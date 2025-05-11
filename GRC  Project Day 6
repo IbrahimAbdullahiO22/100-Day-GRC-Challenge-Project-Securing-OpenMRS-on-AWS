@@ -1,0 +1,73 @@
+# 📅 Day 6 – Overview of Key Frameworks: NIST RMF  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today we explored the **NIST Risk Management Framework (RMF)** – a gold-standard model originally designed for U.S. federal systems under **FISMA**, but widely adopted across industries, including healthcare.
+
+The NIST RMF brings **structure, discipline, and lifecycle management** to risk, making it ideal for systems like **OpenMRS** that handle sensitive patient data.
+
+> 📌 **Why it matters**: Without a structured framework, security often becomes reactive. RMF ensures a **step-by-step process** to proactively protect systems, classify data, and continually improve safeguards.
+
+---
+
+## 🧱 NIST RMF – The 7 Steps Simplified:
+
+1. **Prepare** – Lay the foundation: define context, assign roles, and develop a risk strategy.
+2. **Categorize** – Determine data sensitivity and the potential impact of compromise (e.g., ePHI in OpenMRS = high impact).
+3. **Select** – Choose appropriate security controls (from NIST SP 800-53) based on categorization.
+4. **Implement** – Apply the selected controls via system configurations, policies, and training.
+5. **Assess** – ✅ **Test** the effectiveness of implemented controls — this is the step where we verify functionality and real-world readiness.
+6. **Authorize** – A senior official reviews results and **formally accepts residual risk** before system operation.
+7. **Monitor** – Continuously track control effectiveness, detect changes, and manage updates over time.
+
+---
+
+## 🏥 OpenMRS Use Case:
+
+Imagine using RMF in a clinic running **OpenMRS**:
+
+- **Prepare**: Clinic leadership defines roles (IT lead, compliance officer) and risk strategy.
+- **Categorize**: Data includes **ePHI** – categorized as **High Sensitivity**.
+- **Select**: Encryption, access control, audit logging, and MFA are chosen from NIST controls.
+- **Implement**: IT team configures OpenMRS settings and trains staff.
+- **Assess**: Security team (or third-party auditor) **tests if encryption, MFA, and logs are working**.
+- **Authorize**: The director signs off based on assessment results.
+- **Monitor**: Regular reviews, patching, and training updates keep security current.
+
+---
+
+## ✍️ Hands-On Exercise:
+
+### ✅ Which RMF step involves testing controls?
+**Answer:** Step 5 – **Assess**
+
+> Testing controls is critical before authorization because it validates whether security safeguards like **encryption, firewalls, or access restrictions** are **working as intended**. For OpenMRS, this step could reveal misconfigurations or ineffective protections before real patient data is put at risk.
+
+---
+
+## 💡 Reflection:
+
+Using RMF offers **clarity and accountability**. Without it, things fall through the cracks — roles aren’t clear, data isn’t properly classified, or risks are missed. A step-by-step framework ensures:
+
+- **No major elements are skipped**
+- **Risks are identified early**
+- **Controls are verified before exposure**
+- **Responsibility is distributed and traceable**
+
+In the context of OpenMRS or any healthcare system, adopting RMF means **treating patient data with the diligence it deserves**. It’s not just bureaucracy — it’s about protecting lives.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `NIST RMF 7 steps summary`
+- `FISMA RMF requirements`
+- `NIST RMF vs ISO 27001`
+
+---
+
+✅ _Stay tuned for Day 7 – where we’ll break down HIPAA, its key rules, and how it applies directly to systems like OpenMRS._
+
+📌 #GRC #NISTRMF #RiskManagement #CybersecurityFramework #FISMA #HIPAA #OpenMRS #InfoSec #100DayChallenge
