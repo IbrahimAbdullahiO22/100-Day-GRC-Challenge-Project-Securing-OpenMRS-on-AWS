@@ -1,0 +1,69 @@
+# 📅 Day 5 – Putting It All Together: Governance, Risk & Compliance in Harmony  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today marks the end of our first week in the 100-day GRC journey! We’re tying together the three pillars — **Governance**, **Risk**, and **Compliance** — into one unified, practical concept.
+
+Think of GRC as a **three-legged stool**:  
+- **Governance** sets the strategy  
+- **Risk management** addresses threats and vulnerabilities  
+- **Compliance** ensures the organization aligns with legal and regulatory standards
+
+If one leg is weak or missing, the entire system falters. But when G, R, and C work together, the organization builds a **resilient and secure environment** — especially critical in industries like healthcare where lives and trust are on the line.
+
+---
+
+## 🏥 Real-World Case Study: Encryption in OpenMRS
+
+Let’s walk through how GRC plays out in one decision — **encrypting patient data in OpenMRS**:
+
+### **Governance (G)**  
+Clinic leadership (CIO or board) decides to implement a **formal policy** requiring all patient data to be encrypted at rest and in transit. This directive shows top-level involvement, vision, and accountability.
+
+### **Risk (R)**  
+The risk being addressed is **data theft or loss**, either through system breaches or stolen devices. Encryption reduces the **impact** of such events by making data unreadable to unauthorized parties, thus **mitigating a high-priority risk**.
+
+### **Compliance (C)**  
+Encryption helps fulfill **HIPAA’s technical safeguard** requirements. If a breach happens but the data is encrypted, HIPAA may consider it a **non-reportable incident**, saving the organization from regulatory penalties and reputational damage.
+
+✅ This single policy — driven by governance — reduces risk and meets compliance. That’s the **power of integrated GRC**.
+
+---
+
+## ✍️ Hands-On Exercise: GRC Triad Mapping
+
+**Security Control Chosen:** Multi-Factor Authentication (MFA) for VPN Access
+
+| GRC Element | Description |
+|-------------|-------------|
+| **Governance** | The IT Security Team, approved by senior leadership, mandates MFA as part of the official Access Control Policy. |
+| **Risk** | Mitigates the risk of **credential theft** and **unauthorized remote access**, especially from phishing attacks. Lowers both **likelihood and impact** of account compromise. |
+| **Compliance** | MFA is often a **requirement** for compliance with NIST 800-53, HIPAA best practices, and even cyber insurance policies. |
+
+🔍 This mapping makes it clear how a **single security measure** can fulfill multiple needs across the GRC spectrum.
+
+---
+
+## 💡 Reflection:
+
+Looking back on this first week, I see that the area **often most neglected** is **Governance** — the leadership and policy-setting role. Many orgs (and individuals) focus on compliance checklists or react to risks without a clear, proactive **security vision** from the top.
+
+Personally, I’m drawn to the **Risk Management** side — analyzing threats, mapping out likelihood vs. impact, and helping leaders make informed decisions. It feels like strategic problem-solving that protects real people.
+
+Moving forward, I aim to **strengthen governance practices** wherever I contribute — by advocating for clear security policies, involving leadership, and aligning actions with long-term organizational goals.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `GRC framework healthcare`
+- `Encryption policy HIPAA safe harbor`
+- `Holistic security governance risk compliance`
+
+---
+
+✅ _Stay tuned for Day 6 – where we’ll dig deeper into implementation strategies, starting with more focused GRC applications in systems like OpenMRS._
+
+📌 #GRC #Governance #RiskManagement #Compliance #Cybersecurity #HIPAA #OpenMRS #Encryption #SecurityPolicy #100DayChallenge
