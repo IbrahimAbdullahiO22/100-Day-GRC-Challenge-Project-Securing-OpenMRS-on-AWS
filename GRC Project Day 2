@@ -1,0 +1,71 @@
+# 📅 Day 2 – Governance: Setting the Tone for Cybersecurity
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Governance is the **"G"** in GRC — and it’s the foundation of a security-conscious organization. Simply put, **governance is leadership in action**: setting direction, defining policies, and ensuring security is taken seriously across the organization.
+
+Good governance provides the **structure and expectations** for how security is handled. It's not just about making rules — it's about **creating a culture** of accountability, awareness, and consistency. Think of it like setting the GPS for your cybersecurity journey: it won’t drive the car for you, but it will tell you where to go and how to stay on course.
+
+---
+
+## 🏥 Real-World Context:
+
+In healthcare, governance might come from the hospital board, IT leadership, or department heads. Their decisions — like mandating encryption or funding cybersecurity training — have ripple effects.
+
+Take **OpenMRS** (a medical records system) as an example:  
+Who decides whether data must be encrypted or who can access what?  
+The **CIO**, **IT manager**, or even the **clinic director** — these leaders drive policies like:
+- “Encrypt all patient data stored in OpenMRS”
+- “Require multi-factor authentication for staff logins”
+- “Review access logs monthly for suspicious activity”
+
+These are **governance decisions** — and when leaders **prioritize security**, everyone else does too.
+
+---
+
+## ✍️ Hands-On Exercise:
+
+**Workplace Observations**  
+At a past job, we had two security-related governance examples:
+
+- **Policy**: “All computers must auto-lock after 5 minutes of inactivity”  
+  ➤ Put in place by our IT manager  
+- **Rule**: “Monthly phishing training emails”  
+  ➤ Driven by HR leadership, approved by the CISO
+
+In both cases, leadership clearly **set expectations**, reinforced them in team meetings, and followed up with reminders or support.
+
+These actions created a workplace culture where security was considered a **shared responsibility**.
+
+**OpenMRS Note:**  
+I reviewed OpenMRS documentation, and there are indeed **security best practices**, including:
+- Role-based access controls
+- Audit logging
+- Secure backups  
+This is governance embedded in software – and those settings require leadership to enable and enforce them.
+
+---
+
+## 💡 Reflection:
+
+The phrase **"tone at the top"** is powerful. I once worked in a place where the IT director ignored outdated antivirus software. It made me and others stop taking updates seriously — after all, leadership didn’t seem to care. Later, we experienced a malware incident that could have been prevented.
+
+In contrast, at another job, my supervisor regularly acknowledged good security behavior and kept us informed about new policies. That **positive tone** made me more proactive, and I appreciated being part of a security-aware culture.
+
+The **lesson**: governance is not about strict rules — it’s about **modeling behavior** that promotes safety, respect, and accountability.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `Security governance healthcare leadership`
+- `Tone at the top cybersecurity examples`
+- `OpenMRS security best practices policy`
+
+---
+
+✅ _Stay tuned for Day 3: Risk Management – where we’ll learn how to identify threats and prioritize what matters most._
+
+📌 #GRC #Governance #Cybersecurity #InfoSec #Leadership #ToneAtTheTop #HIPAA #100DayChallenge #HealthcareSecurity #OpenMRS
