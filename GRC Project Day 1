@@ -1,0 +1,57 @@
+# 📅 Day 1 – Introduction to GRC (Governance, Risk & Compliance)
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+Today, we begin our journey into the world of GRC: **Governance, Risk, and Compliance**. While these terms may sound like corporate buzzwords, they are vital practices that ensure organizations operate responsibly, safely, and within regulatory boundaries — especially in industries like **healthcare**, where protecting sensitive data directly impacts lives.
+
+**Governance** sets the direction and rules.  
+**Risk management** identifies and prepares for potential threats.  
+**Compliance** ensures we follow industry and legal standards (like HIPAA in the U.S.).
+
+---
+
+## 🏥 Real-World Context:
+Imagine a clinic using **OpenMRS**, an open-source electronic medical records system. A breach of this system could expose private patient data, leading to:
+
+- Loss of **patient trust**
+- **Regulatory penalties** and **fines**
+- Long-term **reputational damage**
+- Disruption of **clinical operations**
+
+This scenario highlights the need for strong GRC practices to **prevent, detect, and respond** to security threats.
+
+---
+
+## ✍️ Hands-On Exercise:
+
+**Breach Example Researched**: *HCA Healthcare Data Breach (2023)*  
+- **Patients Affected**: Over **11 million** records leaked  
+- **Cause**: Unauthorized access to an external storage location  
+- **Consequences**: Public trust erosion, class-action lawsuits, major brand reputation hit
+
+**Key Takeaways:**
+- Sensitive data stored insecurely can have massive consequences
+- Lack of proper governance over data storage and access was a key failure
+- GRC frameworks could have helped mitigate or prevent this breach
+
+---
+
+## 💡 Reflection:
+
+Security in healthcare is more than just an IT checkbox — it's about **protecting people**. When we give our data to doctors or clinics, we trust them to keep it safe. A failure in GRC processes doesn't just affect systems — it affects lives.  
+That’s why **cybersecurity, risk management, and compliance** must work together to safeguard not only organizations but also the **dignity and safety of every individual**.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `Healthcare data breach impacts`
+- `OpenMRS security breach case study`
+- `HIPAA breach fines examples`
+
+---
+
+✅ _Stay tuned for Day 2: Governance Fundamentals – exploring how leadership and policy shape organizational security._
+
+📌 #GRC #Cybersecurity #InfoSec #HIPAA #100DayChallenge #HealthcareSecurity #OpenMRS
