@@ -1,0 +1,69 @@
+# 📅 Day 3 – Risk Management: Detecting and Defending Against What Could Go Wrong  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today we explored **Risk Management**, the "R" in GRC. It’s the proactive process of identifying what can go wrong and making informed decisions on how to respond. Risk management combines **detective work** (identifying threats and vulnerabilities) with **forecasting** (estimating the likelihood and impact of incidents).
+
+To break it down:
+- **Threat** = Something bad that *could* happen (e.g., a hacker, ransomware, accidental data leak)
+- **Vulnerability** = A weakness that allows the threat to succeed (e.g., weak password, outdated software)
+- **Risk** = Threat × Vulnerability → How likely the bad thing is, and how bad the damage would be
+
+> 📌 **Formula: Risk = Likelihood × Impact**
+
+---
+
+## 🏥 Real-World Context:
+
+Let’s use our ongoing **OpenMRS case** for clarity.
+
+> A clinic runs OpenMRS on a cloud server. They delay critical software updates (vulnerability). Hackers are targeting healthcare systems (threat).  
+> **Risk**: High likelihood + high impact = urgent concern.
+
+A breach here could expose **thousands of patient records**, lead to regulatory fines, downtime, lawsuits, and most importantly, **jeopardize patient care**. This scenario is a real-world demonstration of why **risk must be assessed and prioritized regularly**.
+
+Another example:  
+- Threat: Power outage  
+- Vulnerability: No backup generator  
+- Risk: Low-to-moderate (if data is backed up and in the cloud)
+
+---
+
+## ✍️ Hands-On Exercise:
+
+### ✅ Mini Risk Brainstorm (Based on real-world roles)
+
+| Threat                                         | Vulnerability                                       | Likelihood | Impact |
+|-----------------------------------------------|-----------------------------------------------------|------------|--------|
+| Ransomware attack                             | Unpatched endpoint & outdated antivirus            | High       | High   |
+| Insider mistakenly emails PHI to wrong person | No DLP (Data Loss Prevention) or auto-checking     | Medium     | High   |
+| Server crash during storm                     | No redundant backups or power supply               | Medium     | Medium |
+| Phishing email clicked by employee            | Lack of security awareness training                | High       | High   |
+
+🔍 **Highest-risk item:**  
+Ransomware + unpatched systems — scores high on **both likelihood and impact**, and would disrupt operations, lock data, and expose PHI. This risk should be **prioritized for mitigation** (e.g., patching, backups, endpoint protection).
+
+---
+
+## 💡 Reflection:
+
+A few years ago, I almost clicked on a phishing email that looked convincingly like it came from HR. It asked me to "review my bonus details." I hesitated and reported it — IT confirmed it was fake.  
+At the time, I didn’t consider myself a target. But it made me realize: **we underestimate threats until we almost get hit**. Had I clicked, malware might have been installed, or credentials stolen. The **impact** would have been huge — for me and the organization.
+
+That near miss helped me internalize the **importance of ongoing awareness** and how **every employee plays a part** in risk mitigation.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `Threat vs vulnerability vs risk definitions`
+- `Likelihood impact risk matrix`
+- `Healthcare ransomware cases 2020s`
+
+---
+
+✅ _Stay tuned for Day 4: Compliance – why meeting the rules doesn't always mean you're safe._
+
+📌 #GRC #RiskManagement #Cybersecurity #HealthcareSecurity #Ransomware #OpenMRS #Phishing #100DayChallenge
