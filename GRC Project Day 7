@@ -1,0 +1,90 @@
+# 📅 Day 7 – HIPAA Basics: Protecting Health Information  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today we explored **HIPAA** — the **Health Insurance Portability and Accountability Act**, a U.S. law that governs the privacy and security of patient information. Within GRC, the **HIPAA Security Rule** is especially relevant, as it lays out the **safeguards healthcare organizations must follow** to protect electronic protected health information (**ePHI**).
+
+Even outside the U.S., the principles of HIPAA offer valuable insights into healthcare data protection, especially when working with systems like **OpenMRS**.
+
+> 📌 The Security Rule requires “reasonable and appropriate” **administrative, physical, and technical safeguards** to ensure the confidentiality, integrity, and availability of patient information.
+
+---
+
+## 🧱 HIPAA Security Rule – Three Safeguard Categories:
+
+### 1. **Administrative Safeguards**
+- Focus: Policies, procedures, and staff responsibilities.
+- **Examples in OpenMRS**:
+  - Regular **staff training** on patient data privacy
+  - **Assigning a security officer** responsible for OpenMRS access
+  - **Risk assessments** and documented review of system audit logs
+
+### 2. **Physical Safeguards**
+- Focus: Controlling physical access to systems and data.
+- **Examples in OpenMRS**:
+  - Locking workstations and using **privacy screens** in clinics
+  - Hosting servers in **secure data centers** with controlled access
+  - **Alarm systems** and camera surveillance for clinic IT rooms
+
+### 3. **Technical Safeguards**
+- Focus: Technology used to protect and control access to ePHI.
+- **Examples in OpenMRS**:
+  - **Encryption** of stored and transmitted data
+  - Role-based **access controls** and unique user IDs
+  - **Audit controls** to log who accessed or modified what data
+  - **Two-factor authentication** for added login security
+
+> ⚖️ These safeguards work together — one layer alone is not enough. Strong technology must be supported by policies and physical security to achieve **real compliance and protection**.
+
+---
+
+## 🏥 Application in OpenMRS Scenario:
+
+If a clinic is using OpenMRS in the U.S., they must document safeguards in all three areas to achieve HIPAA compliance.
+
+- **Administrative**: Weekly access log reviews, staff training, and assigned roles
+- **Physical**: Secure hardware, locked server rooms, workstation protections
+- **Technical**: HTTPS for web access, encryption of databases, strong authentication
+
+HIPAA compliance isn’t just a checkbox — it’s a **culture of responsibility and readiness**.
+
+---
+
+## ✍️ Hands-On Exercise:
+
+**Safeguards I Would Implement in OpenMRS:**
+
+- **Administrative Safeguard**:  
+  “Establish a formal policy to review OpenMRS audit logs weekly for suspicious activity.”  
+  _Why_: This ensures early detection of misuse and reinforces accountability.
+
+- **Technical Safeguard**:  
+  “Enable two-factor authentication (2FA) for all OpenMRS users accessing ePHI.”  
+  _Why_: Adds an essential security layer beyond passwords, mitigating account compromise risk.
+
+These actions directly support HIPAA’s goals of **confidentiality, integrity, and availability** of patient data.
+
+---
+
+## 💡 Reflection:
+
+HIPAA’s three safeguard categories cover all bases — **people, places, and technology**.  
+In a **small clinic**, **technical safeguards** might be the most challenging due to limited IT resources or budget. But skipping any category creates gaps. Even perfect encryption won't help if someone shares credentials or walks away from an unlocked terminal.
+
+Each layer supports the other. HIPAA’s structure pushes organizations to think **holistically**, not just about tools or rules in isolation — and that’s why it remains a cornerstone of healthcare cybersecurity.
+
+---
+
+## 📖 Optional Search Terms for Further Learning:
+- `HHS HIPAA Security Rule summary`
+- `HIPAA administrative physical technical safeguards examples`
+- `HIPAA vs GDPR healthcare data`
+
+---
+
+✅ _Stay tuned for Day 8 – we’ll explore how financial security regulations like PCI DSS offer similar lessons for protecting payment data._
+
+📌 #GRC #HIPAA #ePHI #Cybersecurity #DataPrivacy #OpenMRS #HealthcareSecurity #100DayChallenge #Compliance #InfoSec
