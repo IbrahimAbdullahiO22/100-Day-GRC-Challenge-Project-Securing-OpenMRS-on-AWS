@@ -1,0 +1,75 @@
+# 📅 Day 8 – PCI DSS: Card Security and Crossover Lessons for OpenMRS  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today we explored **PCI DSS (Payment Card Industry Data Security Standard)** — a globally recognized compliance standard developed by major credit card companies to **protect cardholder data**. While OpenMRS isn’t designed for payment processing, PCI DSS teaches **universal security principles** applicable to any sensitive data system — including those in healthcare.
+
+> 📌 The big takeaway: PCI DSS isn’t just about credit cards — it’s a concrete, prescriptive set of practices that reinforce strong cybersecurity posture in any organization handling sensitive data.
+
+---
+
+## 🧾 PCI DSS in a Nutshell – The 12 Core Requirements (Grouped by Objective):
+
+### 1. **Build and Maintain a Secure Network**
+- **Requirement 1**: Install and maintain a firewall
+- **Requirement 2**: Don’t use vendor default passwords/settings  
+*💡 In OpenMRS: Ensure firewall rules are configured and default admin passwords are changed.*
+
+### 2. **Protect Cardholder Data**
+- **Requirement 3**: Encrypt stored cardholder data
+- **Requirement 4**: Encrypt transmission over open/public networks  
+*💡 OpenMRS analogy: Encrypt patient records in the database and enforce HTTPS (TLS).*
+
+### 3. **Maintain a Vulnerability Management Program**
+- **Requirement 5**: Use anti-virus and protect systems from malware
+- **Requirement 6**: Develop and maintain secure systems (apply patches)  
+*💡 Same for healthcare: Patch OpenMRS regularly and deploy anti-malware protections.*
+
+### 4. **Implement Strong Access Control Measures**
+- **Requirement 7**: Restrict access on a need-to-know basis
+- **Requirement 8**: Assign unique IDs to users
+- **Requirement 9**: Restrict physical access to cardholder data  
+*💡 In clinics: Only authorized staff access OpenMRS; all users must log in with their own credentials; server rooms should be secured.*
+
+### 5. **Regularly Monitor and Test Networks**
+- **Requirement 10**: Track and monitor access
+- **Requirement 11**: Regularly test systems (e.g., vuln scans, pen testing)  
+*💡 For OpenMRS: Audit logs for access to records and regular security assessments.*
+
+### 6. **Maintain an Information Security Policy**
+- **Requirement 12**: Maintain a formal security policy and train staff  
+*💡 Governance overlap: Ensure clinic staff understand and follow security policies.*
+
+---
+
+## ✅ Hands-On Exercise:
+
+**Chosen Requirement**: **Requirement 5 – Protect all systems from malicious software**
+
+> This is especially relevant to OpenMRS. Even though it's not handling credit cards, patient data is equally (or more) sensitive. Without anti-malware protections, an OpenMRS server could fall victim to ransomware or trojans that expose, lock, or exfiltrate patient data — causing both harm and HIPAA violations.
+
+Implementing anti-virus, EDR (Endpoint Detection & Response), and ensuring frequent scans is critical for healthcare IT security.
+
+---
+
+## 💡 Reflection:
+
+I appreciate how **prescriptive** PCI DSS is — it leaves little room for ambiguity. While that can feel rigid, it also ensures **consistency** across organizations. If a similar standard applied to OpenMRS, it might reduce the guesswork around which controls are essential.
+
+In my opinion, clear checklists like PCI DSS are **helpful guides**, especially for teams without deep security expertise. The challenge is balancing **compliance enforcement** with **real-world flexibility**, allowing adaptations based on the system’s risk and environment.
+
+---
+
+## 📖 Optional Search Terms for Further Learning:
+- `PCI DSS 12 requirements summary`
+- `PCI compliance best practices`
+- `PCI DSS encryption tokenization`
+
+---
+
+✅ _Stay tuned for Day 9 – where we’ll shift to ISO/IEC 27001, an international standard focused on building an organization-wide information security management system (ISMS)._
+
+📌 #GRC #PCI #PCIDSS #Cybersecurity #Compliance #OpenMRS #PatientDataSecurity #InfoSec #HealthcareSecurity #100DayChallenge
