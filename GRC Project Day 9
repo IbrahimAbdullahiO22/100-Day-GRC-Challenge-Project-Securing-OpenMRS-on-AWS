@@ -1,0 +1,78 @@
+# 📅 Day 9 – ISO 27001: Building a Security Management System  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today we explored **ISO/IEC 27001**, the **international gold standard** for building a comprehensive **Information Security Management System (ISMS)**. While frameworks like NIST RMF guide you through individual risk steps, ISO 27001 provides a **full lifecycle model** for managing information security across the organization — with **risk assessments, continuous improvement, and top-down governance** at its core.
+
+What makes ISO 27001 especially powerful is its flexibility — instead of a fixed checklist, it asks organizations to tailor their security controls based on **their own unique risks**.
+
+> 🔁 The core idea: **Plan-Do-Check-Act** — repeat, refine, improve. Security isn’t static — and ISO 27001 helps ensure you never treat it that way.
+
+---
+
+## 🧠 Key Elements of ISO 27001:
+
+### ✅ Risk Assessment
+- Organizations must **identify threats and vulnerabilities**, determine the likelihood and impact, and evaluate overall risk to information assets.
+- *Example for OpenMRS:* Risks like **unauthorized access to patient records**, **downtime**, or **ransomware infections** should be identified and scored.
+
+### ✅ Controls Selection (Annex A)
+- Annex A of ISO 27001 contains **93 controls** across categories like Access Control, Cryptography, Physical Security, and Incident Response.
+- Controls are **selected based on the risk assessment**, not blindly applied.
+
+### ✅ Management System (Plan-Do-Check-Act Cycle)
+- **Plan:** Define policies, assess risks, select controls.
+- **Do:** Implement the controls (e.g., configure systems, train users).
+- **Check:** Monitor, audit, and review performance.
+- **Act:** Adjust based on findings (e.g., patch weaknesses, update policies).
+- *This cycle ensures continuous improvement and relevance over time.*
+
+---
+
+## 🏥 Applying ISO 27001 to OpenMRS:
+
+While OpenMRS isn’t a payment or federal system, it's a **critical healthcare application**. ISO 27001’s flexible, risk-based approach makes it ideal for adapting to a system like OpenMRS.
+
+For example:
+
+- You identify **ePHI** as highly sensitive.
+- You implement role-based access control to restrict who can view/edit records.
+- You monitor access logs.
+- You continuously review these practices as threats evolve.
+
+This is **ISMS in action** — smart, risk-aligned, and dynamic.
+
+---
+
+## ✍️ Hands-On Exercise:
+
+### ✅ Control Chosen from ISO 27001 Annex A:  
+**A.9.1.1 – Access Control Policy**
+
+> This control is highly relevant to OpenMRS. In a healthcare setting, we must ensure only **authorized clinicians** can access sensitive patient data. An access control policy would define roles (e.g., doctor, nurse, IT admin) and what each can do in OpenMRS.
+
+This not only aligns with **data protection and patient privacy**, but also supports **compliance with HIPAA** and reduces insider risk.
+
+---
+
+## 💡 Reflection:
+
+ISO 27001’s flexible, risk-based structure gives **security teams the freedom to choose what fits**, rather than enforcing one-size-fits-all checklists like PCI DSS. While this can be harder — it requires **deep understanding and judgment** — it also means **better, more relevant security**.
+
+The **Plan-Do-Check-Act cycle** really resonates with me. Too often, orgs “set and forget” their security. I believe real resilience comes from **ongoing review and adaptation** — especially in fast-changing fields like healthcare IT. If I were leading a security program, I’d prioritize **continuous tuning** of controls to stay ahead of emerging threats.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `ISO 27001 Annex A summary`
+- `ISO 27001 certification process`
+- `ISO 27001 vs NIST CSF`
+
+---
+
+✅ _Stay tuned for Day 10 – where we revisit healthcare and reflect on how GRC isn’t just about compliance — it’s about trust, ethics, and protecting lives._
+
+📌 #GRC #ISO27001 #ISMS #PlanDoCheckAct #Cybersecurity #AccessControl #AnnexA #OpenMRS #InfoSec #HealthcareSecurity #100DayChallenge
