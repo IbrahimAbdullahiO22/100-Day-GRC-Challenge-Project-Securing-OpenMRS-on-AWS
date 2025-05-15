@@ -1,0 +1,76 @@
+# 📅 Day 11 – GRC Roles: Who Does What (and Who Could You Be?)  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today, we explored the **people and roles** behind successful GRC programs. GRC is not just frameworks and checklists — it’s a **team effort** involving leaders, analysts, engineers, compliance professionals, and decision-makers. Each role contributes to ensuring governance is set, risks are managed, and compliance is maintained — and together, they keep systems like **OpenMRS** safe and effective.
+
+> 🔑 Key takeaway: GRC requires **defined roles and collaboration**. Knowing who does what reduces confusion, increases accountability, and strengthens security and compliance.
+
+---
+
+## 👥 Key GRC Roles and How They Interact:
+
+### ✅ CISO (Chief Information Security Officer) / Security Lead
+- **Sets the security strategy** and leads the design and implementation of policies and controls.
+- Guides the risk management process and aligns security with business goals.
+- *In OpenMRS context:* Might be the IT Director in a small clinic who sets encryption policies and leads incident response.
+
+### ✅ Risk Manager
+- Identifies and evaluates risks, performs assessments, and ensures risk registers are maintained.
+- Coordinates with IT, compliance, and clinical teams to understand threats to systems like OpenMRS.
+
+### ✅ Compliance Officer (or CCO)
+- Ensures adherence to regulatory requirements (e.g., HIPAA, HITECH).
+- Conducts trainings, audits, and manages documentation.
+- Works closely with the CISO to align policies with legal standards.
+
+### ✅ System Owner
+- Manages the **daily operations** and **security posture** of specific systems like OpenMRS.
+- Makes decisions on system configuration, access control, and remediation when issues arise.
+
+### ✅ Authorizing Official (AO)
+- Senior executive who **formally accepts the risk** of operating a system.
+- Makes go/no-go decisions based on input from CISO, Risk Manager, and Compliance teams.
+- *In OpenMRS usage:* Could be a Clinic Director or CEO authorizing system rollout.
+
+---
+
+## 🏥 GRC in Action – OpenMRS Example:
+
+Imagine launching OpenMRS in a healthcare facility:
+- The **System Owner** (IT Manager) configures the platform.
+- The **CISO** ensures encryption and access controls follow policy.
+- The **Risk Manager** identifies threats to system availability or privacy.
+- The **Compliance Officer** ensures HIPAA documents, training, and agreements are in place.
+- The **AO** reviews the residual risk and authorizes the system to go live.
+
+> In large orgs, these are distinct roles. In small teams, **one person may wear multiple hats**. The key is making sure **each responsibility is covered**.
+
+---
+
+## ✍️ Hands-On Exercise:
+
+### 👤 My GRC Identity:
+I resonate with the **Risk Manager** role. I naturally think about what could go wrong in a project and like coordinating with different teams to prepare for those risks. In my current role, I often document informal risk assessments, raise red flags about potential system weaknesses, and suggest mitigation plans. This aligns well with the **core duties of a Risk Manager** — and it’s a role I see myself growing into formally.
+
+---
+
+## 💡 Reflection:
+
+I’m impressed by how **many distinct roles** are involved in GRC — and how **critical coordination** is. In past jobs, I’ve seen things fall through because **responsibility wasn’t clearly assigned** — for example, when no one claimed ownership of a security policy or user access review. Now I see how clear role definition could have prevented that. Going forward, I’ll advocate for identifying GRC roles explicitly, even if they’re shared among team members.
+
+---
+
+## 📖 Optional Search Terms for Further Learning:
+- `NIST RMF roles and responsibilities`
+- `GRC team roles examples`
+- `CISO vs Compliance Officer duties`
+
+---
+
+✅ _Stay tuned for Day 12 – where we begin to apply GRC principles with practical tools like risk assessments and planning exercises for systems like OpenMRS._
+
+📌 #GRC #RiskManager #CISO #ComplianceOfficer #SystemOwner #HealthcareSecurity #OpenMRS #CybersecurityCareers #100DayChallenge
