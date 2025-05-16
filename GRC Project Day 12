@@ -1,0 +1,78 @@
+# 📅 Day 12 – Governance Document Hierarchy: Policies, Standards, and Procedures  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today we explored how governance in cybersecurity and IT operations is built upon a structured **document hierarchy**:  
+**Policy → Standard/Guideline → Procedure**  
+
+Each level serves a unique purpose:
+- **Policies**: High-level rules set by leadership to express intent and strategic direction.
+- **Standards/Guidelines**: Specific technical or procedural requirements used to meet policy goals.
+- **Procedures**: Detailed, step-by-step instructions to carry out the standards in daily operations.
+
+> 🔑 Think of this like a roadmap:  
+> **Policies tell you where you're going**,  
+> **Standards show the route**,  
+> **Procedures give you the GPS directions.**
+
+---
+
+## 🧱 Breakdown with OpenMRS Example:
+
+### ✅ Policy
+> “Only authorized personnel may access the OpenMRS system and patient records.”
+
+- Sets the rule and intent from a governance level.
+- Reflects HIPAA and privacy law alignment.
+- Approved by executive leadership.
+
+### ✅ Standard
+> “All OpenMRS user accounts must use strong passwords and be secured with two-factor authentication (2FA).”
+
+- A measurable, enforceable rule supporting the policy.
+- Can be audited and tested for compliance.
+
+### ✅ Procedure
+> A written guide describing how IT staff configure 2FA for new OpenMRS user accounts:
+1. Access the admin console  
+2. Generate 2FA setup email  
+3. Verify device-based token setup  
+4. Confirm successful enrollment
+
+- Clear operational direction for staff.
+
+---
+
+## ✍️ Hands-On Exercise: Acceptable Use Policy (AUP) – One-Liner
+
+**My one-line AUP statement:**
+> “Staff must use the OpenMRS system exclusively for patient care and maintain strict confidentiality of all patient information.”
+
+This is a high-level policy that sets expectations for appropriate use, without going into procedural details.
+
+---
+
+## 💡 Reflection:
+
+Writing that one-line AUP made me realize how important it is to **stay high-level** in a policy document — resist the urge to describe “how,” and focus on “what” and “why.”  
+I now clearly see how **policies set the tone**, **standards ensure consistency**, and **procedures enable action**. If each level isn’t clearly defined, teams might misinterpret the rules or skip steps.
+
+Having these layers helps align operations with **governance strategy** — making it easier to secure OpenMRS and ensure compliance across the organization.
+
+> Clear governance documents prevent confusion, enable accountability, and support risk-informed decisions.
+
+---
+
+## 📖 Optional Search Terms for Deeper Learning:
+- `SANS security policy templates`
+- `Policy vs. standard vs. procedure`
+- `IT governance document hierarchy`
+
+---
+
+✅ _Stay tuned for Day 13 – where we’ll begin exploring Risk Assessment Basics: spotting vulnerabilities, threats, and understanding how to measure risk before it turns into reality._
+
+📌 #GRC #ITGovernance #Policies #Standards #Procedures #OpenMRS #CybersecurityPolicy #AcceptableUsePolicy #100DayChallenge
