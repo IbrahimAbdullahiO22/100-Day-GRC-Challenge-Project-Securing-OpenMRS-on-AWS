@@ -1,0 +1,83 @@
+# 📅 Day 13 – Risk Assessment Basics: Spotting Trouble Before It Strikes  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today, we put on our detective hats and explored the basics of **risk assessment** — a core practice in any GRC or cybersecurity program. The purpose is to answer a simple but powerful question:  
+> “What could go wrong with our systems, and how bad would it be?”
+
+We learned that risk isn't random — it's the result of **a threat exploiting a vulnerability**, potentially causing **harm to an asset**. Understanding this relationship helps us anticipate, measure, and prioritize potential problems before they happen.
+
+---
+
+## 📚 Key Terms:
+
+- **Asset** – Something valuable we want to protect (e.g., OpenMRS patient database)
+- **Threat** – Anything that could cause harm to the asset (e.g., hacker, malware, power outage)
+- **Vulnerability** – A weakness that can be exploited by a threat (e.g., weak password, outdated software)
+- **Risk** – The potential impact and likelihood of a threat exploiting a vulnerability
+
+> 📌 **Risk = Threat × Vulnerability impacting an Asset**
+
+---
+
+## 🧠 Simple Risk Assessment Process:
+
+1. **Identify Assets**  
+   → What are we protecting?  
+   *Example: OpenMRS server, patient database, clinician login credentials*
+
+2. **Identify Threats & Vulnerabilities**  
+   → What could go wrong? What weaknesses exist?  
+   *Examples: Hackers (threat) + outdated software (vulnerability)*
+
+3. **Analyze Risk**  
+   → For each scenario, rate **Likelihood** and **Impact** as High/Medium/Low.  
+   *Example: Likelihood = Medium, Impact = High → Overall Risk = High*
+
+4. **Prioritize**  
+   → Address High risks first. Document and monitor Medium/Low risks.
+
+---
+
+## 🏥 OpenMRS Risk Scenario – Hands-On Exercise:
+
+### ✅ Asset: OpenMRS Patient Database  
+**Threat:** Unauthorized access by external hacker  
+**Vulnerability:** Default admin password not changed  
+
+> 🔐 **Risk Rating:**  
+- **Likelihood:** High (default passwords are easy to exploit)  
+- **Impact:** High (exposes sensitive patient data)  
+- **Overall Risk:** **High**  
+
+📝 *This scenario shows how even a small oversight like a default password can lead to serious consequences.*
+
+---
+
+## 💡 Reflection:
+
+Today’s exercise made me realize how **small vulnerabilities**, like weak credentials or missing patches, can have **large impacts** when paired with real-world threats. I also see that **risk assessment is everywhere** — not just in IT. Even planning a group event or deploying a new feature involves asking, “What could go wrong?” and “How do we reduce that chance?”
+
+> This process helps us **move from reactive firefighting to proactive risk planning**, especially for systems as critical as OpenMRS.
+
+Additional example:
+- **Asset:** OpenMRS cloud hosting platform  
+- **Threat:** Cloud outage  
+- **Vulnerability:** No backup or failover configured  
+- **Risk:** Medium (could be mitigated with a backup strategy)
+
+---
+
+## 📖 Optional Search Terms for Further Learning:
+- `NIST SP 800-30 risk assessment guide`
+- `Threat vs vulnerability examples`
+- `Risk assessment steps simple`
+
+---
+
+✅ _Stay tuned for Day 14 – where we’ll take our identified risks and learn what to do about them. You’ll explore the four options of Risk Treatment: mitigate, transfer, accept, or avoid._
+
+📌 #GRC #RiskAssessment #NIST80030 #CybersecurityBasics #OpenMRS #HealthcareSecurity #100DayChallenge
