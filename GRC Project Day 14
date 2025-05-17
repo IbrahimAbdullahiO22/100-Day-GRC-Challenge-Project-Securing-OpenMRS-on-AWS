@@ -1,0 +1,66 @@
+# 📅 Day 14 – Risk Treatment: Fight, Flight, or… Accept?  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+After identifying risks in **Day 13**, today we explored what to do about them — a process called **risk treatment** or **risk response**. When a threat meets a vulnerability and creates a risk to our system (like OpenMRS), we don’t just shrug. We **choose a strategy** to handle it — ideally before it causes harm.
+
+There are **four main options**, recommended by NIST and widely used in risk management:
+
+---
+
+## 🛠️ The 4 Risk Treatment Strategies:
+
+### ✅ 1. Mitigate  
+Reduce the risk’s **likelihood or impact** by addressing it directly.  
+*Example (OpenMRS):* If the server has weak passwords, we **mitigate** by enforcing stronger policies and enabling 2FA.
+
+### ✅ 2. Transfer  
+**Shift the risk** to another party or share it through insurance or contracts.  
+*Example:* Host OpenMRS on a secure cloud platform that assumes responsibility for backups and server patching.
+
+### ✅ 3. Accept  
+Acknowledge the risk and decide to live with it.  
+*Example:* If OpenMRS times out occasionally, we **accept** the minor inconvenience instead of spending resources fixing it.
+
+### ✅ 4. Avoid  
+Eliminate the risk altogether by **not engaging** in the risky activity.  
+*Example:* If a module has a severe bug and can’t be secured, we **avoid** the risk by disabling or replacing it.
+
+---
+
+## 🏥 Hands-On Exercise – OpenMRS Risk Treatment Example:
+
+### 🧾 Recap Risk from Day 13:
+**Asset:** OpenMRS patient database  
+**Threat:** Unauthorized access by a hacker  
+**Vulnerability:** Default admin password still in use  
+**Risk Rating:** High
+
+### 🛡️ Treatment Chosen: **Mitigate**  
+> I’d mitigate this risk by implementing strong password policies and enforcing two-factor authentication for all user accounts. This directly reduces the likelihood of unauthorized access and is a cost-effective way to bring the risk down to an acceptable level. Leaving it as-is would be negligent, and transferring or avoiding isn’t practical in this scenario.
+
+---
+
+## 💡 Reflection:
+
+Choosing the right treatment option made me think critically about **cost vs. consequence**. My initial instinct was to mitigate, but I also considered transfer — like outsourcing to a secure cloud provider. In the end, **direct action (mitigation)** felt more effective and timely.
+
+> Risk treatment is a **balancing act** between resources, risk appetite, impact, and business goals. It’s not always black and white — and sometimes, **a hybrid approach** works best (mitigate most of it, insure for the rest).
+
+This process helped me see that good GRC isn’t about fear — it’s about **strategic, thoughtful decisions** that make systems like OpenMRS safer and more resilient.
+
+---
+
+## 📖 Optional Search Terms for Further Learning:
+- `NIST RMF risk response options`
+- `Risk treatment strategies: mitigate, transfer, accept, avoid`
+- `When to accept a risk vs mitigate`
+
+---
+
+✅ _Stay tuned for Day 15 – where we discuss why security and compliance aren’t always the same thing (and what that means for real-world systems like OpenMRS)._
+
+📌 #GRC #RiskTreatment #RiskManagement #NISTRMF #CybersecurityStrategy #OpenMRS #100DayChallenge
