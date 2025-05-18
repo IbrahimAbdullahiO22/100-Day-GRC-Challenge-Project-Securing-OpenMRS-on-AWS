@@ -1,0 +1,77 @@
+# 📅 Day 15 – Security vs. Compliance: When the Checklist Isn’t Enough  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🔍 Topic Overview:
+
+Today’s lesson was a critical wake-up call in GRC:  
+✅ **Being compliant is not the same as being secure.**
+
+Compliance is about **meeting requirements** set by laws, standards, or frameworks (like HIPAA or PCI DSS). Security is about **actually protecting systems** and data from harm. You can be compliant and still vulnerable — that’s the difference between passing an exam and surviving real-world challenges.
+
+---
+
+## 🧠 Key Concepts:
+
+- **Compliance** is a **snapshot in time**, often focused on minimum standards.
+- **Security** is an ongoing process that requires **active monitoring, testing, and adaptation**.
+- Being “certified” doesn’t mean being “invulnerable.”
+
+---
+
+## 🛑 Real-World Case: Target’s 2013 Breach
+
+- **Target was PCI DSS compliant** as of September 2013.
+- Just **three months later**, attackers breached their point-of-sale systems.
+- **40 million credit card records were stolen.**
+- Post-breach analysis showed that **passing compliance checks** did not equal having **robust, maintained security practices**.
+
+> 🔎 Lesson: Compliance gave a false sense of safety. Security gaps remained undetected — and unaddressed.
+
+---
+
+## 🏥 OpenMRS Example:
+
+Let’s say we configure OpenMRS to be compliant with a healthcare IT security standard:
+- ✅ Policies are written
+- ✅ Encryption is enabled
+- ✅ Users are trained
+
+**But if we stop there**:
+- Passwords might be reused or guessed easily.
+- Backups might fail and go untested.
+- Access reviews might not be conducted regularly.
+
+> 📌 A “compliant” system left unmonitored can drift into **insecurity** fast.
+
+---
+
+## ✍️ Hands-On Exercise – Control That Can Fail Without Oversight:
+
+### ✅ Control: **User Access Reviews**
+> A clinic could be **compliant** by having an access review policy on paper.  
+> But if no one **actually conducts the reviews**, former staff might retain access to sensitive OpenMRS patient data — increasing insider threat risk.
+
+🛠️ Real security requires **action**, not just documentation.
+
+---
+
+## 💡 Reflection:
+
+This exercise reminded me that **compliance is just the starting point**. Like fitness, security isn’t something you “achieve” once — it’s a **discipline**. You have to train, monitor, and adapt constantly.
+
+> I now see how vital **continuous vigilance** is — real security comes from consistent action, not from certifications alone.
+
+---
+
+## 📖 Optional Search Terms for Further Learning:
+- `Beyond compliance security`
+- `Compliant but still breached`
+- `Security vs compliance differences`
+
+---
+
+✅ _Stay tuned for Day 16 – where we enter the world of Cloud Security and Shared Responsibility. Learn who secures what when your app (like OpenMRS) is hosted on platforms like AWS or Azure._
+
+📌 #GRC #Compliance #Cybersecurity #SecurityVsCompliance #HIPAA #PCIDSS #TargetBreach #OpenMRS #InfoSec #100DayChallenge
