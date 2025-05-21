@@ -1,0 +1,101 @@
+#  Day 17 – Hosting OpenMRS on AWS: Cloud Architecture & GRC Connection  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Topic Overview:
+
+Today, I explored how the **OpenMRS Electronic Health Record (EHR) system** can be hosted in the AWS cloud — and why this matters for **Governance, Risk, and Compliance (GRC)**.
+
+**OpenMRS** is a powerful, open-source EHR platform used in 40+ countries to provide healthcare in resource-limited settings. It stores critical patient data, so how and where we host it matters — especially in the cloud.
+
+---
+
+## ☁️ AWS Architecture for OpenMRS (Simplified):
+
+Imagine OpenMRS in the cloud — here’s a basic setup using AWS:
+
+- **Amazon EC2**: Runs the OpenMRS web application  
+- **Amazon RDS**: Hosts the patient database (e.g., MySQL or PostgreSQL)  
+- **Amazon S3**: Stores backups and uploaded documents  
+- **VPC + Security Groups**: Ensures secure network segmentation and traffic control  
+- **HTTPS**: Encrypts user access over the web  
+
+> ✅ This trio — EC2 (compute), RDS (data), and S3 (storage) — forms the backbone of a secure, scalable healthcare cloud environment.
+
+---
+
+## 🔐 GRC Relevance:
+
+Understanding the **tech stack** behind a system like OpenMRS is key for GRC professionals. Why?
+
+- You can **identify risks** (e.g., an open EC2 port could be exploited)  
+- You can **evaluate compliance** (e.g., are backups encrypted for HIPAA?)  
+- You can **communicate better with IT teams** during audits or risk assessments
+
+> _Knowing your infrastructure is the first step toward managing its security, compliance, and resilience._
+
+---
+
+##  Hands-On Exercise:
+
+I sketched a **simple AWS architecture diagram** showing:
+
+  -  **AWS Cloud**  
+  -  **EC2** for the OpenMRS app  
+  -  **RDS** for the database  
+  -  **S3** for backups  
+  -  Security groups/firewalls & HTTPS encryption
+
+> This trio — EC2 (compute), RDS (data), and S3 (storage) — forms the backbone of a secure, scalable healthcare cloud environment.
+
+Drawing out these relationships helped visualize how cloud pieces connect — and where to apply security measures.
+
+--- ## Sketched AWS Architecture Diagram:
+
+```text
+                   ☁️ AWS Cloud (VPC)
+                  ┌────────────────────┐
+                  │                    │
+                  │   🔒 Security       │
+                  │   Groups + HTTPS   │
+                  │                    │
+                  │   ┌────────────┐   │
+                  │   │  EC2       │◄──── Users access OpenMRS via browser
+                  │   │ (OpenMRS)  │   │
+                  │   └────┬───────┘   │
+                  │        │           │
+                  │        ▼           │
+                  │   ┌────────────┐   │
+                  │   │   RDS DB   │   │
+                  │   │(Patient DB)│   │
+                  │   └────┬───────┘   │
+                  │        │           │
+                  │        ▼           │
+                  │   🪣 S3 (Backups)   │
+                  │                    │
+                  └────────────────────┘
+
+## 💡 Reflection:
+
+Understanding the cloud architecture helps me better **anticipate and mitigate risks**. For example:
+
+- 🔓 An EC2 server open to the internet could be a big vulnerability if unpatched  
+- 💾 S3 backups must be encrypted and access-controlled to protect patient data  
+- 🧩 Knowing these connections helps bridge the gap between **policy** and **technology**
+
+> _Security isn’t just about rules — it’s about understanding the systems we’re protecting._
+
+---
+
+## 🔍 Optional Search Terms for Deeper Learning:
+
+- `OpenMRS overview open-source EHR`  
+- `AWS OpenMRS architecture example`  
+- `EC2 RDS S3 basic web application design`
+
+---
+
+✅ _Stay tuned for Day 18: Protecting Sensitive Data in the Cloud — compliance, encryption, and real-world lessons._
+
+📌 #GRC #Cybersecurity #AWS #OpenMRS #EHR #CloudSecurity #InfoSec #100DayChallenge #HealthcareIT #Compliance #HIPAA
