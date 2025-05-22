@@ -1,0 +1,73 @@
+#  Day 18 – Handling Patient Data in the Cloud: Compliance & Best Practices  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Topic Overview:
+
+Today I explored how to manage **regulated healthcare data** in the cloud — specifically **Electronic Protected Health Information (ePHI)** under compliance rules like **HIPAA**.
+
+Using AWS to host platforms like **OpenMRS** means leveraging powerful cloud services while also being accountable for data privacy and security. This entry focuses on **compliance requirements**, **AWS support**, and **best security practices**.
+
+---
+
+##  Key Compliance Concepts:
+
+- **HIPAA** requires a **Business Associate Agreement (BAA)** when third parties like AWS handle PHI.
+- AWS offers a **HIPAA BAA** through the **AWS Artifact portal**, enabling healthcare orgs to use certain HIPAA-eligible services securely.
+- Even with a BAA in place, **you (the customer)** are responsible for securely configuring your resources.
+
+---
+
+##  Cloud Security Best Practices:
+
+- **Encryption**  
+  - At Rest: Enable encryption on **RDS**, **S3**, and **EBS** volumes.  
+  - In Transit: Use **HTTPS** and **TLS** to encrypt data during transfer.
+
+- **Access Control & Auditing**  
+  - Use **IAM roles and policies** to enforce least-privilege access.  
+  - Enable **AWS CloudTrail** for auditing access and changes.
+
+- **Network Security**  
+  - Host OpenMRS in **private subnets** where possible.  
+  - Use **VPNs** for administrative access.  
+  - Implement **AWS WAF**, **Shield**, and **Config** to guard against misconfigurations and attacks.
+
+- **Operational Processes**  
+  - Enforce regular **audits**, security reviews, and maintain **documentation**.  
+  - Follow **configuration baselines** to prevent common mistakes like open S3 buckets or default passwords.
+
+>  *Many cloud breaches result from misconfigurations – not hackers. GRC helps prevent this by introducing structure, policies, and controls.*
+
+---
+
+## 🛠 Hands-On Exercise:
+
+I researched how to obtain the **AWS HIPAA BAA**.   
+- You can access it via **AWS Artifact**, the compliance portal.  
+- Just search “AWS HIPAA BAA” and follow steps to review and accept it.
+
+This simple task helped me build the habit of researching cloud compliance requirements – a key GRC skill.
+
+---
+
+##  Reflection:
+
+Between technical and administrative responsibilities, I find the **technical steps** (like IAM and encryption configurations) more challenging — but both are essential.
+
+Understanding your strengths and areas for growth is important in developing a balanced GRC skillset.
+
+---
+
+##  Optional Search Terms for Further Learning:
+
+- `AWS HIPAA compliance best practices`  
+- `Encrypt data at rest and in transit (cloud healthcare)`  
+- `AWS Business Associate Agreement HIPAA`  
+
+---
+
+ _Stay tuned for Day 19: We’ll look at the ISC2 CGRC (Certified in Governance, Risk and Compliance) certification and how our learning connects to its exam domains._
+
+📌 #GRC #Cybersecurity #HIPAA #CloudSecurity #AWS #PHI #OpenMRS #HealthcareIT #Compliance #SharedResponsibility #100DayChallenge #IAM #Encryption #InfoSec
