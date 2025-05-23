@@ -1,0 +1,72 @@
+# 📅 Day 19 – Mapping GRC Skills to the ISC2 CGRC Certification  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Topic Overview:
+
+Today’s focus was all about **connecting what I’ve learned so far** to a globally recognized credential:  
+ **ISC2 CGRC** (Certified in Governance, Risk and Compliance)
+
+This certification validates a professional's ability to **align security, compliance, and business objectives** — exactly what we’ve been doing with OpenMRS and cloud security in this challenge.
+
+---
+
+##  What Is CGRC?
+
+The **CGRC** (formerly known as CAP – Certified Authorization Professional) is issued by ISC2, the same organization behind CISSP. It’s ideal for professionals who work in:
+
+- Governance & Compliance  
+- Risk Management  
+- System Authorization (e.g., RMF practitioners)  
+- Security control selection & implementation  
+
+CGRC focuses on integrating **security and compliance into business strategy** using frameworks like **NIST RMF**.
+
+---
+
+## 🧩 CGRC Domains & What I’ve Covered:
+
+| **Domain** | **What It Covers** | **Connection to This Challenge** |
+|------------|--------------------|----------------------------------|
+| 1. Governance, Risk Management, and Compliance Program | Security and privacy program alignment with business | Days 1–5: Intro to GRC, risk, policies |
+| 2. Scope of the System | Define boundaries, categorize data | OpenMRS architecture, sensitive data |
+| 3. Selection of Security and Privacy Controls | Choosing appropriate safeguards | Encryption, IAM, HIPAA practices |
+| 4. Implementation of Controls | Applying and configuring controls | Hands-on config: EC2, S3, RDS |
+| 5. Assessment/Audit of Controls | Validate control effectiveness | Coming soon in RMF Phase 2 |
+| 6. Authorization of the System | Risk sign-off and system approval | Aligns with governance decisions |
+| 7. Continuous Monitoring (Compliance Maintenance) | Ongoing security management | Logging, updates, security checks |
+
+>  *Everything I’ve done so far is aligned with the CGRC exam blueprint — even without realizing it!*
+
+---
+
+##  Quiz Time!
+
+**Q: Which NIST RMF step involves selecting security controls?**  
+ **Answer**: Step 2 – **Select** (right after Categorize)
+
+This is a direct connection to Domain 3 of CGRC. Questions like this test how well you apply GRC knowledge to real-world frameworks.
+
+---
+
+##  Reflection:
+
+Am I planning to pursue CGRC? ✅ Definitely considering it.  
+Certifications like CGRC **build credibility**, **unlock opportunities**, and **validate hands-on knowledge** in GRC roles.
+
+Whether you go for the cert or not, **understanding these domains** prepares you to lead in cybersecurity and compliance.
+
+---
+
+## 🔍 Optional Search Terms for Deeper Learning:
+
+- `ISC2 CGRC domains and exam topics`  
+- `CAP vs CGRC certification updates`  
+- `NIST RMF steps and CGRC exam`  
+
+---
+
+✅ _Stay tuned for Day 20 – a recap of everything we’ve learned in Phase 1 and a preview of our deep dive into the NIST RMF!_
+
+📌 #GRC #CGRC #ISC2 #Cybersecurity #Compliance #Governance #RiskManagement #NISTRMF #100DayChallenge #OpenMRS #HealthcareIT #InfoSec #CareerDevelopment
