@@ -1,0 +1,116 @@
+# 📅 Day 21 – Kicking off Phase 2: NIST RMF (Overview & Game Plan)  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Topic Overview:
+
+Welcome to **Phase 2** of the challenge — we’re diving into the **NIST Risk Management Framework (RMF)**.  
+The RMF is a structured, step-by-step process for managing cybersecurity risk for information systems.  
+Today’s goal was to understand the **7 RMF steps** and see how they apply to our **OpenMRS on AWS** scenario.
+
+---
+
+##  RMF in a Nutshell – 7 Steps (Simplified):
+
+1. **Prepare** – Set the foundation at both the organization and system level (roles, policies, mission context).  
+2. **Categorize** – Assess the system’s impact based on the sensitivity of data (e.g., PHI in OpenMRS = High confidentiality).  
+3. **Select Controls** – Choose safeguards from NIST SP 800-53 tailored to the system's risk level.  
+4. **Implement Controls** – Configure the system (AWS, OpenMRS) to apply those controls (e.g., encryption, IAM).  
+5. **Assess Controls** – Verify the controls work through testing, audits, and scans.  
+6. **Authorize the System** – Management reviews risk and decides whether the system can operate.  
+7. **Monitor Controls** – Continuously check for threats, re-scan, and update controls as needed.
+
+>  RMF is a **cycle**, not a one-time checklist — it adapts to evolving threats and environments.
+
+---
+
+##  Application to Our OpenMRS Case Study:
+
+We’ll be applying each step to our cloud-hosted OpenMRS system:  
+- When we **categorize**, we’ll classify PHI data  
+- When we **select**, we’ll choose practical AWS security controls  
+- When we **implement**, we’ll apply encryption, IAM roles, and backups  
+- When we **assess**, we’ll simulate testing and audit logs  
+- Eventually, we’ll walk through **authorization** and **monitoring** as well
+
+Each RMF step will be mapped to **real-world actions** and artifacts.
+
+---
+
+##  Hands-On Exercise:
+
+ **Found RMF Diagram** – I searched for **"NIST RMF steps diagram"** and found the official flowchart in **NIST SP 800-37 Rev. 2**.  
+Yes — I see the **loop**: Continuous Monitoring feeds back into other steps.
+## 🗺️ NIST RMF - 7 Steps Overview (Visual Diagram)
+
+```text
++------------------+
+|     Prepare      |  ← Organizational & System Prep (New in Rev.2)
++--------+---------+
+         |
+         v
++--------+---------+
+|    Categorize    |  ← Define impact levels (Confidentiality, Integrity, Availability)
++--------+---------+
+         |
+         v
++--------+---------+
+|     Select       |  ← Choose baseline controls (SP 800-53) based on categorization
++--------+---------+
+         |
+         v
++--------+---------+
+|    Implement     |  ← Apply selected controls (encryption, access control, etc.)
++--------+---------+
+         |
+         v
++--------+---------+
+|     Assess       |  ← Evaluate effectiveness of controls (testing, auditing)
++--------+---------+
+         |
+         v
++--------+---------+
+|   Authorize      |  ← Risk acceptance decision (ATO – Authority to Operate)
++--------+---------+
+         |
+         v
++--------+---------+
+|    Monitor       |  ← Continuous monitoring, scanning, and adjustment
++------------------+
+
+              
+         ⤴───────────────────────────────────────────⤵
+             ← Continuous Monitoring Feeds Back
+                into Categorize / Select Steps
+
+📍 **Where does OpenMRS need the most work?**  
+➡️ I believe **Continuous Monitoring** will be the most resource-intensive step for OpenMRS because cloud environments evolve constantly.  
+➡️ Also, **Selecting Controls** might be challenging due to the vast number of options and cloud-specific configurations.
+
+---
+
+##  Reflection Prompt:
+
+**How do I feel about starting RMF?**  
+✅ *Excited!* It’s structured and logical, and I like working with repeatable frameworks. But I also expect some complexity.
+
+**Most Challenging Step for Me:**  
+➡️ *Select Controls* — because of the depth of NIST SP 800-53 and deciding which controls fit our OpenMRS setup best.
+
+**Most Exciting Step:**  
+➡️ *Implement Controls* — I enjoy hands-on security tasks like enabling encryption, setting up IAM, and tightening configs.
+
+---
+
+##  Optional Search Terms for Further Learning:
+
+- `NIST RMF seven steps summary`  
+- `Risk Management Framework diagram NIST`  
+- `RMF steps explained in simple terms`  
+
+---
+
+ _Stay tuned for Day 22 as we tackle Step 1: **Prepare** — where we’ll set the stage for successful risk management in OpenMRS._
+
+📌 #GRC #NISTRMF #Cybersecurity #RiskManagement #Compliance #OpenMRS #100DayChallenge #CloudSecurity #InfoSec #Governance #AWS #HIPAA #Frameworks
