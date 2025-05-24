@@ -1,0 +1,87 @@
+#  Day 20 – Wrapping Up Phase 1: GRC Lessons Learned & Ready for What’s Next  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Topic Overview:
+
+Today marks the **end of Phase 1** of my 100-day challenge. Over the past 19 days, I’ve learned and applied core **Governance, Risk, and Compliance (GRC)** concepts — all grounded in a real-world healthcare use case with OpenMRS hosted in AWS. Today is about **reflection, recap**, and **preparing for Phase 2**.
+
+---
+
+##  Phase 1 Key Takeaways:
+
+###  What GRC Really Means:
+- **Governance** = Direction + Accountability (e.g., policies, leadership oversight)  
+- **Risk Management** = Identifying and addressing potential threats  
+- **Compliance** = Meeting legal/regulatory standards (e.g., HIPAA)  
+> GRC brings all three together into a unified, proactive security approach.
+
+---
+
+###  Importance of a Risk-Based Approach:
+- Not all risks are equal — prioritize based on **impact and likelihood**  
+- Focus efforts on **high-value systems**, like patient data in OpenMRS  
+- Prevent **checkbox compliance** by aligning controls with actual risks  
+
+---
+
+###  Frameworks & Standards Introduced:
+- **NIST RMF** – a repeatable 7-step risk management process (Phase 2 focus)  
+- **HIPAA** – governs handling of healthcare data  
+- Others mentioned: **ISO 27001**, **AWS Shared Responsibility Model**  
+> Frameworks are the “guardrails” that ensure structure and consistency.
+
+---
+
+###  Our OpenMRS Case Study:
+- Explored how a clinic uses OpenMRS on **AWS**  
+- Applied GRC concepts to **cloud security**, **data protection**, and **compliance**  
+- Hands-on examples: encryption, IAM policies, BAA, backups, network segmentation  
+
+---
+
+###  Why It All Matters (Day 1 Breach Reflection):
+- The opening breach scenario was caused by missing or weak GRC practices  
+- **GRC in action** could have mitigated or prevented the breach:  
+  - Clear governance → roles and policies defined  
+  - Proactive risk management → vulnerabilities addressed  
+  - Compliance → encryption, auditing, BAA in place  
+> GRC isn’t just theory — it **prevents real-world failures**.
+
+---
+
+##  Hands-On Exercise:
+
+**Day 1 Breach Prevention – My GRC Diagnosis:**
+
+- **Risk Management Failure**: No encryption or access controls on patient data  
+- **Governance Lapse**: No policy requiring regular patching or risk assessments  
+- **Compliance Gap**: Failure to sign a Business Associate Agreement (BAA) with AWS  
+
+> A strong GRC foundation across these three areas could have stopped the breach.
+
+---
+
+##  Reflection Prompt:
+
+**Which topic resonated most?**  
+➡ *Cloud security practices* — they made the abstract concrete and taught me how to protect data in the real world.
+
+**Why?**  
+➡ Because cloud is the future, and understanding shared responsibility, encryption, IAM, and backups gave me confidence to secure modern systems.
+
+
+---
+
+##  Optional Search Terms for Deeper Learning:
+
+- `GRC fundamentals recap`  
+- `Risk management framework NIST introduction`  
+- `Importance of risk-based security approach`  
+
+---
+
+ _Stay tuned for Day 21 – Phase 2 begins as we dive into the NIST RMF with a step-by-step, hands-on approach!_
+
+📌 #GRC #Cybersecurity #RiskManagement #Compliance #Governance #HIPAA #NISTRMF #100DayChallenge #OpenMRS #AWS #HealthcareIT #CloudSecurity #InfoSec #LessonsLearned
