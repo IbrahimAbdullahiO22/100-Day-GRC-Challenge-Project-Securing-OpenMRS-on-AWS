@@ -1,0 +1,85 @@
+# 📅 Day 22 – Who’s Who in Risk Management (Establishing RMF Roles)  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🎯 Topic Overview:
+
+Today marks the first action in the **Prepare** step of the **NIST Risk Management Framework (RMF)** — defining **key roles** in the risk management process.
+
+Roles like the **Authorizing Official (AO)**, **System Owner**, and **Information System Security Officer (ISSO)** create structure, accountability, and efficiency. Without clearly assigned roles, risk decisions become unclear and critical tasks may be neglected.
+
+---
+
+## 👥 Key RMF Roles in Plain Language:
+
+### 🛡️ Authorizing Official (AO):
+- **Who**: Senior executive (e.g., CIO or IT Director)
+- **What They Do**: Approves the system for operation by accepting the level of risk  
+- **In Our OpenMRS Case**: Likely the **Hospital CIO** or **Clinic Director**
+- **Note**: Must have authority and independence from day-to-day operations to avoid conflicts of interest
+
+---
+
+### 🖥️ System Owner:
+- **Who**: Manager responsible for OpenMRS (e.g., Head of Health IT or EHR Project Manager)
+- **What They Do**: Manages system lifecycle, coordinates implementation of security controls
+- **In Our Case**: Likely the **Health IT Manager** at MyClinic
+
+---
+
+### 🔐 Information System Security Officer (ISSO):
+- **Who**: Security-focused individual (e.g., Infosec Lead or Security Engineer)
+- **What They Do**: Oversees the implementation and assessment of security controls, prepares documentation and reports
+- **In Our Case**: Likely the **Infosec Lead or Compliance Officer** for MyClinic
+
+> 🔄 These roles interact throughout the RMF process — from planning and implementation to approval and monitoring.
+
+---
+
+## ✅ Hands-On Exercise:
+
+**Who would approve the Authority to Operate (ATO) for OpenMRS?**
+
+➡️ **Answer**: The **Chief Information Officer (CIO)** at MyClinic would likely be the Authorizing Official (AO).  
+They have the executive authority to accept residual risk and approve the system for production use.
+
+---
+
+## 💬 Reflection Prompt:
+
+**Why is it important to designate RMF roles early?**
+
+➡️ Clearly defining roles creates **accountability** and ensures no critical tasks are overlooked.  
+> “If everyone knows who’s in charge of what, then decisions are made faster, gaps are closed sooner, and risks are managed intentionally.”
+
+**What could go wrong if roles weren’t clearly assigned?**
+
+- Missed deadlines due to confusion over responsibility  
+- No one updating or enforcing security controls  
+- Risks being accepted by default, without formal approval  
+- Increased likelihood of compliance failures or security incidents
+
+---
+
+## 🏥 OpenMRS Org Chart (Simplified):
+
+```text
+    MyClinic - OpenMRS Risk Management Roles
+
+       +---------------------------+
+       |  Chief Information Officer|
+       |     (Authorizing Official)|
+       +---------------------------+
+                  |
+                  v
+       +---------------------------+
+       |     Health IT Manager     |
+       |       (System Owner)      |
+       +---------------------------+
+                  |
+                  v
+       +---------------------------+
+       |      Infosec Lead         |
+       |     (ISSO / Security)     |
+       +---------------------------+
