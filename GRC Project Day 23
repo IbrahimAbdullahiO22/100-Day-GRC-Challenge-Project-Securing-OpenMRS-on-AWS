@@ -1,0 +1,79 @@
+# 📅 Day 23 – What’s Your Risk Appetite? Crafting a Risk Management Strategy  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🎯 Topic Overview:
+
+Today’s focus was on developing a **Risk Management Strategy**, including defining our organization’s **risk tolerance**. This sets the tone for all future risk decisions and aligns security efforts with business values.
+
+In leadership, understanding and documenting risk tolerance isn’t just a compliance checkbox — it’s about empowering decision-makers at all levels to act consistently and wisely when risk arises.
+
+---
+
+##  What Is a Risk Management Strategy?
+
+- It defines **how** your organization approaches risk: its priorities, boundaries, and decision-making process.
+- It includes the **level of risk** the organization is willing to accept (aka **risk tolerance** or **risk appetite**).
+- NIST SP 800-37 (Task P-2) recommends this be formalized before diving into system-specific actions.
+
+> “Risk tolerance is the degree of uncertainty an organization is willing to accept in pursuit of its objectives.” – NIST
+
+---
+
+##  OpenMRS Case Example:
+
+###  Example Risk Tolerance Statement for MyClinic:
+> “We have **zero tolerance** for any risk that could result in the unauthorized disclosure of Protected Health Information (PHI) or compromise patient safety.”
+
+**Why it matters:**  
+In healthcare, the stakes are life and death. Data confidentiality and system availability directly affect **trust**, **safety**, and **compliance** (e.g., HIPAA).
+
+MyClinic may accept some operational or financial risk (e.g., minor project delays, resource constraints), but not if it endangers patients or exposes sensitive data.
+
+---
+
+##  Hands-On Exercise:
+
+**Drafted Risk Tolerance Statement (as a leader):**
+
+> “Our organization maintains **zero tolerance** for security risks that compromise patient data confidentiality, and **minimal tolerance** for operational interruptions during critical clinical hours.”
+
+This statement clearly outlines where **no risk is allowed** and where **limited risk may be accepted** for functionality or performance.
+
+---
+
+##  Reflection Prompt:
+
+**Why is this risk intolerable?**
+
+As a leader, protecting **human life and dignity** must come first. A breach of PHI can result in **loss of patient trust**, **legal consequences**, and **irreversible harm** to our mission and community reputation.
+
+**Where is risk acceptable?**
+
+We recognize some **technical debt** and **operational risk** may be necessary to innovate or maintain services — such as tolerating scheduled downtimes or minor feature delays.
+
+> Having a written risk tolerance strategy ensures **every team** — from IT to executive leadership — can make **consistent and principled decisions**, even under pressure.
+
+---
+
+##  Leadership Insight:
+
+- A documented strategy enables **proactive governance**, rather than reactive crisis management.
+- Leaders must balance **mission-critical risk intolerance** with **real-world resource constraints**.
+- Clear boundaries reduce decision fatigue and support accountability at all levels.
+
+---
+
+## 🔍 Optional Search Terms for Deeper Learning:
+
+- `NIST SP 800-37 P-2 risk management strategy`  
+- `Risk tolerance vs risk appetite examples`  
+- `Healthcare risk appetite statement`  
+- `Setting risk thresholds for IT projects`  
+
+---
+
+✅ _Stay tuned for Day 24 – We'll conduct a broader organizational risk assessment and see how OpenMRS fits into the hospital’s overall risk landscape._
+
+📌 #GRC #RiskManagement #Cybersecurity #RiskTolerance #HealthcareIT #NISTRMF #Leadership #Compliance #DataProtection #OpenMRS #100DayChallenge #InfoSec
