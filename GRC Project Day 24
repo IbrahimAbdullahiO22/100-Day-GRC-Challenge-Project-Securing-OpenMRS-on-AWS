@@ -1,0 +1,76 @@
+#  Day 24 – Big-Picture Risks: Enterprise Risk Assessment for MyClinic  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Topic Overview:
+
+Today, we elevated our perspective from individual systems to **enterprise-level risk**.  
+We explored how leaders in healthcare organizations like **MyClinic** conduct **organizational risk assessments** — identifying major threats that could disrupt not just IT, but the **entire mission of patient care**.
+
+> As a future GRC leader, I see this as moving from **fixing what’s broken** to **anticipating what could break us**.
+
+---
+
+##  What Is an Enterprise Risk Assessment?
+
+An **Enterprise Risk Assessment** evaluates risks across departments, operations, and technology to answer:
+
+- What could stop us from delivering safe, quality care?
+- Where do the most critical risks intersect?
+- How should we prioritize mitigation based on **impact** and **likelihood**?
+
+Per **NIST SP 800-37 (Task P-3)**, this is part of the **Prepare** step — a proactive process that aligns risk awareness with strategic planning and resource allocation.
+
+---
+
+##  Hands-On Exercise (Leadership View):
+
+### 1. **Clinical/Operational Risk:**
+> **Patient care interruption due to OpenMRS system downtime during clinical hours**
+
+- *Impact*: Clinicians may be unable to access allergy histories or medication records, resulting in care delays or medical errors.
+- *Why it’s enterprise-level*: This directly jeopardizes patient safety — the **core mission** of the hospital.
+
+### 2. **IT/Cybersecurity Risk:**
+> **Ransomware attack on the hospital network encrypts OpenMRS and other critical systems**
+
+- *Impact*: Operational shutdown, legal exposure under HIPAA, reputational damage.
+- *Why it’s enterprise-level*: Disrupts not just systems, but trust, compliance, and financial stability.
+
+---
+
+##  Reflection (Leadership Insight):
+
+Although these risks come from different angles, they are **deeply connected**:
+
+- A **technical failure** (ransomware or downtime) leads to **clinical consequences**.
+- A **clinical error** could expose the organization to **legal or compliance risk**.
+
+> As a leader, I see clearly: **IT and clinical teams cannot work in silos.** Enterprise risk demands cross-functional awareness and collaboration.
+
+Hospital executives need **one unified view** — not fragmented reports — to make informed decisions about risk, budget, and policy.
+
+---
+
+##  Strategic Takeaway:
+
+- **Enterprise Risk Management (ERM)** isn't about documenting every possible threat.  
+It’s about **surfacing the risks that matter most** to your mission — then assigning owners, making decisions, and allocating resources accordingly.
+
+- When risk managers, IT, clinical staff, and compliance officers all contribute to this big-picture view, we create **organizational resilience**, not just technical safeguards.
+
+---
+
+##  Optional Search Terms for Further Learning:
+
+- `NIST SP 800-37 P-3 organizational risk assessment`  
+- `Enterprise risk management healthcare examples`  
+- `Hospital risk assessment threats`  
+- `Business vs IT risk examples in healthcare`  
+
+---
+
+✅ _Up next for Day 25: We’ll translate these identified risks into a practical tool — the **Risk Register** — where risks are logged, tracked, and assigned for action._
+
+📌 #GRC #RiskManagement #Cybersecurity #HealthcareIT #NISTRMF #OpenMRS #EnterpriseRisk #Leadership #Compliance #InfoSec #100DayChallenge
