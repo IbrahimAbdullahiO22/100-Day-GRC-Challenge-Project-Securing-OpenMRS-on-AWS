@@ -1,0 +1,73 @@
+# 📅 Day 25 – Tracking Risks Made Easy: Meet the Risk Register  
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+## 🧭 Today’s Focus: From Risk Awareness to Risk Accountability
+
+Leadership isn’t just about seeing the risks — it’s about **systematically managing** them.  
+Today, I applied that mindset by building and documenting my first **Risk Register** entry as part of Task P-3 in the NIST RMF.
+
+> "What gets tracked, gets managed. What gets ignored, becomes a threat."
+
+---
+
+## 🧠 What Is a Risk Register?
+
+A **Risk Register** is a central place where all known risks are logged and reviewed.  
+It helps organizations move from reactive to **proactive** — identifying risk early, assigning ownership, and tracking mitigation.
+
+### Why It’s Critical for Leaders:
+- Aligns teams around shared risk awareness  
+- Creates **accountability** for each risk  
+- Enables informed decisions at the executive level  
+- Bridges **technical, clinical, and operational** risk views
+
+In short, it turns fear into **actionable strategy**.
+
+---
+
+## 🏥 Sample Risk Register Entry – MyClinic (OpenMRS Case)
+
+| Field              | Entry                                                                 |
+|--------------------|------------------------------------------------------------------------|
+| **Risk Name**      | Prolonged OpenMRS Downtime During Clinic Hours                        |
+| **Impact**         | **High** – Prevents access to patient records, risking care quality   |
+| **Likelihood**     | **Medium** – Single internet failure or cloud outage could trigger it |
+| **Mitigation**     | Secondary internet connection, offline chart exports, provider SLAs   |
+| **Owner**          | Director of IT Infrastructure                                          |
+| **Status**         | Contingency plan drafted; testing scheduled quarterly                 |
+
+This risk touches both **technology** and **patient care**, showing the **interdependence** that enterprise leaders must constantly evaluate.
+
+---
+
+## 🔍 Reflection as a Future GRC Leader
+
+Creating this entry forced me to:
+- Think **holistically** (not just about the system, but its business impact)
+- Identify a clear **owner** (who ensures follow-through)
+- Consider **ongoing visibility** (status updates, reviews, etc.)
+
+> "Good risk management isn't about eliminating all risk — it's about making risk **visible, owned, and understood.**"
+
+I see the **Risk Register** as a leadership tool — not a checkbox exercise.  
+It enables collaboration across departments and keeps risk conversations grounded in facts, not fear.
+
+---
+
+## 📚 Further Learning:
+
+- `Risk register template cybersecurity`  
+- `Risk register vs risk assessment`  
+- `NISTIR 8286 risk register ERM`  
+- `IT risk register example healthcare`
+
+---
+
+✅ **Tomorrow: Day 26 – Tailored Control Baselines**  
+We’ll learn how to fine-tune security controls for our system needs — adding what matters, removing what doesn’t. Leadership is about making **context-aware decisions**, and tailoring your controls is a powerful way to do that.
+
+---
+
+📌 #GRC #Cybersecurity #NISTRMF #RiskRegister #InfoSecLeadership #HealthcareIT #OpenMRS #100DayChallenge #Compliance #FERPAtoHIPAA #Governance #RiskOwnership
