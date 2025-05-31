@@ -1,0 +1,80 @@
+# 📅 Day 27 – Identifying Common Controls (Part 1)
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Leadership Insight: Reuse What’s Proven. Focus on What’s Critical.
+
+As leaders in governance, risk, and compliance (GRC), one of our core responsibilities is to enable **secure scalability**. That’s where **common controls** come in — standardized, reusable safeguards that apply across multiple systems.
+
+Today, I explored **Task P-5 of the NIST Risk Management Framework (RMF)**, which emphasizes identifying common controls early in the process to **maximize efficiency, reduce redundancy**, and promote **consistent risk treatment** across the enterprise.
+
+---
+
+##  What Are Common Controls?
+
+In simple terms, **common controls** are security or privacy protections that multiple systems can **inherit** rather than create from scratch.
+
+Instead of every project building its own walls, common controls let us build a **strong fortress once** and let many projects live securely inside it.
+
+###  Real-World Examples
+
+- **AWS Physical Security**: Instead of building server rooms with guards, alarms, and temperature controls, we inherit AWS’s world-class infrastructure protections.
+- **Single Sign-On (SSO)**: A hospital-wide identity platform used by all apps (EHR, billing, lab systems) to enforce unified authentication.
+- **Corporate VPN**: Centralized secure access that serves multiple internal systems.
+- **Organization-Wide Logging & Monitoring**: Enterprise SIEM tools like Splunk or AWS CloudTrail serve as common monitoring controls.
+
+---
+
+##  Case Study: MyClinic + OpenMRS (Cloud-Based EHR)
+
+In our scenario, MyClinic is deploying OpenMRS on AWS. Instead of building security from the ground up, the team smartly inherits:
+
+ **AWS Data Center Physical Security**  
+– Includes perimeter defense, badge access, surveillance, climate control, and backup power systems  
+→ _This is a powerful common control that OpenMRS doesn't need to replicate locally._
+
+ **AWS Network Infrastructure Protections**  
+– DDoS mitigation, firewalls, and secure routing  
+→ _Another area where we trust and document inherited controls._
+
+ **Shared Identity Management**  
+– If the hospital uses enterprise-wide SSO, OpenMRS simply plugs in.
+
+By identifying these controls, we reduce overhead and stay focused on tailoring only what’s **unique** to OpenMRS (e.g., role-based access within the EHR, clinical audit logs, patient consent workflows).
+
+---
+
+##  Hands-On Exercise: My Common Control Pick
+
+**Inheritable Control**: _AWS Physical Infrastructure Security_  
+**Why It Matters**:  
+> “This control removes the burden of physical safeguards from the MyClinic IT team. It ensures compliance with standards like SOC 2, ISO 27001, and HIPAA physical security, allowing the OpenMRS project team to focus on software-layer risks.”
+
+---
+
+##  Leadership Reflection
+
+Recognizing and leveraging **common controls** is a hallmark of **mature GRC leadership**. It ensures:
+
+-  **Consistency** across systems
+-  **Faster implementation** of risk strategies
+-  **Smarter resource allocation**
+-  **Clearer audit trails** for inherited responsibilities
+
+>  As a GRC leader, I don't just build controls. I orchestrate a **control ecosystem** where shared protections strengthen every system under the organization’s umbrella.
+
+---
+
+##  Further Exploration
+
+- `"NIST SP 800-37 Task P-5 Common Controls"`
+- `"AWS inherited security controls"`
+- `"Common vs System-Specific Controls"`
+- `"Cloud security shared responsibility model"`
+
+---
+
+📌 #GRC #Cybersecurity #NISTRMF #CommonControls #RiskManagement #AWS #HealthcareSecurity #OpenMRS #InfoSecLeadership #Compliance #CloudSecurity #100DayChallenge #StrategicThinking #InheritControls #FERPAtoHIPAA
+
+ _Tomorrow (Day 28):_ We’ll go deeper into enterprise-level common controls — like centralized Security Operations Centers (SOCs) and AWS compliance programs — and see how they support holistic GRC efforts.
