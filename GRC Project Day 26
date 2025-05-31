@@ -1,0 +1,78 @@
+# 📅 Day 26 – Custom-Fitting Your Security Controls (Tailored Baselines)
+_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+
+---
+
+##  Leadership Focus: Smart Security = Relevant Security
+
+Today, I adopted a powerful concept in strategic risk management — tailoring security control baselines.  
+In the world of GRC, it’s not just about checking boxes — it’s about choosing **the right boxes** to check.
+
+Security is not one-size-fits-all. As a future GRC leader in healthcare IT, I’m learning how to refine and optimize controls in ways that support both **security** and **operational agility**.
+
+---
+
+##  What Are Tailored Security Baselines?
+
+Security control baselines are predefined sets of safeguards recommended for systems based on their impact level (e.g., Low, Moderate, High). For example, a Moderate baseline in NIST SP 800-53 might require ~300 controls.
+
+**Tailoring** means:
+-  **Removing** non-applicable controls
+-  **Adding** necessary controls unique to your environment
+-  **Justifying** each decision based on actual risk
+
+It's like tailoring a suit for your system — fit it to the mission and environment, not the other way around.
+
+---
+
+##  Case Study: MyClinic + OpenMRS (Cloud Deployment on AWS)
+
+### ✔ Tailoring Example – Dropping Irrelevant Controls
+
+**Control to Tailor Out**: Physical access controls (PE-family, e.g., CCTV in server room)
+
+**Justification**:  
+OpenMRS is hosted in the AWS cloud. MyClinic does not own or manage physical data centers.  
+Physical security is **inherited from AWS** as part of the shared responsibility model.
+
+📌 _Lesson_: Smart tailoring avoids wasted resources on controls that don’t apply and focuses on what actually protects the system.
+
+---
+
+##  Reflection: The Leadership Balancing Act
+
+As a future GRC strategist, I see tailoring as an exercise in **disciplined customization**.  
+Done right, it creates **clarity**, **efficiency**, and **risk-aligned protection**.
+
+But tailoring comes with responsibility:
+- Every dropped control must be justified
+- Risks must still be **fully mitigated**, even if addressed differently
+- Decisions must stand up to **audit scrutiny** and leadership review
+
+> As a leader, tailoring isn’t about doing less.  
+> It’s about doing what **matters most**, with clarity and accountability.
+
+---
+
+##  Quick Practice Entry
+
+| Control Area                  | Action               | Justification                                                                 |
+|------------------------------|----------------------|-------------------------------------------------------------------------------|
+| Physical Server Protection   | Tailor OUT           | OpenMRS is cloud-hosted; physical security is inherited from AWS              |
+| Removable Media Controls     | Tailor OUT           | Organizational policy prohibits USB or tape backups in the OpenMRS workflow   |
+| Volunteer Staff Training     | Tailor IN (Add)      | Volunteers must also receive security briefings due to data access exposure   |
+
+---
+
+##  Further Exploration
+
+- `Tailored security control baseline NIST`
+- `NIST SP 800-53B tailoring guidance`
+- `Example of tailoring for AWS cloud deployments`
+- `HIPAA vs NIST 800-53 baseline control mapping`
+
+---
+
+📌 #GRC #Cybersecurity #NISTRMF #TailoredBaseline #HealthcareSecurity #OpenMRS #CloudSecurity #AWS #FERPAtoHIPAA #InfoSecLeadership #100DayChallenge #RiskManagement #Compliance
+
+ _Tomorrow (Day 27):_ We’ll explore **Common Controls** — powerful tools for scaling risk management across an organization.
