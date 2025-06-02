@@ -1,0 +1,75 @@
+# 📅 Day 30 – Planning a Continuous Monitoring Strategy (Task P-7)
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+##  GRC Leadership Insight: Security Isn’t Static – It’s Ongoing
+
+Today, I tackled **Task P-7** of the NIST Risk Management Framework: building a **continuous monitoring strategy** for OpenMRS – our cloud-based electronic medical record system.
+
+One-time security checks aren’t enough. In today’s threat landscape, vigilance must be **constant, structured, and intelligent**.
+
+---
+
+##  What Is Continuous Monitoring?
+
+According to **NIST SP 800-137**, continuous monitoring means maintaining ongoing awareness of security posture to support risk-informed decisions. In practice, it includes:
+
+-  **Regular vulnerability scans**
+-  **Security log collection and alerting**
+-  **Threat detection tools (e.g., GuardDuty)**
+-  **Periodic access reviews and configuration audits**
+-  **Automated anomaly detection**
+
+It's about **transitioning from static checklists to dynamic, real-time protection**.
+
+---
+
+##  OpenMRS: A High-Impact System Deserving Ongoing Oversight
+
+As a GRC leader planning the long-term defense of OpenMRS in AWS, here's what I’d prioritize in our monitoring playbook:
+
+** User Login Behavior Monitoring**  
+> _"I’d implement a SIEM solution to flag unusual login patterns — like repeated failures or access outside business hours — as early indicators of account compromise."_  
+
+** Monthly Vulnerability Scanning**  
+> _"Run monthly authenticated Nessus scans against OpenMRS workloads to detect emerging CVEs, patch gaps, or insecure configs before attackers find them."_  
+
+** Backup Validation Checks**  
+> _"Automate testing to ensure that encrypted backups run nightly and can be restored cleanly."_  
+
+**🔧 Log Review Automation via AWS CloudWatch & GuardDuty**  
+> _"Aggregate OpenMRS logs using CloudWatch and activate GuardDuty to detect port scans, brute force attempts, and misconfigurations across AWS resources."_  
+
+---
+
+## 🎯 Why This Matters
+
+Continuous monitoring is how we go from **security by hope** to **security by design and discipline**.
+
+> “As GRC professionals, our job isn’t just to build secure systems — it’s to ensure they **stay secure** in an evolving threat landscape.”
+
+Proactive monitoring brings confidence to leadership, assurance to clinicians, and protection to patients.
+
+---
+
+##  Strategic Reflections
+
+ Having a robust monitoring strategy in place transforms our security posture from reactive to predictive.
+
+ Challenge: Avoid alert fatigue. Tune thresholds, group alerts, and assign clear ownership for follow-up.
+
+ Leadership Takeaway: **Continuous monitoring is a leadership commitment** — not a technical add-on.
+
+---
+
+##  For Further Learning
+
+- `"NIST SP 800-137 continuous monitoring strategy"`
+- `"AWS CloudWatch and GuardDuty best practices"`
+- `"Healthcare cybersecurity log review templates"`
+- `"SIEM tuning for alert fatigue reduction"`
+
+---
+
+📌 #Day30 #ContinuousMonitoring #GRCLeadership #NISTRMF #SP800137 #OpenMRS #CybersecurityStrategy #SIEM #AWSGuardDuty #CloudSecurity #LogMonitoring #RiskManagement #HealthcareIT #100DaysOfGRC
