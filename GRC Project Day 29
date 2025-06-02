@@ -3,21 +3,21 @@ _100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
 
 ---
 
-## 🧭 Leadership Insight: Prioritization Is Power in GRC
+##  Leadership Insight: Prioritization Is Power in GRC
 
 Not all systems carry the same weight — and effective cybersecurity leadership means knowing **where to focus first**.
 
 Today, I explored **Task P-6 of the NIST RMF** and FIPS 199 — the foundation for categorizing information systems by impact level across:
 
-- 🔐 **Confidentiality**
-- 🧮 **Integrity**
-- ⚙️ **Availability**
+-  **Confidentiality**
+-  **Integrity**
+-  **Availability**
 
 This step ensures that systems like OpenMRS, which handle **sensitive patient data**, are given the heightened security attention and resources they rightfully deserve.
 
 ---
 
-## 📘 FIPS 199 – Security Impact Categories
+##  FIPS 199 – Security Impact Categories
 
 | Impact Level | Description                                                                 |
 |--------------|-----------------------------------------------------------------------------|
@@ -25,7 +25,7 @@ This step ensures that systems like OpenMRS, which handle **sensitive patient da
 | **Moderate** | Serious adverse effect (harm to operations, finances, or privacy)           |
 | **High**     | Severe or catastrophic impact (loss of life, critical missions, legal harm) |
 
-### 🏥 Case Study: OpenMRS (Electronic Medical Records System)
+###  Case Study: OpenMRS (Electronic Medical Records System)
 
 Here’s how I evaluated the impact levels for OpenMRS in a clinical environment:
 
@@ -35,11 +35,11 @@ Here’s how I evaluated the impact levels for OpenMRS in a clinical environment
 | **Integrity**      | High         | Tampering with records could lead to **incorrect treatments or diagnoses**                     |
 | **Availability**   | Moderate–High| Downtime could **delay care**, especially in under-resourced clinics without paper backups     |
 
-> ✅ As a GRC leader, I categorize OpenMRS as a **High-Impact System**, demanding **rigorous security controls, increased oversight, and continuous monitoring**.
+>  As a GRC leader, I categorize OpenMRS as a **High-Impact System**, demanding **rigorous security controls, increased oversight, and continuous monitoring**.
 
 ---
 
-## 🎯 Why This Matters
+##  Why This Matters
 
 This step of prioritizing systems by impact helps answer key leadership questions:
 
@@ -51,14 +51,14 @@ This step of prioritizing systems by impact helps answer key leadership question
 
 ---
 
-## ✍️ Hands-On Application
+##  Hands-On Application
 
 **Exercise Response**:
 > _“I rate OpenMRS’s confidentiality as **High**, because unauthorized disclosure of patient health data could cause significant harm to individuals, breach public trust, and result in regulatory violations.”_
 
 ---
 
-## 🧠 Reflection as a GRC Professional
+##  Reflection as a GRC Professional
 
 Impact-level thinking trains your mindset to:
 
@@ -72,7 +72,7 @@ It’s not just theory — it’s how effective security programs scale and stay
 
 ---
 
-## 🔎 Further Exploration
+##  Further Exploration
 
 - `"FIPS 199 impact levels explained"`
 - `"System security categorization examples healthcare"`
