@@ -1,0 +1,79 @@
+# 📅 Day 33 – What Do We Have? OpenMRS Asset Inventory Time  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+## 🔐 GRC Leadership Insight: If You Don't Know What You Have, You Can't Protect It
+
+Today’s lesson reinforced a foundational truth in Governance, Risk, and Compliance: **Asset visibility is everything.**  
+
+In Task P-10 of the NIST RMF, we zero in on **asset identification** — the critical step before any real risk management can begin. You can’t classify, monitor, or protect what you haven’t mapped. For a system like **OpenMRS**, which plays a vital role in healthcare delivery in low-resource settings, that’s non-negotiable.
+
+---
+
+## 🧾 My High-Level Asset Inventory for OpenMRS in the Cloud
+
+As a security strategist and future GRC leader in healthcare, here’s how I approached our OpenMRS inventory today:
+
+1. **☁️ Cloud Server (Ubuntu VM on AWS EC2)**  
+   - Primary hosting environment for OpenMRS application  
+   - Needs hardening, continuous patching, and access control  
+
+2. **🗃️ OpenMRS MySQL Database**  
+   - Stores all patient records, forms, and system configurations  
+   - Critical confidentiality and integrity asset  
+
+3. **📦 Backups on AWS S3 (Encrypted)**  
+   - Full nightly snapshots of the OpenMRS DB and app  
+   - Secured with IAM roles and object encryption  
+
+4. **🧠 OpenMRS Core Application (v2.x with custom modules)**  
+   - Includes APIs, modules, and UI components  
+   - Requires version control, patch tracking, and code review  
+
+5. **💻 Clinic Workstations (Web Browser Access to OpenMRS)**  
+   - Doctor and nurse access points  
+   - These endpoints can become the weakest link — require antivirus, MFA, browser hardening  
+
+---
+
+## 💡 Why This Step Matters
+
+Asset inventory isn’t just about documentation — it’s about **setting the stage for prioritization, control selection, monitoring, and compliance**.
+
+If even one of these components is forgotten (e.g., a neglected backup on a contractor’s drive), it becomes a blind spot — and **you can’t defend a blind spot**.
+
+In my leadership path toward GRC maturity, I’m adopting **CIS Control 1** as a non-negotiable baseline:  
+> “Actively manage all hardware and software assets... so only authorized devices and software are given access.”  
+
+---
+
+## 🧠 Reflection: Asset Confidence Check
+
+The asset I feel least confident about?  
+**Clinic endpoints.** Why? Because user behavior introduces unpredictable risk. From phishing to unpatched browsers, they require constant education, monitoring, and policy enforcement.  
+
+🔍 **Actionable Next Step**:  
+Create endpoint baseline configurations, enforce web access via VPN, and implement browser security policies organization-wide.
+
+---
+
+## Leadership Takeaway
+
+Building GRC maturity starts here — **with visibility**.  
+As I guide healthcare-focused organizations toward resilience, my approach is clear: **inventory first, then secure smartly.**
+
+This exercise is not a checkbox. It’s a habit.
+
+---
+
+## 🔗 Relevant Standards & Resources
+
+- `NIST SP 800-37 Task P-10`
+- `CIS Control 1 – Inventory and Control of Enterprise Assets`
+- `OpenMRS Architecture Overview`
+- `AWS Trusted Advisor & Config for Asset Inventory`
+
+---
+
+📌 #Day33 #NISTRMF #AssetInventory #OpenMRS #GRCLeadership #CISControls #HealthcareSecurity #CyberGovernance #100DaysOfGRC #CloudSecurity #VisibilityFirst
