@@ -1,0 +1,73 @@
+# 📅 Day 32 – Who’s Who in OpenMRS? Identifying Stakeholders (Task P-9)
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+##  Leadership Insight: Security Starts with People
+
+In today’s Risk Management Framework focus (Task P-9), I shifted from technical assets to **human assets** — because **no system exists in isolation from its people**. As a cybersecurity leader, I know this: to secure a system like OpenMRS effectively, we must first know **who we’re securing it for, who’s running it, and who’s accountable for its outcomes**.
+
+That means mapping out stakeholders — and more importantly, understanding their priorities.
+
+---
+
+## 🧩 Stakeholder Mapping for OpenMRS
+
+Here’s my leadership-level breakdown of critical stakeholder roles for OpenMRS:
+
+- ** Developers & Implementers**  
+  *Focus*: Functionality, code stability, and integrations  
+  *Why they matter*: They build the foundation; security must be embedded from day one.
+
+- **🩺 Clinicians (Doctors/Nurses)**  
+  *Focus*: Ease of use, speed, and data availability  
+  *Why they matter*: They're the frontline users; poor UX or downtime equals care disruption.
+
+- **🛠️ IT Administrators**  
+  *Focus*: System uptime, patching, backups, and support  
+  *Why they matter*: They keep the system alive; their insights influence operational risk.
+
+- **📊 Executives & Compliance Officers**  
+  *Focus*: Strategic value, risk exposure, cost-benefit, legal compliance  
+  *Why they matter*: They approve funding and policy — you need their buy-in to implement change.
+
+- **🌍 Community & Technology Partners (e.g., AWS, OpenMRS community)**  
+  *Focus*: Ecosystem growth, infrastructure security, patch lifecycle  
+  *Why they matter*: OpenMRS doesn’t exist in a silo. These contributors shape its evolution.
+
+---
+
+## 💡 Why This Matters for GRC
+
+Every role represents **a different risk perspective**. Ignoring any of them means introducing blind spots in your threat model.  
+As a GRC professional and future leader in digital health security, I make it a priority to **translate technical controls into stakeholder value**.
+
+For example:
+- **Clinician feedback** → Usability flaws → May expose data to accidental disclosure  
+- **Executive risk appetite** → Defines how strict or lean we are on control selection  
+- **IT support gaps** → Signal weak monitoring or delayed incident response  
+
+Understanding these interconnections helps me **proactively shape policies, not just reactively defend systems**.
+
+---
+
+## ✍️ My Stakeholder Engagement Plan
+
+- **Action**: Create a stakeholder matrix for OpenMRS, including concerns and communication preferences  
+- **Priority**: Increase visibility and voice of end users (clinicians), often overlooked during control selection  
+- **Leadership Lesson**: A successful GRC strategy is not just technical — it’s **relational and inclusive**.
+
+---
+
+## 🔎 Reference Topics
+
+- `NIST SP 800-37 Task P-9`
+- `OpenMRS stakeholder engagement`
+- `Stakeholder analysis in cybersecurity planning`
+- `People-centric risk governance`
+
+---
+
+📌 #Day32 #NISTRMF #StakeholderMapping #OpenMRS #GRCLeadership #CyberGovernance #100DaysOfGRC #HealthcareSecurity #DigitalHealth #RiskManagement #InfoSecStrategy
+```
+
