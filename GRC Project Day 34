@@ -1,0 +1,91 @@
+# 📅 Day 34 – Drawing the Line: Defining Your OpenMRS System Boundary  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+## 🧭 GRC Leadership Insight: If You Don’t Define the Scope, Risk Will Define It for You
+
+Today’s task in the RMF journey (Task P-11) focuses on one of the most strategic decisions we make in governance and risk: **drawing the system boundary**.
+
+We’re not just listing parts of a system — we’re **clarifying ownership, accountability, and control**. A well-defined boundary helps us determine:
+- What’s inside our protection perimeter,
+- What interfaces with us but isn’t owned by us,
+- And what falls outside our responsibility.
+
+---
+
+## 🔍 My OpenMRS System Boundary (Cloud Deployment – Health Sector Context)
+
+As I lead this cloud-based OpenMRS deployment, here’s how I scoped the system:
+
+### ✅ Inside the Boundary (Owned/Controlled):
+1. **OpenMRS Application (Core + Custom Modules)**  
+   - Running on a hardened Ubuntu VM (AWS EC2)  
+   - Source-controlled and maintained internally
+
+2. **MySQL Database (Patient Records)**  
+   - Stores all structured health data and configuration  
+   - Encrypted at rest and in transit
+
+3. **Encrypted Backups (AWS S3, Versioned)**  
+   - Full and incremental snapshots  
+   - IAM-restricted access policies
+
+4. **Cloud Infrastructure Config (AWS Security Groups, IAM, Load Balancer)**  
+   - Defined in Terraform; reviewed quarterly  
+   - VPC segmentation applied
+
+5. **Admin & Support Workstations (Clinical Staff Laptops/Desktops)**  
+   - Device compliance enforced (AV, disk encryption, MFA)
+   - Domain-joined and monitored via endpoint security tools
+
+---
+
+### 🟡 Connected but Outside the Boundary:
+1. **3rd-Party Laboratory System**  
+   - API integration via secure REST endpoints  
+   - Governed by MOU; data in-transit only
+
+2. **Cloud Provider Physical Infrastructure (AWS Data Center Security)**  
+   - Inherited controls via AWS Shared Responsibility Model  
+   - Audited via SOC 2, ISO 27001
+
+3. **Email Gateway (External Notification System)**  
+   - Uses secure SMTP relay service  
+   - Boundary ends at outbound traffic point
+
+---
+
+## 🧠 Reflection as a Security Leader
+
+Defining the boundary forced me to think like a **risk architect**. Without this line in the sand, confusion would reign:
+- Who patches the system?
+- Who encrypts the backups?
+- Who audits access?
+
+Answer: **Whoever owns the asset inside the boundary.**
+
+💡 _Leadership Insight:_  
+> "Scope defines responsibility. Responsibility defines action. Action defines resilience."
+
+---
+
+## 🧰 Next Action
+
+Now that the boundary is defined, I’ll:
+- Update our system security plan (SSP)
+- Align our control selection (FIPS 199 moderate baseline)
+- Coordinate with external stakeholders for interconnection agreements
+
+---
+
+## 🔗 Relevant Standards & References
+
+- `NIST SP 800-37, Task P-11: Define System Boundary`
+- `NIST SP 800-18: System Security Plan (SSP)`
+- `AWS Shared Responsibility Model`
+- `CIS Controls 1 & 2: Inventory & Control of Assets`
+
+---
+
+📌 #Day34 #NISTRMF #SystemBoundary #OpenMRS #GRCLeadership #SecurityArchitecture #SharedResponsibility #CloudGovernance #100DaysOfGRC #CyberRiskManagement
