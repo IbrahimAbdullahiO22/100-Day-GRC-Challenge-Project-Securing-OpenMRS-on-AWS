@@ -1,0 +1,66 @@
+# 📅 Day 35 – Classifying the Lifeblood of OpenMRS: Information Types  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+## 🧠 GRC Leadership Insight: You Can’t Secure What You Haven’t Classified
+
+As I lead this project forward, today’s focus sharpened my mindset around **data-centric risk governance**. In healthcare systems like OpenMRS, data is more than digital—it’s deeply human. It represents lives, care decisions, medical histories, and futures. That’s why **Task P-12** of NIST RMF is a critical checkpoint: **identifying and categorizing the information types** within our system.
+
+---
+
+## 💡 Why This Matters
+
+Classifying data isn’t just paperwork — it drives protection. It helps us:
+
+- Understand **what** we’re protecting
+- Determine **how sensitive** the data is
+- Decide **which controls** are appropriate (encryption, access, retention)
+- Prepare for **impact analysis** under NIST SP 800-60
+
+---
+
+## 🧾 My OpenMRS Info-Type Inventory (Leadership Perspective)
+
+| Information Type                  | Description                                                                 | Sensitivity  | Risk Consideration                                      |
+|----------------------------------|-----------------------------------------------------------------------------|--------------|----------------------------------------------------------|
+| **1. Patient Personal Information**  | Names, MRNs, contact details, IDs (PII & PHI)                                  | High         | Identity theft, privacy violation                       |
+| **2. Clinical Health Data**         | Diagnoses, medications, lab results, visit notes (core PHI)                   | High         | Misdiagnosis risk, legal exposure, regulatory fines     |
+| **3. User Account & Audit Info**    | Usernames, roles, activity logs, privileges                                  | Medium-High  | Insider threat, privilege abuse, system impersonation   |
+| **4. Billing/Insurance Records**    | Payment details, codes, insurance numbers                                    | Medium       | Fraud risk, regulatory compliance (PCI, HIPAA)          |
+| **5. Metadata & Config Files**      | Drug formularies, system settings, coded lists                               | Low-Medium   | Operational integrity issues if tampered                |
+| **6. Analytics/De-Identified Reports** | Trend reports, population metrics                                            | Low-High*    | Low risk unless re-identifiable                         |
+
+> 🔒 *Note: Even aggregated data must be evaluated for re-identification risk when cross-referenced with other datasets.*
+
+---
+
+## 🧠 Reflection as a Future CISO
+
+This exercise reminded me that **information governance isn’t static** — it must evolve with use cases. A report may start as harmless, but gain risk if it includes sensitive flags or rare conditions.
+
+Every data type has a lifecycle, and **risk follows data** wherever it flows. Classifying upfront sets the tone for how we manage encryption, access control, and audit readiness across the board.
+
+---
+
+## 🧰 Next Action Steps
+
+As part of building our OpenMRS Security Strategy, I’ll now:
+
+- Tag data types with impact ratings per NIST SP 800-60
+- Ensure PHI and clinical data are encrypted in storage and transit
+- Limit access to sensitive records using RBAC
+- Build in alerts around unusual access to high-risk data types
+
+---
+
+## 🔗 Standards & References
+
+- `NIST SP 800-37 Task P-12: Identify Information Types`
+- `NIST SP 800-60 Volume II: Map of Data to Security Categories`
+- `HIPAA Security Rule (45 CFR Part 164)`
+- `CIS Control 3: Data Protection`
+
+---
+
+📌 #Day35 #InformationGovernance #DataClassification #OpenMRS #HIPAA #NISTRMF #PHIProtection #CyberLeadership #HealthcareSecurity #100DaysOfGRC #IbrahimAbdullahi
