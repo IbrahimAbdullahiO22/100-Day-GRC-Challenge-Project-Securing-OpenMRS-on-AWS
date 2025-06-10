@@ -1,0 +1,81 @@
+# 📅 Day 36 – The Life of a Patient Record: Understanding the Information Life Cycle in OpenMRS  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+## 🧭 Leading with Data Integrity from Creation to Deletion
+
+Every record has a story.
+
+Today, I guided our GRC journey through one of the most overlooked yet vital elements in healthcare IT governance — the **Information Life Cycle**.
+
+In OpenMRS, a patient’s record is more than just data — it represents care, privacy, trust, and safety. From the moment a record is created to the day it is safely disposed, it must be **nurtured, protected, and governed**. This is where strategy meets stewardship.
+
+---
+
+## 📖 A Patient Record's Journey (OpenMRS Cloud Deployment)
+
+Let me walk you through the path of data — not as an admin, but as a leader mapping risk with purpose:
+
+### 1. **Creation (Collection)**
+A nurse registers a new patient. Vital information is entered into OpenMRS: name, contact, date of birth, initial medical history.  
+🔐 **Leadership Lens:** Are we collecting only what’s necessary? Is data encrypted in transit? Are staff trained on input security?
+
+---
+
+### 2. **Use & Update (Maintenance)**
+Doctors update diagnoses, nurses record prescriptions, lab results come in — the record evolves.  
+📊 **Leadership Lens:** Are access controls role-based? Is every access logged? Are APIs secure when sharing with external systems?
+
+---
+
+### 3. **Storage (Retention)**
+Records remain in the database for years. Daily backups ensure resilience.  
+🗄️ **Leadership Lens:** Are backups encrypted? Is there a retention policy in place? Do we test data restoration regularly?
+
+---
+
+### 4. **Archival (Long-Term Storage)**
+The patient hasn’t visited in 10+ years. The record is archived.  
+📦 **Leadership Lens:** Is archived data segregated and protected? Are we treating “forgotten” data with the same rigor?
+
+---
+
+### 5. **Disposal (Deletion)**
+Records reach the end of their lifecycle. The law requires deletion.  
+🔥 **Leadership Lens:** Are we following NIST SP 800-53 MP-6 for secure data destruction? Are cloud backups purged too?
+
+---
+
+## 🔐 Why This Matters
+
+Data doesn’t just exist. It **moves**, it **grows**, it **rests**, and eventually, it **dies**.
+
+As a GRC leader, I recognize that **information governance isn't just about technology — it's about timing, training, and trust**. Most breaches occur at the edges — when no one’s looking at the archive, or assuming deletion means irretrievable.
+
+Understanding the life cycle ensures we apply the right protections at the right time. We plan for **cradle-to-grave** security.  
+
+> Because in healthcare, failure to manage a record’s journey is more than a technical error — it’s a breach of care.
+
+---
+
+## 💬 Reflection:  
+Where does your organization’s data life cycle fall short?  
+For many, it’s the end. Disposal is an afterthought. But poor sanitization is a backdoor waiting to be opened.  
+
+**My next action as a GRC practitioner:**  
+- Implement quarterly data lifecycle audits  
+- Review our backup destruction policy  
+- Deliver staff training on secure data deletion  
+
+---
+
+## 📚 References  
+- `NIST SP 800-53 (Rev. 5) MP-6: Media Sanitization`  
+- `HIPAA Data Retention Guidelines`  
+- `Information Lifecycle Management in Healthcare Systems`  
+- `OpenMRS Data Flow Best Practices`
+
+---
+
+📌 #Day36 #InformationLifecycle #OpenMRS #GRCLeadership #CyberRisk #DataGovernance #HIPAA #NISTSP80053 #HealthIT #100DaysOfGRC #IbrahimAbdullahi
