@@ -1,0 +1,119 @@
+# 📅 Day 37 – Risk Check-Up: Identifying Threats & Vulnerabilities in OpenMRS  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+##  Diagnosing Risk Like a Pro
+
+A few months ago, I sat in a small community clinic shadowing an IT technician. As a nurse struggled to log into OpenMRS, the admin casually shared passwords aloud over her shoulder. No MFA, no session timeout, and a default admin username still active.
+
+It wasn’t malicious — it was a system grown out of necessity, not design.
+
+That memory stayed with me.
+
+Today, as part of our GRC journey, we stepped into one of the most critical responsibilities in cybersecurity leadership: **Risk Assessment** — the moment where we ask:  
+**"What could go wrong?"**  
+**"Where are we vulnerable?"**
+
+---
+
+##  Objectives for Today
+
+- Define what a system risk assessment is  
+- List threats that could harm OpenMRS (external, internal, accidental)  
+- Identify vulnerabilities OpenMRS may have  
+- Distinguish threats from vulnerabilities with clarity  
+- Strengthen risk awareness in cloud-based healthcare systems  
+
+---
+
+##  What Is a Risk Assessment?
+
+Risk assessment is the **diagnostic exam** of cybersecurity. Like a doctor detecting early symptoms before they become life-threatening, GRC leaders identify threats (the causes of harm) and vulnerabilities (the weak spots where that harm can enter).  
+
+ **Threat = the danger**  
+ **Vulnerability = the opening**  
+ **Risk = when those two meet**
+
+---
+
+##  Case Study: OpenMRS in AWS Cloud (MyClinic Scenario)
+
+###  External Threats
+- **Hackers** scanning internet-facing portals for SQL injection flaws  
+- **Ransomware** attempting to encrypt patient databases  
+- **Malware** infecting endpoints that access OpenMRS  
+
+###  Internal Threats
+- **Disgruntled staff** accessing records they shouldn’t  
+- **Well-meaning staff** misconfiguring access controls  
+- **Phishing victims** clicking malicious links  
+
+###  Environmental/Natural Threats
+- **Power outages** in local clinics (if using hybrid deployments)  
+- **Cloud service disruptions**  
+- **Data corruption** from system bugs or failed patches  
+
+---
+
+##  Vulnerabilities in the System
+
+-  **Unpatched OpenMRS version** – known exploits remain open  
+-  **Misconfigured AWS S3 backups** – publicly accessible!  
+-  **Default credentials** still active on admin accounts  
+-  **Lack of encryption** for data at rest or in motion  
+-  **No staff security training** – high social engineering risk  
+-  **No regular backups or integrity checks**  
+-  **Improper session management** – risk of session hijacking  
+
+---
+
+##  My Leadership Approach
+
+Today, I didn’t just brainstorm — I assumed the mindset of a **CISO diagnosing a live system**. I drafted a two-column matrix:
+
+| Threats                         | Vulnerabilities                            |
+|--------------------------------|--------------------------------------------|
+| External hackers               | Unpatched OpenMRS codebase                 |
+| Insider data misuse            | No role-based access control enforcement   |
+| Power outage                   | No regional data replication               |
+| Phishing campaign              | No staff awareness or reporting procedure  |
+| Malware/ransomware             | No endpoint protection on clinic systems   |
+
+Each pairing tells a story of **impact + opportunity**, and that’s where real risk lives.
+
+---
+
+##  Reflection
+
+**The threat that keeps me up at night?** Insider misuse.
+
+Why? Because insiders have context. They don’t need to “hack” their way in — they already have the keys. Whether out of curiosity, negligence, or intent, an insider accessing or leaking PHI can undermine years of security work in seconds.
+
+---
+
+##  GRC Wisdom of the Day
+
+> **“You can’t patch human intent — but you can build controls that assume fallibility.”**
+
+We lead best not when we trust blindly, but when we design systems that *respect the reality of error*.
+
+---
+
+##  What’s Next?
+
+Tomorrow, we’ll take this list and analyze it. Not all threats are equal. Some are likely but minor; others are rare but catastrophic. We’ll map **likelihood vs. impact**, then prioritize mitigation.  
+
+It’s risk triage time. 
+
+---
+
+## 🔍 Search Topics  
+- “Threat modeling healthcare IT systems”  
+- “OpenMRS known vulnerabilities”  
+- “NIST SP 800-30 Risk Assessment Framework”  
+- “Common EHR system misconfigurations”
+
+---
+
+📌 #Day37 #RiskAssessment #GRCLeadership #OpenMRS #CyberRisk #HealthcareSecurity #NIST #ThreatModeling #IbrahimAbdullahi #100DaysOfGRC
