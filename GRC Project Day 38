@@ -1,0 +1,95 @@
+# 📅 Day 38 – Analyzing OpenMRS Risks & What To Do About Them  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+## ⚖️ Turning Fear into Focus: Prioritizing Risks Like a GRC Leader
+
+Last year, I was called into a meeting at a small health clinic where their EHR had crashed — again. Their IT guy said the backups were “probably fine.” When I asked how often they were tested, the response was silence.
+
+That moment stuck with me. Risk isn’t just about identifying what *could* go wrong — it’s about preparing for *when* it will.
+
+Today, we took our threat and vulnerability list from yesterday and moved into **risk analysis**. The goal? **Sort the chaos. Prioritize what matters. Act with purpose.**
+
+---
+
+## 🎯 Today’s Objectives
+
+- Assign **likelihood and impact** levels to key OpenMRS risk scenarios  
+- Prioritize those risks into High, Medium, Low categories  
+- Choose effective **risk response strategies** (Mitigate, Transfer, Accept, Avoid)  
+- Begin crafting a basic **Risk Register** for OpenMRS  
+
+---
+
+##  Risk Analysis in Action
+
+In cybersecurity and GRC, we don’t fight every battle — we fight the *right* battles. That starts with understanding two key dimensions of risk:
+
+- **Likelihood** = How likely is this event to occur?  
+- **Impact** = How damaging would it be if it did?
+
+By assessing both, we map risk in a matrix — visualizing what needs urgent attention and what can be monitored.
+
+Let’s walk through a few scenarios from our OpenMRS deployment at “MyClinic”:
+
+---
+
+## 📊 Sample Risk Register (OpenMRS in AWS Cloud)
+
+| Risk Scenario | Likelihood | Impact | Risk Level | Response | Notes |
+|---------------|------------|--------|------------|----------|-------|
+|  **Unpatched OpenMRS vulnerability exploited by hacker** | High | High | **High** | **Mitigate** | Patch system, enable WAF, monitor CVEs weekly |
+|  **Insider misuse of patient data** | Medium | High | **High** | **Mitigate + Monitor** | Role-based access, audit logs, awareness training |
+|  **S3 backup bucket publicly exposed** | Medium | High | **High** | **Mitigate** | Enforce bucket policies, encryption at rest |
+|  **Power outage at AWS region** | Low | Medium | **Transfer + Accept** | AWS SLAs cover most scenarios, accept rare edge cases |
+|  **Staff falls for phishing attack** | High | Medium | **Medium** | **Mitigate** | Security awareness program, phishing simulation |
+|  **Legacy patient records never purged** | High | Low | **Medium** | **Mitigate + Plan** | Define retention policies, automate archival/disposal |
+
+---
+
+##  Why This Matters
+
+Leadership in GRC isn’t about solving everything — it’s about **deciding what to solve first**, aligning with mission impact, and defending your priorities when resource constraints bite.
+
+The outdated OpenMRS version, for instance, represents a ticking time bomb. It’s not enough to “plan” to patch it — we mitigate that risk now. On the other hand, natural outages at AWS? We **transfer** that risk through AWS infrastructure and accept the residual minimal risk that comes with it.
+
+---
+
+## 💬 Reflection: What Would You Accept?
+
+Every organization has a **risk tolerance**. Some clinics might accept downtime once a year. Others won’t tolerate a single leaked record. For me, I’d be willing to accept:
+
+> “A rare, short-term power outage if AWS’s regional failover still protects patient data.”
+
+What I wouldn’t accept?  
+> “Even one patient’s data being exposed due to preventable misconfigurations.”
+
+This mindset defines your leadership posture.
+
+---
+
+## 📌 Final Thought
+
+A strong GRC leader doesn’t wait for audits or breaches to act. We **anticipate. Prioritize. Respond.** Risk will always be present — but chaos doesn’t have to be.
+
+---
+
+## 🧭 What’s Next?
+
+Tomorrow we step into the **rules of the road**: compliance requirements. You’ve heard of HIPAA, GDPR, NIST, maybe even ISO 27001. We’ll break down what regulations and standards apply to OpenMRS in a cloud healthcare setting, and how to weave those into our controls and policies.
+
+Until then, keep assessing and documenting. Risks ignored are vulnerabilities accepted.
+
+---
+
+##  Search Topics
+
+- “Risk matrix cybersecurity examples”  
+- “How to build a risk register in healthcare IT”  
+- “Mitigation vs. transfer vs. acceptance in risk strategy”  
+- “GRC prioritization frameworks”  
+
+---
+
+📌 #Day38 #RiskAssessment #CyberRisk #HealthcareSecurity #OpenMRS #AWS #GRCLeadership #Mitigation #100DaysOfGRC #IbrahimAbdullahi
