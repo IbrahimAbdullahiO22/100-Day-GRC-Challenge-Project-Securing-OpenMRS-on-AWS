@@ -1,0 +1,122 @@
+# 📅 Day 39 – Defining OpenMRS Security & Privacy Requirements  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+##  From Uncertainty to Assurance: Mapping Security & Privacy Requirements for Healthcare Systems
+
+Early in my IT journey, I worked with student records protected by **FERPA**—a foundational experience that showed me how seriously we must treat sensitive information. As I began transitioning into healthcare-focused GRC, I realized that **the stakes are even higher**.
+
+If Day 38 was about identifying what *could* go wrong with OpenMRS, then today is about ensuring we **do what’s right**—not just in theory, but by law, policy, and best practice.
+
+---
+
+## 🎯 Goals for Today
+
+- Identify the **external laws** and regulations (like HIPAA) that OpenMRS must comply with  
+- Map out **internal organizational policies** that shape our requirements  
+- Reference **industry frameworks** like NIST SP 800-53 to standardize our control approach  
+- Translate all this into a **concrete set of security and privacy requirements** for OpenMRS  
+
+---
+
+## 📚 Real Talk: Where Do These Rules Come From?
+
+As GRC leaders, we don’t get to set the rules—we get to **align technology with them**. Today I reviewed three key sources:
+
+### 🏛️ 1. Laws & Regulations
+
+- **HIPAA Security & Privacy Rules** (if handling U.S. patient data)
+  - Access control
+  - Audit logging
+  - Encryption in transit and at rest
+  - Contingency planning (backup, disaster recovery)
+
+- **GDPR** (if in EU context)
+  - Consent-based data use
+  - Right to access, delete, or correct personal data
+
+- **Local privacy laws** (e.g., India’s Digital Personal Data Protection Bill)
+
+> 🔍 *Example*: “Encrypt all ePHI stored in OpenMRS’s MySQL database and enforce HTTPS on all endpoints.”  
+*— HIPAA-inspired requirement*
+
+---
+
+### 🏢 2. Organizational Policies
+
+Healthcare orgs may have specific internal security policies such as:
+
+- MFA for all clinician logins  
+- Timeout and session lock after X minutes of inactivity  
+- Mandatory annual security awareness training  
+
+> 🔍 *Example*: “System must support MFA through SSO integration.”  
+*— Org Policy Requirement*
+
+---
+
+### 📘 3. Industry Frameworks
+
+We lean on **NIST SP 800-53 Rev. 5**, **ISO 27001**, or even **COBIT**, not just for checklists, but to bring structure and industry-validated guidance.
+
+> 🔍 *Example*: “Implement audit logging (AU-2) and access reviews (AC-6).”  
+*— NIST 800-53 control reference*
+
+---
+
+## ✅ What We’re Requiring from OpenMRS (Highlights)
+
+| Requirement | Source | Notes |
+|-------------|--------|-------|
+| All patient data must be encrypted at rest and in transit | HIPAA | AWS RDS encryption + HTTPS on frontend |
+| Only authorized users may access patient data | HIPAA / Org Policy | Role-based access control (RBAC) setup in OpenMRS |
+| Maintain audit logs for all patient data access events | HIPAA / NIST AU-2 | Enable logging and secure retention of logs |
+| MFA must be enabled for remote access | Org Policy | Use OpenMRS integration with SSO provider |
+| Backups must be encrypted and tested monthly | Org Policy / HIPAA | Use AWS S3 with encryption and test recovery |
+| Compliance documentation must be retained for 6 years | HIPAA | Store risk assessments, training records, etc. |
+
+---
+
+## 🤔 Reflection: What’s the Hardest Requirement?
+
+For me, the **challenge isn’t technical**—it’s **cultural**.  
+Getting end users (clinicians, admins) to embrace controls like MFA, logging, or access restrictions can be met with resistance.  
+In a healthcare environment, speed is everything. But **security is non-negotiable**.
+
+So our job is to lead with **clarity**, **training**, and **automation**—we meet the standard *without* slowing down care.
+
+---
+
+## 📌 Why This Matters
+
+This phase is the **backbone of compliance**. If we miss a HIPAA requirement now, no fancy security tool will fix that later. As leaders, we must **document, communicate, and enforce** clear requirements before diving into control selection.
+
+In GRC, prevention always beats reaction.
+
+---
+
+## 🛠️ Hands-On Snapshot
+
+- 🎯 Found HIPAA’s Security Rule online and extracted three technical safeguards  
+- 🧠 Reviewed OpenMRS security docs to match system capabilities with required features  
+- 📋 Created a preliminary **requirement list** tagged by source (HIPAA, NIST, Org Policy)
+
+---
+
+## 🚀 What’s Next?
+
+Tomorrow we zoom out and talk **enterprise architecture** — how OpenMRS fits into the broader MyClinic IT landscape. We’ll explore interoperability, security boundaries, and how to ensure systems play nicely in a regulated, cloud-first environment.
+
+---
+
+## 🔍 Search Topics for Curious GRC Pros
+
+- “HIPAA Security Rule technical safeguards summary”  
+- “NIST SP 800-53 AC and AU control families”  
+- “OpenMRS SSO and MFA integration”  
+- “ISO 27001 security requirements for EHR systems”
+
+---
+
+📌 #Day39 #HealthcareCompliance #HIPAA #OpenMRS #GRCLeadership #NIST80053 #SecurityRequirements #100DaysOfGRC #IbrahimAbdullahi
