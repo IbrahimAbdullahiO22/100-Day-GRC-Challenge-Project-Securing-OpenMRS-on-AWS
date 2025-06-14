@@ -1,0 +1,112 @@
+# 📅 Day 41 – Dividing Security Duties: AWS vs. Us (Requirements Allocation)  
+_100 Days of GRC • By Ibrahim Abdullahi_
+
+---
+
+## 🎯 Clarity Beats Assumption in Cloud Security
+
+Early in my cloud learning journey, I made a simple but costly assumption: “AWS is handling security.” I hadn’t yet learned the golden rule of cloud governance:
+
+> **Security is a shared responsibility.**
+
+And that one oversight? It caused a non-compliant backup policy to go unnoticed until an audit. It was a hard lesson — but one I now lead with.
+
+Today, as I build and lead secure systems like OpenMRS in AWS, I focus on one core task from NIST RMF Task P-17:  
+**Requirements Allocation** — clearly defining *who handles what* in cloud security.
+
+---
+
+## 🔐 AWS Shared Responsibility Model (In Simple Terms)
+
+Here’s the line:
+
+- **AWS secures the cloud**: physical infrastructure, global networking, foundational services  
+- **We secure what’s in the cloud**: our OS configs, app settings, access controls, logs, and data
+
+It’s not about trust — it’s about visibility and **intentional design**.
+
+---
+
+## 🧩 Example Breakdown: Who Owns What?
+
+Let’s take a real-world look at OpenMRS in our AWS cloud deployment.
+
+| **Security Requirement**                                      | **AWS Responsibility** | **Our Responsibility** |
+|---------------------------------------------------------------|-------------------------|--------------------------|
+| Physical data center security                                 | ✅                      | 🔲                       |
+| Isolate system in private network                             | 🔲                      | ✅ (VPC, subnets, SGs)   |
+| Harden operating system (EC2)                                 | 🔲                      | ✅                       |
+| Encrypt data at rest (RDS, S3)                                | ✅ (infra & KMS)        | ✅ (enable/configure)    |
+| Secure web traffic (TLS)                                      | ✅ (TLS support)        | ✅ (cert setup, HTTPS)   |
+| Schedule and verify backups                                   | ✅ (automation infra)   | ✅ (config & testing)    |
+| Patch management (EC2)                                        | 🔲                      | ✅                       |
+| Patch management (RDS)                                        | ✅                      | ✅ (enable auto-patch)   |
+| Monitor infrastructure (CloudWatch, GuardDuty)                | ✅                      | ✅ (custom alarms/logs)  |
+| Detect suspicious activity in OpenMRS                         | 🔲                      | ✅                       |
+| Provide audit documentation                                   | ✅ (SOC, ISO reports)   | ✅ (our SSP, evidence)   |
+
+The key isn’t just **knowing this list** — it’s **documenting** it. A clear responsibility matrix avoids gaps and finger-pointing when things go wrong.
+
+---
+
+## 🔍 Lessons from the Field
+
+One of the biggest GRC blind spots I see is when security controls are *assumed* to be covered by the provider.  
+
+🚨 Example: An S3 bucket was thought to be encrypted because “AWS encrypts stuff.” But encryption-at-rest wasn’t enabled. The team missed it — because they didn’t realize it was *their job* to flip the switch.
+
+This kind of oversight doesn’t just cause findings — it erodes **trust** in the system.
+
+---
+
+## ✍️ Leadership Insight: Proactive Clarification
+
+As a GRC leader, part of my role is **reducing ambiguity**.
+
+I create responsibility matrices with project teams early. I walk through security requirements one by one and ask:  
+**“Who owns this?”**  
+If the answer isn’t immediate, we flag it. We clarify it. We write it down. And then we test it.
+
+Good governance isn’t about guessing. It’s about clarity, consistency, and accountability.
+
+---
+
+## ✏️ Hands-On Summary
+
+I took our core OpenMRS security needs and ran them through this lens. A few highlights:
+
+- Encryption? ✅ Shared — AWS handles the tech, I handle the config  
+- Patching? ✅ Mixed — AWS handles RDS backend, I handle EC2 OS  
+- Monitoring? ✅ Shared — AWS gives the tools, I set the thresholds  
+- Access control? ✅ Ours — configure IAM roles, limit privileges  
+- Incident response? ✅ Ours — if OpenMRS is breached, we lead the charge  
+
+---
+
+## 💭 Reflection
+
+Do I trust AWS more or less knowing this?
+
+I trust them more — because they’re clear about what they handle.  
+But I *trust myself most* — because I’ve learned not to assume.  
+**Every control needs an owner.** Every owner needs to know their role.  
+And that’s the GRC mindset I bring to the table.
+
+---
+
+## 🔮 Tomorrow's Mission: System Registration
+
+As we close out the Prepare phase of the NIST RMF, we’re going to formally register OpenMRS in the organization’s system inventory. It’s administrative, yes — but essential for traceability, accountability, and oversight. Because if no one knows your system exists… they definitely aren’t protecting it.
+
+---
+
+## 🔎 Search Terms for Further Exploration
+
+- “AWS shared responsibility model”  
+- “Responsibility matrix FedRAMP”  
+- “Cloud compliance customer vs provider controls”  
+- “Security control allocation RMF P-17”  
+
+---
+
+📌 #Day41 #CloudSecurity #AWS #GRCLeadership #OpenMRS #SharedResponsibility #100DaysOfGRC #IbrahimAbdullahi #RiskManagement #RMF
