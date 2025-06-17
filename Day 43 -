@@ -1,0 +1,87 @@
+# 📅 Day 43 – Task C-1: System Description  
+_#100DaysOfGRC • By Ibrahim Abdullahi_
+
+---
+
+##  "We Can’t Protect What We Can’t Define."
+
+One of the most powerful lessons I’ve learned in GRC is this: **clarity precedes control**. Before you can manage risk, enforce compliance, or design security controls, you have to clearly define **what** you're securing.
+
+That’s why Task C-1 of the NIST RMF – **System Description** – matters so much. It’s not just a checkbox in the Categorize step. It’s where we set the tone for every decision that follows.
+
+Today, I took a deep dive into the heart of OpenMRS, our cloud-hosted EHR system, and translated its operational reality into a clear, security-relevant profile.
+
+---
+
+## 🩺 Case Study: OpenMRS on AWS
+
+Here’s how I’ve documented our system, in my own words:
+
+> **OpenMRS is an open-source Electronic Health Records system deployed on AWS to support clinical workflows at MyClinic.** It handles Protected Health Information (PHI) and supports authorized medical staff via a secure web interface.
+
+### 🔍 System Profile (As I See It)
+
+- **System Name**: MyClinic OpenMRS EHR
+- **Purpose**: To manage patient data and clinical operations securely
+- **Users**: Authorized healthcare staff (doctors, nurses, IT admins)
+- **Environment**: AWS Cloud (EC2, RDS, S3, Route 53, ACM, WAF)
+- **Data Sensitivity**: High – includes PHI governed by HIPAA
+- **Architecture**:
+  - Web Tier: EC2 + Apache Tomcat + OpenMRS App
+  - Data Tier: MySQL on Amazon RDS (multi-AZ enabled)
+  - Backup: Amazon S3 with encryption and lifecycle rules
+  - DNS/SSL: AWS Route 53 + ACM
+  - Network: VPC with private subnets, NAT gateway, security groups
+  - Security: AWS WAF + AWS Shield
+- **Authorization Boundary**: Everything in our AWS-hosted EHR deployment
+- **Compliance Context**: HIPAA, internal healthcare IT policies
+- **Key Roles**:
+  - **System Owner**: Dr. Alice Smith (Health IT)
+  - **System Admin**: Myself – Ibrahim Abdullahi (GRC Lead)
+
+This description lives in our **System Security Plan (SSP)** and will evolve with the system. But already, it’s enabled alignment across our security, compliance, and ops teams.
+
+---
+
+## 🧩 Why This Matters
+
+Describing a system isn’t just an administrative task. It’s a **leadership move**.
+
+When I clearly document system boundaries, components, and sensitivity, I’m enabling:
+
+ Risk analysts to apply accurate categorization  
+ Engineers to scope controls properly  
+ Auditors to assess compliance with context  
+ Executives to see the business impact clearly
+
+It’s how I make sure no one is guessing – **everyone knows what’s on the table**.
+
+---
+
+## ✍️ My Practice Exercise
+
+As part of today’s hands-on, I practiced building system profiles for other environments I’ve worked with – even a personal lab setup. It reinforced a critical insight:
+
+> “If you can’t describe a system in one page, you probably can’t secure it.”
+
+So, I always start with:
+- What is it?
+- Who uses it?
+- Where does it live?
+- What data does it touch?
+- Who’s responsible?
+
+Simple. Actionable. Clear.
+
+---
+
+## 💬 Final Reflection
+
+In my role, I'm committed to **making GRC approachable, effective, and embedded into how we build systems from Day 1**.  
+Task C-1 isn’t a side note. It’s how I lead by bringing visibility, clarity, and ownership into the conversation early.
+
+Now that the system is clearly described, I’m ready for the next step: **categorizing its risk impact** using FIPS 199. Let’s keep the momentum going.
+
+---
+
+📌 _#GRC #Leadership #Cybersecurity #NISTRMF #HIPAA #SystemDescription #OpenMRS #AWS #CloudSecurity #Day43 #100DaysOfGRC_
