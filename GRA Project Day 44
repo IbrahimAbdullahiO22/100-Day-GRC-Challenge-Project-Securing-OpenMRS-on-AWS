@@ -1,0 +1,82 @@
+# 📅 Day 44 – Task C-2: Security Categorization (FIPS 199 In Action)  
+_#100DaysOfGRC • By Ibrahim Abdullahi_
+
+---
+
+##  "How Bad Could It Be?"
+
+That’s really what **Task C-2** boils down to: understanding the potential *impact* if something goes wrong with our system.
+
+As a leader in GRC, I’ve learned this — **you can’t design appropriate security without knowing what’s at stake.** Categorization gives us that clarity.
+
+Today, I guided the team through applying **FIPS 199** to our OpenMRS on AWS deployment. This wasn’t just an academic exercise — it was about honestly assessing the business, legal, and human consequences if the system failed on confidentiality, integrity, or availability.
+
+---
+
+##  Case Study: OpenMRS Categorization
+
+**How I approached it:**
+
+- I started by reviewing the data types handled by OpenMRS — primarily **electronic protected health information (ePHI)**.
+- Then I worked with clinical stakeholders to understand how clinicians use the system daily and what risks they fear most.
+- Finally, I used FIPS 199 definitions to systematically rate each security objective.
+
+###  My Analysis:
+
+| Objective        | Impact Level | Why? |
+|------------------|--------------|------|
+| Confidentiality  | Moderate     | PHI exposure = serious privacy/legal harm; potential HIPAA penalties. |
+| Integrity        | Moderate     | Data corruption = incorrect treatment decisions = possible patient harm. |
+| Availability     | Moderate     | Downtime disrupts clinical workflows; delays patient care; forces manual fallback. |
+
+**Overall Categorization: MODERATE (High Water Mark).**
+
+---
+
+##  Why This Matters
+
+As GRC leaders, it’s not enough to say “secure everything.”  
+**Resources are finite — so prioritization is key.**
+
+By documenting the system as **Moderate**, I’m guiding:
+
+ The **engineering team** — so they select controls proportional to risk.  
+ The **executive team** — so they understand the business impact of outages or breaches.  
+ The **audit/compliance function** — so they see how our categorization maps to required controls (HIPAA, NIST 800-53, etc.).
+
+---
+
+## 🔄 Reflection
+
+One thing I’ve emphasized with my team is this:
+
+> **We categorize every day — in life and in security.**  
+> Just like we know losing our phone is worse than losing a pen, in cybersecurity, we must formalize this thinking.
+
+Categorization makes priorities visible. It ensures we’re not over- or under-protecting what matters most.
+
+In my experience, the biggest mistake organizations make is underestimating **availability**. Downtime in healthcare *isn’t just IT inconvenience — it’s clinical impact.* That’s why I was deliberate about rating OpenMRS’s availability as Moderate.
+
+---
+
+## 📝 My Practice
+
+I also practiced this today on a personal system — my password manager vault:
+
+- Confidentiality: High (if breached, major privacy and financial risk)
+- Integrity: High (corrupted vault could lock me out of critical accounts)
+- Availability: Moderate (if unavailable temporarily, inconvenient but not life-threatening)
+
+**This helped reinforce how categorization applies at every level — personal and enterprise.**
+
+---
+
+## 🚀 What’s Next?
+
+With categorization complete, we’re ready for review & approval (Task C-3). I’ll be presenting this impact assessment to leadership and the privacy officer next.
+
+By doing this, I’m not just checking a box — I’m **leading the organization toward intentional, risk-informed security**.
+
+---
+
+📌 _#GRC #Leadership #Cybersecurity #NISTRMF #HIPAA #FIPS199 #SecurityCategorization #OpenMRS #AWS #CloudSecurity #Day44 #100DaysOfGRC_
