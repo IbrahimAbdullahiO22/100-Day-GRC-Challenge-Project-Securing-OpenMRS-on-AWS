@@ -1,0 +1,104 @@
+# 📅 Day 46 – Task S-1: Selecting the Moderate Baseline | 100 Days of GRC  
+_By Ibrahim Abdullahi_
+
+---
+
+##  Moving From Categorization to Controls
+
+As a GRC leader, one thing I’ve internalized about RMF is this: **Categorization without controls is just theory**. The real test of risk management starts when we begin shaping the system’s defenses. That’s why today’s focus — selecting the appropriate baseline — is such a critical leadership moment.
+
+Now that we’ve formally categorized our OpenMRS system as MODERATE (Task C-3 signed and approved ✅), my role is to chart the path toward ensuring this EHR system is protected at a level commensurate with its sensitivity and importance.
+
+---
+
+##  Why Use a Baseline?
+
+I often explain to teams that a **baseline** is not bureaucracy — it’s a form of professional wisdom.
+
+> *It’s what seasoned practitioners have already figured out about what works at different risk levels.*
+
+NIST SP 800-53B gives us that head start. For our MODERATE system, adopting the **MODERATE baseline** is the smart move:
+
+Avoids reinventing the wheel  
+Ensures comprehensive coverage  
+Aligns with regulatory expectations (HIPAA, FISMA Moderate mappings)  
+Gives auditors and stakeholders a trusted benchmark
+
+Leadership in this phase means recognizing when to leverage standards vs. when to tailor (more on that in tomorrow’s Task S-1 Part 2).
+
+---
+
+##� What’s in the MODERATE Baseline?
+
+As I reviewed the control families today, here are some of the key protections we’ll implement for OpenMRS:
+
+### 1️⃣ Access Control (AC)  
+- **AC-2**: Rigorous user account management  
+- **AC-6**: Least privilege enforcement  
+- MFA for remote or privileged users — critical for a cloud-based EHR
+
+### 2️⃣ Audit & Accountability (AU)  
+- **AU-2, AU-6**: Detailed logging of access to PHI  
+- Required for HIPAA, but also key for forensic readiness
+
+### 3️⃣ Incident Response (IR)  
+- **IR-1 through IR-4**: Documented and tested incident response plan  
+- We must be prepared to respond to potential breaches
+
+### 4️⃣ Contingency Planning (CP)  
+- **CP-9**: Reliable encrypted backups (daily S3 snapshots + tested recovery)  
+- **CP-7**: AWS multi-AZ for availability  
+- Patients can’t wait — care continuity matters
+
+### 5️⃣ System & Communications Protection (SC)  
+- **SC-12, SC-13**: Encrypt PHI in transit (TLS 1.2+ across all web traffic)  
+- **SC-28**: Encrypt PHI at rest (RDS encryption + EC2 volume encryption)
+
+---
+
+##  My Perspective as a Leader
+
+Selecting this baseline also means thinking **beyond just compliance**:
+
+- **Resilience** — How do we ensure continuity of patient care?
+- **Trust** — How do we uphold patient privacy and public confidence?
+- **Operational Impact** — How do we balance controls with usability for clinical staff?
+
+I view NIST’s baseline not as a ceiling, but as **a floor to build upon**. We can (and should) enhance it — especially in healthcare contexts where human lives are involved.
+
+---
+
+## Reflection
+
+In my personal practice, I see baselines much like **pre-flight checklists for pilots**:
+
+ You follow them religiously — because you know they’re there to keep the mission safe.  
+ You also adapt them when new conditions emerge — because static defenses are brittle.
+
+As a GRC leader, I commit to never treating baselines as “checkboxes” — but as **living safeguards** that evolve with the system and the threat landscape.
+
+---
+
+##  What’s Next?
+
+With our MODERATE baseline selected, I’ll now lead the **tailoring process**:
+
+➡️ Map specific HIPAA overlays  
+➡️ Consider control enhancements where needed  
+➡️ Clarify shared responsibilities between AWS and our team  
+➡️ Document tailoring decisions (so nothing gets lost downstream)
+
+Baseline chosen. Leadership mindset engaged. 🚀
+
+---
+
+## 🔍 Key Search Terms
+
+- NIST SP 800-53B Moderate baseline controls  
+- HIPAA to NIST 800-53 mapping  
+- AWS compliance tools for NIST 800-53  
+- Security control tailoring best practices  
+
+---
+
+📌 _#Cybersecurity #GRC #NISTRMF #ModerateBaseline #OpenMRS #HIPAACompliance #AWS #HealthcareIT #Leadership #Day46_
