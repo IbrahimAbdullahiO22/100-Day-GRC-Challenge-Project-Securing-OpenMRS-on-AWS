@@ -1,75 +1,98 @@
-# 📅 Day 8 – PCI DSS: Card Security and Crossover Lessons for OpenMRS.  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+# 📅 Day 8 – PCI DSS (Keeping Credit Card Data Safe) and What It Teaches Us | 100 Days of GRC  
+_By Ibrahim Abdullahi_
 
 ---
 
-## 🔍 Topic Overview:
+##  My Leadership Perspective
 
-Today we explored **PCI DSS (Payment Card Industry Data Security Standard)** — a globally recognized compliance standard developed by major credit card companies to **protect cardholder data**. While OpenMRS isn’t designed for payment processing, PCI DSS teaches **universal security principles** applicable to any sensitive data system — including those in healthcare.
+Today, I shifted my focus from healthcare to payment security — exploring **PCI DSS (Payment Card Industry Data Security Standard).**  
 
-> 📌 The big takeaway: PCI DSS isn’t just about credit cards — it’s a concrete, prescriptive set of practices that reinforce strong cybersecurity posture in any organization handling sensitive data.
+You may wonder: *“What does credit card data protection have to do with healthcare systems like OpenMRS?”* 
 
----
+> **The answer:** The foundational security principles behind PCI DSS apply to any system that handles **sensitive data** — whether that’s cardholder data (CHD) or protected health information (PHI).  
 
-## 🧾 PCI DSS in a Nutshell – The 12 Core Requirements (Grouped by Objective):
-
-### 1. **Build and Maintain a Secure Network**
-- **Requirement 1**: Install and maintain a firewall
-- **Requirement 2**: Don’t use vendor default passwords/settings  
-*💡 In OpenMRS: Ensure firewall rules are configured and default admin passwords are changed.*
-
-### 2. **Protect Cardholder Data**
-- **Requirement 3**: Encrypt stored cardholder data
-- **Requirement 4**: Encrypt transmission over open/public networks  
-*💡 OpenMRS analogy: Encrypt patient records in the database and enforce HTTPS (TLS).*
-
-### 3. **Maintain a Vulnerability Management Program**
-- **Requirement 5**: Use anti-virus and protect systems from malware
-- **Requirement 6**: Develop and maintain secure systems (apply patches)  
-*💡 Same for healthcare: Patch OpenMRS regularly and deploy anti-malware protections.*
-
-### 4. **Implement Strong Access Control Measures**
-- **Requirement 7**: Restrict access on a need-to-know basis
-- **Requirement 8**: Assign unique IDs to users
-- **Requirement 9**: Restrict physical access to cardholder data  
-*💡 In clinics: Only authorized staff access OpenMRS; all users must log in with their own credentials; server rooms should be secured.*
-
-### 5. **Regularly Monitor and Test Networks**
-- **Requirement 10**: Track and monitor access
-- **Requirement 11**: Regularly test systems (e.g., vuln scans, pen testing)  
-*💡 For OpenMRS: Audit logs for access to records and regular security assessments.*
-
-### 6. **Maintain an Information Security Policy**
-- **Requirement 12**: Maintain a formal security policy and train staff  
-*💡 Governance overlap: Ensure clinic staff understand and follow security policies.*
+As GRC professionals, it is our role to **draw lessons from every industry** and apply them where they fit — and PCI DSS offers excellent, actionable controls that healthcare IT systems can benefit from.  
 
 ---
 
-## ✅ Hands-On Exercise:
+##  What I’ve Learned: PCI DSS Overview
 
-**Chosen Requirement**: **Requirement 5 – Protect all systems from malicious software**
+**PCI DSS** is an industry standard (not a law) that defines mandatory security controls for **any organization processing or storing cardholder data**. It was developed by major credit card companies (Visa, Mastercard, AmEx, etc.) to reduce card data breaches.  
 
-> This is especially relevant to OpenMRS. Even though it's not handling credit cards, patient data is equally (or more) sensitive. Without anti-malware protections, an OpenMRS server could fall victim to ransomware or trojans that expose, lock, or exfiltrate patient data — causing both harm and HIPAA violations.
+Even though PCI DSS focuses on financial data, **many of its 12 core requirements overlap with security best practices** in healthcare — encryption, access control, vulnerability management, monitoring, and governance.  
 
-Implementing anti-virus, EDR (Endpoint Detection & Response), and ensuring frequent scans is critical for healthcare IT security.
-
----
-
-## 💡 Reflection:
-
-I appreciate how **prescriptive** PCI DSS is — it leaves little room for ambiguity. While that can feel rigid, it also ensures **consistency** across organizations. If a similar standard applied to OpenMRS, it might reduce the guesswork around which controls are essential.
-
-In my opinion, clear checklists like PCI DSS are **helpful guides**, especially for teams without deep security expertise. The challenge is balancing **compliance enforcement** with **real-world flexibility**, allowing adaptations based on the system’s risk and environment.
+I see PCI DSS as a **very prescriptive framework** — much more “checklist-driven” than something like ISO 27001. And sometimes that’s what organizations need — especially smaller ones. Clear, non-ambiguous requirements help drive accountability.
 
 ---
 
-## 📖 Optional Search Terms for Further Learning:
-- `PCI DSS 12 requirements summary`
-- `PCI compliance best practices`
-- `PCI DSS encryption tokenization`
+##  PCI DSS 12 Core Requirements (Lessons I’d Apply to OpenMRS)  
+
+| PCI DSS Objective | What It Means | How It Applies to OpenMRS / Healthcare |
+|-------------------|---------------|---------------------------------------|
+| Build & Maintain a Secure Network | Use firewalls and change default settings | Harden OpenMRS servers, configure proper firewalls (AWS Security Groups, WAF) |
+| Protect Cardholder Data | Encrypt card data in transit & at rest | Encrypt PHI in OpenMRS DB & enforce HTTPS |
+| Maintain a Vulnerability Management Program | Patch systems and protect from malware | Apply patches and endpoint protections on OpenMRS servers and clients |
+| Implement Strong Access Controls | Enforce least privilege, unique accounts, physical security | Role-based access in OpenMRS, MFA, secure workstation access |
+| Regularly Monitor & Test Networks | Log all access, perform regular tests | Implement OpenMRS audit logging, run vulnerability scans/pen tests |
+| Maintain Security Policies | Have documented policies and training | Healthcare orgs should have formal PHI security policies & HIPAA-required training |
 
 ---
 
-✅ _Stay tuned for Day 9 – where we’ll shift to ISO/IEC 27001, an international standard focused on building an organization-wide information security management system (ISMS)._
+##  My Hands-On Takeaway: One PCI DSS Requirement for OpenMRS
 
-📌 #GRC #PCI #PCIDSS #Cybersecurity #Compliance #OpenMRS #PatientDataSecurity #InfoSec #HealthcareSecurity #100DayChallenge
+If I had to adopt **one PCI DSS control into an OpenMRS healthcare implementation**, it would be:  
+
+ **Requirement 10 – Regularly Monitor and Test Networks**  
+*“Track and monitor all access to network resources and cardholder data.”*
+
+**Why?** In healthcare, auditing access to PHI is critical — not only for detecting malicious access, but also for satisfying HIPAA’s required audit controls (164.312(b)).  
+
+An OpenMRS system **must log who accessed what patient records, when, and from where** — and those logs must be reviewed regularly. The principle here is universal: **“You can’t protect what you don’t monitor.”**  
+
+---
+
+##  Teaching Insight: Prescriptive vs Flexible Standards
+
+After studying PCI DSS today, here’s my takeaway:  
+
+- Some industries (payments) benefit from strict prescriptive rules — PCI DSS is very explicit, and it works well for driving adoption.  
+- Others (like healthcare) use more flexible “risk-based” frameworks (like HIPAA, NIST RMF, ISO 27001).  
+
+**As a leader, I believe BOTH approaches have value**:  
+
+- Prescriptive standards reduce ambiguity for smaller or less mature organizations.  
+- Flexible, risk-based frameworks encourage continuous improvement for mature orgs.  
+
+In my experience, **a hybrid is ideal**: Start with prescriptive basics, then evolve toward a mature, contextual security program.  
+
+---
+
+##  Reflection
+
+Would it be helpful or burdensome to apply PCI-style strict requirements to OpenMRS?  
+Personally, I believe many healthcare orgs *would benefit* from more explicit security checklists — especially those new to HIPAA or without strong internal security maturity.  
+
+> “Compliance isn’t security — but it can drive foundational improvements.”  
+
+And I would advocate for applying **PCI DSS-like rigor** to critical healthcare systems — because at the end of the day: **PHI is just as sensitive — if not more — than payment data.**
+
+---
+
+##  Tomorrow’s Focus
+
+Next, I’ll be exploring **ISO/IEC 27001 — the gold standard for building an Information Security Management System (ISMS).**  
+
+I’m looking forward to comparing ISO 27001 with PCI DSS — one is very process-oriented, the other is a strong prescriptive checklist. **Different tools — both valuable.** Stay tuned for Day 9!
+
+---
+
+##  Recommended Search Terms:
+
+- **“PCI DSS 12 requirements summary”**  
+- **“PCI DSS compliance best practices”**  
+- **“PCI DSS encryption and tokenization”**  
+- **“HIPAA vs PCI DSS security requirements”**  
+
+---
+
+#GRC #PCI_DSS #HealthcareSecurity #OpenMRS #Day8 #CybersecurityLeadership #DataProtection #AuditControls #SecurityBestPractices
