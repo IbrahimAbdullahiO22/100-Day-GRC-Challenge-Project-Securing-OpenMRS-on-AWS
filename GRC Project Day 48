@@ -1,0 +1,88 @@
+# 📅 Day 48 – Task S-2: Control Tailoring | 100 Days of GRC  
+_By Ibrahim Abdullahi_
+
+---
+
+##  Leadership Reflection: The Power of Smart Tailoring
+
+One of the most valuable lessons I’ve embraced as a GRC leader is this:
+
+> **Compliance is not about blindly checking every box — it’s about understanding context and applying controls that make sense for your environment.**
+
+That’s exactly what *tailoring* in RMF is all about. 
+
+Today’s exercise really drove home for me that the NIST 800-53 Moderate baseline is an excellent starting point, but not everything fits perfectly when running an EHR like OpenMRS in AWS Cloud. Good tailoring ensures our System Security Plan (SSP) reflects both **reality** and **risk** — making it actionable and auditable.
+
+---
+
+##  Teaching: What is Tailoring and Why Is It Critical?
+
+Here’s how I explain tailoring to my team:
+
+- You start with a **standard suit** (the baseline).
+- You tailor it to fit YOUR body (your system).
+- You hem, adjust, or add accessories — so it’s not only compliant, but practical and comfortable for daily use.
+
+Without tailoring, you risk two extremes:
+
+1️⃣ **Over-engineering**: Wasting resources implementing irrelevant controls (ex: worrying about physical guards for servers we don’t own).  
+2️⃣ **Under-protecting**: Missing subtle gaps (like forgetting to define session timeout values) because you assumed defaults would cover you.
+
+---
+
+##  Real-World Example: OpenMRS on AWS
+
+Today, I walked through several tailoring examples for our OpenMRS EHR system:
+
+**AC-2: Account Management**  
+- OpenMRS user accounts (clinician logins) are created within the application, not at the AWS level.  
+- Tailoring Decision: “AWS IAM accounts are not used for OpenMRS app login. AC-2 applies to the OpenMRS internal user database. Accounts must be approved by Clinic IT Admin; privileged accounts reviewed every 90 days.”  
+- Result: The control is right-sized for our app’s reality — we’re not trying to apply AWS account policies to OpenMRS logins.
+
+**PE-3: Physical Access**  
+- AWS owns the data center — we can’t physically control it.  
+- Tailoring Decision: “Control inherited from AWS — physical protections documented in AWS SOC 2 and ISO 27001 attestations.”  
+- Result: Clarity for auditors — we’re not “skipping” this control; we’re appropriately inheriting it from AWS.
+
+**SC-10: Network Disconnect**  
+- Tailored: “Session disconnect after 15 minutes of user inactivity on OpenMRS web app — configured in Tomcat settings.”  
+- Here, I’m assigning a concrete value (15 mins) based on organizational policy.
+
+---
+
+##  Reflection: Why This Step Matters
+
+Tailoring is about **risk-aligned efficiency**.
+
+Blindly applying every control as written wastes precious project time — and often doesn’t increase real security.
+
+Thoughtful tailoring ensures:
+
+ Our controls are auditable and defensible  
+ We avoid unnecessary complexity  
+ We close gaps unique to *our* system (HIPAA overlays, cloud nuances, OpenMRS specifics)  
+ Stakeholders (auditors, AOs) clearly see our rationale
+
+---
+
+##  What’s Next?
+
+With tailoring complete, I’m now ready to **assign ownership** and **implement controls**. That’s the next leadership moment: helping my team know which controls are “ours” vs “AWS’s” and driving accountability.
+
+---
+
+##  Search Terms for Ongoing Mastery
+
+- NIST security control tailoring  
+- Inheriting AWS common controls  
+- Scoping cloud security controls  
+- NIST SP 800-53 tailoring worksheet  
+- Compensating vs inherited vs scoped controls
+
+---
+
+##  Final Thought:
+
+Today really reinforced for me: **Tailoring is where GRC leadership shines**. Anyone can read a control catalog — but true leaders help teams apply the right controls the right way — with context, clarity, and purpose.
+
+#Cybersecurity #GRC #NISTRMF #HIPAA #ControlTailoring #Leadership #Day48
