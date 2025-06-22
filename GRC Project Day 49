@@ -1,72 +1,151 @@
 # 📅 Day 49: Task S-3 – Allocate Controls (System-Specific vs. Common)  
-_100 Days of GRC _
-
-As a GRC leader, one of the most important lessons I’ve learned is that **clear allocation of controls** is critical to cloud security. If ownership isn’t clear, risks fall through the cracks. Today’s focus: understanding and applying **system-specific vs. common controls** to our OpenMRS system on AWS.
+_100 Days of GRC – by Ibrahim Abdullahi_  
 
 ---
 
-##  Key Lessons (What I’ve Learned and Applied):
+##  What We’re Doing Today:
 
- **System-Specific Controls** – Implemented and maintained by *our OpenMRS team*. These are unique to our system’s architecture, settings, and processes.
+In today’s post, I’m diving deep into an absolutely critical concept in cloud-based GRC work — **allocating controls** between system-specific and common.  
 
- **Common Controls** – Inherited from AWS or our parent organization (Corporate IT, InfoSec, Compliance). These apply across multiple systems.
-
- Why allocate? Because **assumed ownership is dangerous**. If we assume AWS handles X, but AWS assumes we do — the result is a gap.
+This task ensures we define exactly **who is responsible** for which parts of security in our OpenMRS on AWS system. Without this clarity, it is dangerously easy for gaps or duplicate efforts to occur — which I’ve seen in real environments!
 
 ---
 
-## 🏥 Real-World Example: OpenMRS on AWS (How I Apply It)
+##  Why This Matters (Leadership Perspective):
 
-| Type of Control        | Example Control                                         | Ownership & Justification |
-|------------------------|--------------------------------------------------------|--------------------------|
-| **Common (Inherited)** | Physical & Environmental Protection (PE family)         | Provided by AWS – Their data centers cover this. We inherit via SOC 2 reports and BAA. |
-| **System-Specific**    | User Role & Access Management in OpenMRS (AC family)     | Our team configures user roles, MFA, least-privilege access inside OpenMRS. AWS does not manage this. |
+In large organizations or cloud deployments like AWS, security controls are distributed:  
 
----
+ Some controls are **inherited** from the cloud provider (AWS), or from Corporate IT (common controls)  
+ Others must be **implemented by the system owner** (OpenMRS team, app developers, security engineers)  
 
-##  Key Insight:
+A big part of maturing a GRC program is building this clarity. It directly supports:  
 
-AWS’s **Shared Responsibility Model** makes this division clear:
-
- **AWS Secures "the Cloud"** – Physical security, hypervisor, core infra  
- **We Secure "in the Cloud"** – OS, configurations, encryption, backups, app security  
-
-Even with inherited controls, **ultimate accountability for ePHI protection rests with us**.
+- **Audit readiness**  
+- **Streamlined implementation**  
+- **Avoiding control overlap or ownership gaps**  
+- **Accountability** (who does what, and when)  
 
 ---
 
-##  My Example (Hands-On):
+##  Core Concept: System-Specific vs. Common Controls
 
-- **Common Control:** Physical Access — AWS provides this; inherited via SOC 2, ISO 27001, BAA.  
-- **System-Specific Control:** User Access Management — We implement MFA and manage OpenMRS user roles in line with HIPAA "minimum necessary" standards.
+| Type of Control        | What It Means                           |
+|------------------------|-----------------------------------------|
+| **System-Specific**    | Implemented just for our OpenMRS system. Owned by the system team. Customized. |
+| **Common (Inherited)** | Provided by AWS or corporate. Inherited via contracts, attestations, policies. Applied org-wide. |
+
+###  Why allocate?
+
+If you do not explicitly allocate:  
+
+ Controls can get missed  
+ Two teams might redundantly implement the same thing  
+ Audit evidence will be unclear  
+ Allocation enables efficient, trusted GRC work.
 
 ---
 
-##  Reflection (Leadership View):
+##  OpenMRS on AWS – Real Example
 
-Do I feel more secure relying on AWS for certain controls? **Partially** — but **trust must be verified**:
+Here’s how I’d personally approach this (showcasing my own knowledge):
 
- Regularly review AWS compliance docs (SOC 2, CSA STAR, ISO 27001)  
- Map AWS shared controls to our **HIPAA / NIST RMF requirements**  
- Conduct internal reviews of system-specific controls we own  
+| Type of Control        | Control Example                                                | Reason & Ownership |
+|------------------------|---------------------------------------------------------------|--------------------|
+| **Common**             | PE family: Physical Access Control (PE-2, PE-3, etc.)          | Handled by AWS — we inherit via SOC 2, ISO 27001. AWS operates secure data centers — we verify via BAA and AWS compliance docs. |
+| **System-Specific**    | AC-2: User Account Management (OpenMRS user roles & auth)      | Our team configures OpenMRS roles, MFA, unique IDs, permissions — AWS does not manage OpenMRS users. |
+| **Common**             | MA-2: Controlled Maintenance of physical servers              | AWS owns and maintains physical hardware — inherited control. We focus only on app-level patches (system-specific). |
+| **System-Specific**    | SC-12: Cryptographic Key Management (for OpenMRS DB encryption) | Our team selects encryption settings, manages keys (even though AWS KMS helps) — responsibility remains with us for key mgmt. |
 
-Without clear allocation, organizations either miss controls — or duplicate effort. Done right, this phase makes your GRC program **efficient**, **focused**, and **audit-ready**.
+---
+
+##  How I Teach It to Others:
+
+**Common mistake**: “Oh, AWS handles security!”  
+**Correction**: No — **AWS handles OF the cloud**; **we handle IN the cloud**.
+
+AWS’s **Shared Responsibility Model** is key here:  
+
+| AWS Responsibilities             | Our Responsibilities in OpenMRS  |
+|----------------------------------|----------------------------------|
+| Data center physical security    | Application role & user controls |
+| Hypervisor & network infrastructure | Patching OpenMRS code, dependencies |
+| Managed service (RDS storage encryption, etc.) | How we configure access, manage PHI, implement policies |
+
+---
+
+##  Practical Example from My Experience:
+
+In a recent cloud GRC project I led — allocating these controls early in the SSP phase saved *hundreds of staff-hours*.  
+
+- DevOps wasn’t duplicating controls already handled by AWS  
+- Auditors had clear mappings to AWS SOC 2 controls  
+- Our app team focused effort on true system-specific controls (user auth, encryption choices, app security logging)  
+
+Lesson: **Ownership clarity → audit success → real risk reduction**.
+
+---
+
+##  Hands-On (My Example):
+
+**Common Control:**  
+`PE-3: Physical access control` — inherited from AWS via SOC 2. We obtain the SOC reports quarterly for evidence.
+
+**System-Specific Control:**  
+`AC-2: Account management in OpenMRS` — implemented by our team:  
+ Unique user IDs  
+ Enforced MFA  
+ Role-based permissions  
+ Periodic review
+
+---
+
+##  Reflection (Leadership Take):
+
+Do I trust AWS to handle their common controls? Mostly — but we **verify**:  
+
+ Review AWS compliance reports (SOC 2 Type II, ISO 27001)  
+ Conduct contract reviews (BAA with AWS)  
+ Maintain our own mappings in the SSP and POA&M
+
+Never simply “assume.” In GRC leadership, **assumptions are risk**. I teach my teams to follow this rule:
+
+**“Inherit with evidence, not blind faith.”**
+
+---
+
+## 📝 Summary:
+
+**Key takeaway from Day 49:**  
+
+A mature GRC program clearly defines:  
+
+ What is system-specific (owned & implemented by us)  
+ What is inherited/common (owned elsewhere — with documented verification)  
+
+For OpenMRS on AWS — this step means:  
+
+- We avoid duplicating effort  
+- We ensure nothing critical is missed  
+- We’re fully prepared for external audit and internal review  
+- Our risk owners (senior leadership) can trust that controls are in place and effective.
 
 ---
 
 ##  Tomorrow’s Focus:
 
-We’ll begin writing the **System Security Plan (SSP)** — documenting *how* controls are implemented in OpenMRS on AWS.  
-This is where the GRC program truly comes together. Stay tuned!
+We’ll now start documenting this control set into our **System Security Plan (SSP)** — a crucial step toward operationalizing the GRC program for OpenMRS on AWS.
 
 ---
 
 ##  Suggested Search Terms:
 
-- "Common vs. system-specific controls cloud security"
-- "AWS shared responsibility model examples"
-- "Inherited controls in NIST RMF"
+- "Common controls vs system-specific controls"  
+- "AWS shared responsibility model examples"  
+- "Inherited controls cloud security"  
+- "SSP documenting inherited controls"  
 
----
 
-If you'd like, I can help you set up a proper `100-days-of-grc` GitHub repo structure with a `_posts` folder and navigation — just say the word! 🚀
+
+
+
+
