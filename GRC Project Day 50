@@ -1,0 +1,110 @@
+# 📅 Day 50: Task S-4 (Part 1) — Document Control Implementation (Begin SSP)  
+_100 Days of GRC — by Ibrahim Abdullahi_
+
+---
+
+##  Milestone: Starting the System Security Plan (SSP)
+
+Today marks **Day 50** of my GRC journey — and a big step forward: we begin documenting how our security controls are implemented in the **System Security Plan (SSP)**.  
+
+As a GRC leader, I teach my teams that the SSP is *not just paperwork* — it is the **authoritative playbook** that tells auditors, management, and ourselves exactly **how we are securing the system**. Without a well-documented SSP, you can’t claim to have a mature GRC posture.
+
+---
+
+##  Today’s Learning Objectives:
+
+ Understand the purpose and structure of the SSP  
+ Learn how to write clear, specific descriptions of how technical controls are implemented  
+ Draft a sample implementation for an OpenMRS on AWS technical control  
+
+---
+
+##  What is an SSP?
+
+The **System Security Plan (SSP)** is the “master file” for system security. It includes:  
+
+- The system boundary and architecture  
+- The list of applicable controls (from our tailored baseline)  
+- For each control: **how it is implemented**  
+- References to common/inherited controls (from AWS or corporate)  
+- The people responsible for maintaining each control  
+
+In my view, the SSP = **“How we secure OpenMRS — in writing.”**
+
+---
+
+##  How I Teach SSP Writing:
+
+Good SSP writing = clear, concrete answers to 4 questions:  
+
+| Question | Example Answer |
+|---|---|
+| **Who** is responsible? | OpenMRS team, CloudOps team, DevSecOps, etc. |
+| **What** is done? | Encrypt DB with EBS encryption; use MFA for admin access |
+| **Where** is this applied? | EC2 instance hosting OpenMRS app; Cognito User Pool |
+| **How** is it implemented/configured? | TLS 1.2 enforced; AWS KMS-managed keys |
+
+---
+
+##  Example #1 — User Authentication (IA Family)
+
+**SSP Entry (example):**
+
+> _OpenMRS uses AWS Cognito as its Identity Provider (IdP). All user accounts are maintained in an AWS Cognito User Pool, enforcing a password policy of minimum 12 characters, requiring uppercase, lowercase, numeric, and special characters. Multi-Factor Authentication (MFA) is enabled for all administrative users. User sessions are authenticated with OAuth tokens issued by Cognito and validated by OpenMRS. Role-based access control (RBAC) within OpenMRS enforces least privilege, with roles defined for clinicians, nurses, and system administrators. Accounts are locked after 5 failed login attempts, with lockout events logged in AWS CloudWatch for monitoring and response._  
+
+**Leadership Insight:**  
+ This kind of SSP writing shows exactly how *users are authenticated* and *how access is controlled* — not just vague “we secure our users” statements.
+
+---
+
+## 📝 Example #2 — Data Encryption at Rest (SC Family)
+
+**SSP Entry (example):**
+
+> _All OpenMRS patient data is stored in a MySQL RDS instance with encryption at rest enabled (AES-256 via AWS RDS). The EC2 instances hosting the OpenMRS application also use encrypted EBS volumes for OS and data files. Encryption keys are managed via AWS KMS (Key Management Service), with automatic key rotation enabled. All backups (AWS Snapshots) are encrypted at rest. For data in transit, HTTPS (TLS 1.2 or higher) is enforced across all OpenMRS application endpoints._  
+
+**Leadership Insight:**  
+ Notice how this explains **which AWS services are used**, **how keys are managed**, and the **scope of encryption** — this gives auditors and risk owners confidence.
+
+---
+
+##  Leadership Lessons I Teach on SSP:
+
+ **Specificity is king** — no vague answers  
+ **Tie every control to your system architecture** — where and how is it done?  
+ **Document shared responsibility** — where AWS covers a control, cite it; where your team covers a control, be explicit  
+ **SSP = living document** — update it when controls evolve (e.g. new MFA settings)  
+
+---
+
+##  My Hands-On Example for Today:
+
+**Control:** SC-12 — Cryptographic Key Management  
+
+**SSP Entry (drafted today):**
+
+> _Encryption keys for OpenMRS database encryption and EC2 volume encryption are managed via AWS KMS. Keys are automatically rotated annually per AWS default settings. AWS IAM policies enforce least privilege access to KMS keys. Key use and administrative actions are logged in AWS CloudTrail and reviewed quarterly by the OpenMRS CloudOps team._  
+
+---
+
+##  Reflection:
+
+While writing today’s SSP examples, I noticed that documenting **CloudTrail log review frequency** sometimes lacks clarity in practice — do we really review it quarterly? This is why writing an SSP is so valuable: it surfaces details that may need further process definition.  
+
+**Lesson:** _Writing the SSP = risk-driven QA on your actual security operations._  
+
+---
+
+## 🚀 Tomorrow’s Focus (Teaser):
+
+We’ll continue our SSP work tomorrow, but shift focus to **administrative and procedural controls** — policies, training, audits — not just the tech side!  
+
+---
+
+## 🔍 Suggested Search Terms:
+
+- “System Security Plan examples NIST”  
+- “Writing SSP control implementations”  
+- “How to document cloud security controls in SSP”  
+- “AWS NIST 800-53 SSP examples”  
+
