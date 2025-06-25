@@ -1,0 +1,118 @@
+# 📅 Day 51: Task S-4 (Part 2) — Documenting Administrative & Procedural Controls  
+_100 Days of GRC — by Ibrahim Abdullahi_  
+
+---
+
+##  Today’s Goals:
+
+ Understand **which security controls** are implemented through policies & processes — not just technology  
+ Learn to write **clear, plain-language SSP entries** for these controls  
+ Draft an example **administrative control entry** for OpenMRS on AWS  
+ Appreciate the **people + process** side of system security  
+
+---
+
+##  Why Administrative Controls Matter
+
+In GRC leadership, one thing I always emphasize is:  
+
+> “Tech alone cannot secure a system — **people and processes** must work with the tech.”  
+
+That’s why today we’re documenting those “non-technical” controls in our **System Security Plan (SSP)** — policies, procedures, and human-driven activities that **govern the security posture** of our OpenMRS system on AWS.
+
+---
+
+##  What Kinds of Controls Are We Talking About?
+
+Examples include:  
+- **Security awareness training** for users (AT Family)  
+- **Audit log reviews**  
+- **Incident response plan & testing**  
+- **Personnel background screening**  
+- **Change management processes**  
+- **Account approval and removal procedures**  
+
+These controls typically reference **higher-level org policies**, **company handbooks**, or **procedural documents**, and describe **how they apply to our system**.
+
+---
+
+##  Example #1 — Audit Log Review (AU-6)
+
+**SSP Entry (example):**
+
+> _Audit logs for OpenMRS application activities (user logins, data accesses) and AWS infrastructure events (CloudTrail logs) are aggregated into AWS CloudWatch Logs. The DevOps Engineer for the OpenMRS project reviews these logs weekly, using AWS CloudWatch Insights to filter for anomalies (such as failed login attempts, privilege escalations, or unusual patterns). Findings are recorded in a “Log Review Checklist” stored in Confluence. Any suspicious activity triggers escalation per the documented Incident Response Plan. The Project Manager ensures this review occurs on schedule._  
+
+---
+
+##  Example #2 — Security Awareness Training (AT-2)
+
+**SSP Entry (example):**
+
+> _All OpenMRS project team members (developers, DevOps, admins) must complete annual Security Awareness Training delivered via the organization’s LMS. The training covers phishing, data handling, cloud security best practices (AWS), and HIPAA/privacy awareness. New team members complete training within 30 days of onboarding. The Project Manager maintains a training completion roster and reviews compliance quarterly. This aligns with org Policy ABC-123._  
+
+---
+
+##  Example #3 — Contingency Planning (CP Family)
+
+**SSP Entry (example):**
+
+> _Automated daily AWS RDS Snapshots back up the OpenMRS MySQL database with encrypted copies. EC2 AMIs are generated monthly. The DevOps Engineer maintains a documented “Restore from Snapshot” procedure tested biannually. Backup success/failure alerts are monitored in CloudWatch. These procedures are validated during DR tests with IT leadership._  
+
+---
+
+##  Leadership Lessons on Documenting Administrative Controls
+
+ Be specific about:  
+ **Who** performs the control  
+ **What** is done (clearly define the process)  
+ **When** it is done (timing/frequency)  
+ **How** it links to org policy  
+
+ **Reference parent policies** or SOPs — don’t copy the whole thing, just show the linkage  
+
+ **Identify and close gaps** — if documenting reveals “we don’t actually do this yet,” that’s an opportunity for leadership to improve security maturity  
+
+---
+
+##  My Hands-On Example Today:  
+
+**Control:** AT-3 — Role-Based Training  
+
+**SSP Entry (drafted today):**
+
+> _OpenMRS team members in privileged roles (AWS Administrators, Database Administrators, DevOps) receive role-based security training annually. This covers AWS IAM best practices, AWS KMS key management, CloudTrail/CloudWatch monitoring, and OpenMRS RBAC management. Training modules are delivered via the LMS platform, tracked by HRIS. Completion is reviewed quarterly by the Project Manager._  
+
+---
+
+##  Reflection:
+
+While documenting today, I noticed that our team **does not yet have a formal checklist for log review signoffs**. This surfaced as a gap.  
+
+**Next step as a leader:** I will propose adding a lightweight “Weekly Log Review Checklist” in Confluence, signed off digitally — this builds auditability and clarity for this control.  
+
+---
+
+##  Why This Work Is Critical:
+
+> “Policies and procedures are the connective tissue of a security program — without them, tech controls drift and decay.”  
+
+As I mentor newer GRC analysts, I remind them: **a well-written SSP is not fiction — it reflects reality.** If we find gaps while writing, we fix the process, then document it.
+
+---
+
+##  Tomorrow’s Focus:
+
+Now that our SSP (technical + administrative controls) is drafted, it’s time to think about **continuous monitoring**:  
+
+> How do we **keep this system secure**, month after month, even as the cloud environment evolves?  
+
+---
+
+##  Suggested Search Terms:
+
+- “How to document security policies in SSP”  
+- “SSP examples for NIST 800-53 AT controls”  
+- “AWS audit log review procedures”  
+- “Continuous monitoring NIST RMF”  
+
+---
