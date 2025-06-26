@@ -1,0 +1,141 @@
+# 📅 Day 52: Task S-5 — System Continuous Monitoring Strategy  
+_100 Days of GRC — OpenMRS-on-AWS Case Study_
+
+---
+
+##  Today’s Objectives
+
+- Understand what **Continuous Monitoring** means in the context of GRC  
+- Identify **key monitoring activities** for OpenMRS deployed in AWS  
+- Draft two example monitoring actions with **frequency and ownership**  
+- Recognize how continuous monitoring supports **risk-informed decision-making**  
+
+---
+
+##  What is Continuous Monitoring?
+
+According to NIST, Continuous Monitoring is:
+
+> “The ability to maintain ongoing awareness of information security, vulnerabilities, and threats to support organizational risk management decisions.”  
+
+In practical terms, it means we don’t just secure the system once and walk away. Instead, we **monitor continuously** to ensure:
+
+- Our controls remain effective  
+- No misconfigurations slip in  
+- New threats or vulnerabilities are identified early  
+- People don’t drift from procedure  
+
+Security is not a “set-it-and-forget-it” process. Continuous Monitoring is how we **build trust, prove assurance**, and adapt to change.
+
+---
+
+##  Building the Monitoring Strategy for OpenMRS on AWS
+
+A good Continuous Monitoring Strategy answers:
+
+| Question          | Example |
+|------------------|---------|
+| **What will we monitor?** | Logs, access, vulnerabilities, backups, configs |
+| **How often?** | Daily, weekly, monthly, quarterly, semi-annually |
+| **How?** | Tools like AWS Config, Nessus, CloudWatch, GuardDuty |
+| **Who is responsible?** | DevOps, Security Analyst, Project Manager |
+
+Below are concrete examples I’ve developed for our OpenMRS-on-AWS environment:
+
+---
+
+###  1. Vulnerability Scanning — EC2 & Web App  
+**Activity:** Run vulnerability scans on OpenMRS servers and web interfaces  
+**Tool:** Nessus (or OWASP ZAP for the web layer)  
+**Frequency:** Monthly  
+**Responsible Party:** DevOps Engineer  
+**Rationale:** Identify unpatched packages, insecure services, or exposed versions. Proactive discovery helps us stay ahead of exploitation attempts.
+
+---
+
+###  2. CloudTrail Log Review  
+**Activity:** Analyze CloudTrail logs for unauthorized or anomalous activity  
+**Tool:** AWS CloudWatch Insights, Athena queries, optional GuardDuty  
+**Frequency:** Weekly  
+**Responsible Party:** Security Analyst  
+**Rationale:** Ensures IAM actions (like privilege escalation or key deletions) are legitimate. Helps detect insider threats or compromised credentials.
+
+---
+
+###  3. User Access Review  
+**Activity:** Review OpenMRS user and IAM account privileges  
+**Tool:** Manual + OpenMRS user reports, IAM console export  
+**Frequency:** Quarterly  
+**Responsible Party:** System Owner  
+**Rationale:** Catches stale accounts or over-privileged roles. Ensures least privilege and separation of duties.
+
+---
+
+###  4. Backup Validation & Recovery Drill  
+**Activity:** Verify backup success and test system recovery  
+**Tool:** AWS Snapshots, EC2 AMI restore  
+**Frequency:** Backups checked daily; recovery drill tested semi-annually  
+**Responsible Party:** DevOps Engineer  
+**Rationale:** Backup without successful restoration is meaningless. Ensures operational resilience.
+
+---
+
+###  5. Patch Management Monitoring  
+**Activity:** Apply patches to OS and OpenMRS core  
+**Tool:** Ubuntu unattended-upgrades, OpenMRS update tracker  
+**Frequency:** Monthly (OS) and monthly (App), or within 2 weeks for critical CVEs  
+**Responsible Party:** System Admin  
+**Rationale:** Reduces attack surface from known vulnerabilities. Critical for HIPAA and general cybersecurity hygiene.
+
+---
+
+###  6. AWS Config Rule Compliance  
+**Activity:** Ensure infrastructure adheres to secure configurations  
+**Tool:** AWS Config + pre-defined rules (e.g., “no public S3,” “IAM password policy enforced”)  
+**Frequency:** Realtime monitoring with weekly dashboard review  
+**Responsible Party:** Security Analyst  
+**Rationale:** Catches misconfigurations immediately. Infrastructure drift is one of the top risks in cloud environments.
+
+---
+
+##  Sample Monitoring Table
+
+| Monitoring Activity           | Frequency    | Responsible | Tool Used           |
+|------------------------------|--------------|-------------|---------------------|
+| EC2 Vulnerability Scan       | Monthly      | DevOps      | Nessus              |
+| CloudTrail Log Review        | Weekly       | Sec Analyst | AWS CloudWatch      |
+| IAM + OpenMRS Access Review  | Quarterly    | System Owner| IAM Console, Reports|
+| Backup Success Check         | Daily        | DevOps      | AWS Snapshot Logs   |
+| Disaster Recovery Test       | Semi-Annually| DevOps      | Manual              |
+| Patch Review & Updates       | Monthly      | Sys Admin   | Ubuntu, GitHub Feeds|
+| AWS Config Compliance Review | Weekly       | Sec Analyst | AWS Config          |
+
+---
+
+##  Reflection
+
+The most **critical monitoring activity** for OpenMRS-on-AWS, in my view, is **CloudTrail + CloudWatch Log Monitoring**. It gives us real-time insight into what is happening across AWS. Misuse of permissions or privilege escalations often occur silently; log monitoring shines a spotlight on them before they turn into full-blown incidents.
+
+> But continuous monitoring must be **balanced**. Too many alerts = **alert fatigue**.  
+> Too few alerts = **missed threats**.  
+
+That’s why our strategy includes **automated triage** and **targeted thresholds**, not just a flood of raw logs.
+
+---
+
+##  Tomorrow’s Preview: Security Plan Review & Approval
+
+We’re almost through the **Security Control Implementation phase**. Tomorrow, it’s time to get executive buy-in:  
+
+> How do we present our completed SSP to the **Authorizing Official** for final approval before we go live?
+
+---
+
+##  Suggested Search Terms
+
+- “continuous monitoring strategy NIST RMF”  
+- “AWS Security Hub vs. GuardDuty vs. Config”  
+- “vulnerability management schedule best practices”  
+- “audit log review AWS CloudTrail examples”  
+
+---
