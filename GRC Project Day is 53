@@ -1,0 +1,111 @@
+# 📅 Day 53: Task S-6 – Security Plan Review and Approval  
+_100 Days of GRC – OpenMRS-on-AWS Project_
+
+---
+
+##  Today’s Objectives
+
+- Understand the **Security Plan Review** process and its significance  
+- Learn who reviews and approves the System Security Plan (SSP) and why  
+- Anticipate key questions from the **Authorizing Official (AO)**  
+- Demonstrate leadership perspective in GRC by thinking like a risk acceptor  
+
+---
+
+##  What is the Security Plan Review?
+
+After spending weeks carefully selecting, tailoring, and documenting our controls in the **System Security Plan (SSP)**, we arrive at a critical milestone: review and approval.
+
+In most GRC frameworks (especially NIST RMF), a senior leader—often a **Chief Information Officer (CIO)**, **Chief Information Security Officer (CISO)**, or a formally designated **Authorizing Official (AO)**—must review the security posture of the system and formally accept the residual risk.
+
+This stage is about **accountability** and **due diligence**. The AO does not need to dive into every line of code or every firewall rule. What they want to know is:
+
+- Are all required controls addressed?
+- Are known risks documented and acceptable?
+- Is the system ready to move forward?
+- Do we have a **Continuous Monitoring Strategy** in place?
+
+---
+
+##  What Happens During the Review?
+
+The AO receives the full SSP and any supporting documents (e.g., Risk Assessment, Privacy Impact Assessment, POA&M). Here's what typically happens:
+
+1. **Risk-Based Review**: The AO checks if the residual risks are aligned with the organization’s risk appetite.
+2. **Clarification Requests**: If anything is unclear—say, a critical control is marked "Not Applicable"—the AO may flag it and send it back for revision.
+3. **Policy Alignment**: The AO compares your SSP against internal policies and external regulations (like HIPAA, if applicable).
+4. **Approval or Rejection**: If satisfied, the AO signs a formal **authorization memo** or grants **Authority to Operate (ATO)**.
+
+In some cases, interim approvals may be issued, such as an **Interim Authority to Test (IATT)**, especially if certain conditions must still be met.
+
+---
+
+##  OpenMRS-on-AWS Case Study
+
+Let’s put this in real terms.
+
+We’ve built OpenMRS (an open-source electronic health record system) on AWS. We've documented:
+
+- **Inherited AWS controls** (e.g., physical security, hypervisor patching)
+- **System-specific controls** (e.g., MFA for admins, role-based access in OpenMRS)
+- **Continuous Monitoring Plan** (e.g., weekly CloudTrail reviews, monthly vuln scans)
+
+Now, imagine our **hospital’s CIO** is serving as the AO. During her review, she notices:
+
+> "You’ve enabled MFA for admins—why not for clinicians accessing PHI daily?"
+
+This prompts a healthy security discussion. Perhaps clinicians use shared terminals in a clinic and MFA isn't feasible—or maybe it *is*, and we revise our plan to include it.
+
+The **AO is not a roadblock**—they’re a **partner in secure operations**. Their questions sharpen our implementation and ensure we’ve closed gaps *before* going live.
+
+---
+
+##  Example AO Questions (Hands-On)
+
+If I were the AO reviewing OpenMRS-on-AWS, here’s a question I’d ask:
+
+> “Can you confirm that all third-party libraries in the OpenMRS deployment are monitored for vulnerabilities and patched in a timely manner?”
+
+This reflects real-world risk: third-party dependencies often introduce risk if left unmonitored.
+
+---
+
+##  Reflection: Leading Through Risk Acceptance
+
+As someone who aspires to become a security leader, I recognize that the AO's role carries **real-world accountability**. They are the ones who answer when things go wrong.
+
+If I were in that seat, I’d only sign off if:
+
+- I trusted the team’s competence and documentation  
+- There was a clear monitoring and incident response plan  
+- All high-risk issues were either mitigated or tracked via POA&M  
+
+The **courage to accept residual risk** requires confidence in your people, your process, and your preparedness.
+
+---
+
+##  Summary
+
+The Security Plan Review is more than a formality. It’s the moment where **security becomes operational reality**. Getting that approval signifies:
+
+- Our controls are sufficient  
+- Our documentation is trustworthy  
+- Our risk is understood and owned  
+
+This process also reinforces a key GRC principle: **Transparency builds trust**. A well-documented, well-defended SSP earns buy-in—not just from the AO, but from the entire organization.
+
+---
+
+## 🔭 Tomorrow’s Teaser:  
+Now that we have approval, it’s time to **move into the real world**. Day 54 kicks off the **Implementation and Assessment** phase—where controls are tested, systems go live, and readiness is validated.
+
+---
+
+## 🔍 Suggested Search Terms
+
+- “NIST RMF ATO process explained”  
+- “Authority to Operate (ATO) example memo”  
+- “security plan approval risk acceptance questions”  
+- “how CISOs review SSP documentation”
+
+---
