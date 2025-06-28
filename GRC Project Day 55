@@ -1,0 +1,131 @@
+# 📅 Day 55 – Security Beyond Tech: Policies, People, and Process Controls  
+_100 Days of GRC – OpenMRS-on-AWS Project_
+
+---
+
+##  Securing the Human Side of the System
+
+After diving deep into the technical trenches yesterday, today I took a step back and focused on what holds those firewalls and audit logs together: **people and process**.
+
+In real-world governance, risk, and compliance (GRC), technical tools can only go so far. Without clearly defined **administrative controls** — policies, procedures, and user expectations — even the best tools become ineffective. Day 55 was about building **the human framework** that makes OpenMRS on AWS not only secure, but sustainable.
+
+---
+
+##  Today’s Goals
+
+- Define **administrative controls** and understand their role in NIST RMF Task I-1  
+- Identify real-world administrative controls needed for OpenMRS on AWS  
+- Implement or draft at least one key administrative control  
+- Reflect on the synergy between people, process, and technology  
+
+---
+
+##  What Are Administrative Controls?
+
+Administrative (or procedural) controls are **written policies, defined procedures, and user-focused training**. They guide **how people use systems**, how access is managed, how incidents are handled, and how compliance is maintained.
+
+> If technical controls are the seatbelts and airbags, administrative controls are the **driver's license**, **traffic laws**, and **defensive driving training**. You need both.
+
+---
+
+##  Administrative Controls for OpenMRS on AWS
+
+Here are the core administrative controls I either implemented or planned for our OpenMRS system:
+
+### 📑 1. **Access Control Policy**
+
+A formal policy now guides who can access OpenMRS and AWS resources, under what conditions, and through what approval chain.
+
+**Example Excerpt:**
+- All OpenMRS accounts must be tied to an active clinician or admin role.  
+- Multi-factor authentication (MFA) is mandatory for all AWS and OpenMRS admin users.  
+- Shared credentials are strictly prohibited.  
+- Quarterly access reviews will be conducted to validate least privilege.
+
+This aligns both with HIPAA and NIST AC family controls.
+
+---
+
+### 📄 2. **User Provisioning & Deprovisioning Procedure**
+
+I created a lightweight user management procedure. It's not enough to set up IAM roles — we need to control **who gets access and when it's revoked**.
+
+**Highlights:**
+- New accounts are requested via email/ticket from department leads.  
+- IT admin validates the request and logs it in the provisioning tracker.  
+- Offboarding is tied to HR exit checklists, and accounts must be disabled within 24 hours of separation.  
+
+This prevents orphan accounts and aligns with GRC best practices.
+
+---
+
+### 🎓 3. **Security Awareness Training Plan**
+
+Even the best defenses fail if users click the wrong link. I drafted a plan for lightweight but impactful security training.
+
+**Key Elements:**
+- All OpenMRS team members (devs, admins, clinicians) must complete an annual 30-minute security training.  
+- Topics include phishing, password hygiene, cloud security basics, and PHI handling under HIPAA.  
+- Training tracked via Google Form + shared roster.  
+
+> Simple training = big ROI. This supports NIST AT-2 control.
+
+---
+
+###  4. **Incident Response (IR) Plan**
+
+No system is immune. I outlined a basic IR plan to ensure the OpenMRS team knows what to do *before* something goes wrong.
+
+**Top 3 IR Actions:**
+1. Detect: Set alerts for unauthorized logins, data exfiltration, or GuardDuty findings.  
+2. Contain: Isolate the EC2 instance, revoke IAM keys, disable user access.  
+3. Notify: Alert the security lead, leadership team, and escalate to AWS support.
+
+> Even a one-page IR checklist boosts readiness and builds confidence.
+
+---
+
+###  5. **Backup & Restore Procedures**
+
+Backups mean nothing if they can't be restored. Today I documented how to verify that our OpenMRS backups are functional.
+
+**Policy Highlights:**
+- RDS snapshots taken nightly and retained for 30 days.  
+- Monthly restore drills performed on a test instance to validate data integrity.  
+- Restore procedures reviewed quarterly.  
+
+This hybrid of technical and administrative controls ensures **resilience**.
+
+---
+
+###  6. **Patch Management Standard**
+
+Technical patching needs **human scheduling and documentation**. I drafted a policy aligned with CIS benchmarks.
+
+**Example:**
+- Critical OS patches must be applied within 14 days.  
+- OpenMRS app updates are tested in staging, then pushed to prod within 30 days.  
+- Patch logs stored in a shared team folder for visibility and auditability.
+
+---
+
+##  Reflection: Why Admin Controls Matter
+
+Writing policies and procedures revealed **gaps we hadn’t noticed**. Some controls were assumed but undocumented — others lacked ownership. The process reminded me that **governance is about clarity**: who’s doing what, when, and why.
+
+> “Our tech controls were strong, but now they’re **anchored in process**. Logging is good — having someone review logs weekly is better. IAM roles are good — having a deprovisioning policy is better.”
+
+These controls reduce risk, align with frameworks like NIST 800-53, and make our system **auditable and defendable**.
+
+---
+
+##  Hands-On: Admin Control Implementation
+
+For this sprint, I wrote and committed a **Password Policy** for OpenMRS on AWS:
+
+```text
+- Passwords must be 12+ characters with complexity  
+- MFA is mandatory for all AWS IAM and OpenMRS admin accounts  
+- Passwords must be rotated every 90 days  
+- Default passwords must be changed before first login  
+- Shared credentials are not allowed under any circumstance
