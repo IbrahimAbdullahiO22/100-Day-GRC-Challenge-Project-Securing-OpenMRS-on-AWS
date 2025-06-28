@@ -1,0 +1,143 @@
+# 📅 Day 54 – Locking Down OpenMRS: Technical Controls in Action  
+_100 Days of GRC – OpenMRS-on-AWS Project_
+
+---
+
+##  Transitioning from Planning to Protection
+
+Today marks a pivotal shift in our RMF journey: moving from **planning** into **execution**. We’ve carefully selected and documented our security controls — now it’s time to put them into action.
+
+This is where implementation begins to speak louder than documentation. Our focus? **Technical controls** — the infrastructure-level and application-layer defenses that secure OpenMRS in real-time.
+
+---
+
+## Today’s Goals
+
+- Define **technical controls** in the context of NIST RMF Task I-1  
+- Apply real-world implementations of technical controls in AWS  
+- Reinforce the principle of **least privilege**, **visibility**, and **prevention**  
+- Get hands-on with at least one live control  
+- Reflect on how these controls transform OpenMRS from “configured” to “protected”  
+
+---
+
+## What Are Technical Controls?
+
+Technical controls (also called logical controls) are those implemented through technology. They include:
+
+- **Encryption** (data at rest/in transit)  
+- **Access Control** (IAM roles, MFA)  
+- **Network Security** (firewalls, VPC security groups)  
+- **Logging and Monitoring** (CloudTrail, CloudWatch, SIEM integration)  
+- **Vulnerability Detection** (Amazon Inspector, Nessus)  
+
+In short, technical controls are the guardrails, tripwires, and security checkpoints embedded into our infrastructure — and for OpenMRS on AWS, they are the first line of digital defense.
+
+---
+
+##  OpenMRS-on-AWS: Technical Control Examples
+
+Let’s break down how we’re operationalizing these safeguards:
+
+### 1. **AWS Security Groups & Network ACLs**
+
+Security groups act as virtual firewalls for our EC2-hosted OpenMRS app.
+
+**Implementation Example:**  
+Only allow inbound HTTPS traffic (port 443) from trusted clinic IPs.  
+Block all other traffic by default.  
+This enforces **least privilege at the network layer** and reduces our attack surface.
+
+### 2. **AWS Web Application Firewall (WAF)**
+
+WAF defends OpenMRS endpoints against common threats like SQL injection, XSS, and HTTP floods.
+
+**Implementation Example:**  
+Attach AWS WAF to the Application Load Balancer in front of OpenMRS.  
+Deploy **AWS Managed Rule Groups** that cover OWASP Top 10 threats.  
+This acts as a pre-filter to block known malicious patterns before they hit the application.
+
+### 3. **Identity and Access Management (IAM)**
+
+Granular IAM roles control who can administer, develop, and access OpenMRS resources in AWS.
+
+**Implementation Example:**  
+- DevOps has permission to deploy instances, but cannot access patient data.  
+- The OpenMRS EC2 instance has an IAM role with **read-only** access to its associated S3 bucket.  
+- Admin users authenticate via **MFA** and role-based policies.
+
+This approach ensures **principle of least privilege** and strong identity governance.
+
+### 4. **Encryption: At Rest and In Transit**
+
+Encryption is non-negotiable in healthcare systems.
+
+**Implementation Example:**  
+- OpenMRS data in **Amazon RDS** is encrypted using **AES-256** via KMS-managed keys.  
+- Application and OS EBS volumes are also encrypted.  
+- TLS 1.2 is enforced using **AWS Certificate Manager**, protecting all HTTP endpoints with HTTPS.  
+
+These controls protect PHI and meet HIPAA encryption-at-rest and in-transit requirements.
+
+### 5. **AWS CloudTrail + CloudWatch Logs**
+
+Security without visibility is just hope.
+
+**Implementation Example:**  
+- CloudTrail captures all API actions (who did what and when).  
+- Logs flow into CloudWatch, where alerts are configured for risky events (e.g., new IAM role creation or S3 policy changes).  
+
+This enables **accountability, detection, and response**.
+
+###  6. **AWS Config and Amazon Inspector**
+
+Proactive detection > reactive defense.
+
+**Implementation Example:**  
+- AWS Config checks for compliance violations like wide-open ports or missing encryption.  
+- Amazon Inspector runs continuous vulnerability scans on the EC2 OS.  
+
+We shift from guessing to knowing — fast feedback loops for misconfigurations and CVEs.
+
+---
+
+##  Hands-On Exercise
+
+Today I implemented the following control:
+
+### **Security Group Tightening**
+
+1. Logged into the AWS Console  
+2. Reviewed inbound rules for the OpenMRS EC2 instance  
+3. Removed unused ports (e.g., 22/SSH unless needed)  
+4. Ensured **only port 443** is open to a fixed IP range  
+
+This small tweak drastically reduces the system's exposure. As a GRC leader, it was satisfying to see how documentation translates into measurable defense.
+
+---
+
+##  Reflection
+
+Implementing technical controls felt empowering. It’s one thing to say “we enforce encryption,” but another to **click through AWS Console**, validate it’s on, and understand the *why* behind it.
+
+> "After restricting the security group, I realized how many open ports had been left by default. That simple cleanup makes our OpenMRS system measurably safer today than it was yesterday."
+
+This reminds me: **Security isn’t about perfect systems; it’s about continuous hardening**.
+
+---
+
+## What's Next?
+
+Technical controls are a foundation — but systems don’t run on tech alone. Tomorrow (Day 55), we’ll pivot to **administrative and procedural controls** — training, policies, and documentation that ensure humans operate systems securely.
+
+---
+
+## Suggested Search Terms
+
+- “AWS Security Groups NIST compliance”  
+- “AWS WAF configuration OWASP rules”  
+- “OpenMRS HIPAA encryption AWS RDS”  
+- “AWS CloudTrail CloudWatch SIEM best practices”  
+- “NIST 800-53 Technical Controls mapping cloud”  
+
+---
