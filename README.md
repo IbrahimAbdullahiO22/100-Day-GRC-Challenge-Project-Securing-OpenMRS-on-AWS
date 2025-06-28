@@ -52,7 +52,7 @@ This repository serves as a comprehensive learning portfolio, showcasing how GRC
 
 ---
 
-## 🏥 Sample Environment
+##  Sample Environment
 
 - **System**: OpenMRS (open-source EHR)
 - **Cloud**: AWS (EC2, S3, IAM, VPC, CloudTrail)
@@ -60,12 +60,12 @@ This repository serves as a comprehensive learning portfolio, showcasing how GRC
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 
 ---
 
-## ✅ Skills Demonstrated
+##  Skills Demonstrated
 
 - Governance, Risk & Compliance (GRC) Management  
 - Regulatory Compliance (HIPAA, NIST 800-53, CIS)  
@@ -76,13 +76,13 @@ This repository serves as a comprehensive learning portfolio, showcasing how GRC
 
 ---
 
-## 👋 Contact
+##  Contact
 
 If you’d like to collaborate or ask questions, feel free to connect:
 
 **Ibrahim Abdullahi**  
-📧 Ibrahimojoma22@gmail.com  
-📍 Minnesota
+Ibrahimojoma22@gmail.com  
+Minnesota
 
 ---
 
