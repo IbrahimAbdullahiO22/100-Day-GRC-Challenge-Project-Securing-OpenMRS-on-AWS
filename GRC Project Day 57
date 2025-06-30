@@ -1,0 +1,144 @@
+# 🔍 Day 57 – Who Ya Gonna Call? (Selecting the Right Security Assessor)
+_100 Days of GRC – OpenMRS on AWS_
+
+---
+
+##  Task A-1: Assessor Selection
+
+We’ve entered the **Assess** phase of the NIST Risk Management Framework, and Day 57 focuses on the foundational step: **choosing the right assessor**. After designing, implementing, and documenting controls for OpenMRS-on-AWS, it’s time to invite an **independent, qualified professional** to evaluate the system.
+
+This post walks through not just how to select an assessor, but how to **think like a leader** — making risk-informed, ethics-rooted, and collaborative choices that strengthen both compliance and culture.
+
+---
+
+##  Why Assessor Independence Matters
+
+I’ve been involved from Day 1 in designing, hardening, and documenting our OpenMRS system on AWS. But that proximity can lead to **blind spots**. No matter how experienced you are, self-assessing a system you helped build risks unintentional bias. That’s why **independence** is essential.
+
+> You wouldn’t let a developer test their own code in production.
+> So why let a system owner validate their own security posture?
+
+NIST RMF (and frameworks like FedRAMP) emphasize independence to ensure credibility, objectivity, and transparency. An independent assessor acts like a referee — fair, but firm — ensuring the controls actually work, not just look good on paper.
+
+---
+
+##  What Makes a Good Assessor?
+
+Here’s the checklist I use when evaluating potential assessors:
+
+###  Technical Competence
+- **Understands AWS services** (IAM, CloudTrail, EC2, RDS, WAF)
+- **Knows healthcare IT** and security priorities (e.g., PHI protection, HIPAA safeguards)
+- Familiar with **OpenMRS** or similar EHRs
+- Holds relevant certifications: **CISA**, **CISSP**, **AWS Security Specialty**
+
+###  RMF/NIST Knowledge
+- Practical experience with **NIST 800-53** and **800-53A** controls  
+- Understands how to assess **Access Control (AC)**, **Audit Logging (AU)**, etc.  
+- Familiar with how assessments map to **risk posture**
+
+###  Independence
+- Was **not involved** in implementing OpenMRS
+- Is **organizationally separate** from the development or DevSecOps team
+- If internal, comes from audit or GRC team; if external, no prior engagement as a system integrator
+
+###  Communication and Collaboration
+- Can clearly explain findings and walk through technical logic
+- Uses constructive, solution-focused language  
+- Not a “gotcha” assessor — but also doesn’t sugarcoat gaps
+
+###  Trustworthiness & Confidentiality
+- Will see sensitive configuration details and possibly PHI
+- Must respect boundaries, sign NDAs, and demonstrate discretion  
+- Has a reputation for professionalism  
+
+---
+
+##  Who Might Assess OpenMRS on AWS?
+
+Depending on your org, here are three models that could work:
+
+### 1. **Internal Assessor (Independent Team)**
+- Example: Your hospital’s internal **IT audit team**
+- Pro: Low cost, internal familiarity
+- Con: May lack AWS/OpenMRS depth if not trained
+
+### 2. **Peer Review (Community-Driven)**
+- Example: Security engineer from another OpenMRS implementation
+- Pro: Domain-specific insights
+- Con: May lack formality, independence depending on affiliation
+
+### 3. **External Consultant / 3PAO**
+- Example: A firm like **CyberSecure Inc.** or **AWS Partner**
+- Pro: High independence, formal reporting, certified assessors
+- Con: Costly, may require coordination
+
+---
+
+##  What I’d Provide to the Assessor
+
+As part of assessor onboarding, I’d prepare a package to help them plan efficiently:
+
+###  Assessor “Intro Kit” Checklist:
+-  **Updated System Security Plan (SSP)**
+-  **Network Diagram** of OpenMRS on AWS
+-  **Architecture Diagram** (e.g., EC2, RDS, S3 flow)
+-  **IAM Role Mapping + MFA Reports**
+-  **Access Control Policy**
+-  **Security Awareness Training Records**
+-  **Incident Response Plan**
+-  **Backup & Restore Procedures**
+-  **POA&M Tracker** (if applicable)
+-  **Contact List** (System Owner, Admin, Compliance Officer)
+
+This transparency builds trust and sets the tone for a **professional and productive assessment**.
+
+---
+
+## Potential Assessor Options (Hypothetical)
+
+### 🅰 Option A: Alice, Internal IT Auditor
+- Strength: Certified CISA, 8 years in IT risk, independent of OpenMRS team
+- Weakness: Limited AWS experience
+- Independence:  Yes
+- Consideration: Pair with cloud SME for AWS review
+
+### 🅱 Option B: CyberSecure Inc. (Consulting Firm)
+- Strength: Conducts HIPAA & FedRAMP audits; AWS-certified engineers
+- Weakness: Requires contract, budget approval
+- Independence:  Yes
+- Consideration: Good for external objectivity and documentation polish
+
+---
+
+##  Reflection
+
+I see the value now in bringing in an assessor early — not just as a “checkpoint,” but as a **partner in strengthening resilience**. It can feel vulnerable to have someone critique your work, but it’s ultimately empowering. Better an assessor catch the weakness than a malicious actor.
+
+> Independence isn’t just about compliance — it’s about earning **confidence** in your system.
+
+This process reminds me that leadership in GRC isn’t just about technical skills — it’s about **inviting scrutiny**, **facilitating transparency**, and building a system that’s not only compliant, but credible.
+
+---
+
+##  Hands-On Summary
+
+- Identified 2 qualified assessor options (internal and external)
+- Evaluated each for independence and relevant expertise
+- Created a draft “assessor intro kit” with key documentation for handoff
+
+---
+
+##  Coming Tomorrow: Assessment Planning (Task A-2)
+
+Tomorrow we dive into planning the actual assessment. What controls will be tested? How? When? It’s like crafting the script for a security evaluation — and it’s a critical step in ensuring the review is targeted, evidence-based, and efficient. Let’s keep pushing forward! 🎯
+
+---
+
+##  Suggested Reading
+
+- `“NIST RMF assessor independence” – Official guidance from NIST publications`
+- `“AWS security audit checklist” – Practical assessment guide`
+- `“FedRAMP 3PAO requirements” – What makes a formal assessor eligible`
+- `“HIPAA IT security assessment firms” – External partners for healthcare-focused reviews`
+
