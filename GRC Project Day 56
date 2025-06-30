@@ -1,0 +1,109 @@
+#  Day 56 – Document, Document, Document: Updating the System Security Plan (SSP)
+_100 Days of GRC – OpenMRS-on-AWS Project_
+
+---
+
+##  From Planning to Reality: Closing the Loop
+
+As we reach Day 56, I’ve learned that building security isn’t just about deploying firewalls and enforcing MFA. True governance requires that we **document what we’ve done**, why we did it, and how it fits into the broader security picture. That’s the heart of **NIST RMF Task I-2** — making sure the System Security Plan (SSP) reflects reality.
+
+Today wasn’t about spinning up a new AWS service — it was about translating architecture, policies, and implementations into **clear, usable documentation**. This is how we operationalize trust, compliance, and resilience.
+
+---
+
+##  Today’s Goals
+
+- Reinforce why **updating the SSP** is a vital phase of implementation  
+- Understand what to capture in “as-implemented” control statements  
+- Practice updating a control based on recent changes in our OpenMRS-on-AWS deployment  
+- Embrace the SSP as a **living document**, not static paperwork  
+
+---
+
+##  Why Documentation Matters
+
+Security is a moving target. If we don’t record our actual implementation — from AWS WAF configurations to IAM policies — we risk falling out of compliance or losing operational clarity. 
+
+> Imagine an assessor reading your SSP. Will they see the truth of your system or a past version?  
+> Imagine a new team member onboarding. Can they trace how encryption is applied across RDS, S3, and EC2?
+
+Good documentation ensures **continuity, auditability, and accountability**.
+
+---
+
+##  What I Updated in My SSP Today
+
+###  SC-13: Data Encryption (At Rest)
+
+**As-Implemented Statement:**
+
+We have implemented AES-256 encryption for the OpenMRS database hosted on Amazon RDS. Backup snapshots are also encrypted using the same AWS KMS-managed key. EC2 instances running OpenMRS use encrypted EBS volumes. S3 buckets (used for patient file storage and logs) have server-side encryption (SSE-KMS) enforced by default. This setup was completed and verified as of **July 10, 2025**.
+
+This clearly communicates the scope of data protection and technology choices — not just intent.
+
+---
+
+###  AC-2: Account Management
+
+**As-Implemented Statement:**
+
+OpenMRS user accounts are provisioned by the system admin upon written approval from clinical leadership. Each user has a unique ID; MFA is enforced for admin users via Google Authenticator. AWS IAM roles are assigned based on least privilege, and IAM password policies require 12-character complexity and 90-day rotation. The last quarterly access review was conducted on **August 15, 2025**, with 2 dormant accounts revoked. Deprovisioning is executed within 24 hours of staff termination.
+
+This kind of detail shows **governance maturity** — it’s operational, time-stamped, and auditable.
+
+---
+
+###  IR-4: Incident Response Plan
+
+**As-Implemented Statement:**
+
+We maintain an incident response plan that includes detection (via AWS GuardDuty and CloudTrail), containment (isolating EC2, revoking IAM credentials), and notification (internal IT team, AWS support, and compliance officers). The plan is tested quarterly. The most recent tabletop exercise was held on **September 1, 2025**, and led to a refinement of our escalation chain.
+
+Documentation like this not only prepares for assessments — it builds real-world readiness.
+
+---
+
+##  Lessons Learned While Updating
+
+- I noticed a few things hadn’t been logged during implementation. For example, I had forgotten to document the **CloudTrail log validation** feature — fixing that now strengthens our audit trail.  
+- Realizing I had no formal version tracking for changes made to the SSP. Going forward, I’ll adopt a **changelog approach** to track what was modified and when.  
+- This work will significantly streamline the **Assess phase** when external reviewers ask, “Show me how you implemented that control.” The answers are now at my fingertips.
+
+> A well-documented SSP tells a story — not just of controls, but of **intentional design**, **risk-informed choices**, and **continuous improvement**.
+
+---
+
+## 🧪 Hands-On Control Documentation Sprint
+
+Today I committed to writing **as-built updates** for three controls: data encryption (SC-13), account management (AC-2), and incident response (IR-4). Each update included:
+
+- Actual AWS services used (e.g., RDS, S3, IAM, CloudTrail)
+- Dates of implementation and verification
+- Roles and responsibilities
+- Any known gaps or future improvements (e.g., expanding MFA coverage)
+
+This process helps future team members, assessors, and myself understand the **current state** of security without needing to reverse-engineer decisions.
+
+---
+
+##  Reflection: The Power of Real-Time Documentation
+
+Keeping the SSP updated isn’t just compliance — it’s **self-respect** for your security operations. It shows your organization (or project) is **intentional**, not reactive. And frankly, it’s less painful to document incrementally than all at once before an audit.
+
+> “Our system is now not only protected — it’s also **explainable**.”
+
+---
+
+##  Tomorrow’s Preview: Assess Phase Begins
+
+With an updated SSP, we’re ready to take the next step: **Assessment**. On Day 57, I’ll explore how to select the right assessor, what makes them qualified, and how to ensure independence and objectivity. Just like you wouldn’t want a biased judge, you don’t want a biased security assessor. Let’s get ready to enter the “show me” phase of RMF.
+
+---
+
+## 🔗 Further Reading
+
+- `System Security Plan (SSP) examples NIST`
+- `FedRAMP SSP templates for cloud systems`
+- `As-built control documentation best practices`
+- `Changelog strategies for SSP version control`
+- `RMF I-2 task guidance for documentation maintenance`
