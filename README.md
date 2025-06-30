@@ -82,7 +82,7 @@ If you’d like to collaborate or ask questions, feel free to connect:
 
 **Ibrahim Abdullahi**  
 Ibrahimojoma22@gmail.com  
-Minnesota
+
 
 ---
 
