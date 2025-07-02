@@ -1,0 +1,161 @@
+# Day 58 – Plan the Attack (Plan the Assessment, That Is!)
+
+Welcome to Day 58 of my 100 Days of GRC journey. After building and documenting controls for OpenMRS on AWS, it’s time to step into the **Assess** phase of the NIST RMF. Today’s focus is **Task A-2: Develop the Assessment Plan** — the roadmap that guides how our security controls will be evaluated.
+
+---
+
+##  Objectives for the Day
+
+- Understand the purpose and importance of an Assessment Plan.
+- Learn what goes into the plan: scope, schedule, roles, methods, and boundaries.
+- Apply NIST SP 800-53A methods — **Examine**, **Interview**, **Test** — in designing my approach.
+- Draft a sample plan tailored to my OpenMRS on AWS deployment.
+
+---
+
+## � What Is an Assessment Plan?
+
+An **Assessment Plan** is a formal document that outlines **what will be tested, how it will be tested, who will test it, and when**. It removes guesswork and ensures transparency and alignment between the assessor and system owner.
+
+The purpose isn’t just formality — it sets the tone for the engagement, protects the system from unintentional disruptions, and ensures the assessor’s efforts focus on **what matters most**.
+
+---
+
+## � What Goes Into a Solid Assessment Plan?
+
+### 🔍 Scope
+
+> Defines what’s in and out of bounds.
+
+- In-Scope: OpenMRS web application, AWS infrastructure (EC2, RDS, S3), IAM roles, backups, encryption.
+- Out-of-Scope: Physical facility controls, local clinic LAN devices.
+
+---
+
+###  Assessment Team & Roles
+
+| Name         | Role                          |
+|--------------|-------------------------------|
+| Jane Doe     | Lead Assessor (External SME)  |
+| Bob Smith    | System Owner (Clinic IT Lead) |
+| Alice Wang   | AWS Engineer (Support)        |
+
+---
+
+###  Schedule and Logistics
+
+| Date       | Activity                                      |
+|------------|-----------------------------------------------|
+| Oct 5      | Assessor off-site document review             |
+| Oct 8      | Interviews (OpenMRS Admin, Clinic Physician)  |
+| Oct 9      | Technical testing of AWS setup (staging only) |
+| Oct 12     | Preliminary results and findings discussion   |
+
+**Logistics Notes:**
+
+- Read-only IAM credentials provisioned for Jane.
+- Non-production OpenMRS staging account for safe testing.
+- Interviews scheduled outside clinic busy hours.
+
+---
+
+###  Assessment Methods by Control
+
+Below are selected examples using the **Examine / Interview / Test** methods from NIST 800-53A:
+
+#### **AC-2 – Account Management**
+
+- **Examine**: Review OpenMRS user list, AWS IAM users/roles, audit logs.
+- **Interview**: Ask Bob how onboarding/offboarding happens.
+- **Test**: Try logging in with a disabled OpenMRS account (test user).
+
+#### **CM-2 – Configuration Baseline**
+
+- **Examine**: Check baseline docs, compare with actual patch levels.
+- **Interview**: Speak with Alice about patch tracking and documentation.
+- **Test**: Validate installed packages on EC2 (read-only commands).
+
+#### **SI-2 – Malware Defense**
+
+- **Examine**: Review deployment of AWS Inspector or antivirus software.
+- **Interview**: Ask about update frequency and scan cadence.
+- **Test**: Drop EICAR test file in a secure environment to verify detection.
+
+---
+
+### ⚖ Rules of Engagement
+
+- **No testing on production** unless explicitly approved.
+- **No exploitation** of vulnerabilities — only discovery and reporting.
+- **Read-only scans only**, staged in test environment.
+- All activities are **pre-coordinated** — no surprise testing.
+
+---
+
+###  Reporting & Sign-Off
+
+- Assessor will deliver report by **Oct 15**.
+- Report includes: Executive summary, control-by-control findings, risk ratings, and actionable remediation guidance.
+- Plan to be signed by system owner and reviewed by governance lead or CISO.
+
+---
+
+##  Hands-On Exercise – My Planning Snapshot
+
+###  Controls I Want Assessed
+
+- **User Access & Permissions** – AC-2
+- **Data Encryption (At Rest & In Transit)** – SC-12 / SC-13
+- **Audit Logging & Monitoring** – AU-2 / AU-6
+- **Backup & Recovery** – CP-9 / CP-10
+- **Web App Security (OWASP Alignment)** – SI-10
+
+###  Methods
+
+| Control                      | Methods                      |
+|-----------------------------|------------------------------|
+| User Access & Permissions   | Examine, Interview, Test     |
+| Data Encryption             | Examine                      |
+| Audit Logging               | Examine, Interview           |
+| Backup & Recovery           | Interview, Examine           |
+| Web App Security            | Test (Staging Only), Examine |
+
+###  Logistics Prep
+
+- Provision test user accounts.
+- Ensure CloudTrail logs and backup configs are accessible.
+- Schedule 30-minute Q&A with OpenMRS users and AWS engineer.
+
+###� Mini Timeline
+
+- **Day 1**: Kickoff, interviews, documentation review.
+- **Day 2**: Technical testing on AWS and OpenMRS (in staging).
+- **Day 3**: Debrief and review preliminary report.
+
+---
+
+##  Reflection
+
+Writing the plan made me feel more **in control** of the process. Instead of worrying about “what the assessor might look for,” I now feel prepared and organized. This planning step showed me the **value of structure in security governance**. I especially appreciated aligning my control tests with the **Examine/Interview/Test** framework — it adds rigor and clarity.
+
+I also realized the value of **rules of engagement**. It protects both the system and the assessor. Just like a good contract, boundaries create confidence.
+
+---
+
+## 🔭 What’s Next?
+
+Tomorrow is Day 59 — **Assessment Execution**. I’ll walk through how we actually carry out this plan, from interviews to evidence collection, and what it’s like to experience a real control assessment.
+
+---
+
+##  Search Terms for More Insight
+
+- `Security Assessment Plan template NIST 800-53A`
+- `NIST Examine Interview Test examples`
+- `Penetration testing rules of engagement`
+- `FedRAMP SAP format`
+- `AWS security audit checklist`
+
+---
+
+> **Key Takeaway**: Planning an assessment isn’t just red tape — it’s leadership. It demonstrates ownership, maturity, and confidence in your system and processes.
