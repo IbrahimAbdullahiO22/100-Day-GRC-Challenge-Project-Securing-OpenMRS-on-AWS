@@ -1,0 +1,156 @@
+# Day 59 – Task A-3 (Part 1): Perform Control Assessments (Technical)
+
+Welcome to **Day 59** of my GRC learning journey! Today, I’m diving into the *Assess* phase of the NIST Risk Management Framework (RMF) with a focus on **technical control assessments**. Using the OpenMRS-on-AWS case study, I’ll demonstrate how to verify that our security controls are truly working—not just assumed to be.
+
+---
+
+##  Today’s Goals
+
+- **Identify** technical assessment techniques like vulnerability scanning, password policy enforcement, and encryption validation.  
+- **Leverage** AWS-native tools such as **AWS Config** and **AWS Trusted Advisor**.  
+- **Apply** hands-on control testing to the OpenMRS system hosted on AWS.
+
+---
+
+##  What Are Technical Control Assessments?
+
+Technical assessments are *hands-on validations*—we don’t just “say” a control is in place; we *test* it.
+
+According to [NIST SP 800-53A](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final), assessors rely on three methods:
+- **Examine**: review artifacts or configs  
+- **Interview**: talk to staff  
+- **Test**: execute hands-on security checks  
+
+Today we focus on **Test** — confirming controls work through active evaluation.
+
+---
+
+##  Our Architecture – OpenMRS on AWS
+
+We’re operating OpenMRS in a cloud-hosted stack using:
+- **EC2** instances for the app servers  
+- **Amazon RDS** for the backend database  
+- **S3 buckets** for logs/backups  
+- **AWS WAF**, **IAM**, and **Security Groups** for layered security  
+
+Each of these components must pass technical scrutiny.
+
+---
+
+##  Key Assessment Techniques
+
+###  Vulnerability Scanning
+
+Using tools like **Amazon Inspector**, **OWASP ZAP**, or **Nessus**, we:
+- Scan EC2 and RDS for known CVEs
+- Detect misconfigurations or unpatched software
+- Validate controls such as CM-2 (Baseline Configuration) and SI-2 (Flaw Remediation)
+
+> _Example: A scan revealed an outdated OpenMRS module and an unpatched Log4j library. That flagged a remediation requirement under control SI-2._
+
+---
+
+###  Password Policy Testing
+
+We validated strong authentication under AC-2 and IA-5:
+- Attempted to create weak passwords via IAM and OpenMRS app
+- Confirmed complexity, lockout, and expiration settings
+- Ensured policies align with organizational baselines
+
+> _Tested password "OpenMRS123!" was accepted in one test case—indicating a control gap._
+
+---
+
+### Encryption and Network Configuration
+
+Under SC-12, SC-13, and SC-28:
+- Verified **RDS encryption** at rest  
+- Checked **S3 bucket policies** for default SSE-S3 or SSE-KMS encryption  
+- Confirmed **TLS/HTTPS** enforced across endpoints  
+- Reviewed **Security Groups** for least-privilege access
+
+> _One EC2 instance had port 22 open to 0.0.0.0/0 — a red flag for misconfiguration under SC-7._
+
+---
+
+## AWS Security Tools
+
+### AWS Config
+
+- Validates that resources stay in secure state  
+- Example rule: “Ensure all EBS volumes are encrypted”  
+- Helps maintain continuous compliance
+
+### AWS Trusted Advisor
+
+- Flags:
+  - Open ports
+  - Over-permissive S3 buckets
+  - Root users lacking MFA
+- Even the free tier provides valuable insights
+
+---
+
+##  Optional Penetration Testing
+
+In alignment with [AWS Penetration Testing Policy](https://aws.amazon.com/security/penetration-testing/), we simulated:
+
+- **SQL injection attempts** on OpenMRS forms  
+- **Cross-site scripting** (XSS)  
+- **WAF evasion techniques**  
+
+> _Penetration testing validated the effectiveness of AWS WAF and OpenMRS input validation routines._
+
+---
+
+##  Evidence Collection for RMF
+
+All findings, screenshots, logs, and reports were documented to support Task A-3 and future POA&Ms (Plan of Actions and Milestones). Controls assessed included:
+
+| Control ID | Control Name             | Status       | Method   | Tool Used        |
+|------------|--------------------------|--------------|----------|------------------|
+| AC-2       | Account Management       | Partial Pass | Test     | AWS Console      |
+| SC-12/13   | Cryptographic Protection | Pass         | Examine  | AWS Config       |
+| CM-2       | Configuration Management | Fail         | Test     | Amazon Inspector |
+
+---
+
+##  Reflection
+
+This technical assessment session was a reminder that **security is not static**. Tools like Trusted Advisor and Config help automate checks, but it’s the **hands-on testing** that uncovers real exposure.
+
+> _Most eye-opening moment: discovering the lack of encryption on our backup S3 bucket. That’s getting patched today._
+
+---
+
+##  Hands-On Exercise
+
+If you want to try this too:
+
+1. **Run AWS Trusted Advisor**  
+   _Check for open ports, MFA on root, public S3 buckets._
+
+2. **Inspect Password Policy**  
+   _Reject weak passwords. Enforce complexity and rotation._
+
+3. **Verify Encryption**  
+   _Check that S3, EBS, and RDS are encrypted by default._
+
+---
+
+##  Search Terms for Further Exploration
+
+- `AWS Config compliance checks security`  
+- `AWS Trusted Advisor security best practices`  
+- `NIST SP 800-53A technical control testing`  
+- `Vulnerability scanning AWS EC2 OpenMRS`  
+- `AWS penetration testing policy`
+
+---
+
+Stay tuned for **Day 60**, where we’ll shift from tech to talk — focusing on interviews, documentation reviews, and the human element in control assessments.
+
+> Security isn’t just about firewalls and encryption. It’s also about how people use and protect systems every day.
+
+---
+
