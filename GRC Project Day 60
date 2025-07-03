@@ -1,0 +1,141 @@
+# Day 60 – Task A-3 (Part 2): Perform Control Assessments (Process & Documentation)
+
+Welcome to **Day 60** of my GRC journey! 
+
+Yesterday, I assessed the *technical controls* of our OpenMRS-on-AWS deployment. Today, I’m shifting focus to **non-technical controls** — specifically the policies, procedures, and human factors that support the system's security posture.
+
+This is the second half of **Task A-3** in the NIST Risk Management Framework (RMF). It’s time to examine documentation and interview stakeholders to ensure **what’s written on paper is truly being practiced**.
+
+---
+
+##  Today’s Goals
+
+- **Understand** non-technical assessments (policy, procedure, training, etc.)  
+- **Apply** the `Examine` and `Interview` methods from NIST SP 800-53A  
+- **Validate** process controls for OpenMRS on AWS  
+- **Collect evidence** to support each assessed control
+
+---
+
+##  What Are Non-Technical Assessments?
+
+Security is not just about servers and firewalls — it’s about **people, policies, and process**.
+
+In NIST terms:
+
+- **Examine** = Read and verify documented procedures, plans, logs  
+- **Interview** = Speak to key personnel to confirm understanding and implementation  
+
+Together, these give a full view of whether a control is real, relevant, and reliable.
+
+---
+
+##  Example: What I Reviewed for OpenMRS
+
+### 1. Policy & Procedure Documents (Examine)
+
+I reviewed:
+
+- **Access Control Policy** – defines least privilege, MFA requirements  
+- **Incident Response Plan** – includes roles, communication steps, escalation paths  
+- **Backup & Recovery SOP** – outlines daily backups to S3 and monthly restore drills  
+- **Security Awareness Training Logs** – tracked completion across user roles  
+
+What I looked for:
+
+| Control | Artifact | What I Verified |
+|--------|----------|-----------------|
+| AC-1 | Access Control Policy | Existence, version control, and references to AWS IAM |
+| IR-4 | Incident Response Plan | Clear chain-of-command and incident types |
+| CP-9 | Backup Policy | Snapshot logs, retention policy |
+| AT-4 | Training Records | Completion certificates for all OpenMRS users |
+
+---
+
+###  2. Interviews With Stakeholders (Interview)
+
+I conducted simulated interviews with:
+
+- **System Admin** – to verify user provisioning and deactivation procedures  
+- **Cloud Engineer** – to explain how backup automation is implemented  
+- **HR/Training Coordinator** – to confirm onboarding includes HIPAA/security training  
+
+> *Example Interview Question:*  
+> “Walk me through how you disabled a user account after someone left the organization.”  
+>  
+> *Expected Answer:*  
+> “We disable the account in OpenMRS, remove the IAM role in AWS, and log it in our offboarding checklist.”
+
+---
+
+## 🔍 Gathering Evidence of Control Implementation
+
+Here’s the kind of **evidence** I collected to confirm process implementation:
+
+| Control | Evidence Type | Description |
+|--------|----------------|-------------|
+| AC-2 | User audit log | Showed last account review (with timestamps) |
+| CP-10 | Backup Logs | S3 snapshots taken daily via AWS Backup |
+| IR-8 | Drill Report | Tabletop exercise summary, conducted quarterly |
+| AT-4 | Training Records | Excel export of completed training sessions, with dates and signatures |
+
+> ✳️ **Pro tip:** Screenshots, export files, and meeting minutes are excellent evidence sources.
+
+---
+
+##  10-Minute Hands-On Exercise
+
+###  Step 1: Select a Security Document
+
+I chose the `Incident Response Plan` for OpenMRS on AWS.
+
+###  Step 2: Match to Real-World Practice
+
+The plan says:  
+> “All incidents must be escalated within 30 minutes of detection.”
+
+I checked our ticketing system and confirmed:  
+- We had a documented incident last month  
+- The timestamp showed the incident was escalated within 15 minutes  
+- An after-action review was conducted
+
+ **Control verified**
+
+---
+
+###  Step 3: Write 3 Interview Questions
+
+1. *“How do you know when an incident is severe enough to escalate?”*  
+2. *“Have you participated in an incident drill this quarter? What did you learn?”*  
+3. *“Can you describe the last time a backup was restored?”*
+
+These help test both knowledge and actual adherence to the process.
+
+---
+
+##  Reflection
+
+> “It’s one thing to have a beautiful policy. It’s another to *live it*.”
+
+Through these interviews and reviews, I identified small gaps — like outdated backup procedures and one missing training log. It was a reminder that **policy without practice introduces risk**.
+
+---
+
+##  Search Terms for Further Exploration
+
+- `NIST SP 800-53A examine interview test`  
+- `Security documentation audit checklist`  
+- `Evidence for security control implementation`  
+- `Policy vs practice compliance gap`  
+- `IT security assessment interviews best practices`
+
+---
+
+## Tomorrow’s Focus
+
+**Day 61** will walk through creating a **Security Assessment Report (SAR)**. We’ll tie together everything learned so far — from evidence collection to risk ratings — and prepare to brief stakeholders for authorization decisions.
+
+---
+
+_Stay disciplined. Lead with clarity. Validate what matters._
+
