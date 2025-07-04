@@ -1,0 +1,148 @@
+# Day 61: Task A-4 – Security Assessment Report (SAR)
+
+Welcome to **Day 61** of my 100-Day GRC journey!  
+Today marks a significant milestone — turning all the technical and procedural assessments I’ve performed into an official **Security Assessment Report (SAR)** for our OpenMRS-on-AWS case study.
+
+This document represents the culmination of weeks of planning, control selection, and testing — now organized into a report that communicates system risk posture to decision-makers.
+
+---
+
+##  Today’s Learning Objectives
+
+- **Understand the SAR’s Purpose**  
+  Grasp the critical role this document plays in the RMF process and how it informs the Authorizing Official (AO).
+
+- **Know the SAR’s Structure**  
+  Learn to document which controls are satisfied, which are deficient, and how to evaluate and communicate the associated risks.
+
+- **Apply to Real-World Example**  
+  Showcase mock findings from our OpenMRS AWS implementation to demonstrate effective SAR documentation techniques.
+
+---
+
+##  What Is a Security Assessment Report?
+
+A **Security Assessment Report (SAR)** is the formal output of the **RMF Task A-4**. It summarizes:
+- What was assessed,
+- Which controls passed,
+- What deficiencies were discovered,
+- How serious those risks are,
+- And recommendations for remediation.
+
+The SAR provides **evidence-based findings** for leadership to make a risk-informed authorization decision.
+
+---
+
+##  What Goes Into a SAR?
+
+A standard SAR includes:
+
+###  System Overview  
+Brief description of the system:  
+> *“OpenMRS is a cloud-hosted electronic medical record system deployed on AWS for Clinic XYZ. It consists of EC2 instances, RDS databases, S3 backups, and is protected via AWS IAM, WAF, and security groups.”*
+
+###  Assessment Scope and Method  
+We assessed selected NIST SP 800-53 Rev. 5 controls using **Examine, Interview, and Test** methods across both technical and non-technical domains. Tools used include:
+- Amazon Inspector
+- AWS Trusted Advisor
+- Document review
+- Staff interviews
+
+###  Summary of Results  
+
+| Control Status  | Count |
+|-----------------|-------|
+| Satisfied       | 90    |
+| Deficient       | 10    |
+| High Risk       | 1     |
+| Moderate Risk   | 4     |
+| Low Risk        | 5     |
+
+###  Detailed Findings  
+Each control with a deficiency is documented with:
+- Control ID and Name
+- Description of the issue
+- Associated evidence
+- Risk level
+- Recommendation (optional in SAR, expanded later in POA&M)
+
+---
+
+##  Example Findings from OpenMRS on AWS
+
+###  Finding #1  
+**Control:** SC-13: Cryptographic Protection  
+**Status:** Deficient  
+**Description:** Automated RDS database snapshots were not encrypted by default.  
+**Risk:** Moderate  
+**Evidence:** AWS Console inspection revealed unencrypted snapshots for production RDS instances.  
+**Recommendation:** Enable encryption for automated RDS snapshots and enforce snapshot encryption policies moving forward.
+
+---
+
+###  Finding #2  
+**Control:** IA-5: Authenticator Management  
+**Status:** Deficient  
+**Description:** Weak password policy was enforced by default in both OpenMRS and AWS IAM.  
+**Risk:** High  
+**Evidence:** Test users were able to set passwords like `Password123!` without rejection. IAM policy only required 6 characters.  
+**Recommendation:** Update IAM and OpenMRS password policies to enforce complexity, 12+ character minimum, and MFA for admin roles.
+
+---
+
+###  Example Satisfied Control  
+**Control:** AC-2: Account Management  
+**Status:** Satisfied  
+**Evidence:** All active accounts were reviewed quarterly and removed if unused. Access permissions were appropriately scoped per least privilege via IAM roles and OpenMRS user roles.
+
+---
+
+##  Risk Ratings – What Do They Mean?
+
+| Risk Level | Description |
+|------------|-------------|
+| **High**   | Immediate remediation required; could lead to significant compromise. |
+| **Moderate** | Important to resolve; exploitable with some effort. |
+| **Low**    | Minor issue; mostly administrative or unlikely threat vector. |
+
+Risk levels are based on a combination of **likelihood** and **impact**, following our organization's risk matrix.
+
+---
+
+##  Hands-On Exercise: Write a Mini SAR Entry
+
+Here’s a practical entry I wrote as part of today’s task:
+
+> **Control:** AU-6 (Audit Log Review)  
+> **Status:** Deficient  
+> **Description:** While CloudTrail logging was enabled, the team lacked a routine review process.  
+> **Risk:** Moderate  
+> **Recommendation:** Implement a scheduled weekly log review and set up AWS CloudWatch alarms for anomalies.
+
+---
+
+##  Reflection: What I Learned
+
+Writing an SAR forces clarity and accountability. It’s one thing to assess controls — it’s another to explain them in a way that leadership understands and acts on. I found it especially challenging to **balance technical precision with executive clarity**.
+
+For instance, it’s easy to say “RDS wasn’t encrypted,” but much harder to explain why that’s a **moderate risk** and what the implications could be for patient data.
+
+This exercise reminded me that **GRC work lives in the details** — but decision-makers live in the summary. We must serve both.
+
+---
+
+##  Search Terms for Further Exploration
+
+- “Security Assessment Report example NIST”
+- “Documenting security control findings”
+- “NIST SP 800-53A examine interview test”
+- “Risk assessment matrix cyber vulnerabilities”
+- “SAR vs POA&M reporting RMF”
+
+---
+
+## 📅 Coming Up: Day 62 – Plan of Action & Milestones (POA&M)
+
+Now that we've reported the gaps, the next step is to **act on them**. On Day 62, I’ll share how we build a Plan of Action and Milestones to remediate issues found during the assessment and prepare the system for Authorization to Operate (ATO). Stay tuned!
+
+---
