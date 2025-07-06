@@ -1,0 +1,105 @@
+# Day 63: Task A-6 – Prepare POA&M (Plan of Action & Milestones)
+
+Welcome to **Day 63** of my GRC journey. Today, I dove deep into one of the most critical components of the RMF process: the **Plan of Action and Milestones (POA&M)**. After conducting control assessments and documenting findings in the Security Assessment Report (SAR), the POA&M becomes our action blueprint. It's where strategy meets execution.
+
+---
+
+##  What I Learned
+
+###  What is a POA&M?
+A **Plan of Action and Milestones** is a living document that:
+
+- Tracks **unresolved security weaknesses**.
+- Lays out **remediation steps**, **responsible parties**, and **target dates**.
+- Provides the Authorizing Official (AO) with confidence that issues are acknowledged and being addressed.
+
+> Think of it as a formal, auditable to-do list for risk mitigation. It brings visibility, accountability, and structure to remediation.
+
+---
+
+##  Key Components of a POA&M
+
+| Field                     | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| **POA&M ID**             | Unique identifier for tracking the finding                                  |
+| **Weakness**             | Brief summary of the issue                                                  |
+| **Control Reference**    | NIST 800-53 control or requirement associated with the issue                |
+| **Description**          | Detailed explanation of the vulnerability or deficiency                     |
+| **Risk Level**           | High / Moderate / Low                                                       |
+| **Point of Contact**     | Individual or team responsible for remediation                              |
+| **Planned Actions**      | Milestones outlining the fix strategy                                       |
+| **Target Completion Date** | Deadline for final resolution                                               |
+| **Status**               | Open, In Progress, Completed, Delayed, etc.                                |
+| **Comments**             | Any notes on progress, dependencies, or delays                             |
+
+---
+
+##  Sample POA&M Entries from My OpenMRS Case Study
+
+###  **POA&M ID: 63-1**
+
+- **Weakness:** Default admin account in OpenMRS not disabled (potential brute-force target)
+- **Control Reference:** AC-2 (Account Management) / IA-5 (Authenticator Management)
+- **Description:** The default admin account ("admin") was found active with a weak password.
+- **Risk Level:** High
+- **Point of Contact:** John Doe, Lead DevOps Engineer
+- **Planned Actions:**
+  - Milestone 1: Change default password to a complex one ✅ (Completed 07/06/2025)
+  - Milestone 2: Create a new admin account & disable the default account (Target: 04/27/2025)
+  - Milestone 3: Update documentation/scripts to remove default account dependencies (Target: 05/04/2025)
+- **Target Completion Date:** 05/04/2025
+- **Status:** In Progress
+- **Comments:** Waiting on vendor confirmation to fully remove the account. All other steps completed.
+
+---
+
+###  **POA&M ID: 63-2**
+
+- **Weakness:** Missing encryption on OpenMRS database backups (RDS snapshots)
+- **Control Reference:** SC-12 (Cryptographic Key Establishment)
+- **Risk Level:** Moderate
+- **Point of Contact:** Jane Smith, Cloud Architect
+- **Planned Actions:**
+  - Enable encryption for existing and future RDS snapshots
+  - Implement policy for default encryption of all AWS backups
+- **Target Completion Date:** 05/15/2025
+- **Status:** Open
+- **Comments:** Requires snapshot replacement and validation. Scheduled for next maintenance window.
+
+---
+
+##  Why POA&M Matters
+
+- **Shows ownership:** Everyone knows who’s responsible for what.
+- **Enables prioritization:** Focuses remediation efforts based on risk level.
+- **Drives accountability:** Regular updates force transparency and momentum.
+- **Supports ATO:** The AO relies on the POA&M as a key decision-making tool.
+
+> "What gets measured, gets managed." The POA&M ensures lingering security issues don't fall through the cracks.
+
+---
+
+##  Hands-On Reflection
+Today I drafted a mini POA&M for two OpenMRS findings. This forced me to:
+- Evaluate real risk levels
+- Set achievable target dates
+- Break remediation into clear milestones
+
+I now understand that maintaining an accurate and living POA&M is not just good practice — it's essential for continuous monitoring and compliance.
+
+---
+
+##  Related Search Terms
+- "POA&M template FISMA"
+- "NIST POA&M management best practices"
+- "FedRAMP POA&M guidance"
+- "Tracking remediation actions POAM"
+- "Plan of Action and Milestones example report"
+
+---
+
+Stay tuned for **Day 64**, where we move into the **Authorize** phase and learn how to turn all of this work into a green light for production!
+
+---
+
+#GRC #RMF #NIST80053 #CybersecurityLeadership #POAM #OpenMRS #Day63
