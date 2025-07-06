@@ -1,0 +1,135 @@
+# Day 62: Task A-5 – Remediation Actions
+
+Welcome to **Day 62** of my 100 Days of GRC journey.  
+Today marked a pivotal shift: from identifying security weaknesses to actively fixing them. We’ve completed our Security Assessment Report (SAR) for the OpenMRS-on-AWS environment, and now we engage in the real-world discipline of **remediation** — addressing those findings, reducing risk, and moving our system closer to Authorization to Operate (ATO).
+
+---
+
+##  Today’s Learning Objectives
+
+- **Prioritize and plan remediation efforts** for technical and process-based vulnerabilities.
+- **Execute and document corrective actions** such as patching, configuration hardening, or procedural improvements.
+- **Maintain communication with stakeholders** (e.g., the Authorizing Official) about progress and ongoing efforts.
+
+---
+
+##  From Findings to Fixes – Where to Begin?
+
+Security assessments often leave us with a long list of findings — but not all risks are created equal.
+
+I’ve learned to follow a **risk-based prioritization model**, where:
+- **High-risk** issues are fixed immediately.
+- **Moderate-risk** issues are planned and mitigated soon after.
+- **Low-risk** findings are tracked and scheduled with flexibility.
+
+For example, in the OpenMRS case, suppose the SAR revealed:
+- A **weak password policy** (High risk).
+- An **unpatched Tomcat vulnerability** (High risk).
+- **Missing training documentation** (Moderate risk).
+- **S3 bucket without default encryption** (Moderate risk).
+
+We start with the two high-risk findings — these pose unacceptable exposure and must be addressed before ATO.
+
+---
+
+##  Executing Remediation Actions
+
+Here’s how I tackled real-world remediation steps:
+
+###  1. **Patching Vulnerabilities**
+
+**Finding:** Outdated Tomcat version running OpenMRS.  
+**Action:** Scheduled a maintenance window, updated Tomcat to the latest secure release, and re-ran vulnerability scans using Amazon Inspector and Nessus.  
+**Outcome:** The patched system passed all critical checks.  
+**Control Remediated:** `SI-2 – Flaw Remediation`  
+**Lesson:** Patching is low-hanging fruit with high impact — but must be coupled with re-testing.
+
+---
+
+###  2. **Strengthening Password and IAM Policies**
+
+**Finding:** OpenMRS app and AWS IAM had weak password requirements.  
+**Action:**  
+- Enforced a new password policy (12+ characters, uppercase, lowercase, numbers, special characters) within OpenMRS.  
+- Updated AWS IAM to require strong password complexity and enabled MFA for admin accounts.  
+**Outcome:** User accounts now comply with NIST SP 800-53 `IA-5` guidance.  
+**Lesson:** IAM controls are often overlooked but are central to protecting cloud workloads.
+
+---
+
+###  3. **Fixing Configuration Weaknesses**
+
+**Finding:** RDS snapshots and S3 backup buckets were unencrypted.  
+**Action:**  
+- Enabled default encryption on S3.  
+- Re-created RDS snapshots with KMS-managed encryption.  
+**Outcome:** All data-at-rest is now encrypted by default.  
+**Control Remediated:** `SC-12/SC-13 – Cryptographic Protection`  
+**Lesson:** AWS makes secure defaults easy — it’s on us to enforce them.
+
+---
+
+###  4. **Process and Procedure Enhancements**
+
+**Finding:** No evidence of routine log reviews or user access recertifications.  
+**Action:**  
+- Drafted and implemented a **monthly CloudTrail review SOP**.  
+- Assigned log review responsibilities to a designated analyst.  
+- Scheduled quarterly user access reviews across OpenMRS and AWS IAM.  
+**Evidence Collected:** Log review checklist, first audit report, access review records.  
+**Lesson:** GRC is as much about **discipline** as it is about tools.
+
+---
+
+##  Keeping the AO and Team Informed
+
+Communication is not optional — it’s essential.
+
+I prepared a **remediation status memo** for the Authorizing Official (AO) that included:
+- Total number of findings by risk level.
+- Number of items remediated to date.
+- Timeline for completing the remaining actions.
+- Evidence of fixes (screenshots, scan results, audit reports).
+
+This level of transparency fosters trust and keeps everyone aligned.
+
+### Example AO Update Summary:
+
+
+---
+
+## ✍ Mini Exercise (Real-World Example)
+
+> **04/25/2025 – Enabled encryption on OpenMRS S3 backup bucket via AWS Console.  
+> Verified via Trusted Advisor and AWS Config compliance reports.  
+> Control SC-12 marked as satisfied post-fix.**
+
+This kind of clear, timestamped remediation note is what we provide during reassessments and as part of the final ATO package.
+
+---
+
+##  Reflection
+
+Today reinforced that **security is a living process**. A good SAR means little without action. Fixing issues — whether it’s a CLI command, AWS Console change, or stakeholder meeting — is where we **move the needle**.
+
+I also realized that:
+- Fixes are easier when controls were well-defined to begin with.
+- Collaboration across IT, GRC, and engineering is essential.
+- Every small fix builds toward a stronger security posture and safer system.
+
+---
+
+##  Search Terms Worth Exploring
+
+- `"Remediation of security audit findings best practices"`
+- `"Patch management policy AWS"`
+- `"Risk mitigation vs risk acceptance NIST"`
+- `"Communicating security risk to stakeholders"`
+
+---
+
+##  Tomorrow’s Focus: Day 63 – POA&M (Plan of Action and Milestones)
+
+While we’ve remediated high-priority issues, some moderate and low-risk findings may still remain. On **Day 63**, I’ll create a formal **POA&M** to track remaining risks, assign owners, and establish due dates. It’s the bridge from assessment to long-term governance.
+
+Stay tuned — we’re almost through the Assess phase!
