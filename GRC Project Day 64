@@ -1,0 +1,111 @@
+#  Day 64: Task R-1 – Assemble Authorization Package
+
+Welcome to Day 64!  After weeks of securing and assessing OpenMRS on AWS, today I took a big step forward in the NIST Risk Management Framework (RMF): **assembling the Authorization Package**. This is the formal bundle of documents we submit to the Authorizing Official (AO) for a risk-based decision on whether the system is secure enough to operate.
+
+##  Why This Step Matters
+
+Think of the Authorization Package as the **final report card** for the system. It consolidates all our security efforts—designs, assessments, fixes, and risk decisions—into one cohesive package. It's also where leadership gets to see the big picture.
+
+As a GRC practitioner working toward a future in healthcare compliance, this step is key for showing I can **communicate risk clearly**, **document thoroughly**, and **lead through assurance**.
+
+---
+
+##  Key Components of the Authorization Package
+
+###  1. System Security Plan (SSP)
+This contains:
+- Overview of OpenMRS on AWS: system purpose, boundaries, and environment
+- The full list of implemented NIST SP 800-53 controls
+- AWS architectural diagrams
+- Encryption protocols, IAM, backup strategies, etc.
+
+ *Status:* Finalized and reviewed for consistency. Encryption and IAM sections double-checked for accuracy.
+
+---
+
+###  2. Security Assessment Report (SAR)
+Summarizes:
+- Which controls were assessed (e.g., AC-2, SI-2, SC-13)
+- Methods used: Interviews, testing, documentation review
+- Results: 100 controls tested, 5 moderate-risk findings, 0 high-risk
+- Control-by-control evidence of effectiveness
+
+ *Status:* Complete. Assessment results verified, including screenshots and logs as supporting evidence.
+
+---
+
+###  3. Plan of Action and Milestones (POA&M)
+Outlines:
+- Outstanding issues and their risk ratings
+- Remediation plans, responsible parties, and deadlines
+- Example: Weak MFA on admin accounts (moderate) – due 05/15/2025
+- Demonstrates that unresolved risks are being actively managed
+
+ *Status:* Living document. All high-risk items mitigated; moderate/low items are scheduled with owners assigned.
+
+---
+
+###  4. Executive Summary
+This one-pager delivers the strategic narrative:
+> *"OpenMRS is an open-source EHR system deployed on AWS to support multiple healthcare clinics. It underwent full NIST SP 800-53A assessment with zero high-risk findings. All moderate findings are documented and under remediation. The system's risk posture is considered acceptable for operation with ongoing monitoring in place."*
+
+ *Status:* Complete. Reviewed for alignment with SAR and POA&M.
+
+---
+
+##  Leadership Lessons Learned
+
+Assembling the package forced me to:
+- **Think holistically** about risk—not just control-by-control
+- **Ensure documentation integrity**—what’s in the SSP must align with SAR and POA&M
+- **Summarize complexity** for executive audiences
+- **Own accountability** as a system steward
+
+I also saw how powerful well-documented evidence can be in building trust. When an AO sees a clean, coherent package, they gain confidence in the team behind the system.
+
+---
+
+##  Hands-On Checklist
+
+Here’s a quick self-check I used before finalizing:
+
+| Component | Status | Notes |
+|----------|--------|-------|
+| System Security Plan | ✅ Finalized | Includes AWS architecture, IAM, encryption |
+| Security Assessment Report | ✅ Complete | 100 controls tested, findings clearly documented |
+| POA&M | ✅ Updated | 3 open moderate issues with dates & owners |
+| Executive Summary | ✅ Done | Matches SAR & SSP; reviewed for clarity |
+
+---
+
+##  Reflection
+
+Gathering all this evidence felt like both a celebration and an audit of my own discipline. Every weak spot in documentation exposed a possible gap in process. I learned that **security isn’t just about technical controls—it’s about traceability, accountability, and communication**.
+
+This also reinforced a mantra I’ve started adopting:
+> *“If it’s not documented, it didn’t happen.”*
+
+Clear documentation isn’t just compliance—it’s leadership in action.
+
+---
+
+##  Search Terms I Used
+
+- “NIST RMF Authorization Package contents”
+- “FedRAMP ATO checklist”
+- “Security Assessment Report vs POA&M”
+- “HIPAA ATO documentation healthcare”
+- “How to write an executive summary for system security”
+
+---
+
+##  What’s Next?
+
+Next is Task R-2: Review Authorization Package and make the risk-based decision. I’ll step into the AO’s mindset and assess whether the system is ready for Authorization to Operate (ATO). It’s where assurance meets executive judgment.
+
+---
+
+Thanks for following along on Day 64. This stage taught me the art of **closing the loop** in security work. If you’re building in GRC or healthcare cybersecurity, make documentation your ally and your leadership tool.
+
+Stay tuned for Day 65!
+
