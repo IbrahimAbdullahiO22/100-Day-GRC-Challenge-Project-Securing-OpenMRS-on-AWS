@@ -1,0 +1,129 @@
+#  Day 66: Task R-3 – Risk Response
+
+Welcome to Day 66! By now, the Authorizing Official (AO) has reviewed the system’s risks and made a risk determination. Today in **Task R-3**, we take the next step: defining how we respond to those risks.
+
+This is where governance becomes action. Risk response is not just theory — it’s the moment we decide:
+
+> **“Can we live with this risk, or must we reduce it?”**
+
+##  Objectives of Task R-3
+
+- Understand how to respond to identified residual risks.
+- Distinguish between mitigation and risk acceptance.
+- Document risk response decisions effectively.
+- Align POA&M and system documentation with current status.
+
+---
+
+##  Two Core Risk Responses
+
+In the context of the NIST RMF, there are two primary risk response paths:
+
+###  Mitigation
+
+When the risk is too high or violates organizational policy, we **reduce** it by implementing additional controls. For instance:
+
+- **Issue:** OpenMRS lacks MFA for admin logins.
+- **Response:** Require implementation of MFA within 30 days.
+- **POA&M:** Milestones defined, deadlines set.
+- **Reassessment:** Controls are re-tested to confirm efficacy.
+
+Mitigation can also involve **interim measures** — such as IP whitelisting — while a longer fix is being deployed. Per NIST, mitigation steps and their outcomes should be reflected in updated SSP and SAR documentation.
+
+###  Acceptance
+
+When the **residual risk** is considered low or mitigation is impractical given the cost or impact, the AO may choose to **accept** the risk.
+
+- **Only the AO can authorize acceptance**.
+- Risk is still tracked (in SAR, risk register, etc.).
+- Typically reserved for **low or moderate** findings only.
+
+For example, a minor vulnerability in a legacy API might be accepted with the plan to sunset that feature within a quarter.
+
+---
+
+##  Scenario: Risk Response for OpenMRS on AWS
+
+Let's apply this:
+
+Dr. Tran, our AO, determines:
+
+- All **high risks have been mitigated**.
+- A few **moderate findings** remain:
+  - Missing MFA for some admin accounts.
+  - No API rate limiting.
+
+### Dr. Tran's Risk Response Plan:
+
+- **Mitigate:** MFA must be fully implemented **before go-live**.
+- **Mitigate:** API rate limiting to be implemented **within 60 days**.
+- **Accept:** Residual moderate risk during the 60-day window, contingent on interim measures (e.g., IP filtering).
+
+These are documented in:
+- A memo or authorization letter.
+- The POA&M (with updated milestones).
+- The SSP (updated to reflect MFA is now live).
+
+---
+
+##  When Risks Are Too High...
+
+If any **high-risk** vulnerability had remained — like a critical flaw exposing PHI — Dr. Tran would have likely halted authorization entirely.
+
+> **High risks must be mitigated before ATO can be issued.**
+
+No shortcuts.
+
+---
+
+##  Documentation Updates
+
+As mitigation actions are implemented:
+- **SSP** sections are updated (e.g., access control changes).
+- **POA&M** reflects new or completed items.
+- **SAR** includes post-mitigation re-testing results.
+
+Keeping these synchronized is part of **maintaining governance transparency**.
+
+---
+
+##  Hands-On Exercise
+
+Pick a risk (real or imagined) and define two response options:
+
+**Example:**
+- **Risk:** Unpatched server with critical CVE.
+- **Mitigation:** Apply patch within 48 hours.
+- **Acceptance:** Temporarily accept risk while increasing monitoring (only if organizational policy allows).
+
+Then ask:
+- Would I sign off as AO on this?
+- What interim controls make acceptance safer?
+
+---
+
+##  Reflection
+
+Thinking like an AO is different from being a builder. It’s about **risk ownership**.
+
+- Were your mitigation timelines realistic?
+- Would you be comfortable accepting that risk?
+- How would you explain your decision to leadership?
+
+This task teaches us how to balance **security rigor** with **operational pragmatism**.
+
+---
+
+##  What’s Next?
+
+Tomorrow, we’ll reach a pivotal milestone — **Task R-4: Authorization Decision**.
+
+We’ll see how all our work, all our documents, and all our remediations come together in a formal **ATO (Authority to Operate)** decision.
+
+---
+
+##  Search Terms for Deeper Learning
+
+- "NIST RMF risk response types"
+- "POA&M mitigation tracking"
+- "Residual risk authorization criteria"
