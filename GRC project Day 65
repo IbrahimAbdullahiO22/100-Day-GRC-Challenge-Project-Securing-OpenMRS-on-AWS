@@ -1,0 +1,112 @@
+# Day 65: Task R-2 – Risk Analysis by the Authorizing Official (AO)
+
+Welcome to **Day 65** of my 100 Days of GRC learning journey. Today, I took on the perspective of the **Authorizing Official (AO)** and practiced the critical skill of **risk analysis**. After assembling the authorization package for our OpenMRS-on-AWS project, it’s time to determine whether the system’s residual risk is acceptable enough to move forward with an Authorization to Operate (ATO).
+
+---
+
+##  What I Learned Today
+
+In the RMF **Task R-2**, the AO evaluates the **residual risk** associated with operating the system. This isn't a retest of the system, but rather a senior-level judgment based on the following documents:
+
+-  **System Security Plan (SSP)**
+-  **Security Assessment Report (SAR)**
+-  **Plan of Action & Milestones (POA&M)**
+-  **Executive Summary**
+
+As an AO, the primary question I must answer is:
+
+> "Can we live with the current level of risk, based on what we know?"
+
+---
+
+##  Key Concepts & Insights
+
+###  The AO’s Role
+
+- The AO uses the package to **make a formal risk determination**, not just for technical compliance but for **business and mission impact**.
+- Input may be gathered from stakeholders like the **CISO**, **Privacy Officer**, or **Risk Executive**, especially if enterprise or privacy-level risks are involved.
+
+###  Residual Risk Analysis
+
+Residual risk is what **remains after all controls have been applied**. The AO must weigh:
+- Severity of remaining vulnerabilities (e.g., moderate or low)
+- The presence of active mitigation plans in the POA&M
+- The system's importance to the organization
+- The organization's **risk tolerance thresholds**
+
+---
+
+##  Case Study: OpenMRS on AWS
+
+Let’s say our AO is **Dr. Tran**, the CTO of the healthcare NGO implementing OpenMRS. Here's how she might approach this task:
+
+1. **Review the Executive Summary**: Confirms no high-risk issues remain.
+2. **Dive into the SAR**: Validates that remaining findings (like lack of MFA on admin accounts) are well-documented and medium-risk.
+3. **Check the POA&M**: Confirms mitigation plans are in place for all open items, with acceptable timelines.
+
+Dr. Tran might reach out to the system security team for clarifications. For example:
+
+> _"You plan to enable MFA in 45 days – what safeguards are in place until then?"_
+
+We explain:
+- Admin access is currently IP-restricted.
+- MFA setup is already in testing phase.
+
+This dialogue ensures that **mitigation plans are realistic and active**, building trust in the process.
+
+---
+
+##  Sample Risk Determination Statement
+
+> "The OpenMRS system presents a **moderate residual risk** to the organization’s operations and assets. All high-severity vulnerabilities have been remediated. Mitigation plans for moderate findings are documented in the POA&M and scheduled within 60 days."
+
+This formal determination sets the stage for the next step: **risk response**.
+
+---
+
+##  Hands-On Exercise
+
+###  Pretending to be an AO
+
+Here are the three questions I would ask if I were an AO reviewing a web-based system:
+
+1. **What’s the worst-case scenario if this system is breached?**
+2. **Are there any open high-severity findings?**
+3. **Do mitigation efforts in the POA&M align with organizational risk policy and deadlines?**
+
+And here’s how I’d want them answered:
+- No high-risk vulnerabilities remain.
+- All moderate risks have mitigation milestones within 30–60 days.
+- Interim safeguards (like IP whitelisting, logging, alerts) are in place.
+
+---
+
+##  Reflection
+
+Switching into the AO mindset was a powerful learning experience.
+
+As a builder or engineer, I tend to focus on **fixing problems** and **building functionality**.
+
+But as an AO, the lens is different: I now think in terms of **organizational impact, mission alignment**, and **risk tolerance**.
+
+This shift reminded me that **GRC professionals must bridge both perspectives**: technical precision and executive reasoning.
+
+---
+
+##  What’s Next?
+
+Tomorrow in **Day 66**, I’ll continue with **Task R-3 – Risk Response**. Now that Dr. Tran has made her determination, the next step is deciding: **accept, mitigate further, transfer, or reject** the risk. It’s time to turn insights into action. 💼
+
+---
+
+##  Search Terms for Continued Learning
+
+- “Authorizing Official risk determination”
+- “residual risk acceptance criteria”
+- “NIST RMF R-2 task guidance”
+- “Executive risk tolerance framework”
+
+---
+
+📅 _Logged on: July 10, 2025_  
+🛡️ _#100DaysOfGRC #NISTRMF #OpenMRS #RiskManagement #CybersecurityLeadership_
