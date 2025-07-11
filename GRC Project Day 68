@@ -1,0 +1,168 @@
+#  Day 68: Task R-5 – Authorization Reporting
+
+Welcome to **Day 68** of my 100-Day GRC journey!  
+
+After the excitement of receiving the **Authorization to Operate (ATO)**, you might be tempted to close the book — but **we’re not done just yet**. One final task remains in the Authorize step of the NIST Risk Management Framework (RMF): **Authorization Reporting**.
+
+This is where we **document and communicate** the ATO decision across the organization, making sure everyone who needs to know… does. It’s about transparency, accountability, and laying the foundation for continuous monitoring.
+
+---
+
+##  What Is Task R-5?
+
+**Authorization Reporting** ensures that the AO’s decision — and any residual risks — are properly recorded and disseminated. It helps align the organization’s understanding of the system’s current security posture and sets expectations for future oversight.
+
+Here’s what this step typically includes:
+
+---
+
+###  1. Notify Key Organizational Officials
+
+The **Authorizing Official (AO)** or their delegate must inform relevant stakeholders of the authorization outcome. This often includes:
+
+- CIO  
+- CISO  
+- System Owner  
+- Risk Executive  
+- IT Governance Board
+
+**Why it matters**: Reporting the ATO and any **outstanding vulnerabilities** ensures system-level risks are understood in the broader context of enterprise risk.
+
+**Example:**  
+> "OpenMRS has been granted ATO as of April 1, 2025. No high risks remain. Two moderate risks — MFA implementation and API rate limiting — are being addressed within 60 days."
+
+---
+
+###  2. Update the System Registry
+
+Every organization should maintain an **inventory of systems** — often housed in a GRC tool or internal registry. This registry should be updated with:
+
+- Authorization Date  
+- Expiration Date  
+- Authorizing Official  
+- Residual Risks  
+- Associated POA&M Items  
+
+For example:  
+> **System**: OpenMRS  
+> **ATO Granted**: Apr 1, 2025  
+> **Expires**: Apr 1, 2028  
+> **AO**: Dr. Tran  
+> **Residual Risk**: Moderate – MFA & rate limiting in progress
+
+---
+
+###  3. Record Accepted Risks and Conditions
+
+If **moderate or high risks** were accepted, they should be clearly documented and visible to senior leadership. Some organizations maintain a **central risk dashboard** to provide real-time insights into residual risk across all systems.
+
+In our case:  
+- **No high risks**  
+- **Two moderate risks**, accepted with mitigation underway  
+- Conditions noted in the ATO letter and the POA&M
+
+---
+
+###  4. Archive the Authorization Package
+
+Although not explicitly highlighted in NIST’s step, it’s best practice to **archive the full authorization package** in a secure document repository.
+
+This includes:
+
+- Signed ATO Letter  
+- Final System Security Plan (SSP)  
+- Security Assessment Report (SAR)  
+- Plan of Action & Milestones (POA&M)  
+
+**Why?**  
+To support compliance, future audits, and ensure continuity if personnel change. Organizational knowledge must live beyond the inbox.
+
+---
+
+##  Real-World Example – OpenMRS on AWS
+
+After Dr. Tran signed the ATO, the **Information Security Office** initiated the reporting process:
+
+###  Email Notification:
+> "**Subject**: ATO Granted for OpenMRS Health Records System  
+> **Date**: April 1, 2025  
+>  
+> The OpenMRS EHR system has been granted an Authorization to Operate (ATO) valid through April 1, 2028.  
+>  
+> Conditions:  
+> - MFA for admin accounts to be implemented before May 31, 2025  
+> - API rate limiting to be deployed by June 30, 2025  
+>  
+> No high-severity risks remain. Moderate risks have been accepted and are being mitigated.  
+>  
+> Congratulations to the team for their dedication and commitment to security compliance."
+
+###  Registry Update:
+The security analyst updated the internal ATO tracker:
+- Status: **Authorized**  
+- Start Date: **April 1, 2025**  
+- Expiration: **April 1, 2028**  
+- Outstanding POA&M Items: MFA & API security  
+- AO: **Dr. Tran**
+
+Reminders were also scheduled for:
+- **60-day risk mitigation follow-up**  
+- **3-month pre-expiration reauthorization planning**
+
+---
+
+##  Why Reporting Matters
+
+Authorization Reporting promotes **institutional memory**, **visibility**, and **accountability**.
+
+-  **Risk Transparency**: Everyone knows what risks exist and who accepted them  
+-  **Smooth Handoffs**: Critical for continuity across system owners, security staff, and leadership  
+-  **Strategic Oversight**: Supports enterprise risk dashboards and FISMA/NIST reporting  
+-  **GRC Alignment**: Ensures ATO status is current and traceable in all official records
+
+Without reporting, the risk decision could live in a silo — but RMF is a **team sport**, and everyone needs to be aligned.
+
+---
+
+##  Hands-On Exercise
+
+Create a simple ATO summary for a fictional system:
+
+> **System**: XYZ Payroll System  
+> **Owner**: Finance IT  
+> **ATO Granted**: Aug 1, 2025  
+> **Expires**: Aug 1, 2028  
+> **Conditions**: PII encryption for backup files within 30 days  
+> **Residual Risk**: 1 moderate – Accepted
+
+This reinforces what matters most in reporting: who owns the system, what the AO decided, and what risk remains.
+
+---
+
+##  Reflection
+
+Reflect on the **importance of making authorization decisions visible**:
+
+- How does this support organizational trust and preparedness?
+- If a breach occurred tomorrow, would responders know when the last ATO was granted and what risks were accepted?
+- How does this reporting process reinforce the seriousness of the AO's decision?
+
+**For me, this reinforces that leadership in GRC is not just about compliance — it's about stewardship, communication, and risk-informed decision-making.**
+
+---
+
+##  Teaser for Day 69 – Monitoring Begins
+
+Now that OpenMRS is authorized, our job shifts from building to **operating securely**. Tomorrow, in Day 69, we enter the final step of the RMF: **Monitor**.  
+
+This is where we ensure our controls remain effective, respond to new threats, and uphold the integrity of the system over time. Let’s keep going — the finish line is near! 🏁
+
+---
+
+##  Suggested Search Terms
+
+- `RMF R-5 authorization reporting`  
+- `ATO registry entry example`  
+- `enterprise risk dashboard RMF`  
+- `FedRAMP/FISMA reporting requirements`
+
