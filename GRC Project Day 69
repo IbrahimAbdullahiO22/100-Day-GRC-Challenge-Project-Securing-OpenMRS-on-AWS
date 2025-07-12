@@ -1,0 +1,129 @@
+#  Day 69: Task M-1 – Monitor System & Environment Changes
+
+Welcome to **Day 69** of my 100-Day GRC journey!
+
+Today marks our first step into the **Monitor** phase of the NIST Risk Management Framework (RMF). Now that OpenMRS has received its **Authorization to Operate (ATO)** and is in production, our focus shifts to making sure it stays secure.  
+
+This is where **Task M-1 – Monitor System & Environment Changes** becomes essential. It’s not just about watching for known threats — it’s about staying alert to **anything that changes** and could affect security or privacy posture.
+
+---
+
+##  Why Monitor System and Environment Changes?
+
+The truth is simple: **Change is inevitable.**  
+
+- Systems get updated  
+- Infrastructure evolves  
+- Threats become more sophisticated  
+- Business needs shift  
+
+Even the smallest change — like an opened port in an AWS Security Group — can undermine months of hardening work. That’s why M-1 emphasizes **proactive awareness**.
+
+---
+
+##  Applying M-1 to OpenMRS on AWS
+
+Let’s explore what this looks like in practice. Suppose I'm managing an OpenMRS deployment hosted on AWS for a healthcare NGO. I would track changes in two key areas:
+
+###  1. Technical System Changes
+
+These include:
+
+- OS updates (e.g., Ubuntu patches)
+- OpenMRS core or module upgrades
+- AWS configuration tweaks (e.g., modifying EC2, RDS, or S3 permissions)
+- Deployment of new scripts or APIs
+- Changes in IAM roles or security group settings
+
+**Monitoring Techniques:**
+
+- **AWS CloudTrail**: Tracks who made what change and when  
+- **AWS Config**: Detects configuration drift against baselines  
+- **Security Information and Event Management (SIEM)**: Aggregates alerts and changes for correlation  
+- **Code deployment logs**: Reveal unexpected updates or failed rollbacks  
+
+---
+
+### 2. Environmental Changes
+
+These include:
+
+- Organizational changes (e.g., new clinic location, new staff)
+- Policy updates (e.g., new HIPAA interpretation, stricter MFA policies)
+- Regulatory shifts (e.g., GDPR/HIPAA alignment, state-level changes)
+- Threat landscape shifts (e.g., ransomware surge targeting healthcare)
+
+**Monitoring Techniques:**
+
+- **Threat intelligence feeds**
+- **Policy review cadence (quarterly or annual)**
+- **Regular security awareness and training feedback**
+- **Business continuity plans** updated to reflect new environments
+
+---
+
+## Blending Process and Technology
+
+A strong GRC leader knows that **technology alone is not enough**. We also need **governance processes** in place:
+
+-  **Change Management Policy**: Every change must go through approval, logging, and rollback planning  
+-  **Configuration Management Plan**: Defines which configurations are approved and monitored  
+-  **Security Impact Analysis (SIA)**: Evaluates whether a proposed change will affect the system's security controls  
+-  **Stakeholder Review**: For high-risk or impactful changes  
+
+By pairing automated detection tools with structured decision-making processes, we reduce the chance that a silent change erodes trust or opens a vulnerability.
+
+---
+
+##  Reflection
+
+If I were managing OpenMRS today, here are three **environmental/system changes** I’d monitor closely:
+
+1. **Change in firewall rules** on AWS that open port 8080 to the internet  
+2. **Deployment of unverified OpenMRS modules** by development teams  
+3. **Expansion to new clinic locations** with unclear network segmentation or physical security practices  
+
+For each, I’d implement alerts via CloudTrail and AWS Config, require change tickets in our ITSM tool, and hold monthly change control board (CCB) meetings to review trends.
+
+---
+
+##  Today’s Goal Recap
+
+Task M-1 taught me to think like a **continuous risk assessor**.  
+
+Security is not a one-time setup — it’s a **living, breathing process**. I now understand that:
+
+- **System changes** must be logged, reviewed, and monitored  
+- **Environmental changes** must be anticipated and incorporated into strategy  
+- **Tooling and policy** go hand in hand to create real-time visibility  
+
+---
+
+##  Hands-On Activity
+
+Design a quick monitoring checklist for your system:
+
+| Change Type | Example | How It’s Monitored |
+|-------------|---------|--------------------|
+| Technical | EC2 IAM Role change | AWS CloudTrail alert |
+| Policy | New MFA mandate | Change advisory review |
+| Threat | Ransomware alert for healthcare | Threat Intel + SOC updates |
+| Network | New VPN endpoint added | Network scan + config baseline diff |
+
+---
+
+##  Search Terms to Explore
+
+- `Continuous monitoring strategy NIST RMF`  
+- `AWS CloudTrail for compliance`  
+- `IT change management and configuration drift detection`  
+- `Security impact analysis (SIA)`  
+
+---
+
+## Teaser for Day 70
+
+Tomorrow, we continue our Monitor phase by diving into **Task M-2 – Ongoing Control Assessments**.  
+
+It’s not enough to know something changed — we must assess whether our **controls still work** as expected after those changes. See you then!
+
