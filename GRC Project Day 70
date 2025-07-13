@@ -1,0 +1,109 @@
+#  Day 70: Task M-2 – Ongoing Assessments (Regular Security Checkups)
+
+Welcome to **Day 70** of my 100-Day GRC journey!  
+
+Yesterday, I focused on detecting system and environment changes (Task M-1). Today, I’m moving deeper into the **Monitor** phase of the RMF with **Task M-2: Ongoing Assessments**.  
+
+This is where I shift from watching **for change** to validating that my **security controls** are still doing their job. It’s one thing to deploy controls; it’s another to ensure they’re effective over time. This task is about performing regular, proactive **security health checks** — long before an auditor or attacker shows up.
+
+---
+
+##  Why Ongoing Assessments Matter
+
+Even if your system *seems* fine, risks can quietly accumulate.  
+
+- Configurations drift  
+- Patches are missed  
+- Roles and permissions expand  
+- New vulnerabilities emerge  
+
+By scheduling **routine checkups**, I maintain **assurance** that the controls I’ve documented in my System Security Plan (SSP) are **still valid** and functioning as intended.
+
+This is not about paranoia — it’s about building a culture of **continuous validation and readiness**.
+
+---
+
+##  Applying Ongoing Assessments to OpenMRS on AWS
+
+Let’s explore what this looks like for my **OpenMRS deployment in AWS**:
+
+###  1. Vulnerability Scanning
+
+- **Tool**: AWS Inspector or open-source options like OpenVAS  
+- **Frequency**: Monthly, or upon major updates  
+- **Goal**: Identify new OS or application vulnerabilities (e.g., CVEs in OpenMRS or Tomcat)  
+- **Action**: Feed results into the POA&M or patch pipeline  
+
+---
+
+###  2. Manual Control Reviews
+
+- **Backup validation**: Confirm backup jobs ran successfully and restore points are functional  
+- **Access control audit**: Review IAM roles, group memberships, and ensure least privilege is maintained  
+- **Encryption review**: Validate that S3 buckets, databases, and snapshots are encrypted per policy  
+- **Log retention**: Ensure CloudTrail and OpenMRS logs are stored and protected  
+
+---
+
+###  3. Compliance Spot Checks
+
+If HIPAA or other frameworks apply:
+
+- **Audit logs**: Are access logs still enabled and reviewed regularly?  
+- **User activity monitoring**: Are we detecting suspicious behaviors?  
+- **Data handling procedures**: Are PHI records still masked when required?  
+
+---
+
+##  Integrating Ongoing Assessments into Operations
+
+To make these assessments sustainable, I’m building them into standard operating procedures:
+
+| Assessment Area         | Frequency         | Responsible Role          |
+|-------------------------|-------------------|----------------------------|
+| Vulnerability Scanning  | Monthly           | Security Analyst           |
+| IAM/User Audit          | Quarterly         | System Owner + GRC Lead    |
+| Backup Restore Test     | Quarterly         | Infrastructure Engineer    |
+| HIPAA Spot Checks       | Biannually        | Privacy Officer + GRC Team |
+| Firewall Rule Review    | Quarterly         | Network Engineer           |
+| Encryption Checks       | Quarterly         | Security Architect         |
+
+These routines are tracked in our **continuous monitoring plan** and updated in the GRC tool.
+
+---
+
+##  Reflection
+
+If I were leading the security of OpenMRS, here’s what I’d prioritize in my **routine checkups**:
+
+1. **Patch Management**: Is the latest OpenMRS version deployed? Have we patched Log4j-type vulnerabilities recently?
+2. **Access Control Reviews**: Are all user accounts still required? Have any privileged accounts gone stale?
+3. **Backup and Restore Validation**: Could we recover production data within RTO/RPO targets?
+4. **Firewall & Security Group Audit**: Are AWS ports still restricted per policy?
+5. **Encryption Compliance**: Are KMS keys rotated and used correctly for all sensitive data?
+
+By doing these checks regularly, I build **muscle memory**, identify drift early, and reduce risk without waiting for a crisis.
+
+---
+
+##  Today’s Goal
+
+Recognize the **importance of proactive security validation**.  
+Controls are not “set and forget.” They degrade without oversight. Regular assessments create operational maturity and build trust with auditors, leadership, and users.
+
+---
+
+##  Search Terms to Explore
+
+- `Automated vulnerability scanning tools`  
+- `Continuous security control monitoring NIST RMF`  
+- `Security audit frequency best practices`  
+- `Compliance testing in cloud infrastructure`  
+
+---
+
+##  Teaser for Day 71
+
+Tomorrow, I’ll move into **Task M-3 – Ongoing Risk Response**, where I translate assessment findings into **real action**. Scans and reviews are only useful if they result in smart, timely decisions.  
+
+Stay tuned as I continue turning GRC knowledge into real-world impact.
