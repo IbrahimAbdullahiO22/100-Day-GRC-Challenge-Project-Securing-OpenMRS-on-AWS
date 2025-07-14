@@ -1,0 +1,114 @@
+#  Day 71: Task M-3 – Ongoing Risk Response  
+**“Find it, fix it.”** That’s the mindset I’ve built throughout this GRC journey — and Day 71 is where that principle shines.  
+
+Yesterday, I focused on detecting risks through **monitoring and assessments**. Today’s milestone, **Task M-3: Ongoing Risk Response**, is about what happens *next*: how we take action to reduce, mitigate, or formally accept the risks we discover.
+
+---
+
+##  What I’m Learning
+
+In the world of risk management, identifying a vulnerability is only **step one**. The real value comes from **closing the loop** — taking appropriate action that prevents a small issue from snowballing into a major incident.
+
+Risk response is not a one-time thing. It’s an ongoing discipline — a cycle of:
+
+1. **Discovering risk**
+2. **Analyzing impact**
+3. **Choosing a response**
+4. **Tracking it to closure**
+
+Whether it’s a misconfigured AWS S3 bucket or a new OpenMRS vulnerability, it’s my job to **make risk response routine** and ensure nothing falls through the cracks.
+
+---
+
+##  OpenMRS on AWS: What Ongoing Risk Response Looks Like
+
+Let’s say we’re managing the **OpenMRS health records system in AWS**. Here’s how we handle new risk discoveries:
+
+###  1. Analyze & Prioritize
+
+- **Example**: A Nessus scan flags a **critical SQL injection** vulnerability in the OpenMRS login portal.
+- **Action**: Triage the finding. Is it exploitable? What data is at risk? What’s the CVSS score?
+- **Output**: Categorize it as **High Risk**, which triggers immediate attention.
+
+---
+
+###  2. Mitigate or Accept
+
+- **Mitigation Path**:  
+  - Apply available patch  
+  - Block affected endpoints temporarily  
+  - Implement a WAF rule to stop malicious input  
+  - Conduct a quick test to validate the patch  
+- **Acceptance Path (only for low risks)**:  
+  - Document in risk register  
+  - Include business rationale and interim controls  
+  - Monitor closely for escalation
+
+---
+
+###  3. Track in POA&M Until Resolved
+
+- **Tool**: Plan of Action and Milestones (POA&M)  
+- **Log Entry**:  
+  - Vulnerability ID  
+  - Risk Level  
+  - Assigned Owner  
+  - Remediation Steps  
+  - Target Date for Completion  
+- **Example**:  
+
+
+---
+
+##  Real-World Scenario: S3 Misconfiguration
+
+Let’s say AWS Config flags that an **S3 bucket storing OpenMRS backups** became publicly accessible.
+
+**Steps I’d take as a GRC Lead:**
+
+- **Investigate**: Use CloudTrail to check who made the change and why  
+- **Remediate**: Restrict bucket access immediately, apply SCP or IAM policy enforcement  
+- **Mitigate**: Enable automated bucket policies and enable logging  
+- **Document**: Add the incident to POA&M and follow up with training for IAM role users  
+
+This is **continuous improvement** in action — not just fixing an issue, but preventing it from happening again.
+
+---
+
+##  Today’s Goal
+
+Master the art of **turning findings into fixes**. Continuous monitoring is only effective when it triggers fast, intelligent, and trackable risk responses.
+
+Ongoing risk response is where **cybersecurity meets accountability** — and where trust in the system is built.
+
+---
+
+##  Reflection
+
+If I found a **critical vulnerability** today in OpenMRS:
+
+1. I’d **prioritize triage** using CVSS scoring and exploitability context  
+2. **Notify stakeholders**: AO, DevSecOps, system owner  
+3. **Assign the issue** in our POA&M and track response  
+4. Apply the **mitigation** or containment measures immediately  
+5. **Schedule a reassessment** after patching to confirm it’s resolved  
+6. Document the outcome and **update the SSP** if any control changed  
+
+This response is driven by a strong **risk-aware culture** and well-documented response procedures.
+
+---
+
+##  Search Terms to Explore
+
+- `Risk mitigation lifecycle in cloud systems`  
+- `POA&M process NIST RMF`  
+- `Vulnerability management framework (FedRAMP, HIPAA, NIST 800-53)`  
+- `Remediation SLAs for cybersecurity findings`  
+
+---
+
+##  Coming Up Next: Task M-4
+
+In **Day 72**, I’ll move on to **Task M-4: Security Status Reporting**. It’s not just about fixing things — it’s also about communicating **how secure we are**, so stakeholders can make smart decisions with visibility and confidence.
+
+Let’s keep building secure, auditable, and resilient systems together.
