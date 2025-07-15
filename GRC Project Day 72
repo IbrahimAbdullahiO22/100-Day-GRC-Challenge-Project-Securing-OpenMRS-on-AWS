@@ -1,0 +1,92 @@
+#  Day 72: Task M-4 – Keeping the Docs Updated (Authorization Package)
+
+Welcome to **Day 72** of my 100-Day GRC journey!  
+
+Now that our system has been continuously monitored and improved, it’s time for one of the most important — yet often overlooked — parts of maintaining a secure and auditable system: **updating the authorization package**.  
+
+This is **Task M-4** in the NIST RMF: keeping the **System Security Plan (SSP)**, **Risk Assessment Report**, and **Plan of Action & Milestones (POA&M)** current. These documents are the living memory of the system’s security posture — and just like the system itself, they must evolve.
+
+---
+
+##  What I’ve Learned
+
+Security is not static — and neither is documentation.
+
+If your team works hard to fix vulnerabilities, implement new controls, and adapt to changing environments, but your documentation still reflects the system from 9 months ago… that’s a risk in itself.
+
+Keeping documentation up-to-date ensures that:
+- **Auditors** have an accurate view of the system
+- **Leadership** can make informed risk decisions
+- **New team members** can onboard more quickly
+- **Continuous monitoring** is supported with integrity
+
+---
+
+## Real-World Example: OpenMRS on AWS
+
+Let’s say we’re running **OpenMRS** in AWS. Over the past few weeks, we:
+
+- **Enabled MFA** for admin accounts  
+- **Closed out a critical vulnerability** found in Nessus  
+- **Moved the backend database** to another AWS region for disaster recovery
+
+Each of these actions requires an update to our documentation:
+
+| Change Made | Document to Update | Notes |
+|-------------|--------------------|-------|
+| Enabled MFA | SSP | Update the `IA-2 (Identification and Authentication)` control section to reflect implementation |
+| Patched SQL vuln | POA&M | Mark the item as "Remediated" and add a remediation date + summary |
+| Database moved | SSP + Network Diagram | Update the architecture overview and data flow to reflect new region |
+
+This ensures the **SSP** tells the current truth, the **POA&M** reflects active and resolved risks, and any **SAR** (Security Assessment Report) findings stay in sync with reality.
+
+---
+
+##  Why It Matters
+
+Failing to update your security docs is like relying on an old map to navigate a city that's changed — you're bound to make wrong turns.
+
+**Risks of outdated documentation:**
+
+- Audit findings (non-compliance due to inaccurate SSP)
+- Confusion during incident response ("Are we logging that service?")
+- Poor decision-making ("I didn’t know the data center changed!")
+- Delayed ATO renewals or re-assessments
+
+Keeping your docs current is one of the **simplest but most powerful ways** to maintain trust, transparency, and operational readiness.
+
+---
+
+##  Today’s Goal
+
+Understand that the **authorization package is a living set of documents**, not a one-time deliverable. It must change as your system and risk environment do.
+
+Every configuration update, control enhancement, vulnerability fix, or architecture change is a signal: **update the docs**.
+
+---
+
+##  Reflection
+
+If we **never updated** our system's SSP, POA&M, or SAR, it would be like locking the doors and leaving the keys under the mat — giving us a false sense of security.
+
+Imagine this:
+> A team member refers to the SSP to confirm that OpenMRS logs access to patient data — but logging was disabled during a patch and never turned back on. No one knew because the docs said otherwise. That could be a **HIPAA violation**, and worse — a patient trust breach.
+
+Documentation is a form of **security communication** — it has to be **current, clear, and continuous**.
+
+---
+
+##  Search Terms to Explore
+
+- `System Security Plan maintenance best practices`  
+- `Continuous authorization documentation`  
+- `NIST RMF POA&M updates`  
+- `FedRAMP SSP change control`  
+
+---
+
+##  What’s Next?
+
+Tomorrow, in **Day 73**, I’ll dive into **Security Status Reporting** – the art of communicating system security health to leadership, auditors, and stakeholders. If today is about keeping the house clean, tomorrow is about **showing the receipts**.
+
+Let’s keep pushing forward, staying proactive, transparent, and accountable in all things GRC.
