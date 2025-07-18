@@ -1,0 +1,97 @@
+#  Day 74 – Ongoing Authorization (Periodic Review)
+
+Today marks **Day 74** in my 100 Days of GRC, and we’re diving into **Task M-6: Ongoing Authorization** — a game-changer in how we think about compliance and Authority to Operate (ATO).
+
+For years, organizations treated ATO like a driver’s license — valid for three years, then up for renewal. That legacy model meant **long gaps between assessments**, **last-minute paperwork scrambles**, and **periods of risk between reviews**.
+
+But ongoing authorization changes the game. Instead of “pause everything and reassess,” we shift to **real-time trust validation** through **continuous monitoring**.
+
+---
+
+##  What is Ongoing Authorization?
+
+It’s a proactive, modern approach that allows systems like **OpenMRS on AWS** to **maintain their ATO without a full reassessment**, as long as:
+
+- No **major risks** emerge,
+- No **significant system changes** occur, and
+- Continuous monitoring shows that **controls remain effective**.
+
+It aligns perfectly with **cloud-first** and **DevSecOps** environments where systems evolve rapidly — because security shouldn’t stall innovation.
+
+---
+
+##  How It Works in Practice
+
+We maintain an ATO by **demonstrating control, visibility, and responsiveness** over time, not by redoing assessments on a calendar date.
+
+> “Trust isn’t granted every 3 years. It’s earned every day.”
+
+In the case of OpenMRS on AWS, our real-time monitoring tools (like AWS CloudTrail, Inspector, and GuardDuty) continuously feed data to security stakeholders. As long as:
+
+- No critical vulnerabilities persist,
+- No drastic infrastructure or feature changes happen, and
+- Risk levels remain within our organization’s tolerance,
+
+...the **ATO stays active.**
+
+---
+
+##  What Could Break Ongoing Authorization?
+
+Here are a few scenarios that would **trigger a reauthorization**:
+
+- **Major security breach** (e.g., unauthorized access to patient data)
+- **Significant architectural changes** (e.g., moving databases to a new cloud provider or adding a new AI module processing PII)
+- **Deployment of new sensitive features** (e.g., integration with third-party APIs storing medical records)
+- **Discovery of high-risk vulnerabilities** that require major reengineering
+- **Compliance scope change** (e.g., system must now adhere to additional federal standards or regulatory controls)
+
+These “disruptions” reset the risk baseline and would justify pausing to formally reassess the system.
+
+---
+
+##  Why It Matters
+
+Ongoing authorization isn’t just about skipping paperwork — it’s about smarter security:
+
+-  **Enables agility** – Ideal for systems that evolve frequently (like OpenMRS in DevOps environments)
+- � **Improves visibility** – Risk posture is tracked in near real time, not at intervals
+- � **Fosters collaboration** – Keeps AOs, CISOs, engineers, and assessors aligned
+-  **Reduces audit shock** – There are fewer surprises when you’re continuously in compliance
+
+For OpenMRS, this means **better protection of patient data**, **less downtime for reassessment**, and **more focus on care delivery and innovation**.
+
+---
+
+##  Reflection
+
+As a GRC leader, I strongly believe in the power of **ongoing assurance** over point-in-time validation. Continuous ATO is not just about process efficiency — it’s about **operational resilience**.
+
+Would I trade quarterly control checks and real-time dashboards for a stressful tri-annual review? **Absolutely.**
+
+> Continuous trust, validated daily, beats stale paperwork every time.
+
+Biggest benefit for OpenMRS? **Both security and efficiency**. Real-time risk insights help us react swiftly, protect patients, and keep leadership informed — all while avoiding unnecessary reassessment cycles.
+
+---
+
+## Today’s Goal
+
+Recognize how ongoing authorization keeps systems secure and compliant **without interrupting operations** — and understand the **conditions that trigger reauthorization** when needed.
+
+---
+
+##  Search Terms
+
+- `Continuous ATO vs periodic reauthorization`  
+- `Ongoing authorization NIST continuous monitoring`  
+- `DoD continuous Authority to Operate cATO guidance`  
+- `RMF M-6 implementation best practices`
+
+---
+
+## � Up Next: Day 75 – Secure System Disposal
+
+The end is near — but not in a bad way. Tomorrow, I’ll walk through the **final step of the RMF lifecycle: system disposal**. When OpenMRS reaches end-of-life, how do we decommission it **securely and responsibly**?
+
+Because security doesn’t stop until every byte is wiped and every secret is retired. 
