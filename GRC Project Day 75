@@ -1,0 +1,96 @@
+#  Day 75 – System Disposal (Secure Decommissioning)
+
+Even the most mission-critical systems must eventually sunset. Today, on **Day 75** of my 100 Days of GRC, we focus on **Task R-1: System Disposal** — the secure, complete decommissioning of a system like **OpenMRS running on AWS**.
+
+Whether due to a system upgrade, project termination, or modernization effort, system disposal is **not just about pulling the plug** — it’s about ensuring no sensitive data is left behind, no residual risks remain, and all documentation reflects the system’s retirement.
+
+---
+
+##  Why Disposal Matters
+
+Failing to securely decommission systems can lead to:
+
+- **Data breaches from residual storage**
+- **Unauthorized access to “forgotten” infrastructure**
+- **Audit findings for poor lifecycle management**
+
+Disposal is the final chapter in the RMF lifecycle — and it must be written with the same discipline and care as system authorization.
+
+---
+
+##  Key Steps for Secure Decommissioning
+
+Here’s how I would approach shutting down the OpenMRS-on-AWS system:
+
+###  1. Archive Required Data
+- **Export and encrypt** critical patient records.
+- Store in **long-term secure cloud storage** (e.g., Amazon S3 Glacier Deep Archive).
+- Retention aligns with **HIPAA** or applicable compliance standards.
+
+###  2. Sanitize All Sensitive Data
+Apply **NIST SP 800-88 Rev. 1** media sanitization principles:
+
+- **Purge EC2 volumes and RDS instances** using built-in AWS secure deletion tools.
+- **Permanently delete S3 buckets** (and all object versions and delete markers).
+- **Destroy encryption keys** used for data-at-rest to render residual storage unreadable.
+- **Remove CloudWatch logs**, Lambda archives, and related backups that contain PHI or sensitive information.
+
+###  3. Decommission Infrastructure
+- Terminate AWS resources (EC2, RDS, S3, IAM policies specific to OpenMRS).
+- Delete Route53 records and domain names linked to the system.
+- Remove the system from **asset inventories**, dashboards, and monitoring tools.
+
+###  4. Update Documentation
+- Annotate the **System Security Plan** to reflect retirement.
+- Close all remaining **POA&M** items or transfer them to lessons-learned documentation.
+- Document steps in a **Disposal Report** for audit trail and ATO closure.
+
+###  5. Revoke Access
+- Deactivate all OpenMRS admin and user accounts.
+- Revoke IAM roles, VPN profiles, and third-party integrations.
+- Remove OpenMRS from **authentication directories and federated access systems**.
+
+---
+
+##  Disposal Checklist (Sample Items)
+
+- ✔️ Archive encrypted database backup in Glacier Vault (retention: 7 years)
+- ✔️ Delete all S3 buckets used for OpenMRS image uploads and verify object removal
+- ✔️ Terminate EC2 instances and confirm volume deletion via AWS console
+- ✔️ Shred any on-prem hardware backups or laptops storing PHI (if applicable)
+- ✔️ Revoke all OpenMRS-related IAM roles and document access log closure
+- ✔️ Update SSP and asset inventory to reflect system retirement date
+
+---
+
+##  Reflection
+
+Deleting a file doesn’t mean it’s gone. In cloud environments, **versioning, backups, shadow copies**, and **metadata caches** can all hold sensitive remnants. That’s why we don’t just “delete” — we **sanitize**.
+
+The real challenge is balancing:
+
+- **Data retention** (e.g., for HIPAA or legal compliance)
+- **Data destruction** (e.g., to avoid residual risk)
+
+Using cloud-native tools alongside frameworks like **NIST SP 800-88** gives us confidence that once data is deleted — it’s **gone for good**.
+
+---
+
+##  Search Terms
+
+- `NIST SP 800-88 media sanitization guidelines`  
+- `Secure cloud data deletion AWS`  
+- `System decommission checklist security`  
+- `HIPAA data retention vs destruction best practices`
+
+---
+
+##  Today’s Goal
+
+Understand the **full lifecycle closure** of a system — not just turning it off, but decommissioning securely, documenting actions, and validating data sanitization.
+
+---
+
+##  Up Next: Day 76 – Writing Security Policies that Actually Work
+
+We’ve retired OpenMRS safely — now it’s time to explore the foundation of every GRC program: **security policies**. Tomorrow, I’ll break down how to craft policies that are clear, enforceable, and actually followed. No more doorstops — we’re writing for impact.
