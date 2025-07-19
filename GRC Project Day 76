@@ -1,0 +1,92 @@
+#  Day 76 – Writing Effective Security Policies
+
+Today I tackled something many overlook but absolutely essential to any successful GRC program: **writing security policies that actually get read and followed**.
+
+Policies are not meant to collect dust in a shared drive — they are the house rules that guide behavior, decisions, and accountability across systems. When done right, policies **empower** teams to act securely without constant oversight.
+
+---
+
+##  What Makes a Policy Effective?
+
+Too often, security policies are bloated with legal jargon, outdated references, or technical language that confuses the very people expected to follow them. Here’s what I’ve learned:
+
+ **Clarity is king**  
+ **Brevity beats bulk**  
+ **Relevance drives compliance**  
+
+Instead of saying:
+> "All users must adhere to access controls at all times."
+
+I write:
+> **"All OpenMRS user accounts must be individually assigned; shared accounts are prohibited."**
+
+It’s short, clear, and leaves no ambiguity.
+
+---
+
+##  Structure and Style Tips
+
+When writing policies, I follow a few key principles:
+
+- **Use plain language**: Write like you're explaining it to a new team member over coffee.
+- **Use bullets or numbered lists**: Policies are easier to digest when rules are broken into distinct items.
+- **State the “what,” not the “how”**: Procedures cover implementation; policies cover expectations.
+- **Make it actionable**: Use “must,” “will,” or “shall” — not “should” or “may.”
+
+---
+
+##  Sample Policy Statements – OpenMRS Access Control Policy
+
+As part of securing our **OpenMRS-on-AWS** deployment, here are a few access control policy statements I would enforce:
+
+1. **All OpenMRS user accounts must be individually assigned; shared accounts are prohibited.**
+2. **Users must authenticate with multi-factor authentication (MFA) when accessing OpenMRS.**
+3. **Access to patient records is limited to clinical staff with an approved need-to-know.**
+4. **Inactive accounts over 90 days will be automatically disabled.**
+5. **User accounts must be approved by both the system administrator and clinic manager prior to creation.**
+
+Each of these rules is **specific**, **relevant**, and **measurable** — exactly what effective policy writing requires.
+
+---
+
+##  Reflection
+
+I’ve seen both excellent and terrible policies in the wild. The bad ones? They were long, filled with buzzwords, and disconnected from actual practices. The good ones? **They matched how teams worked**, were clear about expectations, and empowered users to act securely without second guessing.
+
+For OpenMRS admins, a well-written Access Control Policy:
+
+- Reduces onboarding confusion
+- Sets enforceable standards
+- Supports audit readiness
+- Reinforces least privilege access by design
+
+It’s not about perfection — it’s about making security **understandable** and **practical**.
+
+---
+
+##  Tools and Templates I Recommend
+
+If you're looking for a starting point, check out the **SANS Institute Security Policy Templates**. They're solid frameworks — but **always tailor them** to your actual environment. No point in referencing "server room badge access" if you're fully cloud-native on AWS.
+
+---
+
+##  Today’s Goal
+
+Learn how to write **concise, understandable, and relevant security policies** that users will read, auditors will respect, and security teams can enforce.
+
+---
+
+##  Search Terms
+
+- `Security policy best practices clear concise`  
+- `SANS security policy templates Access Control`  
+- `Effective access control policy writing examples`  
+- `Policy vs. procedure cybersecurity`  
+
+---
+
+##  Up Next: Day 77
+
+Tomorrow I’ll shift gears and dive into **AWS-native tools** that can streamline security and compliance tasks — including **AWS Config, Security Hub, and Audit Manager**. These tools help automate evidence collection, detect misconfigurations, and support our continuous compliance goals for OpenMRS on AWS.
+
+Let’s make GRC scalable — not stressful.
