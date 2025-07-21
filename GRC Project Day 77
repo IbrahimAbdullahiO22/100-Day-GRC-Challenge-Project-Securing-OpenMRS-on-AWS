@@ -1,0 +1,115 @@
+#  Day 77 – Leveraging AWS Services for GRC Automation
+
+Keeping track of compliance manually is like spinning a hundred plates — stressful and prone to human error. Fortunately, the cloud gives us a better option: **automation**. Today, I explored how AWS-native tools can transform Governance, Risk, and Compliance (GRC) operations from reactive to proactive.
+
+For our **OpenMRS-on-AWS** case study, three services stood out:
+
+---
+
+##  AWS Config – The Real-Time Configuration Auditor
+
+**What it does:**  
+AWS Config records the state of AWS resources and continuously evaluates them against defined compliance rules.
+
+**How it helps OpenMRS:**  
+- Detects configuration drift in real-time.  
+- For example: A rule like `S3 buckets must not allow public read access` helps ensure OpenMRS patient data remains private.  
+- If someone accidentally opens up a bucket, AWS Config **flags it instantly**.
+
+**Why I value it:**  
+It allows **automated, policy-based monitoring** without waiting for a monthly review. Continuous visibility means continuous control.
+
+---
+
+##  AWS Security Hub – The Cloud Security Command Center
+
+**What it does:**  
+Aggregates findings from various AWS services (Config, GuardDuty, Inspector) into one dashboard. Applies AWS security best practices and highlights issues by severity.
+
+**How it helps OpenMRS:**  
+- Flags issues like missing patches on EC2 or root account without MFA.  
+- For example: `[S3.2] S3 bucket allows public read access – FAILED` tells us exactly what’s wrong.  
+- Prioritizes alerts (CRITICAL vs. MEDIUM), helping us **focus response efforts**.
+
+**Why I value it:**  
+It’s my **mission control**. One place to assess our entire cloud security posture, triage findings, and stay audit-ready.
+
+---
+
+##  AWS Audit Manager – Your Built-In Evidence Collector
+
+**What it does:**  
+Automatically collects evidence from AWS services for audits and frameworks (NIST, ISO, PCI, etc.).
+
+**How it helps OpenMRS:**  
+- Gathers logs, settings, and control evaluations that prove compliance.  
+- Connects with AWS Config to confirm whether controls (like encryption, logging, retention) are met.  
+- Great for HIPAA, FedRAMP, or internal audits.
+
+**Why I value it:**  
+Audit Manager reduces the manual pain of compliance documentation. It **keeps the audit binder full — automatically**.
+
+---
+
+##  Summary: Automate the GRC Grind
+
+Together, these services:
+
+| Tool               | Role in GRC                                               | OpenMRS Example |
+|--------------------|-----------------------------------------------------------|------------------|
+| **AWS Config**      | Monitors resource configurations and compliance in real-time | Alerts if S3 bucket becomes public |
+| **AWS Security Hub** | Aggregates findings, prioritizes alerts, shows security posture | Flags missing MFA or unpatched EC2 |
+| **AWS Audit Manager**| Automates evidence collection for compliance frameworks | Provides CloudTrail logs for user access control verification |
+
+They are my **robo-assistants** — catching misconfigurations, compiling evidence, and surfacing issues before they become incidents.
+
+---
+
+##  Hands-On Scenario
+
+**Finding:**  
+`[EC2.8] No security groups allow unrestricted SSH access – FAILED for sg-123abc`
+
+**Response Plan:**  
+Restrict the SSH rule to a specific IP range or route through a Bastion host. Public SSH (0.0.0.0/0) is never acceptable for production.
+
+**Another Finding Example:**  
+`[S3.2] S3 bucket OpenMRS-Data allows public read access – FAILED`
+
+**Action:**  
+Remove public permissions, apply a bucket policy to restrict access to known IAM roles, and re-run compliance checks.
+
+---
+
+## � Reflection
+
+I now feel more confident knowing **automated tools** are watching our cloud environment 24/7. Without Config or Security Hub, we’d be relying on spreadsheets and periodic audits — and that’s not scalable.
+
+Still, too many alerts can overwhelm a team. That’s where tuning comes in:
+- Suppress non-relevant findings.
+- Group similar alerts.
+- Focus on high-severity issues first.
+
+**Most valuable tool?**  
+For OpenMRS, I’d say **Security Hub** — it’s the central nervous system for cloud security. But together with Config and Audit Manager, we have a powerful trio for cloud-native GRC.
+
+---
+
+##  Today’s Goal
+
+Explore how AWS tools like **Config**, **Security Hub**, and **Audit Manager** can automate tedious compliance tasks and turn GRC into a scalable, intelligent system — not a last-minute scramble.
+
+---
+
+##  Search Terms
+
+- `AWS Config rules compliance examples`  
+- `AWS Security Hub findings remediation`  
+- `AWS Audit Manager how it works evidence`  
+- `Cloud-native compliance tools AWS`  
+
+---
+
+##  Up Next: Day 78
+
+Next, I’ll focus on how to **track risk remediation and manage POA&M items** effectively — plus how to formally accept certain risks when necessary. It’s all about making smart, documented security decisions. Let’s finish strong!
