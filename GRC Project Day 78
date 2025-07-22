@@ -1,0 +1,121 @@
+#  Day 78 – Managing POA&Ms and Risk Acceptance Over Time
+
+Welcome to the final day of this GRC journey!   
+After weeks of securing, monitoring, and decommissioning systems, we now arrive at one of the most crucial ongoing practices: **managing POA&Ms (Plans of Action and Milestones)** and **risk acceptance**.
+
+---
+
+##  What Is a POA&M?
+
+A **POA&M** is a structured plan that captures security findings, outlines steps to remediate them, and assigns accountability. If a control isn’t immediately satisfied, we don’t ignore it — we **document it**, own it, and track it to closure.
+
+> It includes:
+- The identified **weakness**
+- A **remediation plan**
+- Required **resources**
+- Milestones and **target completion dates**
+- **Progress status** (e.g., Open, In Progress, Completed)
+
+---
+
+###  Example from the OpenMRS-on-AWS Project:
+
+**Weakness:** MFA not enabled for all AWS admin accounts  
+**Plan:** Deploy AWS MFA tokens and train users  
+**Resources:** IAM engineer + training sessions  
+**Milestones:**  
+- Pilot MFA with 2 users by Q1  
+- Full deployment by Q2  
+**Completion Target:** June 30, 2025
+
+As work progresses, we log updates. Example:
+> _"Status: 50% complete – 5 out of 10 admins enrolled in MFA."_  
+This keeps stakeholders informed and shows accountability in real-time.
+
+---
+
+##  What Happens When You Can’t Fix a Risk?
+
+Sometimes, despite best efforts, you **can’t immediately fix a weakness** — or it’s not worth the cost or impact. This is where **Risk Acceptance** enters the picture.
+
+>  Risk Acceptance is not a failure — it’s a **formal, documented business decision**.
+
+###  When to Accept a Risk:
+
+- The risk is **low-impact** or **within tolerance**
+- A fix would be **disruptive** or **unfeasible** short-term
+- **Compensating controls** reduce overall exposure
+
+###  Real-World Example:
+
+> Risk: OpenMRS backup database is unencrypted  
+> Fix: Encryption degrades performance; backup access is restricted  
+> Acceptance:  
+> _"CISO accepted the risk on 2025-04-30. Compensating controls in place. Revisit by 2026-04-30."_
+
+This goes into the POA&M (or a Risk Register) as a tracked, reviewed decision — not a forgotten issue.
+
+---
+
+##  Hands-On Practice
+
+### Sample POA&M Update Entry
+
+**POA&M Item:** Enable encryption for all OpenMRS database backups  
+**Initial Deadline:** May 31, 2025  
+**Update:**  
+> _"Status: 50% complete — encryption enabled on test and dev backups. Production backups in progress. Interim risk of unencrypted prod backups formally accepted by CIO until final encryption deadline of June 30, 2025."_  
+
+This update shows:
+- Progress made  
+- Remaining risk  
+- Who approved acceptance and when  
+
+---
+
+## Why POA&Ms Matter
+
+POA&Ms help ensure that issues:
+- Don’t slip through the cracks  
+- Are tracked to closure  
+- Are prioritized with context  
+- Are visible to decision-makers
+
+They keep security teams **accountable** and **focused** on real progress — not just compliance checkboxes.
+
+---
+
+##  Reflection
+
+>  “Is a POA&M just paperwork — or is it power?”
+
+For me, a well-managed POA&M is **a living roadmap**. It turns good intentions into tangible actions and reminds teams that **security is an ongoing commitment**. Even when risks are accepted, they’re not invisible — they’re **monitored, owned, and revisited**.
+
+Not every weakness gets fixed right away — and that’s okay. What matters is transparency, deliberate decision-making, and continuous improvement.
+
+---
+
+## Today’s Goal
+
+Understand how to track security weaknesses over time, prioritize remediation, and use risk acceptance **wisely** — not as a shortcut, but as a strategic business decision supported by documentation and review.
+
+---
+
+##  Search Terms
+
+- `POA&M management best practices`  
+- `Risk acceptance vs risk mitigation NIST`  
+- `Tracking security remediation actions POA&M`  
+- `Continuous monitoring risk register templates`  
+
+---
+
+##  Wrapping Up the GRC Journey
+
+This marks the final day in this 78-day GRC journey. From system authorization to monitoring, reporting, and now risk accountability, I’ve built both hands-on experience and leadership insight.
+
+Remember:  
+> **GRC is not a checkbox. It’s a culture.**  
+Keep growing, keep learning, and keep securing what matters.
+
+Stay vigilant. Stay resilient. Stay committed.
