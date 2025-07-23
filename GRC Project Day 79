@@ -1,0 +1,106 @@
+# 📋 Day 79 – Compliance Checklists & Self-Assessment
+
+Today, I focused on one of the most practical tools in Governance, Risk, and Compliance (GRC): **compliance checklists**. These are more than paperwork — they’re your internal radar system, scanning for gaps before auditors do.
+
+##  What Is a Compliance Checklist?
+
+A **compliance checklist** is a structured list of requirements derived from regulations, standards, or best practices — such as HIPAA, NIST, or CIS Controls. It allows teams to evaluate their systems, processes, and controls proactively. For our **OpenMRS deployment on AWS**, I treated it as a self-assessment mechanism to uncover vulnerabilities, enforce best practices, and prepare for future audits.
+
+>  The goal isn’t just to tick boxes.  
+> It’s to **build confidence** that your environment is secure and compliant — and to highlight gaps that need addressing.
+
+---
+
+##  HIPAA Security Rule Checklist in Action (OpenMRS Case Study)
+
+Since OpenMRS deals with **Electronic Health Records (EHR)**, I chose to use a **HIPAA Security Rule checklist** to assess compliance and security. Here’s how I applied it:
+
+###  Item 1: "Are all sensitive health data encrypted in transit and at rest?"
+
+**Assessment:**
+- **In Transit:** Confirmed SSL/TLS is enforced via HTTPS for all OpenMRS endpoints.
+- **At Rest:** AWS RDS encryption is enabled; S3 buckets use AES-256 server-side encryption.
+
+**Status:**  **Compliant**
+
+---
+
+### ⚠️ Item 2: "Do we log and review access to patient records?"
+
+**Assessment:**
+- OpenMRS provides some basic audit logging.
+- However, read-access logs for patient records are **limited by default**.
+- AWS CloudTrail logs are configured, but application-level read-access logging needs improvement.
+
+**Status:** ⚠️ **Gap Identified**
+
+**Action Plan:**
+- Enhance OpenMRS logging with a plugin or custom implementation.
+- Integrate logs with AWS CloudWatch for centralized visibility.
+- Document the deficiency in the POA&M and assign follow-up.
+
+---
+
+##  Why Checklists Matter
+
+Checklists help turn abstract compliance goals into **tangible control reviews**. For OpenMRS, it was like giving the system a **compliance health check**. They ensure:
+
+- Nothing critical slips through the cracks
+- Evidence is gathered before an audit
+- Risk discussions are **data-driven**, not guesswork
+
+However, I’ve learned that checklists alone are not enough. They must be part of a **risk-based mindset**. Just because something is "checked off" doesn't mean the risk has vanished. Every item needs to be backed by:
+
+- Context
+- Evidence
+- Continuous monitoring
+
+---
+
+##  Reflection
+
+> How do we use checklists without falling into a "check-the-box" trap?
+
+As a leader in GRC, I’ve adopted the mindset that **checklists support — not substitute — critical thinking**. My approach includes:
+
+- Using checklists to **start conversations**, not end them.
+- Asking "What’s the risk behind this item?" for each entry.
+- Reviewing items periodically — not just at audit time.
+- Training team members to understand **why** each item exists.
+
+That’s how I integrate checklists into a living, breathing compliance culture.
+
+---
+
+##  Hands-On Assessment Summary
+
+| Checklist Item                                | Status        | Evidence/Notes |
+|----------------------------------------------|---------------|----------------|
+| Data encrypted at rest and in transit         |    Compliant   | RDS/S3 encryption, HTTPS enforced |
+| Access to patient records is logged & reviewed| ⚠️ Gap Found  | Basic audit logs present, needs improvement at app-level |
+
+---
+
+##  Today’s Goal Recap
+
+- ✔ Explored how compliance checklists support proactive security
+- ✔ Used HIPAA Security Rule to assess OpenMRS controls
+- ✔ Identified both compliant areas and control gaps
+- ✔ Connected checklist outcomes to POA&M and risk tracking
+
+---
+
+##  Suggested Search Terms
+
+- `HIPAA Security Rule Checklist Self-Assessment`  
+- `IT Compliance Internal Audit Checklist`  
+- `OpenMRS HIPAA Compliance Tips`  
+- `Risk-Based vs. Checklist Compliance`
+
+---
+
+##  Final Thought
+
+Checklists aren’t about compliance theater — they’re tools to help security and GRC professionals do the right thing, **before someone tells you that you didn’t.**  
+When paired with risk analysis and action tracking, they become a **force multiplier** in any compliance effort.
+
