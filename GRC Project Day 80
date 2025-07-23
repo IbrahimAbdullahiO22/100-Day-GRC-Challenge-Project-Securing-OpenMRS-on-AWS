@@ -1,0 +1,105 @@
+#  Day 80 – Preparing for Audits: How to Put Your Best Foot Forward
+
+As I reach Day 80 of this GRC journey, today's focus is on one of the most high-stakes, high-impact areas of compliance: **Audit Readiness**. Whether it's for HIPAA, NIST, ISO 27001, or an internal GRC check, being prepared for an audit means you're not just compliant — you're in control.
+
+In the world of OpenMRS on AWS, I’ve learned that **audit readiness starts long before the auditor shows up.** It’s a culture, not a scramble. It’s how we demonstrate that security and compliance are continuous, deliberate, and built into our operations.
+
+---
+
+##  What I’ve Learned
+
+### 1. **Evidence is Everything**
+
+The first step to audit prep is ensuring your documentation and proof are airtight and readily accessible. I now keep a well-organized evidence library, which includes:
+
+- **Policies & Procedures** (Access Control Policy, Incident Response Plan)
+- **Risk Assessments & POA&M Updates**
+- **Training Records** (security awareness training logs)
+- **System Configurations** (screenshots, access reviews, logging settings)
+- **Architecture Diagrams** (how OpenMRS is deployed on AWS)
+
+If a control is in place, I should be able to **prove it within seconds** — not hours.
+
+---
+
+### 2. **Mock Audits = Game Changers**
+
+A powerful way I prepare is by running **mock audits**. This helps me:
+
+- Identify blind spots before the real audit
+- Practice retrieving evidence quickly
+- Confirm the team knows their roles and how to respond to questions
+
+A mock audit recently revealed we lacked documentation for a test of our incident response plan. Because of that exercise, we ran and documented a tabletop exercise — and avoided what could’ve been a real finding.
+
+---
+
+### 3. **Audit Etiquette: Do’s and Don’ts**
+
+|  Do's | ❌ Don'ts |
+|--------|----------|
+| Be organized and concise | Overwhelm the auditor with raw logs |
+| Answer only what’s asked | Volunteer extra details that expand the scope |
+| Be transparent and truthful | Falsify or cover up missing evidence |
+| Assign a single point of contact | Let multiple people respond independently |
+| Treat findings as improvement opportunities | Get defensive or take it personally |
+
+Auditors aren't out to "catch" us — they're verifying due diligence. It’s my job to **guide them through** how we’ve implemented and documented our GRC program.
+
+---
+
+##  Reflection
+
+What I find most challenging is **maintaining audit readiness year-round**, not just when an audit is scheduled. To fix that, I'm building the habit of:
+
+- Keeping documentation **version-controlled and updated**
+- Saving **evidence as I implement controls**, not afterward
+- Holding **quarterly internal reviews** to stay on track
+
+I’ve realized that **proactive GRC is less stressful and far more effective** than reactive scrambling.
+
+---
+
+##  Hands-On Activity: Audit Evidence Prep
+
+If an auditor visited **tomorrow**, here are 3 items I’d present immediately:
+
+1. **Risk Assessment Report**  
+   - A documented evaluation of threats, vulnerabilities, and controls for OpenMRS@AWS  
+   - Includes prioritization and POA&M linkage  
+
+2. **Access Log Monitoring Report**  
+   - CloudTrail and OpenMRS application logs showing who accessed what, and when  
+   - Evidence of regular review by the GRC or IT Security team  
+
+3. **Security Training Completion Records**  
+   - Dated list of team members who completed annual security awareness training  
+   - Includes training topics and sign-offs  
+
+Having these items **ready, organized, and explained** builds instant trust with auditors.
+
+---
+
+##  Key Takeaways
+
+- **Audit preparation is a leadership function** — it reflects how seriously you take accountability.
+- **Evidence should speak for itself**, not need a tour guide to interpret.
+- **Audits are opportunities**, not threats — they validate your discipline and open paths to improve.
+
+---
+
+##  Suggested Search Terms
+
+- `Audit Evidence Collection Checklist`
+- `How to Prepare for IT Security Audit Do’s and Don’ts`
+- `Compliance Audit Mock Drill`
+- `Auditor Interview Tips for IT Staff`
+
+---
+
+## 🎯 Final Thought
+
+Audit readiness isn’t about perfection — it’s about **being prepared, being honest, and being professional**. When I look at how far this GRC journey has brought me, I know that leading OpenMRS toward audit-ready maturity has made me a better risk thinker, communicator, and strategist.
+
+I’m not just preparing for audits — I’m preparing my team and my systems to **earn trust**.
+
