@@ -1,0 +1,99 @@
+#  Day 81 – Incident Response & Business Continuity Planning | 100 Days of GRC
+
+As I continue to deepen my expertise in Governance, Risk, and Compliance (GRC), Day 81 brings us to one of the most mission-critical areas of any security program: **Incident Response (IR)** and **Business Continuity/Disaster Recovery (BCP/DR)**.
+
+Whether it's a data breach, a natural disaster, or a regional cloud outage, the ability to respond swiftly and recover operations is what separates resilient organizations from the rest. In the context of our **OpenMRS deployment on AWS**, these capabilities are not optional — they’re essential.
+
+---
+
+##  What I’ve Learned
+
+###  Incident Response Planning (IRP)
+
+An **Incident Response Plan** is like a fire drill for cybersecurity incidents. When a security event like unauthorized access occurs, it’s not the time to improvise. Everyone on the team should know their role, what steps to take, and how to escalate.
+
+#### IR Lifecycle Applied to OpenMRS on AWS:
+- **Identify**: Detect suspicious access to patient data via logs or SIEM alerts.
+- **Contain**: Temporarily disable the affected OpenMRS instance or revoke credentials.
+- **Eradicate**: Patch the exploited vulnerability or remove malware.
+- **Recover**: Restore OpenMRS from clean backups, validate integrity.
+- **Learn**: Conduct a post-mortem, update playbooks, and train teams.
+
+A robust IRP also includes:
+- **Communication Plans**: Who gets notified and when (e.g., internal leaders, affected patients, regulators).
+- **Evidence Handling**: Proper logging, preserving forensic data for analysis or compliance reporting.
+- **Defined Roles**: Clear roles and responsibilities for each IR team member.
+
+---
+
+###  Business Continuity & Disaster Recovery (BCP/DR)
+
+When incidents go beyond security breaches — like **AWS outages**, hardware failure, or natural disasters — you need BCP and DR to ensure operations **continue or recover quickly**.
+
+#### Real-World OpenMRS BCP/DR Example:
+Imagine a fire in an AWS data center hosting OpenMRS:
+- **BCP** ensures the clinic can continue operations:
+  - Revert to paper records.
+  - Redirect staff to alternative workflows.
+- **DR Plan** triggers technical recovery:
+  - Restore OpenMRS from encrypted backups in a separate AWS region.
+  - Validate restored environment before resuming operations.
+
+#### Key DR Elements I Practice:
+- **Cross-region backup strategy** on AWS.
+- **Periodic testing** of restore procedures (don’t wait for the real thing).
+- **Emergency mode operations** per HIPAA guidelines (e.g., staff access via secure offline workflows).
+
+---
+
+##  Hands-On Activity
+
+One **critical element** in my IRP for OpenMRS is a **clear communication plan**. Here’s why:
+
+> In a high-stakes moment like a breach, minutes matter. Knowing exactly *who to call*, *how to escalate*, and *what information to share* keeps the response organized, timely, and compliant. Whether it’s the IT lead, AWS support, or clinic leadership, outdated contacts can paralyze response. I maintain and regularly validate an up-to-date IR contact list across key roles and vendors.
+
+---
+
+## � Reflection
+
+If OpenMRS were to go offline **right now**, would my team and I know what to do?
+
+ Yes — because we’ve developed and **tested** our plans.
+
+- The IRP ensures everyone knows their role.
+- The BCP ensures patients are still cared for.
+- The DR plan ensures OpenMRS gets restored securely and swiftly.
+
+But this journey taught me it’s not enough to document plans. I must **operationalize them**:
+- Run **tabletop simulations**.
+- Review and revise playbooks quarterly.
+- Verify **backup integrity and restore time** regularly.
+
+---
+
+##  Key Takeaways
+
+-  **IRP is not just a document** – it's a rehearsed action plan.
+-  **BCP/DR are business enablers**, not IT-only concerns.
+-  **Testing and drills** reveal gaps that written plans cannot.
+-  **Communication and clarity under pressure** make or break incident response.
+-  **HIPAA and NIST require these plans** – but smart leaders practice them because it protects lives and mission.
+
+---
+
+## � Suggested Search Terms
+
+- `Incident Response Plan Steps (NIST Incident Handling)`
+- `Business Continuity vs Disaster Recovery (IT examples)`
+- `Healthcare IT Contingency Planning (HIPAA requirements)`
+- `AWS Backup and Restore Best Practices`
+- `Disaster Recovery Cloud Deployment Strategies`
+
+---
+
+##  Final Thought
+
+In GRC, it's not *if* something goes wrong — it's *when*. By building and testing Incident Response and Business Continuity capabilities into my OpenMRS@AWS project, I'm not only meeting compliance — I'm strengthening organizational resilience.
+
+Leadership is about preparing teams to respond with calm, clarity, and control — and that’s exactly what well-executed IR and BCP/DR plans deliver.
+
