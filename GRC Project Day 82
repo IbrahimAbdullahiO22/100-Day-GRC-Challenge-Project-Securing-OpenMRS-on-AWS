@@ -1,0 +1,101 @@
+#  Day 82 – Third-Party Risk: Trusting AWS (and Others) Without Losing Sleep | 100 Days of GRC
+
+Today, I focused on a cornerstone of GRC that’s easy to overlook: **Third-Party Risk Management (TPRM)**. When deploying systems like **OpenMRS on AWS**, we entrust critical data and operations to external providers — but trust doesn’t mean blind faith. As a GRC leader-in-training, I’ve learned that third-party risk is not about paranoia. It’s about structured assurance.
+
+---
+
+##  What I Learned
+
+Third-party risk management is about **evaluating and monitoring external partners** to ensure their security, compliance, and reliability meet the standards we demand for our own systems. In the cloud era, vendors like **AWS are no longer just suppliers — they are extensions of our infrastructure**.
+
+A key concept I reinforced today is the **AWS Shared Responsibility Model**:
+- **AWS is responsible for the security of the cloud**: data center infrastructure, hardware, global network, and base virtualization.
+- **The customer (me) is responsible for security in the cloud**: OS configurations, application security, access management, encryption, backups, and monitoring.
+
+---
+
+##  Core Practices in Third-Party Risk Management (TPRM)
+
+###  1. Obtain Formal Assurance Documents
+- **SOC 2 Type II Report**: Independent audit report demonstrating AWS’s internal controls over data security and availability.
+- **HIPAA Business Associate Agreement (BAA)**: Legal agreement clarifying shared responsibilities and AWS’s commitment to protecting PHI.
+
+These aren’t just “nice-to-have” — they’re **critical for due diligence**. I learned AWS provides these through the [AWS Artifact](https://aws.amazon.com/artifact/) portal for customers to download and review.
+
+###  2. Review AWS Service Commitments
+- **SLAs for uptime**: Know what AWS guarantees for service availability.
+- **Penetration testing summary or compliance attestations**: Some orgs request redacted reports or certifications as proof of ongoing diligence.
+
+###  3. Plan for Vendor Failure
+What if AWS has an outage? What if a third-party service in my OpenMRS architecture stops functioning or is compromised?
+- **Redundancy**: Architect OpenMRS to be resilient across AWS regions.
+- **Exit Strategy**: Maintain portable backups to avoid vendor lock-in.
+- **Security Configuration**: Misconfiguring an S3 bucket could expose patient data — and that would be *my* fault, not AWS’s.
+
+###  4. Expand Vendor Evaluation Beyond AWS
+Think beyond the cloud host:
+- OpenMRS community modules
+- Email/SMS APIs
+- External identity providers (e.g., Auth0, Okta)
+
+Each vendor must be evaluated with questions like:
+- Do they follow recognized security frameworks?
+- Are they compliant with SOC 2, ISO 27001, or similar?
+- Do they allow security questionnaires or penetration testing summaries?
+
+---
+
+##  Hands-On Activity
+
+As part of my TPRM for OpenMRS on AWS, I would require:
+
+1. **AWS SOC 2 Type II Report**
+   - Verifies AWS's internal control effectiveness for confidentiality, integrity, and availability.
+   - Provides third-party assurance of AWS’s security posture.
+
+2. **Signed Business Associate Agreement (BAA)**
+   - Required for HIPAA compliance when processing Protected Health Information (PHI).
+   - Clearly defines responsibilities between AWS and the healthcare entity using OpenMRS.
+
+These two items are foundational — without them, I cannot confidently say my third-party controls are adequate.
+
+---
+
+##  Reflection
+
+Third-party risk is often **the weakest link** in a compliance chain, not because vendors are bad — but because we fail to manage them properly. As a GRC practitioner, I must:
+
+- Include key vendors in my **risk register**.
+- Develop a **repeatable TPRM process** (e.g., onboarding questionnaire, document review, annual reassessments).
+- Build **resilience and exit strategies** into architecture.
+
+If I had to evaluate a third-party today, I would:
+- Review their compliance reports (SOC 2, ISO, etc.).
+- Verify their incident notification protocols.
+- Assess my dependency and prepare mitigation for potential failure.
+
+---
+
+##  Key Takeaways
+
+-  Every cloud service or vendor adds **invisible risk** if not assessed properly.
+-  The **shared responsibility model** is not just theory — misconfigurations on our side can lead to major breaches.
+-  **Documents like SOC 2 and BAAs are not red tape — they’re insurance policies.**
+-  Third-party management is both technical and legal — it spans architecture, contracts, and compliance.
+
+---
+
+##  Suggested Search Terms
+
+- `Cloud Vendor Risk Management Best Practices`
+- `AWS Shared Responsibility Model`
+- `AWS HIPAA BAA and Compliance`
+- `SOC 2 Report Cloud Provider`
+- `Third-Party Risk Questionnaire Template`
+
+---
+
+##  Final Thought
+
+In the GRC world, **vendors don't get a free pass**. Even a top-tier provider like AWS must be treated with both **respect and rigor**. That’s what real governance looks like — and it’s how we sleep well at night knowing our data, systems, and patients are safe.
+
