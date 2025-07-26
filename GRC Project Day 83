@@ -1,0 +1,94 @@
+# Day 83 – Measuring GRC with KPIs & KRIs | 100 Days of GRC
+
+Today, I dove deep into one of the most crucial yet often overlooked elements of a mature GRC program — **measurement**. You can’t improve what you don’t measure, and in Governance, Risk, and Compliance (GRC), metrics provide the visibility needed to prove effectiveness and uncover emerging threats. Two powerful tools in this space are **Key Performance Indicators (KPIs)** and **Key Risk Indicators (KRIs)**.
+
+---
+
+## What I Learned
+
+###  KPIs = Measuring Performance  
+KPIs help track how well processes are functioning against expectations or goals. They’re aligned with continuous improvement and compliance success.
+
+###  KRIs = Monitoring Risk  
+KRIs are early warning signals that highlight increasing exposure to risk. They help GRC leaders stay proactive instead of reactive.
+
+---
+
+## Applying KPIs & KRIs to OpenMRS on AWS
+
+As I manage the OpenMRS deployment on AWS from a GRC perspective, I started thinking about what metrics truly reflect both performance and potential risk. Below are some contextualized examples I’ve mapped out:
+
+### Patch Management  
+- **KPI**: `% of critical patches applied within 30 days of release`  
+   → Measures efficiency of patch management and responsiveness.
+- **KRI**: `Number of high-risk vulnerabilities unpatched >30 days`  
+   → Indicates build-up of security debt, increasing breach risk.
+
+### User Access Governance  
+- **KPI**: `% of monthly user access reviews completed on time`  
+   → Tracks adherence to access governance policy.
+- **KRI**: `Number of stale/inactive OpenMRS accounts >90 days`  
+   → Identifies potential risks from unused but active accounts.
+
+###  Security Awareness  
+- **KPI**: `% of workforce who completed mandatory training this quarter`  
+   → Reflects commitment to staff education and compliance.
+- **KRI**: `Number of employees overdue on cybersecurity training`  
+   → Signals cultural and human-layer vulnerabilities.
+
+###  Incident Response & Resilience  
+- **KPI**: `Mean Time to Recover (MTTR) from OpenMRS outages`  
+   → Demonstrates recovery efficiency after incidents.
+- **KRI**: `Downtime hours due to security incidents`  
+   → Reflects risk to availability and operational continuity.
+
+---
+
+## Hands-On Metrics I’ve Defined
+
+For my OpenMRS GRC Program, here are two key metrics I’ve chosen to implement and track:
+
+###  KPI:
+**Percentage of monthly OpenMRS data backups completed successfully**
+- **Why it matters**: Ensures critical patient data is protected and recoverable.
+- **How I’ll measure**: Automate reporting from backup logs via scheduled scripts that verify timestamps and status codes of completed backup jobs.
+
+###  KRI:
+**Number of critical vulnerabilities on OpenMRS server older than 30 days**
+- **Why it matters**: Highlights unresolved high-risk exposures that could lead to compromise.
+- **How I’ll measure**: Use Nessus scan reports and internal ticket logs to track open findings past due remediation timelines.
+
+---
+
+##  Reflection
+
+At this stage in my GRC journey, **KRIs are more valuable for me** than KPIs. While KPIs help validate that my processes are running smoothly, **KRIs help me detect lurking risks before they become incidents**. As I focus on strengthening OpenMRS’s security posture, the ability to see risk trends in real-time is key.
+
+This doesn’t mean I ignore KPIs — they’re crucial for reporting and stakeholder assurance — but in my current environment, **risk detection is the immediate priority**. Moving forward, I plan to build a small dashboard that visualizes both my KPIs and KRIs, driving accountability and continuous improvement.
+
+---
+
+##  Key Takeaways
+
+- KPIs measure how well we’re doing (success).
+- KRIs measure where things could go wrong (early warnings).
+- Metrics need to be **specific, measurable, and tied to objectives**.
+- Too many metrics create noise — choose what truly matters.
+- Track them over time to see trends and proactively adapt your GRC strategy.
+
+---
+
+##  Suggested Search Terms
+
+- `GRC Metrics and Measurement (Compliance KPIs)`
+- `Key Risk Indicators Examples (IT Security)`
+- `Security Patch Management Metrics`
+- `Measuring Compliance Effectiveness KPI KRI`
+- `IT Governance Metrics for Healthcare Systems`
+
+---
+
+## 📣 Final Thought
+
+By implementing KPIs and KRIs thoughtfully, I’m transforming GRC from a static checklist to a **living, breathing system of continuous feedback and control**. This is how we move from reactive to resilient. Measurement isn’t just a formality — it’s our compass in the dynamic landscape of risk and compliance.
+
