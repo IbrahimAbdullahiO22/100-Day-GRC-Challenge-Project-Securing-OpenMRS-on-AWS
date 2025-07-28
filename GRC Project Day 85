@@ -1,0 +1,75 @@
+#  Day 85 – Communicating Risk and Compliance to Stakeholders | 100 Days of GRC
+
+Today’s focus is all about **bridging the communication gap** between technical teams and executive leadership. As a GRC leader, it's not enough to spot risk — I must also **translate that risk into language that compels action**.
+
+Whether it's requesting funding for a new security tool or gaining buy-in for policy enforcement, how I deliver the message determines whether stakeholders truly understand the impact. Today, I practiced tailoring my pitch to both technical and non-technical audiences using an OpenMRS case.
+
+---
+
+##  What I Learned
+
+- Technical and executive audiences have **different priorities and languages**.
+- Communicating risk is **not just about being right**, it's about being **understood**.
+- **Technical teams** want precision: tools, threats, integration steps.
+- **Executives** want outcomes: patient safety, legal risk, financial impact, reputation.
+
+The **same message** must be framed differently depending on who I’m speaking to.
+
+---
+
+##  Case Scenario: OpenMRS Security Upgrade – Multi-Factor Authentication (MFA)
+
+Imagine I’ve identified a security gap: OpenMRS currently allows password-only login, creating high risk for unauthorized access via credential theft.
+
+###  Technical Team Brief
+
+> OpenMRS currently lacks enforcement of multi-factor authentication (MFA), leaving admin and clinician accounts susceptible to phishing and brute force attacks. By integrating AWS Cognito’s MFA capabilities, we can introduce a second authentication layer (TOTP or SMS OTP) at login. This significantly reduces the attack surface and strengthens patient data protection across the AWS-hosted environment.
+
+**Purpose**: Provide clear technical reasoning and a roadmap to implementation.
+
+---
+
+### Executive Elevator Pitch
+
+> OpenMRS is the digital heartbeat of our hospital — powering patient care, records, and compliance. Today, that system is one password away from a potential data breach that could expose thousands of patient records and violate HIPAA regulations. By investing in a multi-factor authentication upgrade, we will strengthen the protection of patient information, ensure compliance, and safeguard our hospital’s trust and reputation. It's a small investment with a high return — preventing future incidents that could cost us millions.
+
+**Purpose**: Highlight *why* the investment matters — risk reduction, legal compliance, and organizational integrity.
+
+---
+
+## Reflection
+
+I’ve learned that **effective GRC communication is a strategic skill**, not just a soft skill. I’ve seen this in practice — when I break down complex issues into business language, non-technical leaders engage more, support initiatives faster, and ask smarter questions.
+
+If I had only used technical jargon like “AWS Cognito, TOTP, threat vectors,” I’d risk losing my audience. Instead, by reframing the issue around **patient safety**, **HIPAA compliance**, and **financial risk**, I turn a tech request into a **business priority**.
+
+This skill is what transforms a GRC analyst into a GRC leader.
+
+---
+
+## Hands-On Summary
+
+| Audience         | Focus                         | Message Highlights |
+|------------------|-------------------------------|---------------------|
+| Security Team    | Technical controls, integration | MFA via AWS Cognito, risk reduction at the control layer |
+| Executives       | Business risk, compliance, ROI | Protect patient data, avoid HIPAA fines, reputational trust |
+
+I practiced writing both versions to reinforce the mindset that **data must serve the message**, not the other way around.
+
+---
+
+##  Suggested Search Terms
+
+- `Communicating cybersecurity risk to executives`
+- `Translating IT risk into business language`
+- `Security elevator pitch examples`
+- `Technical vs non-technical communication GRC`
+
+---
+
+##  Final Thought
+
+**Communication is the ultimate control.** A great GRC program can fail if its value isn't understood by the right people. But when we communicate risk in a way that aligns with stakeholder goals — **safety, compliance, trust, and continuity** — we gain the support we need to secure the organization.
+
+This day has reinforced that leadership in GRC is not just knowing what needs to be done — it’s knowing how to **get everyone on board**.
+
