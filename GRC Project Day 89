@@ -1,0 +1,114 @@
+#  Day 86 – Capstone Kickoff: Project Overview & Objectives | 100 Days of GRC
+
+##  Project Objective
+
+This capstone GRC plan is designed to demonstrate how a governance, risk, and compliance (GRC) analyst can develop a secure and regulation-aligned environment for **OpenMRS** deployed in **AWS Cloud**. The ultimate goal is to ensure OpenMRS remains **HIPAA-compliant**, **secure**, and **resilient**, while aligning with organizational objectives and protecting sensitive healthcare data.
+
+---
+
+##  GRC Plan Sections & My Approach
+
+### 1. **System Description & Scope**
+> Define OpenMRS's purpose, its architecture on AWS, and the scope of operations.
+
+- OpenMRS is an open-source electronic medical record (EMR) system used in healthcare environments to manage patient records.
+- This plan focuses on OpenMRS hosted on AWS, used by healthcare staff to access, store, and manage Protected Health Information (PHI).
+- Scope includes EC2 instances, RDS for data storage, IAM configurations, and third-party integrations.
+
+### 2. **Compliance Mapping**
+> Map healthcare and cloud regulations (e.g., HIPAA, NIST 800-53) to applicable controls and responsibilities.
+
+- Identify relevant laws (HIPAA, HITECH, GDPR if applicable).
+- Use AWS’s Shared Responsibility Model to divide responsibilities between AWS and the healthcare org.
+- Leverage frameworks like NIST 800-53 Rev. 5 to map required safeguards.
+
+### 3. **Risk Summary**
+> Provide a high-level summary of threats and vulnerabilities facing the OpenMRS system.
+
+- Key risks include: data breaches, misconfigured access controls, unpatched vulnerabilities, insider threats, and third-party risk.
+- Risk assessment will include likelihood, impact, and current mitigation measures.
+
+### 4. **Control Plan**
+> Design and list security controls to reduce risk and enforce compliance.
+
+- Technical controls: MFA, data encryption (at rest and in transit), audit logging, least privilege access.
+- Administrative controls: policies, onboarding procedures, change control processes.
+- Reference controls from NIST 800-53 families: AC, AU, SC, IR, etc.
+
+### 5. **Policies Needed**
+> Identify and draft the necessary policies for OpenMRS governance.
+
+- Access Control Policy  
+- Data Retention and Disposal Policy  
+- Incident Response Policy  
+- Backup & Recovery Policy  
+- Acceptable Use Policy  
+- Vendor Management Policy
+
+### 6. **Training & Awareness**
+> Describe a structured training plan for all OpenMRS users and administrators.
+
+- Annual HIPAA and privacy training for healthcare staff.
+- Secure coding practices for developers.
+- Phishing simulations and monthly newsletters for continuous awareness.
+
+### 7. **Incident Response Plan**
+> Develop a response framework for security events involving OpenMRS.
+
+- Define roles and responsibilities during incidents.
+- Create playbooks for ransomware, data breaches, and insider misuse.
+- Establish incident reporting, communication workflows, and post-mortem analysis.
+
+### 8. **Continuous Monitoring**
+> Describe ongoing security and compliance assurance strategies.
+
+- Weekly vulnerability scans and monthly patch reviews.
+- Use AWS CloudTrail and GuardDuty for real-time monitoring.
+- Conduct quarterly risk reviews and log audits.
+
+### 9. **POA&M (Plan of Action & Milestones)**
+> Track remediation efforts and accountability for gaps.
+
+| Finding                           | Remediation Action           | Owner       | Due Date   |
+|----------------------------------|------------------------------|-------------|------------|
+| No MFA enforced on admin logins  | Enable AWS IAM MFA           | IT Security | 2025-09-15 |
+| Missing audit trail on OpenMRS   | Implement OpenMRS audit log module | GRC Analyst | 2025-09-20 |
+| Staff overdue for HIPAA training | Send reminders & track completion | Compliance Officer | 2025-08-30 |
+
+---
+
+## ✍ Reflection
+
+### Which section do I expect to be the most challenging?
+
+The **Policy Development** section may be the most challenging because it requires tailoring templates to fit a specific healthcare environment while aligning with technical, legal, and cultural realities of the organization.
+
+### Which is the most critical for success?
+
+**Compliance Mapping** is the most foundational section. Without knowing which laws and standards apply, any effort in controls or monitoring could miss key requirements—especially in healthcare, where violations can result in major penalties and patient harm.
+
+---
+
+##  Lessons So Far
+
+Throughout this journey, I've learned the power of structure and foresight in GRC work. Proactive planning, communication, and alignment with organizational goals transform compliance from a checkbox exercise into a driver of trust and resilience. This capstone project allows me to combine everything I’ve practiced into a coherent and actionable plan — and I’m excited to bring it to life over the next few days.
+
+---
+
+##  Suggested Search Terms
+
+- `GRC plan template healthcare`
+- `Security plan components NIST`
+- `Plan of Action and Milestones example`
+- `HIPAA security rule implementation guide`
+
+---
+
+##  What’s Next?
+
+On Day 87, I’ll begin building out the first section of the capstone plan: **System Description & Scope**. This is where I set the stage for the entire GRC strategy, aligning context with purpose.
+
+Stay tuned. We're turning GRC knowledge into real-world impact.
+```
+
+
