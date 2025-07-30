@@ -1,0 +1,109 @@
+#  Day 87: Capstone Part 1 – Define Scope & System Description | 100 Days of GRC
+
+## � Objective
+
+Today, I kicked off the hands-on phase of my GRC Capstone project by drafting the **Scope and System Description** section of a Governance, Risk, and Compliance (GRC) plan for **OpenMRS**, an open-source electronic medical record system deployed in a cloud-based healthcare environment. This section is the foundation of any effective GRC plan, ensuring all stakeholders understand **what is being secured**, **where it operates**, **who uses it**, and **what sensitive data is at stake**.
+
+---
+
+## System Description – What is OpenMRS?
+
+**OpenMRS** (Open Medical Record System) is a mission-critical, open-source **Electronic Health Record (EHR)** platform used in our healthcare facility to capture, store, and manage patient health information. The system plays a vital role in streamlining clinical workflows, improving patient care, and ensuring proper documentation of medical encounters. 
+
+Our deployment of OpenMRS is tailored to support the specific needs of our hospital, including clinical documentation, medication tracking, patient registration, diagnostics, and reporting. The system is accessible through secure web interfaces and is used by clinical and non-clinical staff alike.
+
+---
+
+##  Technical Environment – AWS Cloud Infrastructure
+
+Our instance of OpenMRS is securely hosted on **Amazon Web Services (AWS)**, leveraging cloud-native infrastructure for flexibility, availability, and cost-efficiency. Specifically, OpenMRS is deployed on an **EC2 virtual machine** with a **MySQL backend database**, operating within a **VPC** under the hospital’s dedicated AWS account.
+
+- The **AWS Shared Responsibility Model** governs this deployment: AWS manages the security *of* the cloud (physical security, infrastructure, storage durability), while our team is responsible for the security *in* the cloud (operating system hardening, patching, access controls, application configurations).
+- We have also integrated **AWS Identity and Access Management (IAM)** roles and security groups to enforce role-based access and least privilege principles at the infrastructure layer.
+
+This environment allows us to scale operations securely while maintaining strong availability and disaster recovery capabilities.
+
+---
+
+##  Users and Roles
+
+OpenMRS is accessed by multiple user groups within the hospital:
+
+- **Doctors and Nurses**: Have access to patient diagnosis, treatment records, prescriptions, and clinical notes.
+- **Lab Technicians**: Input diagnostic results and interpret lab orders.
+- **Administrative Staff**: Manage patient demographics, appointment scheduling, and insurance documentation.
+- **System Administrators**: Configure and maintain the application and ensure system health and security.
+
+Access is managed using **Role-Based Access Control (RBAC)** to ensure users only interact with data relevant to their job function. This control model helps mitigate insider threats and supports compliance with privacy regulations such as **HIPAA**.
+
+---
+
+## Data Processed and Stored
+
+OpenMRS processes and stores **Protected Health Information (PHI)** including:
+
+- Personally Identifiable Information (PII): Name, Date of Birth, Contact Info
+- Medical History and Treatment Records
+- Diagnoses, Prescriptions, and Lab Results
+- Audit logs tracking user activity and data access
+
+Given the sensitivity of this information, our GRC plan ensures **HIPAA compliance**, incorporating administrative, physical, and technical safeguards to prevent unauthorized access, loss, or tampering.
+
+---
+
+## Scope Boundaries
+
+To maintain clarity and focus, this GRC plan is scoped specifically to the following components:
+
+**In-Scope:**
+- OpenMRS application running on AWS EC2
+- Associated MySQL database
+- User roles and access management
+- Logging, monitoring, and data integrity controls specific to OpenMRS
+- Interfaces with external lab systems (where applicable)
+
+**Out-of-Scope:**
+- Broader hospital IT infrastructure (e.g., core network, HR systems, external billing platforms)
+- Physical security of hospital workstations (unless they directly impact OpenMRS)
+- Any third-party systems not integrated with OpenMRS
+
+By setting these boundaries, we can conduct focused **risk assessments**, implement appropriate **security controls**, and **map compliance requirements** effectively without spreading resources too thin or introducing ambiguity.
+
+---
+
+## Reflection – Why Scope Definition Matters in GRC
+
+Clearly defining the **system and scope** at the beginning of a GRC plan is not just a formality—it's a **strategic necessity**. Here's why:
+
+1. **Avoids Ambiguity:** A vague scope leads to misunderstandings about who is responsible for what. Without defining the AWS cloud environment, we might overlook cloud-specific security tasks, leading to compliance gaps.
+2. **Enables Focused Risk Management:** A narrow and precise scope allows risk assessments to be meaningful, manageable, and measurable.
+3. **Streamlines Communication:** Stakeholders (technical and non-technical) can quickly understand what the plan covers and why.
+4. **Supports Compliance Audits:** Auditors can trace controls back to specific assets and systems, increasing audit readiness and reducing friction.
+5. **Prevents Scope Creep:** Helps avoid taking on responsibilities that exceed available resources or team expertise.
+
+A well-defined scope transforms GRC from a theoretical exercise into an actionable, measurable, and accountable program.
+
+---
+
+##� What I Learned and Applied Today
+
+- The importance of **role clarity**, especially in regulated environments.
+- How to **translate technical cloud infrastructure (AWS EC2, IAM, RDS)** into a compliance context.
+- That GRC is **not just about risk control**, but about **storytelling**—how we communicate risks, systems, and safeguards to stakeholders.
+- How the **AWS Shared Responsibility Model** shifts the security paradigm from physical hardware to **configuration responsibility** and **cloud-native controls**.
+
+This foundation will guide the rest of my capstone work—from compliance mapping and control selection to incident response planning and continuous monitoring.
+
+---
+
+## Keywords & Resources
+
+- `OpenMRS system overview`
+- `AWS shared responsibility model healthcare`
+- `HIPAA compliance cloud hosting`
+- `Scope definition in risk management`
+- `Information system security plan examples`
+
+---
+
+Next up: I’ll begin mapping compliance requirements and identifying control objectives tailored to OpenMRS in AWS. Onward to Day 88! 
