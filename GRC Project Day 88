@@ -1,0 +1,75 @@
+#  Day 88: Capstone Part 2 – Identify Compliance Requirements & Frameworks | 100 Days of GRC
+
+##  Objective
+
+Today, I focused on aligning **OpenMRS**, our cloud-hosted electronic medical record system, with the **compliance requirements** and **security frameworks** that govern the handling of sensitive healthcare data. A strong GRC program doesn’t just secure systems – it ensures compliance with laws, standards, and policies, providing both **legal protection** and a **security roadmap**.
+
+This step is about translating abstract rules (like HIPAA or NIST CSF) into **practical controls** we can implement in our environment. I approached it from a leadership mindset: “How can I ensure our hospital’s OpenMRS instance is both compliant and secure – today, tomorrow, and under audit?”
+
+---
+
+##  Why Compliance Matters in a Cloud-Based EHR System
+
+When managing a system that handles **ePHI (electronic protected health information)**, regulatory compliance isn’t optional – it’s mandatory. Our OpenMRS system is deployed in **AWS**, which means we must think in terms of both the **HIPAA Security Rule** and the **AWS Shared Responsibility Model**.
+
+Here’s the truth: AWS can sign a **Business Associate Agreement (BAA)** with you, but **compliance is never fully outsourced**. We, as the implementers and security team, are responsible for configuring and enforcing the right controls *in* the cloud. Today, I learned how to translate compliance obligations into enforceable actions – bridging regulation with real-world technical decisions.
+
+---
+
+##  Compliance Requirements & Security Frameworks Mapped to Controls
+
+Below is a table mapping key compliance and security frameworks to specific control actions I am implementing in our GRC plan for OpenMRS.
+
+| **Requirement / Framework** | **How We Comply (Control / Action Plan)** |
+|-----------------------------|--------------------------------------------|
+| **HIPAA Security Rule**: Ensure confidentiality, integrity, and availability of ePHI | - Role-Based Access Control (RBAC) within OpenMRS<br> - Encrypted AWS RDS (data at rest)<br> - TLS/HTTPS for data in transit<br> - AWS IAM permissions and CloudWatch logs<br> - Routine backup strategy with AWS snapshot automation |
+| **HIPAA Security Rule**: Risk analysis and risk management | - Risk Summary section of our GRC plan documents known threats<br> - We will maintain a **POA&M** (Plan of Action and Milestones)<br> - Annual reviews and continuous monitoring included |
+| **HIPAA Security Rule**: Audit Controls | - Enable OpenMRS access logging<br> - Use AWS CloudTrail and CloudWatch for infrastructure logs<br> - Retain logs per retention policy and review monthly |
+| **NIST Cybersecurity Framework (CSF)**: Protect Function | - Implement multi-factor authentication (MFA)<br> - Limit console access to specific IAM roles<br> - Harden EC2 configurations (e.g., disable unused ports)<br> - Maintain baseline OS images and patch regularly |
+| **NIST CSF**: Detect Function | - CloudWatch alarms for login anomalies and resource misuse<br> - Setup alerts for ePHI data export attempts<br> - Scheduled log review for unusual patterns |
+| **NIST CSF**: Respond & Recover Functions | - Incident Response Plan section in the GRC plan<br> - Define escalation paths, containment steps, and notification procedures<br> - Daily snapshots of database, with restore tests every quarter |
+| **Hospital Internal Policy**: Annual user security training | - OpenMRS user training module (customized videos and quizzes)<br> - Training completion tracked and logged in HR system<br> - Certificate required before full access is granted |
+| **AWS Shared Responsibility Model** | - AWS manages physical security, hypervisor, and network layers<br> - We configure firewalls, security groups, IAM roles, backups, and OS hardening<br> - Use Private Subnets for database, restrict SSH via Bastion only |
+
+---
+
+##  Key Insight: Compliance Reveals What You Missed
+
+As I mapped each requirement to a control, I realized how easily some critical areas could have been overlooked without these frameworks:
+
+- **HIPAA** made me think deeper about **audit logs** and how important it is to **track user activity** across both OpenMRS and the AWS platform.
+- **NIST CSF** reminded me to include a **response plan** – not just preventative controls.
+- The **AWS Shared Responsibility Model** helped clarify where my team must take ownership: IAM roles, encryption, patching – all fall under *our* side of the responsibility line.
+
+By following these frameworks, I’m not just ticking boxes – I’m building resilience. Regulatory frameworks like HIPAA don’t just mandate security; they **guide you to think holistically**.
+
+---
+
+##  Reflection
+
+What stood out most today is that **regulations shape design**. Without considering HIPAA and NIST, our OpenMRS deployment might have been functional but vulnerable. These standards act like a flashlight, revealing weak spots: no backup plan, no incident response, no training program? That's a recipe for trouble.
+
+Compliance doesn’t slow us down. It **accelerates trust**, ensures **data safety**, and prepares us for the day when an auditor knocks or a breach looms.
+
+---
+
+##  What I Taught Myself Today
+
+- How to **transform regulatory text** into practical cloud security controls  
+- The value of **compliance mapping** as a foundational GRC activity  
+- That **cloud hosting doesn't remove responsibility** – it just changes where it lies  
+- And finally: **Security is shared, but compliance is earned**
+
+---
+
+##  Suggested Keywords & Resources
+
+- `HIPAA Security Rule summary`  
+- `OpenMRS HIPAA compliance`  
+- `NIST CSF healthcare implementation`  
+- `AWS Shared Responsibility Model healthcare`  
+- `Compliance requirements mapping table`
+
+---
+
+🔜 **Up Next:** I’ll begin identifying risks and building the **Risk Summary** section of the plan – categorizing threats, assessing likelihood and impact, and preparing mitigation strategies. Onward to Day 89! 🚀
