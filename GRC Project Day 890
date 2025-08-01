@@ -1,0 +1,91 @@
+#  Day 89: Capstone Part 3 – Risk Assessment Summary | 100 Days of GRC
+
+##  Objective
+
+Today, I completed a **risk assessment** for the OpenMRS electronic medical record system deployed in AWS. The goal was to identify and rank potential threats to the confidentiality, integrity, and availability of the system and its data. By using a **qualitative 3x3 risk matrix**, **team brainstorming**, and results from a **vulnerability scan**, I evaluated technical and human-centric risks that could impact healthcare operations.
+
+This process helped me prioritize which risks require immediate attention and which can be monitored or mitigated with lower urgency. It’s not just a checklist — it's a leadership tool for decision-making.
+
+---
+
+##  Risk Assessment Methodology
+
+We used a **simple but effective 3x3 qualitative risk matrix**, rating each threat based on:
+
+- **Likelihood** (Low, Medium, High)
+- **Impact** (Low, Medium, High)
+
+Each risk was assigned a rating of **Low**, **Medium**, or **High** based on where it landed on the grid. This matrix was informed by:
+
+-  **Team brainstorming sessions** (business and IT perspectives)
+-  **Vulnerability scan results** (technical evidence)
+-  **Previous incident logs and threat intelligence**
+
+This hybrid approach helped ensure a **holistic view** — combining both **cybersecurity controls** and **operational insights**.
+
+---
+
+##  Top 5 Risks Identified
+
+| **Risk** | **Risk Description** | **Likelihood** | **Impact** | **Overall Risk** |
+|----------|----------------------|----------------|------------|------------------|
+| Data breach via SQL injection | Vulnerability in application code could be exploited to exfiltrate patient records | High | High | **High** |
+| Unauthorized admin access | Weak or stolen credentials could lead to privilege escalation | Medium | High | **High** |
+| PHI exposure via S3 misconfiguration | Improper access settings could publicly expose backups or logs | Medium | High | **High** |
+| Server outage without rapid recovery | Downtime from patch failure, hardware error, or DDoS attack could disrupt clinical care | Medium | Medium | **Medium** |
+| Insider misuse of data | Staff with legitimate access may misuse or leak sensitive information | Low | High | **Medium** |
+
+>  *Lower-rated risks (e.g., cosmetic software bugs) were noted but deprioritized for immediate mitigation.*
+
+---
+
+##  Hands-On Risk Categorization & Mitigation Exercise
+
+###  High Risk: Unauthorized Admin Access  
+- **Description**: If a malicious actor gains unauthorized admin credentials, they could compromise all patient records or alter configurations.  
+- **Mitigation**:  
+  - Enforce **multi-factor authentication (MFA)** on all administrative accounts  
+  - Use **strict password policies** and **IAM least privilege roles**  
+  - Regularly audit admin access and disable unused accounts  
+
+###  Medium Risk: Prolonged Server Outage  
+- **Description**: A patching error or cloud infrastructure failure could take OpenMRS offline, affecting care continuity.  
+- **Mitigation**:  
+  - Use **AWS Multi-AZ deployment** for high availability  
+  - Automate **daily encrypted snapshots** of the EC2 instance and RDS database  
+  - Conduct quarterly **disaster recovery drills** to reduce downtime  
+
+###  Low Risk: UI Bug Causing Display Error  
+- **Description**: A minor display bug causes the visit summary to render incorrectly, with no impact on underlying data integrity.  
+- **Mitigation**:  
+  - Document the bug and assign to the dev team with normal SLA  
+  - No emergency fix required; monitor user feedback for escalation  
+
+---
+
+##� Reflection – Why This Process Matters
+
+This risk assessment reminded me that **security leadership begins with awareness**. Without a structured review, some of these risks might stay hidden until it's too late. I was surprised by how technical issues (like SQL injection) and human issues (like insider misuse) can both be **High risk** in a healthcare setting.
+
+The **ranking process was eye-opening**:  
+- SQL injection felt like a top concern because of real-world breaches in healthcare.  
+- Insider misuse was less likely, but its impact on trust and compliance is severe.  
+- Misconfigured S3 buckets are often overlooked — but can result in **instant public data exposure**.
+
+By evaluating these scenarios through a risk lens, I’ve learned how to **focus resources**, **build accountability**, and **communicate security priorities** to both technical and non-technical stakeholders.
+
+> **Takeaway**: Risk assessments are not just paperwork — they’re a guide to smart, proactive security.
+
+---
+
+## Suggested Keywords & Resources
+
+- `Qualitative risk assessment 3x3 matrix`  
+- `Top healthcare IT security risks`  
+- `SQL injection medical data breach`  
+- `Vulnerability scanning tools open source`  
+- `Risk mitigation strategies examples`  
+
+---
+
+📅 **Next Up (Day 90)**: I’ll be working on the **Security Controls & Policy Plan** — defining exactly which controls we’ll implement to mitigate the risks identified today. Let’s keep building forward. 💪
