@@ -1,0 +1,106 @@
+#  Day 90: Capstone Part 4 – Control Implementation Plan | 100 Days of GRC
+
+##  Objective
+
+Today I focused on building out the **Control Implementation Plan** for OpenMRS, guided by the **NIST 800-53 Moderate Baseline** and aligned with **HIPAA Security Rule safeguards**. The goal is to define **how** we mitigate each risk identified earlier using structured, well-documented, and measurable security controls. This ensures our OpenMRS deployment on AWS is not only secure but also **audit-ready**.
+
+Rather than guessing or reacting, we’re using a tested security blueprint — NIST 800-53 — tailored with healthcare-specific controls required by HIPAA.
+
+---
+
+##  Security Control Framework: NIST 800-53 + HIPAA Overlay
+
+We adopted the **NIST SP 800-53 Rev. 5 Moderate Baseline**, which provides comprehensive coverage for systems handling sensitive (but not classified) data. This was enhanced with **HIPAA-specific controls**, especially for protecting **electronic Protected Health Information (ePHI)**, as required by the HIPAA Security Rule.
+
+This combination provides:
+
+-  Proven, widely-accepted control catalog (NIST)
+-  Regulatory alignment with federal healthcare law (HIPAA)
+-  Scalable, modular controls applicable to AWS-hosted OpenMRS
+
+---
+
+##  Key Control Domains & Implementation Examples
+
+###  Access Control (AC)
+
+- Enforce **Role-Based Access Control (RBAC)** in OpenMRS — doctors, nurses, admins each get permissions based on job function.
+- Implement **strong password policies** and consider **Multi-Factor Authentication (MFA)** for elevated roles.
+- On AWS, use **IAM roles**, **Security Groups**, and **VPC-level restrictions** to tightly control server and database access.
+- Follow **Principle of Least Privilege** across all user access paths.
+
+---
+
+###  Encryption (SC-12, SC-13, SC-28, SC-28(1))
+
+- **Data at rest** is encrypted using AWS native tools (RDS encryption for OpenMRS database, S3 encryption for backups).
+- **Data in transit** is protected via **HTTPS (TLS 1.2+)** for OpenMRS and SSL/TLS for backend database communications.
+- Ensure encryption keys are managed using **AWS KMS** with restricted access.
+
+---
+
+###  Audit Logging (AU)
+
+- OpenMRS logs user activity (logins, patient record views/edits).
+- AWS CloudTrail and CloudWatch track infrastructure-level actions (IAM changes, EC2 access, S3 events).
+- Enable **log aggregation** and **retention policies**, and review audit logs **weekly** for suspicious activity.
+
+---
+
+###  Configuration Management (CM)
+
+- Use hardened AMIs (Amazon Machine Images) for EC2 instances.
+- Disable unnecessary ports, protocols, and services.
+- Apply security patches weekly; monitor for CVEs relevant to OpenMRS and system software.
+- Use **AWS Systems Manager** to run configuration compliance scans and **baseline enforcement**.
+
+---
+
+###  Identification & Authentication (IA)
+
+- All users have **unique OpenMRS accounts** – no shared credentials.
+- Admin users require **MFA + strong password policies**.
+- In AWS, use **IAM with federated SSO** (if integrated with hospital directory) or IAM users with MFA.
+- Enforce **automatic logoff/session timeout** after inactivity.
+- Use **key-based SSH access** to servers – no password login allowed.
+
+---
+
+##  Hands-On Control Example: Identification & Authentication (IA)
+
+> *"In our OpenMRS environment, every user has a unique login identity. Strong password policies are enforced, and administrators are required to authenticate using MFA. For AWS, IAM roles are tightly scoped with least privilege, and EC2 server access is restricted to approved keys via SSH. Sessions expire after a period of inactivity to prevent misuse of unattended workstations."*
+
+This ties real practices to the **IA control family**, showing how OpenMRS satisfies key requirements from both **NIST 800-53** and **HIPAA**.
+
+---
+
+##  Reflection – Why Frameworks Like NIST Make Security Achievable
+
+Before I began using a structured control framework, the task of securing a healthcare system felt **overwhelming**. There are so many angles to cover: who can log in, what data is exposed, how updates are done, how logs are reviewed, and so on.
+
+But once we adopt **NIST 800-53 Moderate + HIPAA**, it’s like being handed a **comprehensive blueprint**. Instead of scrambling, we follow tested security practices, one domain at a time — and make sure every risk is covered.
+
+Reflecting on our earlier risk assessment:
+- **Access control** directly mitigates unauthorized access threats
+- **Encryption** addresses HIPAA confidentiality requirements
+- **Audit logs** support both detection and post-incident response
+- **Config management** prevents vulnerabilities from software rot
+- **Authentication** ensures accountability
+
+>  **My takeaway**: Following NIST + HIPAA turns chaos into clarity. It helps us **prove compliance**, **build trust**, and **harden security** with purpose.
+
+I personally believe **Access Control** is the most critical in our OpenMRS case — because everything else (encryption, audit logs, patching) fails if the wrong person gets in.
+
+---
+
+##  Suggested Keywords & Search Resources
+
+- `NIST 800-53 moderate baseline controls`  
+- `HIPAA security rule safeguards NIST mapping`  
+- `Access control best practices healthcare IT`  
+- `AWS data encryption HIPAA compliance`  
+- `OpenMRS security configuration guidelines`  
+
+---
+
+ **Next Up (Day 91)**: I’ll be creating a **Security Training & Awareness Plan** for OpenMRS users — ensuring everyone knows how to use the system safely, avoid mistakes, and respond if something goes wrong. Onward! 🚀
