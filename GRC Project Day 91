@@ -1,0 +1,78 @@
+#  Day 91: Capstone Part 5 – Policies and Procedures 
+
+##  Objective
+
+Today I focused on identifying and documenting the **security policies and procedures** needed to govern the OpenMRS deployment on AWS. These documents serve as the **human rulebook** for how we manage security, define responsibilities, and ensure consistent behavior across all stakeholders — from clinicians to system administrators.
+
+This part of the GRC plan ensures that our **technical controls are backed by formal guidance**, reducing confusion, enforcing compliance (e.g., HIPAA), and preparing the organization for audits or incident response scenarios.
+
+---
+
+##  Understanding Policies vs. Procedures
+
+- **Policies** = What & Why (the rule, its intent, and who it applies to)
+- **Procedures** = How (step-by-step instructions to carry out the policy)
+
+Policies give direction. Procedures give instruction. Together, they ensure **predictability, accountability, and compliance**.
+
+For OpenMRS — which handles **Protected Health Information (PHI)** — both are essential for HIPAA readiness and real-world security operations.
+
+---
+
+##  Key Policies & Procedures for OpenMRS
+
+| **Title** | **Status** | **Purpose** |
+|-----------|------------|-------------|
+| **Access Control Policy** | Existing – Needs Update | Defines how OpenMRS and AWS user accounts are created, modified, and revoked. Enforces the principle of least privilege and ensures only authorized personnel access sensitive systems and data. |
+| **Incident Response Plan (IRP)** | New | Provides a clear workflow for identifying, reporting, containing, and remediating security incidents involving OpenMRS. Defines roles, communication paths, and documentation expectations. |
+| **Backup & Recovery Procedure** | Existing – Needs Update | Outlines how OpenMRS data is backed up (daily encrypted backups to S3) and how recovery is tested. Ensures we can restore operations quickly and preserve patient data integrity. |
+| **Acceptable Use Policy (AUP)** | Existing – Needs Update | Educates end-users (doctors, nurses, admins) on responsible system usage. Clarifies prohibited actions like password sharing, unauthorized access, and use of personal devices for PHI access. |
+| **Change Management Procedure** | Existing – Needs Update | Ensures that patches, software updates, or infrastructure changes to OpenMRS/AWS go through documented review and approval, with testing and rollback plans in place. |
+| **Encryption & Data Protection Policy** | New | Documents the encryption requirements for data at rest (e.g., RDS, S3) and in transit (e.g., HTTPS, TLS). Ensures OpenMRS handles PHI according to HIPAA's confidentiality requirements. |
+| **User Provisioning & Deprovisioning Procedure** | New | Step-by-step guide for onboarding new users, assigning appropriate roles, and promptly revoking access upon departure or role change. Critical for avoiding orphaned accounts. |
+| **Log Management & Review Policy** | New | Defines how OpenMRS and AWS audit logs are collected, protected, reviewed, and retained. Ensures security events are detectable and traceable. |
+
+---
+
+##  Hands-On Policy Review Summary (3 Examples)
+
+### 1. **Access Control Policy** – *Existing, Needs Update*  
+> Governs how user access is granted or revoked for OpenMRS and AWS resources. It ensures adherence to least privilege, password complexity standards, and role-based access.
+
+### 2. **Incident Response Plan (IRP)** – *New*  
+> Lays out roles, notification paths, and containment strategies in the event of a breach. Guides the technical team in coordinating fast, consistent, and documented response actions.
+
+### 3. **Backup & Recovery Procedure** – *Existing, Needs Update*  
+> Ensures OpenMRS data is backed up nightly and stored in encrypted S3 buckets, with quarterly restore drills to confirm integrity and availability.
+
+---
+
+##  Reflection – The Power of Governance in Security
+
+Today’s work reinforced something important: **Security isn’t just about firewalls and encryption – it’s also about people, behavior, and consistency.** Policies and procedures make this possible.
+
+They’re how we:
+- Prevent confusion when onboarding staff
+- Respond quickly when things go wrong
+- Meet compliance requirements (like HIPAA)
+- Foster a culture of security awareness
+
+The **Incident Response Plan** stands out to me as the most impactful policy — because **when a breach happens, response time and clarity are everything**. However, I also believe that **Access Control** sets the tone for risk prevention, and should be tightly governed.
+
+Writing these documents is one challenge. **Getting buy-in and compliance** is another. That’s why training, regular reviews, and executive support are critical. A policy that no one reads is a **risk in itself**.
+
+>  *Takeaway*: Policies and procedures translate technical strategy into day-to-day practice. Without them, even the best controls will fail in a real-world crisis.
+
+---
+
+## Suggested Search Terms
+
+- `Essential cybersecurity policies healthcare`  
+- `Access control policy example clinic`  
+- `Incident response plan template small business`  
+- `HIPAA security policies list requirements`  
+- `IT change management procedure examples`
+
+---
+
+ **Next Up (Day 92)**: I’ll be developing a **User Security Awareness Training Plan** — making sure OpenMRS users understand how to keep patient data safe and follow all the rules we’ve now put in place. Let’s keep building! 🚀
