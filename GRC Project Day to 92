@@ -1,0 +1,104 @@
+#  Day 92: Capstone Part 6 – Training and Awareness Program 
+
+##  Objective
+
+Today, I focused on developing the **Security Training and Awareness Program** for the OpenMRS deployment hosted on AWS. The goal is to ensure that **everyone — from front-line clinic staff to system administrators — understands their role** in keeping the system secure, compliant with HIPAA, and resilient against human error.
+
+Even the most secure systems can be compromised by a single careless click, weak password, or failure to report suspicious activity. That’s why **user education is not optional — it’s a strategic layer of defense.**
+
+---
+
+## � Training Goals by Role
+
+We’ve designed the training program with **two primary user groups** in mind:
+
+###  General Users (Doctors, Nurses, Medical Assistants, Clerks)
+
+Topics to be covered:
+
+- **Password Hygiene**: Strong password creation, avoiding reuse, no sticky notes!
+- **Workstation Security**: Locking sessions, logging out when stepping away
+- **Phishing Awareness**: Identifying and reporting suspicious emails or messages
+- **Patient Data Privacy**: Understanding HIPAA obligations and personal accountability
+- **Incident Reporting**: How and when to escalate concerns to IT/security
+
+Goal: Help end-users adopt secure habits that become **second nature**, without disrupting their clinical duties.
+
+---
+
+###  Technical Users (System Admins, IT Staff, DevOps)
+
+In addition to general user topics, admins will receive advanced technical training:
+
+- **Secure Server and App Management**: Patch management for OpenMRS and OS
+- **AWS Security Fundamentals**: IAM roles, security groups, bucket permissions
+- **Audit Logging & Monitoring**: Interpreting logs, detecting anomalies
+- **Incident Response Execution**: Aligning with IRP (Incident Response Plan)
+- **Backup & Recovery Operations**: Restoration procedures and validation testing
+
+Goal: Equip technical staff to protect, detect, and respond to threats effectively — from the infrastructure layer up.
+
+---
+
+##  Training Program Structure
+
+- **Onboarding Training**: Required for all new users before accessing OpenMRS
+- **Annual Security Refresher**: Covers HIPAA updates, security best practices, policy changes
+- **Quarterly Awareness Campaigns**: Themed newsletters, posters, or email tips
+- **Phishing Simulation Drills**: Simulated phishing emails with just-in-time education
+- **Role-Based Training Modules**: Custom content tailored to job responsibilities
+
+---
+
+##  Hands-On Training Activity: *Phishing Drill & Awareness Campaign*
+
+###  Title: “Click Smart, Stay Safe” – Quarterly Phishing Simulation
+
+**Objective**: Improve email security hygiene by simulating real-world phishing attacks in a safe, educational environment.
+
+**How It Works**:
+- A realistic but fake phishing email is sent to OpenMRS users.
+- Users who click the link are redirected to a training page that highlights the red flags they missed.
+- All results are anonymized and compiled into a quarterly security report.
+- A follow-up newsletter shares helpful tips and success stories (e.g., “15 staff members reported the phishing email — great job!”).
+
+**Who Participates**: All OpenMRS users (clinical, admin, and IT staff)
+
+**Why It Matters**:
+Healthcare organizations are high-value targets for phishing. Teaching staff how to recognize deception **before** a real attack occurs reduces the likelihood of compromise and encourages a culture of curiosity and caution.
+
+---
+
+##  Reflection – Building a Human Firewall
+
+While firewalls and encryption are vital, **people are often the first and last line of defense.**
+
+Many users:
+- Are busy and may find security tasks annoying or confusing
+- Aren’t trained to detect subtle threats like spear phishing
+- Don’t realize how impactful their actions are on system integrity
+
+That’s why I believe training must be:
+- **Relevant** (linked to real-world situations)
+- **Engaging** (interactive scenarios, storytelling, gamification)
+- **Reinforced** (not a one-time course — ongoing touchpoints)
+
+From my experience, the training that sticks includes **simulations**, **short videos with real consequences**, and **team-based competitions** ("Who can spot the phishing email fastest?").
+
+One well-trained staff member who reports a phishing attempt or avoids downloading data to personal devices could literally save the entire system from breach or non-compliance.
+
+>  *Takeaway*: Security awareness isn’t an add-on. It’s an embedded mindset — and culture always beats policy alone.
+
+---
+
+## 🔗 Suggested Search Terms
+
+- `Security awareness training healthcare staff`  
+- `HIPAA training requirements for employees`  
+- `IT admin cybersecurity training topics`  
+- `Phishing simulation program best practices`  
+- `Creating a security culture healthcare`
+
+---
+
+📅 **Next Up (Day 93)**: I’ll begin drafting the **Continuous Monitoring Plan** for OpenMRS, defining how we’ll track security metrics, audit logs, vulnerabilities, and compliance over time. Let’s keep our eyes open! 👀🚀
