@@ -1,0 +1,103 @@
+#  Day 94: Capstone Part 8 – Continuous Monitoring & Audit Readiness | 100 Days of GRC
+
+## � Objective
+
+Today’s goal was to build a **Continuous Monitoring** and **Audit Readiness** strategy for our OpenMRS deployment on AWS. While we’ve implemented technical controls and governance policies, security isn’t a one-time job — it’s a **living system** that needs continuous oversight.
+
+**Continuous monitoring** ensures that security risks, control failures, and compliance gaps are detected early, while **audit readiness** ensures that we can provide clear, timely evidence of security practices and compliance activities — whenever required.
+
+---
+
+##  Why Continuous Monitoring & Audit Readiness Matter
+
+-  **Threats evolve**: New vulnerabilities, phishing campaigns, or misconfigurations can appear any time.
+-� **Environments change**: Cloud resources are dynamic. Someone might open a port, change a policy, or spin up an insecure service.
+-  **Audits happen**: Whether internal reviews or external HIPAA audits, you must show documentation and proof of compliance efforts.
+
+>  Continuous monitoring ensures we’re always ready — not just once a year.
+
+---
+
+##  Core Elements of Continuous Monitoring
+
+### Log Reviews
+- Monitor AWS CloudTrail and OpenMRS application logs
+- Detect signs of misuse, privilege escalation, or data access anomalies
+
+###  Automated Alerts
+- Use AWS CloudWatch Alarms for key metrics (e.g., CPU spikes, failed logins, S3 bucket access)
+- Set SNS notifications for critical events like DB restarts or security group changes
+
+### Vulnerability Scanning
+- Conduct monthly vulnerability scans on OpenMRS servers
+- Use tools like Nessus or AWS Inspector to identify known CVEs
+
+###  Compliance Checks
+- Quarterly reviews of:
+  - Backup success status
+  - IAM user and role permissions
+  - Encryption settings (RDS, S3)
+  - MFA enforcement
+  - Patch status of EC2 instances
+
+###  Documentation Updates
+- Keep policies, diagrams, recovery plans, and logs up-to-date
+- Ensure alignment with HIPAA and NIST expectations
+
+---
+
+##  Continuous Monitoring Tools for OpenMRS on AWS
+
+| **Tool/Service** | **Purpose** |
+|------------------|-------------|
+| **AWS CloudWatch** | Monitor system health, resource utilization, and trigger alarms |
+| **AWS CloudTrail** | Record AWS API activity (who did what and when) |
+| **AWS Config** | Continuously assess AWS resources against compliance rules (e.g., S3 encryption) |
+| **AWS Security Hub** | Aggregate alerts and posture across AWS services |
+| **OpenMRS Application Logs** | Monitor user access and application-level activity |
+| **Vulnerability Scanner (e.g., Nessus)** | Identify system-level weaknesses monthly |
+| **Backup Testing** | Restore OpenMRS from backup quarterly to validate recovery readiness |
+
+---
+
+##  Hands-On Activity: My Monitoring Checklist
+
+| **Monitoring Item** | **Frequency** | **Owner** | **Audit Evidence** |
+|----------------------|----------------|-----------|---------------------|
+| Review CloudTrail logs for unusual AWS admin activity | Weekly | Security Analyst | Email summary log review report saved |
+| Verify daily RDS backups completed successfully | Daily | DevOps Engineer | Backup success logs or screenshots from AWS Console |
+| Run vulnerability scan on OpenMRS server | Monthly | IT Admin | Scanner report PDF stored in audit folder |
+| Review OpenMRS audit log for suspicious data access | Weekly | Privacy Officer | Log review checklist signed off and stored |
+| Restore a backup from S3 to test data recovery | Quarterly | DevOps | Restore report with timestamp and verification steps |
+| Check IAM roles and access permissions | Quarterly | Cloud Security Engineer | IAM policy snapshot and access review form |
+| Ensure S3 buckets and RDS are encrypted | Monthly | Compliance Officer | AWS Config rule evaluation reports |
+
+>  **Pro Tip**: Each monitoring task should produce a small piece of evidence. A quick email, signed log, or PDF screenshot is enough to keep you audit-ready.
+
+---
+
+##  Reflection – Monitoring = Confidence
+
+Today was a reminder that **security isn't just about setup — it's about stewardship.**
+
+It’s one thing to configure encryption or IAM roles. It’s another to ensure they **stay correct over time**, especially in the cloud where settings can drift, people can make changes, and attackers are constantly probing for weakness.
+
+The **real power of continuous monitoring** is that it turns security into a routine — **no surprises, no scrambling during audits, no hoping everything works**. You *know* it does, because you're checking regularly.
+
+Personally, I believe our **log review + backup testing** strategy is the cornerstone of this plan. Logs tell the story of what’s happening, and backup testing ensures that no matter what happens, we can recover.
+
+>  *Takeaway*: A mature security program isn’t measured by how secure your system is today — but how confident you are it will remain secure tomorrow.
+
+---
+
+## 🔗 Suggested Search Terms
+
+- `Continuous monitoring checklist for cloud`  
+- `AWS CloudTrail audit log review`  
+- `HIPAA audit readiness best practices`  
+- `Security Hub vs AWS Config comparison`  
+- `Vulnerability scanning schedule healthcare`
+
+---
+
+📅 **Next Up (Day 95)**: I’ll start compiling everything we’ve done into a unified **OpenMRS GRC Plan Document** — bringing together scope, risks, controls, policies, training, monitoring, and more into a cohesive and professional security package. Almost there! 🚀📘
