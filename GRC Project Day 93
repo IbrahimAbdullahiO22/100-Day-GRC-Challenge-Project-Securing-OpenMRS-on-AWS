@@ -1,0 +1,104 @@
+#  Day 93: Capstone Part 7 – Incident Response and Contingency Plan | 100 Days of GRC
+
+##  Objective
+
+Today’s focus was on building the **Incident Response** and **Contingency Planning** components of the OpenMRS GRC plan. While we've worked hard to secure the system, we also have to **prepare for failure** — whether it’s a cyberattack, hardware failure, or natural disaster. This part of the plan ensures that **if something goes wrong, it won’t become a catastrophe**.
+
+Our approach combines **incident response (IR)** — how we react in the moment — with **contingency planning** — how we ensure continuity and quick recovery afterward.
+
+---
+
+##  Incident Response Process: Prepare, Detect, Contain, Eradicate, Recover, Learn
+
+We follow a standard lifecycle for IR based on NIST and SANS guidance:
+
+###  Prepare  
+- Establish security contacts, escalation paths, and response playbooks  
+- Train OpenMRS users and IT staff  
+- Deploy logging, monitoring, and alerting tools (e.g., AWS CloudWatch, OpenMRS audit logs)
+
+###  Detect  
+- Monitor for anomalies (e.g., mass record exports, login failures)  
+- Use automated alerts, endpoint detection, and user reporting  
+- Example tools: AWS GuardDuty, CloudTrail, OpenMRS logs
+
+###  Contain  
+- Isolate infected servers, lock compromised accounts, halt malicious processes  
+- Switch to backup systems if needed  
+- Contain to prevent spread or escalation
+
+###  Eradicate  
+- Remove malware or malicious user access  
+- Patch exploited vulnerabilities  
+- Strengthen controls (e.g., enforce MFA, fix misconfigurations)
+
+###  Recover  
+- Restore OpenMRS from backups or failover system  
+- Validate system integrity  
+- Resume operations with elevated monitoring
+
+###  Learn  
+- Conduct post-incident review  
+- Document lessons learned  
+- Update IR policies and controls to prevent recurrence
+
+>  This structured process transforms chaos into a controlled response. Every step ensures clarity, accountability, and alignment with HIPAA and organizational risk tolerance.
+
+---
+
+## Contingency Planning – Business Continuity & Disaster Recovery
+
+For OpenMRS — a mission-critical healthcare application — downtime and data loss can directly impact patient care. We’ve established the following objectives:
+
+### Recovery Time Objective (RTO) – **4 Hours**  
+> OpenMRS must be operational again within 4 hours of an outage to maintain continuity of clinical services. Paper-based fallback procedures may be used temporarily, but the system must be restored quickly.
+
+### Recovery Point Objective (RPO) – **1 Hour**  
+> We cannot afford to lose more than 1 hour of patient data. Backups and database replication must be configured accordingly.
+
+---
+
+## Infrastructure to Support RTO/RPO
+
+| **Control** | **Description** |
+|-------------|-----------------|
+| **AWS Multi-AZ RDS** | Automatically replicates OpenMRS database to another availability zone for failover |
+| **Hourly Encrypted Backups** | RDS point-in-time recovery enabled; backups stored in S3 with versioning |
+| **Infrastructure-as-Code (IaC)** | Use automation scripts (e.g., Terraform or AWS CloudFormation) to rapidly redeploy OpenMRS |
+| **Warm Standby Option** | Preconfigured smaller instance available for fast scale-up in alternate region |
+| **Disaster Communication Plan** | Staff informed of outage procedures and switch to manual documentation if needed |
+
+---
+
+##  Hands-On Scenario Exercise
+
+> **What if** the OpenMRS database is encrypted by ransomware?  
+> **Then** we will immediately isolate the affected RDS instance, restore the database from the most recent clean backup using point-in-time recovery, and activate the incident response plan to notify stakeholders, analyze root cause, and improve system defenses.
+
+---
+
+##  Reflection – The Power of Planning for the Worst
+
+Building this IR and contingency plan gave me **peace of mind**. Before this, the idea of a cyberattack or system crash felt like a panic trigger — now it feels like **a solvable problem**.
+
+- A clinic without a plan is one incident away from total disruption.  
+- A clinic *with* a plan can absorb the shock, respond calmly, and **maintain patient trust and care delivery**.  
+- Having defined RTO and RPO goals ensures we design systems that align with **real-world needs and constraints.**
+
+I believe the most critical part of this plan is our **backup strategy combined with user preparedness**. Backups mean nothing if no one knows how to restore them. And even a perfect incident playbook fails if the team hasn’t practiced or isn’t reachable.
+
+>  *Takeaway*: Good cybersecurity isn't just about prevention — it's about resilience. With the right plan, we don't fear the storm. We’re ready for it.
+
+---
+
+##  Suggested Search Terms
+
+- `Incident response steps NIST SANS framework`  
+- `Contingency planning vs disaster recovery vs business continuity`  
+- `RTO RPO definition examples healthcare`  
+- `Healthcare IT disaster recovery plan example`  
+- `Cybersecurity incident scenario examples`
+
+---
+
+📅 **Next Up (Day 94)**: I’ll be working on building out the **Continuous Monitoring Plan** for OpenMRS — identifying what metrics and logs we’ll watch to ensure ongoing security and compliance over time. Onward! 🧩📊
