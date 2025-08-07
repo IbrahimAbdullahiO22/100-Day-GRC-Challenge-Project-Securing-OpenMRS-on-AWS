@@ -1,0 +1,136 @@
+#  Day 95: Capstone Part 9 – Compile the GRC Plan Document | 100 Days of GRC
+
+##  Objective
+
+Today marks a major milestone: compiling the **Governance, Risk, and Compliance (GRC) Plan Document** for our OpenMRS-on-AWS project. After weeks of designing security controls, identifying risks, defining policies, and establishing monitoring procedures, it’s time to **bring it all together into a single, cohesive document**.
+
+This isn’t just paperwork — it’s our **living blueprint** for securing OpenMRS and staying compliant over time. This GRC Plan will serve as a guide for stakeholders, team members, auditors, and future administrators who manage or assess the security of this system.
+
+---
+
+##  Purpose of the GRC Plan
+
+> “What is the system, what could go wrong, and how are we protecting it?”
+
+The GRC Plan answers those questions. It documents our structured, proactive approach to managing security and compliance, including:
+- System scope and environment
+- Risk identification and treatment
+- Security controls implemented
+- Policy and procedural governance
+- Monitoring and audit preparation
+
+By consolidating our efforts into one document, we make it **readable, transferable, and actionable**.
+
+---
+
+##  GRC Plan Document Structure
+
+### 1. **Introduction & System Overview**
+> *“What is OpenMRS, where does it live, and why does it matter?”*
+
+- **System**: OpenMRS is an open-source electronic medical record (EMR) system used by Clinic X to manage patient care.
+- **Hosting**: Deployed on Amazon Web Services (AWS) using EC2, RDS (MySQL), S3, CloudWatch, IAM, and VPC configurations.
+- **Scope**: This plan applies to the OpenMRS application, supporting AWS infrastructure, storage, and administrative access controls.
+
+---
+
+### 2. **Roles & Responsibilities**
+> *“Who is responsible for what?”*
+
+| Role | Responsibility |
+|------|----------------|
+| **System Owner** | Oversees OpenMRS implementation and budget (e.g., Clinic IT Director) |
+| **AWS Administrator** | Manages cloud infrastructure, backups, IAM, and patching |
+| **GRC Lead (You)** | Owns the GRC Plan, policies, and continuous monitoring |
+| **Security Analyst** | Performs log reviews, alerts, and vulnerability scans |
+| **End-Users (Clinicians)** | Follow secure usage policies; report anomalies |
+
+---
+
+### 3. **Risk Assessment Summary**
+> *“What could go wrong and what have we done about it?”*
+
+| Risk | Rating | Mitigation |
+|------|--------|------------|
+| SQL Injection Attack | High | WAF enabled, input validation enforced |
+| Unauthorized Admin Access | High | IAM roles restricted, MFA required |
+| Misconfigured S3 Bucket | High | AWS Config alerts, access audits |
+| Server Outage | Medium | Multi-AZ RDS, backup EC2 AMI |
+| Insider Misuse | Medium | Audit logs, least privilege enforced |
+
+ A full risk register is available in the appendices.
+
+---
+
+### 4. **Control Implementation Summary**
+> *“What security controls protect the system?”*
+
+**Access Control**
+- IAM policies with least privilege
+- Role-Based Access Control in OpenMRS
+- MFA enforced for AWS and administrative logins
+
+**Data Protection**
+- RDS encrypted at rest
+- HTTPS and SSL/TLS enforced in transit
+- S3 buckets configured with encryption and versioning
+
+**Monitoring**
+- AWS CloudTrail logs all actions
+- AWS CloudWatch alarms configured for anomalies
+- OpenMRS audit logs enabled and reviewed
+
+**Incident Response**
+- NIST-aligned IRP in place (Prepare, Detect, Contain, Eradicate, Recover, Learn)
+- Response roles defined; communication playbook prepared
+
+**Backup & Recovery**
+- Automated daily backups to encrypted S3
+- Quarterly backup restore tests documented
+
+---
+
+### 5. **Policies & Procedures**
+> *“What rules and steps guide secure behavior?”*
+
+- **Access Control Policy** – Updated to reflect OpenMRS/AWS user management
+- **Incident Response Plan (IRP)** – Defines how to handle security events
+- **Backup & Recovery Procedure** – Details backup frequency, testing, and restoration
+- **Acceptable Use Policy (AUP)** – Defines proper use expectations for end users
+- **Change Management Procedure** – Governs updates to OpenMRS or AWS configuration
+- **Training Plan** – Role-based, HIPAA-aligned, includes phishing simulation and onboarding
+
+Policies are referenced here and stored in **Appendix B**.
+
+---
+
+### 6. **Continuous Monitoring & Audit Plan**
+> *“How do we keep this plan effective and audit-ready?”*
+
+| Task | Frequency | Owner | Audit Evidence |
+|------|-----------|-------|----------------|
+| Review AWS CloudTrail logs | Weekly | Security Analyst | Log review email or report |
+| Verify backup completion | Daily | DevOps | Screenshot or success log |
+| Run vulnerability scans | Monthly | IT Admin | Nessus report or scan output |
+| IAM access review | Quarterly | GRC Lead | Signed access review form |
+| Restore from backup (test) | Quarterly | DevOps | Validation report |
+
+- Monitoring tasks scheduled via secure calendar
+- Evidence stored in protected audit repository
+- Audit readiness includes pre-audit checklist, IRP drills, policy reviews
+
+---
+
+### 7. **Appendices**
+> *Supporting docs to avoid crowding the main document.*
+
+- **Appendix A**: Full Risk Register (detailed list of risks, scores, treatment, owner)
+- **Appendix B**: Full Text of Policies (Access, IR, AUP, etc.)
+- **Appendix C**: AWS Architecture Diagram  
+- **Appendix D**: Monitoring Checklist Template  
+- **Appendix E**: Compliance Mapping (HIPAA & NIST 800-53 references)
+
+---
+
+### 🗺️ Sample AWS Architecture Diagram (Appendix C)
+
