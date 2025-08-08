@@ -1,0 +1,113 @@
+#  Day 96: Capstone Part 10 – Executive Presentation of GRC Plan | 100 Days of GRC
+
+##  Objective
+
+Today’s mission is about **translating 95 days of cybersecurity and GRC work into a concise, high-impact presentation** that resonates with executives and non-technical decision-makers.
+
+While the full GRC plan dives into technical and procedural depth, this executive summary focuses on **what matters most to leadership**: risk reduction, business impact, compliance readiness, and the ask for continued support.
+
+---
+
+##  Executive Summary (Elevator Pitch)
+
+> “Over the past few months, I led a security and risk management initiative for our OpenMRS electronic medical records system hosted on AWS. We identified critical risks such as data breaches, unauthorized access, and potential system outages. By implementing strong security controls – including encryption, daily backups, least-privilege access controls, and proactive monitoring – we've significantly improved the system’s resilience. Today, we align with HIPAA and NIST standards, our risk posture is low, and we have a sustainable GRC framework to keep it that way. I’m seeking leadership approval to proceed with policy enforcement and user training.”
+
+---
+
+##  Executive Slide Deck Outline (No Design Needed – Just the Message)
+
+###  Slide 1: Introduction & Objective
+- **Title**: Securing Patient Data & Ensuring Reliable EMR Operations
+- **Message**: The objective was to safeguard our OpenMRS system to protect patient trust, improve operational uptime, and align with regulatory requirements.
+- **Why It Matters**: Security and reliability are essential for uninterrupted patient care and avoiding reputational or legal damage.
+
+---
+
+### ⚠️ Slide 2: Risk Overview (Before vs. After)
+
+| Risk Level | Before | After |
+|------------|--------|-------|
+| High       | 5      | 0     |
+| Medium     | 7      | 3     |
+| Low        | 3      | 12    |
+
+- **Top Risks Resolved**:
+  - Unauthorized admin access → Resolved with MFA + IAM restrictions
+  - Data loss due to outages → Mitigated with automated encrypted backups and restore testing
+- **Key Message**: 85% risk reduction; all critical issues are addressed or managed
+
+---
+
+###  Slide 3: Key Security Measures Implemented
+
+-  **Full encryption** of patient records (at rest and in transit)
+-  **Multi-factor authentication (MFA)** for all AWS and OpenMRS admin users
+-  **Web Application Firewall (WAF)** deployed and actively blocking threats
+-  **Daily automated backups** and monthly restore validation
+-  **Strict user access policies** based on least privilege and role-based access
+
+> “These controls ensure we’re protecting sensitive health data, reducing exposure to attacks, and guaranteeing service availability.”
+
+---
+
+###  Slide 4: Compliance & Best Practices Alignment
+
+-  Aligns with **HIPAA Security Rule** (access control, audit logs, data encryption)
+-  Follows **NIST Risk Management Framework (RMF)** for identifying, assessing, and managing risks
+-  **Continuous Monitoring** strategy in place:
+  - Weekly log reviews
+  - Monthly vulnerability scans
+  - Quarterly access audits and restore drills
+
+> “We’re aligned with industry best practices and ready for audits or compliance assessments.”
+
+---
+
+###  Slide 5: Next Steps & Executive Support Needed
+
+-  **Plan is complete and ready for rollout**
+-  **User training** on policies and secure usage starts next month
+-  **Quarterly security reports** to leadership will track ongoing performance
+-  **Ask**: Executive endorsement of the GRC plan + support for policy enforcement across departments
+
+> “With your approval, we’ll maintain this momentum and ensure security remains a shared priority.”
+
+---
+
+##  Presentation Tips Recap
+
+| Principle | Application |
+|----------|-------------|
+|  Plain Language | Avoid jargon. E.g., “Access controls so no one sees what they shouldn’t.” |
+|  Clean Visuals | Use color-coded risk tables or diagrams to illustrate impact |
+|  Concise Delivery | Keep it under 10 minutes with time for questions |
+|  Anticipate Questions | Be ready to address HIPAA, budget, or risk-based inquiries |
+|  Confident Tone | You lived this for 95 days – own the expertise you've gained |
+
+---
+
+##  Example Responses to Likely Executive Questions
+
+**Q**: Are we HIPAA compliant now?  
+**A**: Yes. The plan was built with HIPAA safeguards in mind – we implemented access controls, audit logging, encrypted storage, and risk assessments per HIPAA’s requirements.
+
+**Q**: Do we need outside help to manage this?  
+**A**: Not immediately. However, we may engage a third-party audit firm annually to validate our security controls. All current efforts are managed internally with existing staff and tools.
+
+**Q**: What’s our budget impact moving forward?  
+**A**: No major increases anticipated. We’re using AWS-native tools and open-source resources. Any monitoring add-ons will be within our existing cloud budget.
+
+---
+
+##  Final Thoughts
+
+> The goal of this presentation is to **build trust and gain approval**. It assures executives that:
+- Patient data is protected
+- Systems are resilient
+- Risks are managed
+- Compliance is addressed
+- The organization is prepared for the future
+
+---
+
+📅 **Next Up (Day 97)**: We’ll finalize the approval process, set up version control for the plan, and reflect on the entire 100 Days journey. You're almost there – this is where GRC leadership takes flight. 🦅
