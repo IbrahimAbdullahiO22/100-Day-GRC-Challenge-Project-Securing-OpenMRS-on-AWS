@@ -1,78 +1,117 @@
-# 📅 Day 12 – Governance Document Hierarchy: Policies, Standards, and Procedures.
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+# Day 12 – Governance Document Hierarchy: Policies, Standards, and Procedures | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🔍 Topic Overview:
+## Why Documents Matter More Than I Expected
 
-Today we explored how governance in cybersecurity and IT operations is built upon a structured **document hierarchy**:  
-**Policy → Standard/Guideline → Procedure**  
+I will be honest — when I saw today's topic I initially thought it would be one of the drier days in this challenge. Policies, standards, procedures — it sounds like paperwork. But the more I worked through it, the more I realized this is actually one of the most practical topics so far. Because without a clear document hierarchy, all the frameworks and risk assessments and compliance requirements I have been learning about have nowhere to land. They need to be captured in writing, in the right format, at the right level — or they simply do not get implemented consistently.
 
-Each level serves a unique purpose:
-- **Policies**: High-level rules set by leadership to express intent and strategic direction.
-- **Standards/Guidelines**: Specific technical or procedural requirements used to meet policy goals.
-- **Procedures**: Detailed, step-by-step instructions to carry out the standards in daily operations.
-
-> 🔑 Think of this like a roadmap:  
-> **Policies tell you where you're going**,  
-> **Standards show the route**,  
-> **Procedures give you the GPS directions.**
+Today was about understanding how that structure works and why each layer exists.
 
 ---
 
-## 🧱 Breakdown with OpenMRS Example:
+## What I Worked On Today
 
-### ✅ Policy
-> “Only authorized personnel may access the OpenMRS system and patient records.”
+Governance in cybersecurity is built on a layered document structure. The three levels are **Policy**, **Standard**, and **Procedure** — and each one serves a distinct purpose. Mixing them up, or skipping a level, leads to confusion, inconsistent implementation, and accountability gaps.
 
-- Sets the rule and intent from a governance level.
-- Reflects HIPAA and privacy law alignment.
-- Approved by executive leadership.
+Here is how I am understanding each level:
 
-### ✅ Standard
-> “All OpenMRS user accounts must use strong passwords and be secured with two-factor authentication (2FA).”
+**Policy** is the highest level. It expresses the intent and direction of leadership — what the organization has decided must be true, and why. A policy does not tell you how to do something. It tells you what is required and what values or obligations are driving that requirement. Policies are approved by senior leadership and apply across the organization.
 
-- A measurable, enforceable rule supporting the policy.
-- Can be audited and tested for compliance.
+**Standards** sit one level below policy. They take the intent expressed in a policy and translate it into specific, measurable requirements. Where a policy says "only authorized users may access patient data," a standard says "all user accounts must be protected with strong passwords of at least 12 characters and multi-factor authentication." Standards are testable and auditable — you can look at a system and determine whether it meets them or not.
 
-### ✅ Procedure
-> A written guide describing how IT staff configure 2FA for new OpenMRS user accounts:
-1. Access the admin console  
-2. Generate 2FA setup email  
-3. Verify device-based token setup  
-4. Confirm successful enrollment
+**Procedures** are the most detailed level. They provide step-by-step instructions for carrying out the requirements defined in standards. A procedure does not set the rules — it explains exactly how to follow them. Procedures are written for the people doing the work: IT staff configuring systems, clinicians handling patient data, administrators managing access.
 
-- Clear operational direction for staff.
+The relationship between the three levels is what makes the hierarchy powerful. A policy without supporting standards is just an aspiration. A standard without procedures is a requirement that nobody knows how to meet. And procedures without policies have no organizational authority behind them. All three levels need each other.
 
 ---
 
-## ✍️ Hands-On Exercise: Acceptable Use Policy (AUP) – One-Liner
+## What Actually Clicked for Me
 
-**My one-line AUP statement:**
-> “Staff must use the OpenMRS system exclusively for patient care and maintain strict confidentiality of all patient information.”
+The thing that clicked most for me today is the discipline required at each level — specifically the discipline to stay at the right level and resist the urge to drift.
 
-This is a high-level policy that sets expectations for appropriate use, without going into procedural details.
+When writing a policy, the temptation is to start explaining how things should be done. But a policy that gets into implementation details becomes outdated quickly, because technology and processes change faster than organizational intent does. A well-written policy should still be relevant five years from now even if the specific tools and systems have changed completely.
 
----
+When writing a standard, the temptation is to either be too vague — sliding back toward policy language — or too specific — sliding down into procedure territory. The sweet spot is a measurable requirement: specific enough to test and audit, but not so detailed that it needs to change every time a system is updated.
 
-## 💡 Reflection:
+When writing a procedure, the temptation is to leave things at a high level because the details feel tedious. But a procedure that is too vague defeats its own purpose. The whole point is that someone who has never done this task before can follow the procedure and do it correctly.
 
-Writing that one-line AUP made me realize how important it is to **stay high-level** in a policy document — resist the urge to describe “how,” and focus on “what” and “why.”  
-I now clearly see how **policies set the tone**, **standards ensure consistency**, and **procedures enable action**. If each level isn’t clearly defined, teams might misinterpret the rules or skip steps.
-
-Having these layers helps align operations with **governance strategy** — making it easier to secure OpenMRS and ensure compliance across the organization.
-
-> Clear governance documents prevent confusion, enable accountability, and support risk-informed decisions.
+I found myself thinking about how often I have seen confusion in workplaces that came down to this exact problem — someone thought they were following the policy, but the standard said something more specific, and there was no procedure explaining how to actually do it. That kind of gap is where things fall through.
 
 ---
 
-## 📖 Optional Search Terms for Deeper Learning:
-- `SANS security policy templates`
-- `Policy vs. standard vs. procedure`
-- `IT governance document hierarchy`
+## Applying This to OpenMRS on AWS
+
+I worked through a full example of the three-level hierarchy applied to access control in OpenMRS:
+
+**Policy — Access Control Policy**
+*"Only authorized personnel may access the OpenMRS system and the patient records it contains. Access must be granted based on job role and the principle of least privilege, and must be reviewed regularly to ensure it remains appropriate."*
+
+This is leadership-level intent. It reflects HIPAA's access control requirements and the organization's commitment to protecting patient privacy. It does not say anything about how access is configured — just what is required and why.
+
+**Standard — User Authentication Standard**
+*"All OpenMRS user accounts must be protected with a password of at least 12 characters containing uppercase, lowercase, numbers, and special characters. Multi-factor authentication (MFA) must be enabled for all accounts. Shared or generic accounts are prohibited. Accounts must be reviewed quarterly and disabled within 24 hours of a user's departure."*
+
+This is measurable and auditable. An assessor can look at the system and determine whether each of these requirements is being met. It supports the policy by translating intent into specific technical requirements.
+
+**Procedure — New User Account Setup Procedure**
+*Step-by-step instructions for IT staff:*
+1. Receive approved access request form signed by the user's manager
+2. Log into the OpenMRS administration console
+3. Create a new user account using the user's full name and work email address
+4. Assign the appropriate role based on the user's job function
+5. Generate the MFA enrollment email and send it to the user
+6. Confirm the user has completed MFA setup before activating the account
+7. Document the new account in the access control register with the date and approving manager
+8. Notify the user's manager that access has been provisioned
+
+This procedure gives an IT staff member everything they need to complete the task correctly and consistently, every time. It also creates an audit trail — the access control register entry means there is documentation of every access decision that was made.
 
 ---
 
-✅ _Stay tuned for Day 13 – where we’ll begin exploring Risk Assessment Basics: spotting vulnerabilities, threats, and understanding how to measure risk before it turns into reality._
+## A Real-World Example That Made This Click
 
-📌 #GRC #ITGovernance #Policies #Standards #Procedures #OpenMRS #CybersecurityPolicy #AcceptableUsePolicy #100DayChallenge
+While researching today's topic I came across the **2013 Advocate Medical Group data breach** in Illinois — one of the largest HIPAA breaches of that year, affecting nearly four million patients. Unencrypted laptops containing patient data were stolen from an administrative office.
+
+When investigators examined what went wrong, part of the picture was a governance documentation failure. Advocate had a policy requiring encryption of devices containing patient data — but the standards and procedures needed to actually implement that policy consistently across the organization had not been fully developed or enforced. The policy said encryption was required. But without clear standards specifying which devices were in scope and procedures explaining how encryption was to be configured and verified, the policy did not translate into consistent action.
+
+Advocate paid a settlement of $5.55 million to HHS — at the time the largest HIPAA settlement ever reached. The breach itself was a physical security failure. But the governance documentation failure is what allowed it to persist undetected and uncorrected.
+
+That example made the document hierarchy feel very concrete. A policy is not a control. It is the starting point for a chain of documents that eventually produces a control. If any link in that chain is missing or weak, the intent of the policy does not reach the people who need to act on it.
+
+---
+
+## The Acceptable Use Policy — A Practical Exercise
+
+One of the exercises today was writing a one-line Acceptable Use Policy (AUP) for OpenMRS. Here is what I came up with:
+
+*"All staff must use the OpenMRS system exclusively for authorized patient care activities and are responsible for maintaining the confidentiality and integrity of all patient information they access."*
+
+Writing even one sentence at the policy level was more challenging than I expected. The temptation was to start adding specifics — but specifics belong in the standard. A policy needs to capture the intent clearly and concisely, in language that applies regardless of which specific system or technology is in use. Getting that balance right takes practice.
+
+---
+
+## What I Am Still Thinking About
+
+One question I am sitting with: how do organizations keep their document hierarchy current over time? Policies are relatively stable, but standards and procedures need to be updated whenever systems, regulations, or processes change. In a busy healthcare environment with limited administrative resources, documentation maintenance is easy to deprioritize.
+
+Is there a practical approach to document lifecycle management that does not require a dedicated team? I imagine the answer involves scheduled review cycles and clear ownership — but I want to understand what that looks like in a resource-constrained setting like a small clinic running OpenMRS. This feels like a governance question I will keep coming back to throughout this project.
+
+---
+
+## What's Next
+
+Day 13 moves into **Risk Assessment Basics** — learning how to systematically identify vulnerabilities and threats and measure risk before it turns into an incident. After building the conceptual and governance foundations over the past twelve days, I am ready to start getting more hands-on with the practical tools of risk management.
+
+---
+
+## Resources I Found Helpful Today
+- [SANS Security Policy Templates](https://www.sans.org/information-security-policy/)
+- [NIST SP 800-12 – Introduction to Information Security](https://csrc.nist.gov/publications/detail/sp/800-12/rev-1/final)
+- [Advocate Medical Group HIPAA Settlement – HHS OCR](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/advocate/index.html)
+- [HIPAA Administrative Safeguards – Policy Requirements](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html)
+
+---
+
+*#GRC #ITGovernance #SecurityPolicy #Standards #Procedures #HealthcareSecurity #100DaysOfGRC #OpenMRS #AWS #Day12*
