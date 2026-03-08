@@ -1,92 +1,97 @@
-# 📅 Day 3 – Risk Management: Understanding Threats and Impact | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+# 📅 Day 3 – Risk Management: Learning to Think About What Could Go Wrong | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What I’ve Learned About Risk Management
+## Building on the First Two Days
 
-Today’s journey into the “R” of GRC reminded me how critical it is for every security leader to develop a **risk mindset** — not just focusing on controls, but thinking about **what could go wrong**, **how bad it would be**, and **how likely it is to happen**.
+Day 1 gave me the big picture of GRC. Day 2 showed me how governance sets the foundation. Today I moved into the "R" — Risk Management — and honestly this is the part that started to feel the most practical to me. Governance is about setting direction. Risk management is about asking hard questions before something goes wrong. Those two things together are already starting to feel like a real discipline rather than just theory.
 
-At its core:
+---
 
- A **threat** is something bad that could happen (e.g., hackers, insider misuse, outages).  
- A **vulnerability** is a weakness that could be exploited (e.g., unpatched software, weak passwords).  
- A **risk** is when a threat meets a vulnerability — and we assess it as:  
+## What I Worked On Today
+
+Risk management starts with three concepts that I kept coming back to today:
+
+- A **threat** is something bad that could happen — a ransomware attack, an insider accidentally sharing patient data, a server going down at the worst possible time
+- A **vulnerability** is a weakness that makes a threat more likely to succeed — unpatched software, weak passwords, a misconfigured AWS setting
+- A **risk** is what you get when a threat meets a vulnerability — and the way you measure it is straightforward:
 
 **Risk = Likelihood × Impact**
 
----
-
-##  Applying This to Healthcare — and OpenMRS
-
-In a healthcare context, this becomes very real:
-
-- Threat: Ransomware attack  
-- Vulnerability: Outdated OpenMRS server  
-- Risk: Attackers encrypt ePHI, halt operations, trigger HIPAA fines — very high likelihood and very high impact.
-
-Healthcare is one of the most targeted industries — because patient data is valuable, and downtime can be life-threatening.
-
-For an OpenMRS deployment on AWS, the risks I would actively track include:
-
-1️⃣ **Data Breach (Confidentiality risk):** If OpenMRS is breached, PHI could be exposed — with direct patient harm and regulatory penalties.  
-2️⃣ **Integrity Compromise:** If medical records are altered (maliciously or accidentally), patient safety is at stake.  
-3️⃣ **Availability Outage:** If OpenMRS is down (due to ransomware or cloud misconfiguration), care delivery is disrupted.
+That formula sounds simple, but applying it well is where the real work is. Not every risk is equal. Some things are very likely but low impact. Some are unlikely but catastrophic if they happen. Risk management is about figuring out which ones deserve your attention first — and being honest about that, even when the answer is uncomfortable.
 
 ---
 
-##  Teaching Point for My Team
+## What Actually Clicked for Me
 
-> **Risk management isn’t about avoiding all risk (impossible). It’s about knowing which risks matter most, and managing them intelligently.**
+What clicked today is that risk management is not about eliminating every possible risk — that is impossible. It is about making informed decisions about which risks to prioritize, which to monitor, and which to accept for now.
 
-As a GRC leader, I focus my team on **prioritizing**:
+That framing helped me a lot. I used to think about security in terms of "fix everything." But organizations have limited time, limited budget, and limited people. You cannot patch every vulnerability on day one. What you *can* do is understand your highest-priority risks and make sure those get addressed first.
 
- Address HIGH likelihood + HIGH impact risks first (like ransomware + outdated software).  
- Monitor and mitigate MEDIUM risks.  
- Document LOW risks and revisit as needed.
+I also found the concept of **impact** really interesting — specifically in healthcare. A data breach at a retail company is bad. A data breach at a hospital is bad *and* it can directly affect patient care. The stakes are different, and that changes how you think about risk priorities.
 
 ---
 
-##  My Personal Reflection
+## Applying This to OpenMRS on AWS
 
-In my career, I’ve seen how **underestimating impact** can lead to disaster.
+When I tried to apply today's concepts to the OpenMRS environment, three risk scenarios stood out immediately:
 
-Example: At a former organization, leadership dismissed a known vulnerability as “low risk” because “no one would attack us.” Six months later, the system was breached — leading to public embarrassment and a costly recovery.
+**1. Data Breach — Confidentiality Risk**
+- Threat: Unauthorized access to OpenMRS patient records
+- Vulnerability: Weak access controls or exposed AWS services
+- Likelihood: High — healthcare data is one of the most targeted categories
+- Impact: High — patient privacy violated, HIPAA penalties, loss of trust
+- Priority: Critical
 
-Lesson learned:
+**2. Record Tampering — Integrity Risk**
+- Threat: Malicious or accidental modification of patient records
+- Vulnerability: Lack of audit logging and access restrictions
+- Likelihood: Medium
+- Impact: High — wrong medical decisions could be made based on altered data
+- Priority: High
 
-**Always respect the “what if” — and validate assumptions with reality.** 
+**3. System Outage — Availability Risk**
+- Threat: Ransomware or cloud misconfiguration taking OpenMRS offline
+- Vulnerability: No tested backup and recovery plan
+- Likelihood: Medium
+- Impact: High — care delivery stops, staff cannot access patient history
+- Priority: High
 
----
-
-##  Real-World Exercise: Mini Risk Brainstorm for OpenMRS
-
-**Threat:** Ransomware attack  
-**Vulnerability:** Unpatched Tomcat server running OpenMRS  
-**Likelihood:** HIGH  
-**Impact:** HIGH  
-**Risk Priority:** Critical — must address with patching, EDR, and backups.
-
-**Threat:** Insider accidental disclosure (emailing PHI to wrong party)  
-**Vulnerability:** Lack of user awareness training  
-**Likelihood:** MEDIUM  
-**Impact:** HIGH  
-**Risk Priority:** High — requires training and DLP controls.
-
----
-
-## Final Thought
-
-Without structured risk management, an organization is **flying blind**. But with it, we can steer proactively — reducing surprises, protecting patients, and building trust.
-
-That’s why **R** is such an important pillar of GRC.
+Going through this exercise made the risk formula feel real. These are not hypothetical scenarios — they are exactly the kinds of things that have happened to real healthcare organizations.
 
 ---
 
-## What’s Next?
+## A Real-World Example That Made This Click
 
-Tomorrow — onto **Compliance (C)**: understanding how compliance works alongside (but is not a substitute for) real security. I’m looking forward to diving deeper into HIPAA and other healthcare frameworks. Onward!
+While researching today's topic I came across a pattern that shows up in breach reports over and over again — organizations that were aware of a vulnerability but deprioritized it because they assumed they were not a likely target. The **2020 Universal Health Services ransomware attack** is a good example of this. One of the largest hospital networks in the US, brought down by ransomware, with staff reverting to pen and paper during the recovery. The cost was estimated at around $67 million.
+
+What I took from that: *"we are too small to be targeted"* is not a risk management strategy. And even large, well-resourced organizations get caught off guard when they underestimate likelihood. The question that stuck with me is not *"will someone target us?"* but *"if they did, how prepared would we be?"*
+
+That question feels like the right starting point for everything risk management is trying to do.
 
 ---
 
-## #GRC #RiskManagement #HealthcareSecurity #OpenMRS #Day3
+## What I Am Still Thinking About
+
+One thing I am genuinely unsure about: how do you handle risk assessments when your information is incomplete? In a perfect world you have full visibility into your systems, your data flows, and your third-party dependencies. In reality — especially in smaller healthcare organizations — you often do not.
+
+Do you make your best estimate and document your assumptions? Do you delay the assessment until you have better data? I am not sure what the right answer is yet. I imagine this is something risk professionals navigate all the time in practice, and I am hoping it becomes clearer as the project moves forward.
+
+---
+
+## What's Next
+
+Day 4 is about **Compliance** — specifically how HIPAA and other healthcare regulations connect to everything I have been learning so far. I want to understand how compliance and risk management work together, because from what I can tell they are closely related but definitely not the same thing.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-30 – Guide for Conducting Risk Assessments](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [HHS – Understanding the HIPAA Security Risk Assessment](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [AWS – Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- [2020 UHS Ransomware Attack – Overview](https://www.healthcareitnews.com)
+
+---
+
+*#GRC #RiskManagement #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day3*
