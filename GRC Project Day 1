@@ -1,69 +1,88 @@
-# 📅 Day 1 – Introduction to GRC & Why It Matters | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+#  Day 1 – What Is GRC and Why Does It Matter? | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What is GRC — and Why Should We Care?
+## A Little Context First
 
-As I begin this 100-day GRC journey, here’s the first truth I want to share:
+I want to be upfront about something: I am not a GRC expert. I am someone who decided to commit 100 days to learning this field properly — hands-on, honestly, and from the ground up. This repository is my learning journal. If you are a recruiter, a fellow learner, or someone curious about GRC in healthcare, I hope something here is useful to you. That is genuinely why I am documenting this publicly.
 
-> **GRC is not just corporate buzz — it’s about protecting people, trust, and lives.**
-
-**GRC** stands for **Governance, Risk, and Compliance** — three pillars that keep organizations safe and ethical:
-
- **Governance** → Setting direction, policies, and accountability  
- **Risk Management** → Identifying, assessing, and preparing for threats  
- **Compliance** → Meeting laws, regulations, and industry standards
+This project is built around a real-world scenario: securing **OpenMRS** — an open-source electronic health records (EHR) system — deployed on **Amazon Web Services (AWS)**. Every concept I learn, I will apply directly to that environment. That is the whole point.
 
 ---
 
-##  Why GRC Is Critical in Healthcare
+## What I Worked On Today
 
-In healthcare, GRC is not optional — it’s essential:
+Day 1 was about understanding what GRC actually is — not just the acronym, but the idea behind it.
 
-- Patients trust us with their most private information  
-- A single breach can ruin that trust, impact care, and cause legal and financial disaster  
-- Regulatory bodies (like HHS for HIPAA) impose heavy fines for lapses  
-- Ultimately, **security in healthcare is about protecting people’s well-being**
+**GRC stands for Governance, Risk, and Compliance.** Three words that get thrown around a lot in cybersecurity and healthcare, but what do they actually mean?
 
-During today’s reflection, I thought of this: as a patient myself, would I feel safe knowing my medical records were protected by “hope” alone — or by strong GRC practices? I know the answer — and that’s why I’m committed to mastering this space.
+Here is how I am starting to understand them:
 
----
+- **Governance** is about direction and accountability. Who is in charge? What are the rules? Who makes sure those rules are followed? Governance answers those questions.
+- **Risk Management** is about asking "what could go wrong?" before it actually goes wrong — and then doing something about it. It is not about eliminating every possible risk, but about understanding and preparing for the ones that matter most.
+- **Compliance** is about meeting the external requirements placed on your organization — laws, regulations, industry standards. In healthcare, that means things like HIPAA. You do not get to opt out.
 
-##  A Quick Real-World Example
-
-While exploring today’s hands-on exercise, I came across the 2023 **HCA Healthcare data breach** — 11 million patients impacted, huge public fallout, and class-action lawsuits pending. The root cause? Gaps in risk management and compliance — exactly what GRC is meant to prevent.
+Together, these three things form the backbone of how responsible organizations — especially in healthcare — protect their people, their data, and their reputation.
 
 ---
 
-##  My Teaching to the Team
+## What Actually Clicked for Me
 
-Here’s how I’ll explain Day 1 to my team:
+I went into today expecting GRC to feel like a dry, bureaucratic topic. What I did not expect was for it to feel personal.
 
-“GRC is not about endless paperwork — it’s about **keeping the mission safe**. In healthcare, if we fail at GRC, patients can be harmed. Their trust can be lost. Our reputation and ability to deliver care can be destroyed. That’s why we do this work.”
+Here is the thought that stopped me: *as a patient, would I feel okay knowing my medical records were being protected by "hope" alone?*
 
----
+No. Obviously not. And yet that is essentially what happens when an organization has no real governance structure, no risk management process, and no compliance program in place. They are just hoping nothing goes wrong.
 
-##  Reflection
-
-Today reinforced this key leadership lesson:
-
-> **Security is personal in healthcare — it protects lives, not just data.**
-
-As we move forward, I’ll remind myself and my team: every control we put in place is a safeguard for the people who trust us.
+That realization shifted something for me. GRC is not paperwork for the sake of paperwork. It is the difference between an organization that takes its responsibility seriously and one that does not. In healthcare, where the data being protected belongs to real people going through some of the most vulnerable moments of their lives — that distinction matters enormously.
 
 ---
 
-##  Search Terms for Further Mastery
+## A Real-World Example That Made This Hit Home
 
-- **Healthcare data breach impacts**  
-- **HIPAA breach fines examples**  
-- **OpenMRS security breach case study**
+While going through today's material, I came across the **2023 HCA Healthcare data breach**. Roughly 11 million patients were affected. The company faced massive public backlash, regulatory scrutiny, and class-action lawsuits.
+
+What stood out to me was not just the scale — it was the cause. From what I read, the breach came down to gaps in risk management and compliance. Not some impossibly sophisticated attack. Gaps. Things a proper GRC program exists specifically to identify and close.
+
+That is a real organization, real patients, and real consequences — all traceable back to the exact problems GRC is designed to prevent. I will be keeping examples like this in mind throughout the next 99 days, because they make the concepts concrete in a way that definitions alone cannot.
 
 ---
 
-## 🎉 What’s Next?
+## What I Am Still Thinking About
 
-Tomorrow I’ll explore **Governance** — who sets the tone and policies that drive good security in healthcare environments. Looking forward to deepening this leadership journey.
+I feel reasonably clear on what each of the three pillars means individually. What I am less clear on is how they actually interact inside a real organization day to day.
 
-#GRC #HealthcareSecurity #HIPAA #Leadership #Day1
+Like — is there a dedicated GRC team? Or is governance owned by leadership, risk owned by security, and compliance owned by legal, with everyone only loosely coordinating? Who has the final say when there is a conflict between what is compliant and what is practical?
+
+I do not have clean answers to those questions yet. But I think asking them is the right starting point. I expect this will become clearer as I get deeper into the project.
+
+---
+
+## Why This Project, Why OpenMRS, Why AWS
+
+I want to briefly explain the setup for anyone reading this from the beginning.
+
+**OpenMRS** is a real, widely-used open-source EHR platform deployed in healthcare settings around the world — particularly in low-resource environments. It handles sensitive patient data, which makes it a genuinely meaningful system to practice GRC on. This is not a made-up scenario.
+
+**AWS** is where the system is hosted in this project. Cloud environments introduce their own unique governance, risk, and compliance challenges — shared responsibility models, misconfigured services, access control — and AWS is the dominant cloud platform in real-world healthcare deployments.
+
+Working with both means the skills I build here are directly transferable to real roles. That matters to me.
+
+---
+
+## What's Next
+
+Day 2 is about **Governance** specifically — diving into who sets the tone, who owns accountability, and how leadership shapes the security culture of an organization. I am curious to see how governance looks in a healthcare context versus a general corporate one.
+
+---
+
+## Resources I Found Helpful Today
+- [What is GRC? – ISACA](https://www.isaca.org)
+- [HCA Healthcare Data Breach Overview](https://www.hhs.gov)
+- [OpenMRS Official Site](https://openmrs.org)
+- [HIPAA Overview – HHS.gov](https://www.hhs.gov/hipaa)
+
+---
+
+*#GRC #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #CyberSecurity #Day1*
