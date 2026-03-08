@@ -1,83 +1,146 @@
-# 📅 Day 13 – Risk Assessment Basics: Spotting Trouble Before It Strikes  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 13 – Risk Assessment Basics: Learning to Spot Trouble Before It Strikes | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🔍 Topic Overview:
+## From Frameworks to Practice
 
-Today, we put on our detective hats and explored the basics of **risk assessment** — a core practice in any GRC or cybersecurity program. The purpose is to answer a simple but powerful question:  
-> “What could go wrong with our systems, and how bad would it be?”
+The past twelve days have been about building a foundation — understanding what GRC means, learning the major frameworks, studying regulations, and exploring governance documents. Today felt like the moment where some of that foundation started turning into a practical skill. Risk assessment is not just a concept I am reading about anymore. It is a process I can actually work through, step by step, on a real system.
 
-We learned that risk isn't random — it's the result of **a threat exploiting a vulnerability**, potentially causing **harm to an asset**. Understanding this relationship helps us anticipate, measure, and prioritize potential problems before they happen.
-
----
-
-## 📚 Key Terms:
-
-- **Asset** – Something valuable we want to protect (e.g., OpenMRS patient database)
-- **Threat** – Anything that could cause harm to the asset (e.g., hacker, malware, power outage)
-- **Vulnerability** – A weakness that can be exploited by a threat (e.g., weak password, outdated software)
-- **Risk** – The potential impact and likelihood of a threat exploiting a vulnerability
-
-> 📌 **Risk = Threat × Vulnerability impacting an Asset**
+And the core question it is trying to answer is surprisingly simple: *what could go wrong, and how bad would it be?*
 
 ---
 
-## 🧠 Simple Risk Assessment Process:
+## What I Worked On Today
 
-1. **Identify Assets**  
-   → What are we protecting?  
-   *Example: OpenMRS server, patient database, clinician login credentials*
+Risk assessment is the structured process of identifying what could harm an organization's assets, understanding how likely that harm is, and figuring out how serious the consequences would be. It is the foundation of everything that comes after — you cannot treat a risk you have not identified, and you cannot prioritize your security efforts without some sense of which risks matter most.
 
-2. **Identify Threats & Vulnerabilities**  
-   → What could go wrong? What weaknesses exist?  
-   *Examples: Hackers (threat) + outdated software (vulnerability)*
+The process starts with four key concepts that I kept coming back to throughout today:
 
-3. **Analyze Risk**  
-   → For each scenario, rate **Likelihood** and **Impact** as High/Medium/Low.  
-   *Example: Likelihood = Medium, Impact = High → Overall Risk = High*
+**Asset** — something valuable that the organization needs to protect. In the context of OpenMRS, this includes the patient database, the application server, clinician login credentials, audit logs, and the availability of the system itself. An asset does not have to be a piece of technology — data, processes, and people can all be assets.
 
-4. **Prioritize**  
-   → Address High risks first. Document and monitor Medium/Low risks.
+**Threat** — anything that could cause harm to an asset. Threats can be external, like a hacker attempting to break into the system, or internal, like a staff member accidentally sending patient data to the wrong recipient. They can also be non-human — a power outage, a hardware failure, or a natural disaster are all threats to system availability.
 
----
+**Vulnerability** — a weakness that makes it easier for a threat to cause harm. An unpatched software component, a default password that was never changed, a misconfigured AWS security group, a lack of staff training on phishing — these are all vulnerabilities. A vulnerability on its own is not necessarily dangerous. It only becomes a risk when a threat exists that could exploit it.
 
-## 🏥 OpenMRS Risk Scenario – Hands-On Exercise:
+**Risk** — the combination of a threat and a vulnerability affecting an asset. The standard formula is:
 
-### ✅ Asset: OpenMRS Patient Database  
-**Threat:** Unauthorized access by external hacker  
-**Vulnerability:** Default admin password not changed  
+**Risk = Likelihood × Impact**
 
-> 🔐 **Risk Rating:**  
-- **Likelihood:** High (default passwords are easy to exploit)  
-- **Impact:** High (exposes sensitive patient data)  
-- **Overall Risk:** **High**  
-
-📝 *This scenario shows how even a small oversight like a default password can lead to serious consequences.*
+Likelihood asks: how probable is it that this threat will actually exploit this vulnerability? Impact asks: if it does, how serious are the consequences? Combining those two dimensions gives you a risk rating that helps you prioritize where to focus your energy.
 
 ---
 
-## 💡 Reflection:
+## The Risk Assessment Process
 
-Today’s exercise made me realize how **small vulnerabilities**, like weak credentials or missing patches, can have **large impacts** when paired with real-world threats. I also see that **risk assessment is everywhere** — not just in IT. Even planning a group event or deploying a new feature involves asking, “What could go wrong?” and “How do we reduce that chance?”
+Working through today's material I tried to understand risk assessment not just as a concept but as an actual process with steps. Here is how I am now thinking about it:
 
-> This process helps us **move from reactive firefighting to proactive risk planning**, especially for systems as critical as OpenMRS.
+**Step 1 — Identify Your Assets**
+Before you can assess risk you need to know what you are protecting. For OpenMRS this means documenting the key components: the patient database, the application server, the admin interface, user credentials, audit logs, backup systems, and the network infrastructure connecting everything.
 
-Additional example:
-- **Asset:** OpenMRS cloud hosting platform  
-- **Threat:** Cloud outage  
-- **Vulnerability:** No backup or failover configured  
-- **Risk:** Medium (could be mitigated with a backup strategy)
+**Step 2 — Identify Threats and Vulnerabilities**
+For each asset, ask what could threaten it and what weaknesses might make that threat more likely to succeed. This step benefits from creativity and honesty — it is tempting to focus on the obvious threats and miss the less dramatic ones. Insider accidents cause as many breaches as external attackers.
 
----
+**Step 3 — Analyze the Risk**
+For each threat-vulnerability combination, rate the likelihood and impact. I am using a simple High, Medium, Low scale for now. A High likelihood combined with a High impact is a critical risk that needs immediate attention. A Low likelihood combined with a Low impact might be documented and monitored without urgent action.
 
-## 📖 Optional Search Terms for Further Learning:
-- `NIST SP 800-30 risk assessment guide`
-- `Threat vs vulnerability examples`
-- `Risk assessment steps simple`
+**Step 4 — Prioritize**
+Address critical and high risks first. Document medium and low risks and set a schedule for revisiting them. The goal is not to eliminate every risk — that is impossible — but to make sure the most serious ones are being actively managed.
 
 ---
 
-✅ _Stay tuned for Day 14 – where we’ll take our identified risks and learn what to do about them. You’ll explore the four options of Risk Treatment: mitigate, transfer, accept, or avoid._
+## Hands-On Risk Assessment for OpenMRS
 
-📌 #GRC #RiskAssessment #NIST80030 #CybersecurityBasics #OpenMRS #HealthcareSecurity #100DayChallenge
+I worked through several risk scenarios for the OpenMRS deployment today. Here is what that looked like:
+
+---
+
+**Scenario 1 — Default Admin Password**
+
+- **Asset:** OpenMRS patient database
+- **Threat:** Unauthorized access by an external attacker
+- **Vulnerability:** Default administrator password was never changed after installation
+- **Likelihood:** High — default credentials are publicly documented and routinely targeted by automated scanning tools
+- **Impact:** High — an attacker with admin access could view, export, or delete all patient records
+- **Overall Risk:** Critical
+- **Notes:** This is one of the most common and most preventable vulnerabilities in any system. The fix is straightforward — change default credentials immediately during setup and enforce a strong password standard. The fact that it is easy to fix makes it even more important to catch early.
+
+---
+
+**Scenario 2 — No Backup or Failover Configuration**
+
+- **Asset:** OpenMRS cloud hosting on AWS
+- **Threat:** Cloud service outage or ransomware attack encrypting the system
+- **Vulnerability:** No tested backup or failover configuration in place
+- **Likelihood:** Medium — major AWS outages are relatively rare but ransomware targeting healthcare systems is increasingly common
+- **Impact:** High — if OpenMRS goes down and cannot be quickly restored, clinical operations are disrupted and patient care is affected
+- **Overall Risk:** High
+- **Notes:** The fix here is more complex than changing a password — it requires designing and testing a backup and recovery process. But the investment is worth it given the potential impact on care delivery.
+
+---
+
+**Scenario 3 — Phishing Attack on Clinical Staff**
+
+- **Asset:** OpenMRS user credentials and patient records
+- **Threat:** Phishing email targeting a clinician or administrator
+- **Vulnerability:** No phishing awareness training and no MFA on user accounts
+- **Likelihood:** High — healthcare staff are frequently targeted by phishing campaigns and without training or MFA the chance of a successful attack is significant
+- **Impact:** High — compromised credentials could give an attacker access to patient records
+- **Overall Risk:** Critical
+- **Notes:** This scenario requires both a technical control (MFA) and an administrative control (training). Neither alone is sufficient. MFA limits the damage from a successful phishing attack. Training reduces the likelihood of one succeeding in the first place.
+
+---
+
+**Scenario 4 — Unpatched OpenMRS Application**
+
+- **Asset:** OpenMRS application server
+- **Threat:** Exploitation of a known vulnerability in the OpenMRS software or its dependencies
+- **Vulnerability:** Outdated version of OpenMRS or underlying components like Apache Tomcat
+- **Likelihood:** Medium to High — known vulnerabilities in widely used software are actively exploited
+- **Impact:** High — depending on the vulnerability, an attacker could gain access to the system or patient data
+- **Overall Risk:** High
+- **Notes:** Patch management is one of those controls that feels mundane until something goes wrong. The Equifax breach I covered on Day 9 is a reminder of what happens when patching is deprioritized.
+
+---
+
+## What Actually Clicked for Me
+
+The thing that clicked most today is how interconnected the four concepts are. An asset by itself is just something valuable. A threat by itself is just a possibility. A vulnerability by itself is just a weakness. Risk only exists when all three come together — and understanding that relationship is what makes risk assessment practical rather than theoretical.
+
+I also found myself thinking about how the same vulnerability can produce very different risk levels depending on the threat environment. An unpatched server in a system that is completely air-gapped with no external connectivity has a different risk profile than the same unpatched server exposed to the internet. The vulnerability is identical. The risk is not. That nuance is what separates a thoughtful risk assessment from a generic checklist.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2014 Community Health Systems breach** — one of the largest healthcare breaches in US history at the time, affecting 4.5 million patients. Attackers exploited the **Heartbleed vulnerability** — a well-known flaw in the OpenSSL cryptographic library — to steal credentials and gain access to the network.
+
+What made this case relevant to today's topic is the timeline. The Heartbleed vulnerability was publicly disclosed in April 2014. Community Health Systems was breached between April and June of that same year. The vulnerability was known. Patches were available. The risk was identifiable through a basic risk assessment process. But the organization had not assessed, prioritized, and remediated the vulnerability quickly enough to prevent the breach.
+
+That pattern — known vulnerability, available patch, delayed response — comes up repeatedly in breach investigations. Risk assessment exists specifically to catch these situations before they become incidents. The process I worked through today, applied consistently and honestly, would have flagged Heartbleed as a critical risk requiring immediate patching. Whether the organization acts on that assessment is a governance question. But you cannot act on a risk you have not identified.
+
+---
+
+## What I Am Still Thinking About
+
+Something I want to understand better is how organizations handle risk assessment at scale. Today I worked through four scenarios for one system — OpenMRS. A large healthcare organization might have hundreds of systems, thousands of assets, and an enormous number of potential threat-vulnerability combinations.
+
+How do you make risk assessment manageable at that scale without either oversimplifying it into meaninglessness or drowning in detail? I imagine the answer involves prioritizing scope — focusing first on the highest-value assets and most likely threats — and using tools to automate parts of the process. But I want to understand what that looks like in practice, particularly for organizations without dedicated risk management teams.
+
+---
+
+## What's Next
+
+Day 14 is about **Risk Treatment** — once you have identified and assessed your risks, what do you actually do about them? There are four options: mitigate, transfer, accept, or avoid. I am curious to understand how those choices are made in practice and how they connect back to the governance and compliance foundations I have been building.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-30 – Guide for Conducting Risk Assessments](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [Community Health Systems Breach – HHS Summary](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/index.html)
+- [Heartbleed Vulnerability Overview – CVE-2014-0160](https://heartbleed.com/)
+- [HIPAA Risk Assessment Guidance – HHS](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #RiskAssessment #RiskManagement #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day13*
