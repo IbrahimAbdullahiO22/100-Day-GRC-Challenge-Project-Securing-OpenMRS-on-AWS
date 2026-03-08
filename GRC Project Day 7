@@ -1,96 +1,94 @@
-# 📅 Day 7 – HIPAA Basics: Protecting Health Information | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+# 📅 Day 7 – HIPAA Basics: Understanding the Law That Protects Patient Data | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  My Leadership Perspective
+## One Week In
 
-As cybersecurity and GRC professionals, we must remember that security is **not just about technology — it’s about people, processes, and legal responsibilities.**
-
-Today I focused on **HIPAA** — the U.S. law that governs the security and privacy of healthcare information. While I often work with broader GRC frameworks like NIST RMF or ISO 27001, HIPAA brings home one vital point:
-
-> **When it comes to patient data — security is not optional, it’s the law.**
-
-Even for global implementations (like an OpenMRS EHR system used outside the U.S.), understanding HIPAA makes us stronger security leaders because the **principles of protecting personal health information (PHI)** are universal.
+Seven days into this challenge and today felt like one of the most important so far. HIPAA is one of those terms I had heard constantly before starting this project — but I realized pretty quickly that hearing a term and actually understanding what it requires are very different things. Today I sat down and tried to genuinely understand what HIPAA means, what it demands, and why it exists in the first place.
 
 ---
 
-##  What I’ve Learned: HIPAA Security Rule
+## What I Worked On Today
 
-The Security Rule within HIPAA is where the “teeth” live — it defines the practical steps required to protect **electronic protected health information (ePHI)**.
+HIPAA — the Health Insurance Portability and Accountability Act — is the US law that governs how healthcare organizations must protect patient health information. For this project, the most relevant part is the **HIPAA Security Rule**, which specifically covers **electronic protected health information (ePHI)** — the kind of data an OpenMRS system handles every day.
 
-**Key idea:** Safeguards must be “reasonable and appropriate” — tailored to the risks and resources of the organization.
+The Security Rule organizes its requirements into three categories of safeguards. When I first read through them I thought it was an odd way to structure a law — but the more I sat with it, the more the logic made sense. Risk does not come from just one direction. It comes from people, from physical environments, and from technology — and HIPAA addresses all three.
 
-It organizes those safeguards into **three pillars**:
+**Administrative Safeguards** are about leadership, process, and people. Things like conducting regular risk assessments, assigning a security officer, training staff on how to handle patient data, and having documented policies that people actually follow. This category deals with human error, insider threats, and organizational accountability.
 
-### 1️⃣ Administrative Safeguards  
-*The leadership & process controls*  
-Example: Conducting regular risk assessments on your OpenMRS system and assigning a security officer responsible for compliance.  
-Without good admin safeguards, no technical solution will succeed — people and processes are the foundation.
+**Physical Safeguards** are about the physical environment where ePHI lives. Workstations that access OpenMRS should lock when unattended. Server rooms should have controlled access. Backup media should be stored securely. For a cloud deployment on AWS, a lot of the physical security is inherited from AWS data centers — but that does not mean physical safeguards disappear entirely. Endpoints still matter.
 
-### 2️⃣ Physical Safeguards  
-*Securing the physical environment*  
-Example: Ensuring that clinic workstations accessing OpenMRS are locked down when unattended, server rooms are access-controlled, and backups are stored securely.  
-Cloud deployments (AWS for OpenMRS) inherit physical security from AWS data centers, but endpoint security still matters.
-
-### 3️⃣ Technical Safeguards  
-*Technology protecting data*  
-Example: Enforcing HTTPS for OpenMRS web access, encrypting the OpenMRS database at rest, using role-based access controls with unique credentials.  
-This is often where tech teams focus — but without the other two pillars, the defense is incomplete.
+**Technical Safeguards** are the technology controls — encryption, access controls, audit logging, secure transmission. This is often where technical teams spend most of their energy, and for good reason. But what I keep learning throughout this challenge is that technical controls alone are never enough. If the administrative and physical layers are weak, even the best technical controls can be undermined.
 
 ---
 
-##  Teaching Insight: Why Three Categories?
+## What Actually Clicked for Me
 
-HIPAA splits safeguards into three categories because **risk comes from multiple dimensions**:
+Something that clicked today is that HIPAA deliberately uses the phrase **"reasonable and appropriate"** when describing what organizations must do. That phrase appears throughout the Security Rule and it means that HIPAA is not a one-size-fits-all checklist. A small rural clinic running OpenMRS with three staff members has different resources and risks than a large hospital network. HIPAA acknowledges that and asks organizations to implement safeguards that make sense for their specific situation.
 
-- **Administrative** deals with human error, insider threats, leadership responsibility
-- **Physical** deals with theft, vandalism, unauthorized physical access
-- **Technical** deals with hacking, malware, network intrusion
+That was more nuanced than I expected from a federal law. It also means that "we could not afford it" is not automatically an excuse — organizations are expected to document their reasoning when they choose not to implement a particular control. That documentation is itself a compliance requirement.
 
-In real-world clinics using OpenMRS, the **biggest challenges** I see are often **Administrative** — because leadership may not budget for proper training or formal risk management, even though that is crucial for HIPAA compliance.
-
-All three categories must work together — no single pillar is enough.
+The three-category structure also clicked for me when I connected it back to Day 5. Governance, risk, and compliance working together — and here it shows up again inside HIPAA itself. Administrative safeguards are essentially governance. Technical safeguards are risk controls. And the whole framework exists to drive compliance. The same logic keeps appearing at different levels of the field.
 
 ---
 
-## 🛠️ My Hands-On Example for OpenMRS
+## Applying This to OpenMRS on AWS
 
-If I were leading an OpenMRS deployment in a HIPAA-covered environment, here are two controls I would mandate:
+Thinking through what HIPAA safeguards would look like for a real OpenMRS deployment, here is how I mapped the three categories:
 
- **Administrative safeguard:**  
-“Establish weekly reviews of OpenMRS audit logs for unauthorized or anomalous access.”
+**Administrative:**
+- Assign a named Security Officer responsible for HIPAA compliance
+- Conduct and document a formal risk assessment of the OpenMRS environment
+- Establish a process for regular review of who has access to patient data and why
+- Train all staff who interact with OpenMRS on their HIPAA responsibilities
 
- **Technical safeguard:**  
-“Enable Multi-Factor Authentication (MFA) for all OpenMRS administrative accounts and remote users.”
+**Physical:**
+- Ensure workstations accessing OpenMRS automatically lock after a period of inactivity
+- Control physical access to any on-premises infrastructure
+- For AWS-hosted components — review AWS's physical security certifications and understand the shared responsibility model
 
-Why? Because **audit log reviews detect misuse** and **MFA blocks stolen credentials** — both are critical for reducing risk of ePHI breaches.
+**Technical:**
+- Enforce HTTPS for all OpenMRS web access — no unencrypted transmission of ePHI
+- Encrypt the OpenMRS database at rest
+- Implement role-based access controls so users only see the data they need for their job
+- Enable audit logging to track who accessed what and when
+- Require MFA for all administrative accounts
 
----
-
-##  Reflection as a Leader
-
-Studying HIPAA reminds me that **compliance ≠ security** — but compliance helps enforce a solid baseline. 
-
-> If an organization ONLY “checks the HIPAA boxes” — it’s at risk.  
-> If it uses HIPAA as a foundation for a mature risk management program — it’s building true resilience.
-
-I teach my teams that **compliance is the floor — risk-driven security is the ceiling**. The two must work together.
-
----
-
-##  Tomorrow’s Focus
-
-Tomorrow, I will pivot to another key standard — **PCI DSS** — used to secure payment data. It will be exciting to compare healthcare data protection with financial data protection — different sectors, same core GRC principles!
+Going through that exercise made HIPAA feel much more concrete than reading the regulation alone. These are real decisions that real OpenMRS administrators have to make.
 
 ---
 
-##  Search Terms I Recommend:
+## A Real-World Example That Made This Click
 
-- “HHS HIPAA Security Rule summary”  
-- “HIPAA administrative physical technical safeguards examples”  
-- “HIPAA vs GDPR healthcare data”  
+While researching today's topic I came across the **2019 UConn Health data breach** — a phishing attack that gave attackers access to employee email accounts containing patient information, affecting over 326,000 people. UConn Health faced a HHS investigation and significant reputational damage.
+
+What stood out to me was that this breach was fundamentally an administrative safeguards failure. The technical controls on the email system were not enough to compensate for insufficient staff training on phishing awareness — which falls squarely in the administrative category. The attackers did not break through a firewall. They got an employee to hand over their credentials.
+
+I keep coming back to this pattern across multiple days now: technical controls matter, but they do not operate in a vacuum. The human layer — which is what administrative safeguards are designed to address — is consistently where breaches find their entry point. HIPAA understood that when it was written, which is why all three categories carry equal weight.
 
 ---
 
-#GRC #HIPAA #SecurityLeadership #HealthcareSecurity #OpenMRS #EHR #Day7 #CybersecurityLaw #DataPrivacy
+## What I Am Still Thinking About
+
+Something I am genuinely uncertain about: HIPAA applies specifically to covered entities and business associates in the US healthcare system. But OpenMRS is used globally — in clinics across Africa, Asia, and other regions where HIPAA does not technically apply.
+
+Does that mean patient data in those environments is less protected? Probably not by law — but potentially in practice. I find myself wondering what the equivalent frameworks are in those contexts, and whether there is a universal standard for protecting health data that transcends any single country's regulations. I do not have an answer yet but it feels like an important question for a system like OpenMRS that was specifically designed for global use.
+
+---
+
+## What's Next
+
+Day 8 moves into **PCI DSS** — the standard for protecting payment card data. I am curious to compare how a financial data protection framework differs from HIPAA, and whether the underlying GRC principles stay consistent even when the sector changes. My guess is they will — but I want to see that for myself.
+
+---
+
+## Resources I Found Helpful Today
+- [HHS HIPAA Security Rule Summary](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html)
+- [HHS – Administrative, Physical and Technical Safeguards](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [UConn Health Breach – HHS Resolution](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/uconn/index.html)
+- [AWS HIPAA Eligible Services](https://aws.amazon.com/compliance/hipaa-eligible-services-reference/)
+
+---
+
+*#GRC #HIPAA #HealthcareSecurity #DataPrivacy #100DaysOfGRC #OpenMRS #AWS #Day7*
