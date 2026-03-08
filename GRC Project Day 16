@@ -1,63 +1,118 @@
-# 📅 Day 16 – Cloud Security 101 – Shared Responsibility with AWS  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 16 – Cloud Security 101: Understanding Who Is Responsible for What on AWS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## ☁️ Topic Overview:
+## Moving From Concepts to the Cloud
 
-Today’s focus is on **cloud security fundamentals** and understanding the **AWS Shared Responsibility Model**. When using cloud platforms like Amazon Web Services (AWS) to host systems like **OpenMRS**, it’s crucial to understand **who is responsible for what** when it comes to securing the environment.
+The first fifteen days built a strong conceptual foundation — GRC frameworks, risk assessment, compliance, governance documents, and the people who make it all work. Starting today, the project gets more specific. OpenMRS in this challenge is not running on a server in a back room somewhere. It is hosted on AWS. And that means there is a fundamental question I need to answer before I can make meaningful security decisions: in a cloud environment, who is actually responsible for securing what?
 
-- **AWS is responsible** for securing the cloud infrastructure.  
-- **We (the customer)** are responsible for securing what we put *in* the cloud — like applications, operating systems, and data.
-
-> _Think of it like renting an apartment: AWS secures the building, but you must lock your apartment door and safeguard your belongings._
+The answer is more nuanced than I expected — and getting it wrong is one of the most common causes of cloud security failures.
 
 ---
 
-## 🏥 Real-World Context: OpenMRS in the Cloud
+## What I Worked On Today
 
-OpenMRS, when deployed on AWS (e.g., using EC2 or S3), benefits from AWS’s powerful infrastructure — but **our configuration and operational decisions** determine the real-world security outcomes.
+AWS operates under what they call the **Shared Responsibility Model** — a framework that divides security responsibilities between AWS as the cloud provider and the customer using the cloud services. Understanding this division is not optional for anyone deploying a system like OpenMRS on AWS. It is foundational.
 
-### ✅ AWS Handles:
-- Physical security at data centers (guards, cameras, power redundancy)  
-- Maintenance of networking hardware and virtualization layers
+The model splits responsibilities into two categories:
 
-### ✅ Customer Handles:
-- OS and application patching (e.g., updating OpenMRS and Ubuntu)  
-- Firewall rules, access controls, and data encryption  
-- User authentication and secure storage practices
+**AWS is responsible for security *of* the cloud** — the physical infrastructure, the hardware, the networking, the virtualization layer, and the global data center facilities. AWS manages the physical security of the buildings where servers live, the power and cooling systems, the network hardware, and the hypervisor technology that separates one customer's workloads from another's. Customers inherit these protections automatically when they use AWS services.
 
-> _A misconfigured security group, unpatched system, or open S3 bucket could lead to a breach — and that would be **our** responsibility, not AWS’s._
+**The customer is responsible for security *in* the cloud** — everything that runs on top of the infrastructure AWS provides. That includes the operating system on an EC2 instance, the applications deployed on it (like OpenMRS), the data stored in databases and S3 buckets, the network configuration through security groups and VPCs, user access management through IAM, and encryption of data at rest and in transit.
+
+The analogy that helped me most today: renting an apartment. The building owner is responsible for the structural integrity of the building, the locks on the front door of the complex, and the security of shared spaces. But the tenant is responsible for locking their own apartment door, securing their valuables, and not leaving sensitive items visible through the window. AWS is the building owner. The customer is the tenant. Both have real responsibilities, and neither can substitute for the other.
 
 ---
 
-## ✍️ Hands-On Exercise:
+## What Actually Clicked for Me
 
-**Example Responsibilities:**
+What clicked today is how many real-world cloud breaches trace back to a misunderstanding — or a misapplication — of this model.
 
-- ✅ **AWS Task**: Ensures physical security and controlled access to its data centers  
-- ✅ **Customer Task**: Configures security groups to control traffic to OpenMRS EC2 instances
+The most common pattern I came across while researching today is the **misconfigured S3 bucket**. AWS S3 provides secure object storage by default — but it also gives customers the ability to make buckets publicly accessible if they choose to. Countless organizations have accidentally exposed sensitive data by misconfiguring S3 bucket permissions, making data that should have been private accessible to anyone on the internet.
 
-These examples reinforce that while AWS lifts a huge burden, **we must remain vigilant** in securing our deployments.
+AWS did not fail in those cases. The infrastructure was working exactly as configured. The customer configured it incorrectly — and that is the customer's responsibility under the shared model. AWS has added tools and warnings over the years to help customers catch these mistakes, but the fundamental responsibility for configuration still lies with the customer.
 
----
-
-## 💡 Reflection:
-
-The AWS Shared Responsibility Model has **increased my trust** in cloud platforms — knowing AWS handles the infrastructure gives peace of mind. However, it also underscores the need for **continuous vigilance on our part**. Misconfigurations, weak access controls, or forgotten updates can still expose sensitive patient data.
-
-For OpenMRS and other healthcare systems, **shared responsibility doesn't mean less responsibility — it means smarter responsibility.** We must actively manage what’s inside our cloud environments.
+For OpenMRS on AWS, this has direct implications. AWS will not patch the OpenMRS application for you. AWS will not configure your security groups correctly. AWS will not manage who has access to your IAM accounts. AWS will not encrypt your database unless you configure encryption. These are all customer responsibilities — and each one is a potential source of the kind of risk I have been assessing and treating over the past two days.
 
 ---
 
-## 🔍 Optional Search Terms for Deeper Learning:
+## Breaking Down the Responsibility Split for OpenMRS Specifically
 
-- `AWS Shared Responsibility Model explained`  
-- `Cloud security checklist AWS`  
-- `Common AWS misconfigurations OpenMRS`
+Working through today's material I tried to map the shared responsibility model as specifically as possible to an OpenMRS deployment on AWS:
+
+**AWS Responsibilities (inherited automatically):**
+- Physical security of AWS data centers — guards, cameras, biometric access controls, power redundancy
+- Security and availability of the global network infrastructure
+- Hardware maintenance and replacement
+- Hypervisor security — ensuring one customer's EC2 instances cannot access another's
+- Managed service security — for services like RDS, AWS handles OS patching of the database engine itself
+
+**Customer Responsibilities (our job):**
+- Patching the operating system on EC2 instances running OpenMRS — AWS does not do this automatically
+- Patching the OpenMRS application itself and its dependencies — Tomcat, Java, modules
+- Configuring security groups correctly — controlling which ports and IP addresses can reach the OpenMRS server
+- Managing IAM users and roles — enforcing least privilege, rotating access keys, enabling MFA for all accounts
+- Encrypting the OpenMRS database at rest — using RDS encryption or EBS volume encryption
+- Encrypting data in transit — enforcing HTTPS for all web traffic to OpenMRS
+- Configuring S3 bucket permissions correctly if storing any patient data or backups
+- Enabling and reviewing CloudTrail logs for suspicious activity
+- Managing VPC configuration — network segmentation, private subnets for the database tier
+- Conducting regular access reviews — who has access to what, and is it still appropriate
+
+That list is long. And every item on it represents a real risk if neglected. AWS handles an enormous amount of heavy lifting — but the customer-side list is still substantial, and it requires active, ongoing attention.
 
 ---
 
-✅ _Stay tuned for Day 17: Deepening our cloud security journey with more hands-on best practices._
+## A Real-World Example That Made This Click
 
-📌 #GRC #Cybersecurity #AWS #CloudSecurity #InfoSec #100DayChallenge #HealthcareSecurity #OpenMRS
+While researching today's topic I came across the **2019 Capital One data breach** — one of the most significant cloud security incidents on record, affecting over 100 million customers in the US and Canada. The attacker exploited a misconfigured Web Application Firewall (WAF) on Capital One's AWS environment to gain access to sensitive data stored in S3.
+
+What made this case particularly instructive is that AWS's infrastructure was not compromised. The attacker did not break into AWS data centers or defeat AWS security controls. They exploited a configuration mistake on the customer side — a WAF that had been set up with overly permissive permissions, creating a pathway to access data that should have been protected.
+
+Capital One was subject to significant regulatory scrutiny and paid a $80 million fine to the Office of the Comptroller of the Currency. The breach affected financial data — but the same misconfiguration pattern applies directly to healthcare environments. An OpenMRS deployment with a misconfigured security group, an overly permissive IAM role, or an unprotected S3 bucket containing patient data would present essentially the same risk — and the consequences under HIPAA would be severe.
+
+The Capital One breach is one of the clearest real-world illustrations of what the shared responsibility model means in practice. AWS was not at fault. The customer's configuration decisions created the vulnerability. Understanding that boundary is not just a theoretical exercise — it is the difference between a secure deployment and a breach investigation.
+
+---
+
+## Common Misconfigurations to Watch For in OpenMRS on AWS
+
+Based on today's research, here are the misconfiguration patterns I want to make sure I address throughout this project:
+
+| Risk Area | Common Mistake | What It Should Look Like |
+|---|---|---|
+| Security Groups | Allowing inbound traffic from 0.0.0.0/0 on sensitive ports | Restrict to known IP ranges; only open necessary ports |
+| S3 Buckets | Public access enabled on buckets containing patient data or backups | Block all public access; use bucket policies for authorized access only |
+| IAM | Root account used for day-to-day operations; no MFA on privileged accounts | Use IAM roles with least privilege; enable MFA on all accounts |
+| Encryption | RDS database not encrypted at rest; S3 objects not encrypted | Enable encryption at rest for all data stores; enforce HTTPS |
+| Logging | CloudTrail not enabled; logs not reviewed | Enable CloudTrail in all regions; set up alerts for suspicious activity |
+| Patching | EC2 instance OS not patched regularly | Establish a patching schedule; use AWS Systems Manager for automation |
+
+Each row in that table represents a real breach pattern. None of them are exotic or difficult to fix. They are the kinds of basic hygiene failures that the shared responsibility model places squarely in the customer's hands.
+
+---
+
+## What I Am Still Thinking About
+
+Something I want to understand better is how the shared responsibility model changes depending on which AWS services you use. Today I focused on Infrastructure as a Service — EC2 instances where the customer manages the operating system. But AWS also offers managed services like RDS for databases and Elastic Beanstalk for application deployment, where AWS takes on more of the responsibility for underlying components.
+
+Does using more managed services shift more responsibility to AWS and reduce the customer's security burden? In some ways yes — but it also introduces new questions about vendor trust and about what the customer can and cannot directly control or inspect. I want to think more carefully about where the right balance is for an OpenMRS deployment as this project develops.
+
+---
+
+## What's Next
+
+Day 17 goes deeper into cloud security best practices — moving from the conceptual framework of shared responsibility into specific, hands-on security controls for an AWS-hosted OpenMRS environment. I am looking forward to getting more technical and practical.
+
+---
+
+## Resources I Found Helpful Today
+- [AWS Shared Responsibility Model – Official Documentation](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- [Capital One Data Breach – OCC Enforcement Action](https://www.occ.gov/news-issuances/news-releases/2020/nr-occ-2020-106.html)
+- [AWS Security Best Practices Whitepaper](https://docs.aws.amazon.com/whitepapers/latest/aws-security-best-practices/welcome.html)
+- [HIPAA on AWS – Compliance Guide](https://aws.amazon.com/compliance/hipaa-compliance/)
+
+---
+
+*#GRC #CloudSecurity #AWS #SharedResponsibility #HealthcareSecurity #100DaysOfGRC #OpenMRS #Day16*
