@@ -1,87 +1,106 @@
-#  Day 20 – Wrapping Up Phase 1: GRC Lessons Learned & Ready for What’s Next  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 20 – Phase 1 Complete: Looking Back Before Moving Forward | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Topic Overview:
+## Twenty Days In
 
-Today marks the **end of Phase 1** of my 100-day challenge. Over the past 19 days, I’ve learned and applied core **Governance, Risk, and Compliance (GRC)** concepts — all grounded in a real-world healthcare use case with OpenMRS hosted in AWS. Today is about **reflection, recap**, and **preparing for Phase 2**.
+I started this challenge not really knowing what GRC meant in practice. I had heard the acronym. I knew it had something to do with security and compliance. But the actual substance — how the three pillars connect, what the frameworks look like, how compliance differs from security, what it means to assess and treat risk — that was largely new territory.
 
----
+Twenty days later, I want to take stock honestly. What have I actually learned? Where do I still have gaps? And what does Phase 2 need to accomplish to take this from conceptual understanding to practical skill?
 
-##  Phase 1 Key Takeaways:
-
-###  What GRC Really Means:
-- **Governance** = Direction + Accountability (e.g., policies, leadership oversight)  
-- **Risk Management** = Identifying and addressing potential threats  
-- **Compliance** = Meeting legal/regulatory standards (e.g., HIPAA)  
-> GRC brings all three together into a unified, proactive security approach.
+This entry is my attempt to answer those questions — not as a polished summary, but as a genuine reflection on where I am.
 
 ---
 
-###  Importance of a Risk-Based Approach:
-- Not all risks are equal — prioritize based on **impact and likelihood**  
-- Focus efforts on **high-value systems**, like patient data in OpenMRS  
-- Prevent **checkbox compliance** by aligning controls with actual risks  
+## What Phase 1 Actually Covered
+
+Looking back at Days 1 through 19, the learning fell into roughly five areas:
+
+**The GRC Foundation (Days 1–5)**
+The first week was about understanding what governance, risk, and compliance each mean individually and how they function as an integrated system. The most important insight from this week was that GRC is not three separate departments doing three separate jobs — it is one discipline with three dimensions, and the three dimensions only work properly when they reinforce each other. A governance decision about encryption simultaneously addresses a risk and satisfies a compliance requirement. That integration is what makes GRC programs effective rather than bureaucratic.
+
+**Frameworks and Regulations (Days 6–10)**
+The second area covered the major frameworks and regulations I will be working with throughout this project. NIST RMF gave me a structured, seven-step process for managing risk across a system's lifecycle. HIPAA gave me the specific legal requirements for protecting patient health information. ISO 27001 showed me what a risk-based management system looks like when it is built to evolve continuously rather than just pass a one-time audit. PCI DSS illustrated what highly prescriptive compliance looks like and what its limitations are. And Day 10 grounded all of it in the patient safety reality that makes healthcare GRC different from any other sector.
+
+**People and Documents (Days 11–12)**
+Two days that I think are underrated in importance. Understanding who is responsible for GRC — the CISO, Risk Manager, Compliance Officer, System Owner, and Authorizing Official — matters because frameworks and policies do not implement themselves. People do. And the governance document hierarchy — policy, standard, procedure — matters because the distance between intent and action is often a missing or poorly written document. The Advocate Medical Group breach on Day 12 was a perfect illustration of what happens when that hierarchy is incomplete.
+
+**Risk Assessment and Treatment (Days 13–14)**
+These two days were where GRC started to feel the most practical and analytical. Building the risk picture for OpenMRS — identifying assets, threats, vulnerabilities, likelihood, and impact — gave me a structured way to think about security that goes beyond intuition. And working through the four treatment options — mitigate, transfer, accept, avoid — made clear that risk management is about making deliberate, documented decisions rather than just fixing things as they break. The Premera Blue Cross case on Day 14 was a sharp reminder of what implicit, undocumented risk "acceptance" actually costs.
+
+**Compliance, Cloud, and Architecture (Days 15–18)**
+The final stretch of Phase 1 brought the compliance-security distinction into focus, established the AWS shared responsibility model as the operating framework for this project, mapped the technical architecture of OpenMRS on AWS, and worked through the specific compliance and security controls required to handle ePHI in the cloud responsibly. By Day 18 I had a practical checklist of controls — encryption, IAM, CloudTrail, VPC configuration, BAA — that translates the conceptual GRC learning into specific technical requirements.
 
 ---
 
-###  Frameworks & Standards Introduced:
-- **NIST RMF** – a repeatable 7-step risk management process (Phase 2 focus)  
-- **HIPAA** – governs handling of healthcare data  
-- Others mentioned: **ISO 27001**, **AWS Shared Responsibility Model**  
-> Frameworks are the “guardrails” that ensure structure and consistency.
+## What Actually Surprised Me
+
+Three things genuinely surprised me over the past twenty days:
+
+**How often the same principles appear across different frameworks.** NIST RMF, HIPAA, ISO 27001, PCI DSS — they use different language and different structures, but they keep arriving at the same underlying requirements. Encrypt sensitive data. Control who has access. Monitor what is happening. Keep systems patched. Train people. Document your decisions. I expected the frameworks to be more different from each other. Instead they feel like different expressions of the same core discipline.
+
+**How much of security is a governance and culture problem rather than a technical one.** I came into this challenge expecting to learn mostly about technical controls. What I found instead is that the most common cause of security failures is not technical sophistication — it is organizational behavior. Leaders who deprioritize risk. Documentation that is never maintained. Controls that exist on paper but are never verified. Training that gets clicked through without engagement. The technical solutions for most security problems are well understood. Getting organizations to actually implement and maintain them consistently is the harder challenge.
+
+**How personal the healthcare context makes everything.** I noted this on Day 10 and it has stayed with me. The Düsseldorf hospital incident, the ransomware attacks that force staff to use paper records, the breaches that expose people's most sensitive health information — these are not abstract security failures. They affect real people at vulnerable moments in their lives. That context changes how I think about the work. It is not just an interesting technical and organizational challenge. It is work that matters.
 
 ---
 
-###  Our OpenMRS Case Study:
-- Explored how a clinic uses OpenMRS on **AWS**  
-- Applied GRC concepts to **cloud security**, **data protection**, and **compliance**  
-- Hands-on examples: encryption, IAM policies, BAA, backups, network segmentation  
+## Where I Still Have Gaps
+
+Being honest with myself about what Phase 1 did not cover:
+
+**Hands-on technical implementation.** I understand what encryption means for RDS, S3, and EBS. I understand why CloudTrail matters and what IAM least privilege looks like. But I have not yet gone through the actual configuration process — logging into AWS, making the settings changes, verifying that controls are working. Phase 2 needs to close this gap.
+
+**Control assessment.** I know from the NIST RMF that Step 5 — Assess — is where controls are independently verified. But I have not yet worked through what a real assessment looks like in practice. What evidence do you collect? What tests do you run? How do you document findings? This is an area I need to go much deeper on.
+
+**The authorization process end to end.** I understand the concept of an Authorization to Operate and the role of the Authorizing Official. But I have not yet worked through the full documentation package that supports an authorization decision — the System Security Plan, the Security Assessment Report, the Plan of Action and Milestones. These are core CGRC and NIST RMF artifacts that I want to build practical familiarity with.
+
+**Continuous monitoring in practice.** I understand the principle — security does not stop at authorization, controls need ongoing verification, and the threat environment changes over time. But what does a continuous monitoring program actually look like operationally? What is reviewed, how often, by whom, and what triggers a reassessment? Phase 2 should address this more concretely.
 
 ---
 
-###  Why It All Matters (Day 1 Breach Reflection):
-- The opening breach scenario was caused by missing or weak GRC practices  
-- **GRC in action** could have mitigated or prevented the breach:  
-  - Clear governance → roles and policies defined  
-  - Proactive risk management → vulnerabilities addressed  
-  - Compliance → encryption, auditing, BAA in place  
-> GRC isn’t just theory — it **prevents real-world failures**.
+## A Real-World Anchor for the Phase 1 Lessons
+
+Looking back across the breach cases I studied in Phase 1 — HCA Healthcare, Target, Anthem, Equifax, Community Health Systems, Premera, Excellus, Capital One, Scripps Health — a consistent pattern emerges that I want to carry forward into Phase 2.
+
+In almost every case, the breach was not caused by an attack that no one could have anticipated or defended against. It was caused by known vulnerabilities that were not addressed, controls that existed on paper but were not functioning, monitoring that detected anomalies but did not trigger a response, or governance failures that meant no one had clear ownership of the problem.
+
+The **2021 Florida water treatment facility attack** — while not a healthcare case — captures this pattern clearly. An attacker remotely accessed the facility's industrial control system and attempted to increase sodium hydroxide levels to dangerous concentrations. The attack was caught by an alert operator who noticed the mouse cursor moving on their screen. The defense was not a sophisticated security control. It was a human paying attention.
+
+That case is a reminder that GRC is not just about building the right technical architecture. It is about building an organization where people are paying attention, where responsibilities are clear, where anomalies get investigated, and where the gap between policy and practice is continuously being narrowed. That is what Phase 2 is about.
 
 ---
 
-##  Hands-On Exercise:
+## What Phase 2 Needs to Accomplish
 
-**Day 1 Breach Prevention – My GRC Diagnosis:**
+Phase 2 is a deep dive into NIST RMF — working through the framework step by step with OpenMRS as the system being secured. Based on where I am at the end of Phase 1, here is what I need Phase 2 to deliver:
 
-- **Risk Management Failure**: No encryption or access controls on patient data  
-- **Governance Lapse**: No policy requiring regular patching or risk assessments  
-- **Compliance Gap**: Failure to sign a Business Associate Agreement (BAA) with AWS  
+**Hands-on AWS configuration** — actually implementing the controls identified in Phase 1, not just describing them. Encryption settings, IAM policies, CloudTrail setup, security group rules.
 
-> A strong GRC foundation across these three areas could have stopped the breach.
+**System documentation** — building the GRC artifacts that a real authorization process requires. A System Security Plan. A risk register. A data flow diagram. These are the outputs that demonstrate professional-level GRC work.
 
----
+**Control assessment practice** — working through what it looks like to test whether controls are functioning, collect evidence, and document findings.
 
-##  Reflection Prompt:
+**Authorization thinking** — understanding the residual risk picture for OpenMRS and what a realistic authorization decision would look like based on the assessment findings.
 
-**Which topic resonated most?**  
-➡ *Cloud security practices* — they made the abstract concrete and taught me how to protect data in the real world.
-
-**Why?**  
-➡ Because cloud is the future, and understanding shared responsibility, encryption, IAM, and backups gave me confidence to secure modern systems.
-
+**Continuous monitoring design** — defining what ongoing security management looks like for this system — what is monitored, how frequently, and what triggers action.
 
 ---
 
-##  Optional Search Terms for Deeper Learning:
+## What's Next
 
-- `GRC fundamentals recap`  
-- `Risk management framework NIST introduction`  
-- `Importance of risk-based security approach`  
+Day 21 starts Phase 2 — beginning a step-by-step walkthrough of NIST RMF applied to OpenMRS on AWS. I am genuinely looking forward to going deeper. The foundation is in place. Now it is time to build something on top of it.
 
 ---
 
- _Stay tuned for Day 21 – Phase 2 begins as we dive into the NIST RMF with a step-by-step, hands-on approach!_
+## Resources That Shaped Phase 1
+- [NIST Risk Management Framework](https://csrc.nist.gov/projects/risk-management/about-rmf)
+- [HHS HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html)
+- [AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- [ISO/IEC 27001 Overview](https://www.iso.org/isoiec-27001-information-security.html)
+- [ISC2 CGRC Certification](https://www.isc2.org/Certifications/CGRC)
 
-📌 #GRC #Cybersecurity #RiskManagement #Compliance #Governance #HIPAA #NISTRMF #100DayChallenge #OpenMRS #AWS #HealthcareIT #CloudSecurity #InfoSec #LessonsLearned
+---
+
+*#GRC #Phase1Complete #RiskManagement #Compliance #Governance #HIPAA #NISTRMF #100DaysOfGRC #OpenMRS #AWS #HealthcareIT #Day20*
