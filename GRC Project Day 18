@@ -1,73 +1,145 @@
-#  Day 18 – Handling Patient Data in the Cloud: Compliance & Best Practices  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 18 – Handling Patient Data in the Cloud: Compliance, Encryption, and Real Accountability | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Topic Overview:
+## Building on the Architecture
 
-Today I explored how to manage **regulated healthcare data** in the cloud — specifically **Electronic Protected Health Information (ePHI)** under compliance rules like **HIPAA**.
+Yesterday I mapped out the technical architecture of OpenMRS on AWS — EC2, RDS, S3, VPC, security groups. Today I went a level deeper and asked a more specific question: once you understand what components exist, what does it actually take to handle the patient data flowing through them in a way that is both legally compliant and genuinely secure?
 
-Using AWS to host platforms like **OpenMRS** means leveraging powerful cloud services while also being accountable for data privacy and security. This entry focuses on **compliance requirements**, **AWS support**, and **best security practices**.
-
----
-
-##  Key Compliance Concepts:
-
-- **HIPAA** requires a **Business Associate Agreement (BAA)** when third parties like AWS handle PHI.
-- AWS offers a **HIPAA BAA** through the **AWS Artifact portal**, enabling healthcare orgs to use certain HIPAA-eligible services securely.
-- Even with a BAA in place, **you (the customer)** are responsible for securely configuring your resources.
+This is where compliance gets concrete. It is not enough to know that HIPAA requires data protection. You need to know exactly what that means for each component in your architecture — which services need encryption, what agreements need to be in place with your cloud provider, and which controls are your responsibility versus AWS's.
 
 ---
 
-##  Cloud Security Best Practices:
+## What I Worked On Today
 
-- **Encryption**  
-  - At Rest: Enable encryption on **RDS**, **S3**, and **EBS** volumes.  
-  - In Transit: Use **HTTPS** and **TLS** to encrypt data during transfer.
+The starting point for HIPAA compliance on AWS is something called a **Business Associate Agreement — or BAA**.
 
-- **Access Control & Auditing**  
-  - Use **IAM roles and policies** to enforce least-privilege access.  
-  - Enable **AWS CloudTrail** for auditing access and changes.
+Under HIPAA, any third party that handles electronic protected health information (ePHI) on behalf of a covered entity is called a **Business Associate**. When a healthcare organization uses AWS to host a system like OpenMRS — where patient data is stored and processed — AWS becomes a Business Associate. And HIPAA requires that a formal written agreement be in place between the covered entity and any Business Associate before ePHI is shared.
 
-- **Network Security**  
-  - Host OpenMRS in **private subnets** where possible.  
-  - Use **VPNs** for administrative access.  
-  - Implement **AWS WAF**, **Shield**, and **Config** to guard against misconfigurations and attacks.
+The BAA defines what AWS is permitted to do with the data, what security obligations it accepts, and what happens in the event of a breach. Without a signed BAA, using AWS to process or store ePHI is a HIPAA violation — regardless of how well the technical controls are configured.
 
-- **Operational Processes**  
-  - Enforce regular **audits**, security reviews, and maintain **documentation**.  
-  - Follow **configuration baselines** to prevent common mistakes like open S3 buckets or default passwords.
+AWS makes its BAA available through **AWS Artifact** — a compliance portal within the AWS console where you can review and accept the agreement. This was one of the practical exercises I worked through today, and it reinforced something important: compliance in the cloud is not just a technical exercise. It starts with understanding and fulfilling the legal and contractual requirements before a single line of configuration is written.
 
->  *Many cloud breaches result from misconfigurations – not hackers. GRC helps prevent this by introducing structure, policies, and controls.*
+One thing I want to be clear about — and this connects directly back to the shared responsibility model from Day 16 — signing a BAA with AWS does not transfer your compliance obligations to AWS. It establishes that AWS will protect the infrastructure it controls. Everything within the customer's responsibility — configuration, access management, encryption settings, audit logging — remains the customer's obligation. The BAA is necessary but nowhere near sufficient.
 
 ---
 
-## 🛠 Hands-On Exercise:
+## What Actually Clicked for Me
 
-I researched how to obtain the **AWS HIPAA BAA**.   
-- You can access it via **AWS Artifact**, the compliance portal.  
-- Just search “AWS HIPAA BAA” and follow steps to review and accept it.
+The thing that clicked most today is the relationship between the BAA and the technical controls. They are two separate layers of the same compliance requirement, and both are essential.
 
-This simple task helped me build the habit of researching cloud compliance requirements – a key GRC skill.
+The BAA is the legal layer. It establishes the contractual framework that makes it permissible to use AWS for ePHI under HIPAA. Without it, you are legally exposed regardless of how secure your technical configuration is.
 
----
+The technical controls are the operational layer. They are what actually protect the data in practice. A signed BAA with no encryption, no access controls, and no audit logging satisfies the paperwork requirement of HIPAA while completely failing the security requirement. That is the compliance-security gap from Day 15 showing up again — this time in a very specific cloud compliance context.
 
-##  Reflection:
-
-Between technical and administrative responsibilities, I find the **technical steps** (like IAM and encryption configurations) more challenging — but both are essential.
-
-Understanding your strengths and areas for growth is important in developing a balanced GRC skillset.
+Real HIPAA compliance on AWS requires both: the legal agreement that makes the arrangement permissible, and the technical controls that make the arrangement actually safe.
 
 ---
 
-##  Optional Search Terms for Further Learning:
+## Encryption — What It Means for Each Component
 
-- `AWS HIPAA compliance best practices`  
-- `Encrypt data at rest and in transit (cloud healthcare)`  
-- `AWS Business Associate Agreement HIPAA`  
+Encryption is one of the most important technical controls for ePHI in the cloud, and today I tried to understand exactly what it means for each component of the OpenMRS architecture:
+
+**RDS — Database Encryption at Rest**
+AWS RDS supports encryption using AES-256 through AWS Key Management Service (KMS). When enabled, the database files, automated backups, snapshots, and read replicas are all encrypted. Importantly, encryption must be enabled at the time the RDS instance is created — it cannot be added retroactively to an existing unencrypted instance. For an OpenMRS deployment handling patient records, this is non-negotiable.
+
+**S3 — Backup and File Storage Encryption**
+S3 supports server-side encryption for all objects stored in a bucket. AWS offers several encryption options — SSE-S3 uses AWS-managed keys, SSE-KMS uses customer-managed keys through KMS for additional control and audit capability. For backup data containing patient records, SSE-KMS is the stronger choice because it provides an audit trail of key usage through CloudTrail. S3 bucket policies should also enforce that all objects are encrypted at upload — rejecting any upload that does not include encryption headers.
+
+**EBS — Volume Encryption**
+The EC2 instance running OpenMRS uses Elastic Block Store (EBS) volumes for its operating system and application files. EBS encryption ensures that data written to these volumes is encrypted at rest. Like RDS, EBS encryption should be enabled at the time the volume is created, and AWS now supports setting encryption as the default for all new EBS volumes in an account.
+
+**In Transit — HTTPS and TLS**
+All data moving between users and the OpenMRS application, and between the application and the database, should be encrypted in transit using TLS. For user-facing traffic this means enforcing HTTPS and redirecting any HTTP requests. For database connections this means requiring SSL/TLS on the RDS connection string and rejecting unencrypted connections.
 
 ---
 
- _Stay tuned for Day 19: We’ll look at the ISC2 CGRC (Certified in Governance, Risk and Compliance) certification and how our learning connects to its exam domains._
+## Access Control and Audit Logging
 
-📌 #GRC #Cybersecurity #HIPAA #CloudSecurity #AWS #PHI #OpenMRS #HealthcareIT #Compliance #SharedResponsibility #100DayChallenge #IAM #Encryption #InfoSec
+Encryption protects data at rest and in transit. Access control determines who can reach the data in the first place. Audit logging creates the record of who did what and when — essential for both security monitoring and HIPAA compliance.
+
+**IAM — Identity and Access Management**
+Every service and person accessing AWS resources should have an IAM identity with only the permissions they actually need. For OpenMRS this means the EC2 instance should have an IAM role with permission to access only the specific RDS instance and S3 bucket it needs — nothing more. Individual administrators should have IAM users with MFA enabled. The root account should be locked down, protected with MFA, and never used for day-to-day operations.
+
+**CloudTrail — Audit Logging for AWS API Activity**
+CloudTrail records every API call made in an AWS account — who made it, from where, at what time, and what the result was. For HIPAA compliance this is essential: it creates an audit trail of access to patient data infrastructure. CloudTrail should be enabled in all regions, logs should be stored in a protected S3 bucket, and alerts should be configured for high-risk activities like changes to security groups, deletion of encryption keys, or disabling of logging itself.
+
+**CloudWatch — Operational Monitoring and Alerting**
+CloudWatch monitors the operational health of AWS resources and can trigger alerts when anomalous activity is detected. For OpenMRS this might include alerts for unusual spikes in database queries, failed login attempts to the EC2 instance, or unexpected changes to security group rules.
+
+---
+
+## Network Security
+
+**Private Subnets for the Database**
+The RDS database should live in a private subnet — meaning it has no direct route to the internet. The only thing that should be able to reach the database is the EC2 application server, through a controlled internal network connection. This architectural decision alone eliminates an entire category of direct database attack.
+
+**VPN for Administrative Access**
+Administrative access to EC2 instances should not be open to the internet. SSH access should be restricted to specific IP addresses at minimum, and ideally routed through a VPN so that direct internet exposure is eliminated entirely.
+
+**AWS WAF — Web Application Firewall**
+A Web Application Firewall sits in front of the OpenMRS application and filters malicious web traffic — SQL injection attempts, cross-site scripting, and other common web application attacks. Given that OpenMRS is a web application handling patient data, WAF is an important additional layer of protection on top of security group rules.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2022 Baptist Medical Center and Resolute Health Hospital breach** — a ransomware attack that affected approximately 1.2 million patients. The investigation found that attackers had accessed the network and were able to reach sensitive data in part because of gaps in access controls and network segmentation.
+
+What made this case relevant to today's topic is the post-breach regulatory focus. HHS investigators examining the organization's HIPAA compliance looked not just at whether policies existed, but at whether the technical controls — encryption, access management, audit logging — were actually in place and functioning. Having a BAA with cloud service providers was a baseline expectation. What investigators scrutinized was whether the operational security practices matched the compliance documentation.
+
+This is the pattern I keep seeing: the compliance documentation and the technical reality need to match. A BAA signed and filed, combined with an unencrypted RDS database and no CloudTrail logging, is not HIPAA compliance. It is paperwork on top of a security gap. The technical controls are what make the compliance real.
+
+---
+
+## Practical Checklist for HIPAA-Compliant OpenMRS on AWS
+
+Based on today's research, here is the checklist I am building for this project:
+
+| Control Area | Requirement | Status for This Project |
+|---|---|---|
+| Legal | AWS HIPAA BAA signed via AWS Artifact | To be completed |
+| Encryption at Rest | RDS encryption enabled (AES-256 via KMS) | To be configured |
+| Encryption at Rest | S3 server-side encryption enabled (SSE-KMS) | To be configured |
+| Encryption at Rest | EBS volume encryption enabled | To be configured |
+| Encryption in Transit | HTTPS enforced for all OpenMRS web traffic | To be configured |
+| Encryption in Transit | SSL/TLS required for RDS connections | To be configured |
+| Access Control | IAM roles with least privilege for all services | To be configured |
+| Access Control | MFA enabled for all IAM users | To be configured |
+| Access Control | Root account protected and not used operationally | To be configured |
+| Audit Logging | CloudTrail enabled in all regions | To be configured |
+| Audit Logging | CloudTrail logs stored in protected S3 bucket | To be configured |
+| Network Security | RDS in private subnet with no internet access | To be configured |
+| Network Security | Security groups restrict EC2 to HTTPS only | To be configured |
+| Network Security | WAF deployed in front of OpenMRS application | To be configured |
+| Monitoring | CloudWatch alerts for anomalous activity | To be configured |
+
+This checklist will become a running reference as the project moves into implementation phases.
+
+---
+
+## What I Am Still Thinking About
+
+Something I want to understand better is key management — specifically how AWS KMS works in practice and what the implications are of using AWS-managed keys versus customer-managed keys for encrypting ePHI.
+
+Customer-managed keys give you more control and a more detailed audit trail, but they also introduce more operational complexity. If a customer-managed key is accidentally deleted or disabled, encrypted data becomes permanently inaccessible. That is a serious availability risk for a healthcare system. I want to think more carefully about how to balance the security and compliance benefits of customer-managed keys against the operational risk of managing them incorrectly.
+
+---
+
+## What's Next
+
+Day 19 looks at the **ISC2 CGRC certification** — Certified in Governance, Risk and Compliance — and how the learning from this challenge maps onto a recognized professional credential. After 18 days of building practical GRC knowledge, I am curious to see where the gaps are and what the certification pathway looks like.
+
+---
+
+## Resources I Found Helpful Today
+- [AWS HIPAA Compliance – Official Overview](https://aws.amazon.com/compliance/hipaa-compliance/)
+- [AWS Artifact – Accessing the HIPAA BAA](https://aws.amazon.com/artifact/)
+- [AWS Key Management Service Documentation](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)
+- [Baptist Medical Center Breach – HHS Notification](https://www.hhs.gov/hipaa/for-professionals/breach-notification/index.html)
+- [HIPAA Technical Safeguards – Encryption Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #HIPAA #CloudSecurity #AWS #ePHI #Encryption #IAM #CloudTrail #100DaysOfGRC #OpenMRS #HealthcareIT #Day18*
