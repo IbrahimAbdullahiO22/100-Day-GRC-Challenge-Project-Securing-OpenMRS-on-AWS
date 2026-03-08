@@ -1,83 +1,71 @@
-# 📅 Day 2 – Governance: Setting the Tone at the Top | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+# 📅 Day 2 – Governance: Who Sets the Tone and Why It Matters | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What is Governance — and Why Does It Matter?
+## Picking Up From Day 1
 
-One thing I’ve learned very early in my GRC journey is this:
-
-> **Governance is leadership in action — setting direction, building culture, and making security real.**
-
-In simple terms:
-
- Governance = **Leadership + Policies + Frameworks**
-
-It’s how senior management ensures that an organization operates responsibly — protecting systems, data, and people. In the world of cybersecurity, if leadership shrugs off risk, so will the rest of the organization. But when leaders *own* security — through clear policies, investments, and setting the tone — that influence reaches every level.
+Yesterday I got my first real look at what GRC means as a whole. Today the focus narrowed to the first pillar — **Governance** — and honestly it turned out to be more interesting than I expected. I went in thinking governance just meant policies and paperwork. I came out thinking it is really about leadership, culture, and accountability. Those are very different things.
 
 ---
 
-##  Why Governance Is Vital for Healthcare
+## What I Worked On Today
 
-In healthcare, governance is life-critical. Patients trust us with their private information. If that trust is broken, care suffers — and so does the organization’s reputation.
+Governance, at its core, is about answering one question: *who is responsible for making sure this organization operates responsibly?*
 
-Good governance means leadership actively:
+It is the combination of leadership decisions, written policies, and defined frameworks that tell everyone in an organization what is expected of them — especially when it comes to protecting sensitive information. In cybersecurity terms, governance is what ensures security is not just an IT problem that gets handed off to one team. It is an organizational responsibility that starts at the top.
 
- Sets security policies  
- Funds the right resources  
- Supports training and awareness  
- Leads by example
+The way I am thinking about it now:
 
-Take an OpenMRS implementation. The **CIO**, **Health IT Director**, or **Chief Physician** would be responsible for setting OpenMRS security policies: requiring encryption, limiting access to ePHI, mandating MFA, enforcing audits — and making sure the whole organization understands why it matters.
+- **Leadership** decides that security matters and backs that up with real investment and attention
+- **Policies** put those decisions in writing so everyone knows what the rules are
+- **Frameworks** like NIST or HIPAA give organizations a structured way to organize and measure their governance efforts
 
----
-
-##  Teaching Point for My Team
-
-Here’s how I explain governance:
-
-> **Without leadership buy-in, security becomes “just an IT thing.” With strong governance, security becomes part of organizational DNA.**
-
-This is the “G” that makes the entire GRC framework work. It is leadership that empowers the team to act and sustain secure behavior.
+Without all three working together, governance is just a word.
 
 ---
 
-##  My Hands-On Reflection
+## What Actually Clicked for Me
 
-At my current and past workplaces, I’ve seen this in action:
+The phrase "tone at the top" came up a lot today and it genuinely stuck with me.
 
- An IT Director who consistently reminded staff about phishing threats — raising awareness.  
- A CISO who fought for budget to implement MFA — showing security mattered at leadership level.  
- On the flip side, I’ve also seen leaders downplay vulnerabilities — and that resulted in poor user behavior.
+The idea is simple: if the people leading an organization treat security as a priority, that attitude filters down through every level. If they treat it as a box to check or an IT team's problem, that attitude filters down too — and it does a lot more damage.
 
-**Lesson learned**: The “tone at the top” cascades down fast. If leaders care, staff will too.
+I thought back to things I have seen at past workplaces. I remember an IT Director who would regularly bring up phishing risks in team meetings — not in a scary way, just keeping it visible and normal. People paid more attention because of it. I also remember seeing a leader once dismiss a legitimate security concern because it felt inconvenient at the time. The team noticed. After that, people were a lot more hesitant to raise issues. One moment, one decision — and it quietly shaped how the whole team behaved for months.
 
----
-
-##  Real-world Tailoring Example for OpenMRS Governance
-
-In an OpenMRS deployment on AWS:
-
-- Governance starts by clearly **assigning ownership**: “System Owner” and “Information System Security Officer (ISSO)” roles must be named.  
-- Policies must be documented and communicated — not just assumed.  
-- Leadership should conduct regular reviews — not once and forget it.
-
-As a GRC leader, I will ensure that **governance is visible and active** — not just a compliance checkbox.
+That is what tone at the top actually looks like in practice. It is not a policy document. It is behavior. And it compounds over time in either direction.
 
 ---
 
-## Reflection
+## Applying This to OpenMRS on AWS
 
-Thinking back, I once saw a VP who praised a junior analyst for identifying and reporting a suspicious login — that moment built a strong culture of vigilance. I also saw an executive once dismiss a legitimate security finding, which discouraged the entire team from raising concerns again.
+In a real OpenMRS deployment, governance does not happen automatically. Someone has to own it.
 
-**My leadership takeaway**: **Reinforce good security behavior from the top — consistently.** Every word and action from leadership shapes the organization’s approach to risk.
+That means clearly assigning roles like **System Owner** and **Information System Security Officer (ISSO)** — actual people with actual accountability, not just job titles on an org chart. It means documented policies that cover things like who can access patient data, how that access is reviewed, and what happens when something goes wrong. It means leadership scheduling regular reviews instead of setting a policy once and forgetting it exists.
 
----
-
-## What’s Next?
-
-Tomorrow, we dive into **Risk Management** — identifying threats and vulnerabilities before they strike. I’m excited to explore how thinking like a risk manager helps protect systems like OpenMRS — and beyond.
+For an open-source EHR system handling real patient data on AWS, the governance layer is what keeps everything else honest. Risk management and compliance both depend on it. If governance is weak, everything downstream suffers.
 
 ---
 
-## #GRC #CyberLeadership #HealthcareSecurity #OpenMRS #ToneAtTheTop #Day2
+## What I Am Still Thinking About
+
+Something I am still working through: how does governance actually function in smaller healthcare organizations that do not have a dedicated CISO or security leadership team? In a large hospital system it is easier to imagine — there are resources, there are roles, there is budget. But what about a small clinic running OpenMRS with a tiny IT team?
+
+I do not have a clear answer yet. But I think it is an important question, especially because OpenMRS is widely used in under-resourced healthcare settings around the world. Governance cannot just be designed for well-funded environments. I want to think more about this as the project develops.
+
+---
+
+## What's Next
+
+Day 3 moves into **Risk Management** — learning how to identify threats and vulnerabilities before they cause real damage. I am genuinely curious about how risk thinking applies specifically to a cloud-hosted EHR system like OpenMRS, and how you decide which risks are worth prioritizing when you cannot fix everything at once.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST Cybersecurity Framework – Governance Overview](https://www.nist.gov/cyberframework)
+- [HIPAA Security Rule – Administrative Safeguards](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html)
+- [CIS Controls – Governance and Asset Management](https://www.cisecurity.org/controls)
+
+---
+
+*#GRC #Governance #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day2*
