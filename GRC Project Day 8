@@ -1,98 +1,101 @@
-# 📅 Day 8 – PCI DSS (Keeping Credit Card Data Safe) and What It Teaches Us | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+#  Day 8 – PCI DSS: What Payment Security Taught Me About Protecting Any Sensitive Data | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  My Leadership Perspective
+## Why Am I Studying Payment Security in a Healthcare Project?
 
-Today, I shifted my focus from healthcare to payment security — exploring **PCI DSS (Payment Card Industry Data Security Standard).**  
+That was my first reaction when I saw today's topic. This is a healthcare GRC project — why does payment card security matter here?
 
-You may wonder: *“What does credit card data protection have to do with healthcare systems like OpenMRS?”* 
-
-> **The answer:** The foundational security principles behind PCI DSS apply to any system that handles **sensitive data** — whether that’s cardholder data (CHD) or protected health information (PHI).  
-
-As GRC professionals, it is our role to **draw lessons from every industry** and apply them where they fit — and PCI DSS offers excellent, actionable controls that healthcare IT systems can benefit from.  
+The answer I kept coming back to is this: good security principles do not belong to one industry. PCI DSS was built to protect cardholder data, but the controls it prescribes — encryption, access control, monitoring, vulnerability management, documented policies — are the same controls that protect patient health records. Studying how a different industry solved a similar problem turned out to be one of the more useful exercises so far in this challenge.
 
 ---
 
-##  What I’ve Learned: PCI DSS Overview
+## What I Worked On Today
 
-**PCI DSS** is an industry standard (not a law) that defines mandatory security controls for **any organization processing or storing cardholder data**. It was developed by major credit card companies (Visa, Mastercard, AmEx, etc.) to reduce card data breaches.  
+**PCI DSS** stands for Payment Card Industry Data Security Standard. It is not a law — it is an industry standard created by major credit card companies including Visa, Mastercard, and American Express. Any organization that processes, stores, or transmits cardholder data must comply with it or risk losing the ability to accept card payments.
 
-Even though PCI DSS focuses on financial data, **many of its 12 core requirements overlap with security best practices** in healthcare — encryption, access control, vulnerability management, monitoring, and governance.  
+What makes PCI DSS interesting compared to something like HIPAA is how prescriptive it is. HIPAA uses language like "reasonable and appropriate" and gives organizations flexibility in how they meet requirements. PCI DSS is much more specific — it tells you exactly what to do, how to do it, and how to prove you did it. There is less room for interpretation, which can feel rigid but also removes a lot of ambiguity for organizations that are just starting to build their security programs.
 
-I see PCI DSS as a **very prescriptive framework** — much more “checklist-driven” than something like ISO 27001. And sometimes that’s what organizations need — especially smaller ones. Clear, non-ambiguous requirements help drive accountability.
+PCI DSS organizes its requirements into 12 core areas. Rather than listing all 12, I want to focus on the ones that felt most directly relevant to what I am building with OpenMRS:
 
----
+**Network Security** — Build and maintain secure network configurations, use firewalls, and never use vendor-supplied default passwords. For OpenMRS on AWS this means properly configured security groups, a web application firewall, and making sure no default credentials are left in place on any component.
 
-##  PCI DSS 12 Core Requirements (Lessons I’d Apply to OpenMRS)  
+**Data Protection** — Encrypt sensitive data at rest and in transit. For OpenMRS this is directly parallel to HIPAA's encryption requirements — patient records in the database should be encrypted, and all web traffic should run over HTTPS.
 
-| PCI DSS Objective | What It Means | How It Applies to OpenMRS / Healthcare |
-|-------------------|---------------|---------------------------------------|
-| Build & Maintain a Secure Network | Use firewalls and change default settings | Harden OpenMRS servers, configure proper firewalls (AWS Security Groups, WAF) |
-| Protect Cardholder Data | Encrypt card data in transit & at rest | Encrypt PHI in OpenMRS DB & enforce HTTPS |
-| Maintain a Vulnerability Management Program | Patch systems and protect from malware | Apply patches and endpoint protections on OpenMRS servers and clients |
-| Implement Strong Access Controls | Enforce least privilege, unique accounts, physical security | Role-based access in OpenMRS, MFA, secure workstation access |
-| Regularly Monitor & Test Networks | Log all access, perform regular tests | Implement OpenMRS audit logging, run vulnerability scans/pen tests |
-| Maintain Security Policies | Have documented policies and training | Healthcare orgs should have formal PHI security policies & HIPAA-required training |
+**Vulnerability Management** — Keep systems patched and protected from malware. An unpatched OpenMRS server is a known risk, and PCI DSS makes patching a formal requirement rather than something that happens when time allows.
 
----
+**Access Control** — Enforce least privilege, use unique accounts for every user, and restrict physical access to systems. Role-based access control in OpenMRS, combined with MFA, directly satisfies this principle.
 
-##  My Hands-On Takeaway: One PCI DSS Requirement for OpenMRS
+**Monitoring and Testing** — Log all access to sensitive data, review those logs regularly, and test security controls through vulnerability scans and penetration testing. This one stood out to me the most.
 
-If I had to adopt **one PCI DSS control into an OpenMRS healthcare implementation**, it would be:  
-
- **Requirement 10 – Regularly Monitor and Test Networks**  
-*“Track and monitor all access to network resources and cardholder data.”*
-
-**Why?** In healthcare, auditing access to PHI is critical — not only for detecting malicious access, but also for satisfying HIPAA’s required audit controls (164.312(b)).  
-
-An OpenMRS system **must log who accessed what patient records, when, and from where** — and those logs must be reviewed regularly. The principle here is universal: **“You can’t protect what you don’t monitor.”**  
+**Security Policies** — Maintain documented security policies and train staff. Again — the human and process layer showing up alongside the technical one.
 
 ---
 
-##  Teaching Insight: Prescriptive vs Flexible Standards
+## What Actually Clicked for Me
 
-After studying PCI DSS today, here’s my takeaway:  
+The requirement that stood out most today was **Requirement 10 — Track and Monitor All Access**.
 
-- Some industries (payments) benefit from strict prescriptive rules — PCI DSS is very explicit, and it works well for driving adoption.  
-- Others (like healthcare) use more flexible “risk-based” frameworks (like HIPAA, NIST RMF, ISO 27001).  
+The core idea is simple: you cannot protect what you do not monitor. Every access to sensitive data should be logged — who accessed it, when, from where, and what they did. Those logs need to be reviewed regularly, not just stored and forgotten.
 
-**As a leader, I believe BOTH approaches have value**:  
+In the context of OpenMRS, this is not just a PCI DSS principle — it is also a HIPAA requirement under the audit controls standard (§164.312(b)). The two frameworks are pointing at the same thing from different directions: if a patient's records are accessed inappropriately, you need to be able to detect it, investigate it, and respond to it. That only happens if logging is in place and someone is actually looking at the logs.
 
-- Prescriptive standards reduce ambiguity for smaller or less mature organizations.  
-- Flexible, risk-based frameworks encourage continuous improvement for mature orgs.  
+What clicked for me is that monitoring is often treated as optional or secondary — something you set up "when there is time." Both PCI DSS and HIPAA treat it as foundational. That reframing matters.
 
-In my experience, **a hybrid is ideal**: Start with prescriptive basics, then evolve toward a mature, contextual security program.  
+The other thing I found genuinely interesting today was the difference between prescriptive and flexible frameworks. PCI DSS tells you exactly what to do. HIPAA and NIST give you principles and ask you to apply them to your context. Neither approach is universally better — prescriptive frameworks reduce ambiguity and are easier to audit, while flexible frameworks encourage organizations to think about their actual risk environment rather than just checking boxes. As I go deeper into this project I am starting to think the best real-world programs probably combine both: use prescriptive requirements as a baseline, then build a more mature risk-driven program on top.
 
 ---
 
-##  Reflection
+## A Real-World Example That Made This Click
 
-Would it be helpful or burdensome to apply PCI-style strict requirements to OpenMRS?  
-Personally, I believe many healthcare orgs *would benefit* from more explicit security checklists — especially those new to HIPAA or without strong internal security maturity.  
+While researching today's topic I came across the **2013 Target data breach** — one of the most well-known payment security failures in history. Attackers stole the credit and debit card data of approximately 40 million customers during the holiday shopping season. The breach caused enormous financial and reputational damage and ultimately led to the resignation of Target's CEO.
 
-> “Compliance isn’t security — but it can drive foundational improvements.”  
+What made this case relevant to today's topic is how it happened. Attackers gained access through a third-party HVAC vendor that had network access to Target's systems. Once inside, they moved laterally and eventually reached the point-of-sale systems where card data was being processed.
 
-And I would advocate for applying **PCI DSS-like rigor** to critical healthcare systems — because at the end of the day: **PHI is just as sensitive — if not more — than payment data.**
+Target was PCI DSS compliant at the time of the breach. That fact stopped me when I read it. A company that had passed a PCI DSS audit was still breached in a significant way. What went wrong? Investigators found that monitoring alerts had actually fired during the attack — but they were not acted on in time. The controls existed. The logs existed. The detection existed. But the response process was not mature enough to turn that detection into action before serious damage was done.
 
----
-
-##  Tomorrow’s Focus
-
-Next, I’ll be exploring **ISO/IEC 27001 — the gold standard for building an Information Security Management System (ISMS).**  
-
-I’m looking forward to comparing ISO 27001 with PCI DSS — one is very process-oriented, the other is a strong prescriptive checklist. **Different tools — both valuable.** Stay tuned for Day 9!
+That is a sobering reminder of something I first encountered on Day 4: compliance is the floor, not the ceiling. Meeting the requirements is necessary but not sufficient. The Target breach showed that you can check every box and still be vulnerable if the human and process layers are not working alongside the technical ones.
 
 ---
 
-##  Recommended Search Terms:
+## Connecting PCI DSS Back to OpenMRS
 
-- **“PCI DSS 12 requirements summary”**  
-- **“PCI DSS compliance best practices”**  
-- **“PCI DSS encryption and tokenization”**  
-- **“HIPAA vs PCI DSS security requirements”**  
+Thinking about how PCI DSS principles apply to an OpenMRS deployment on AWS, here is the mapping I worked through:
+
+| PCI DSS Principle | OpenMRS Application |
+|---|---|
+| Secure network configuration | AWS security groups, WAF, no default credentials |
+| Encrypt sensitive data | Database encryption at rest, HTTPS for all web traffic |
+| Patch and update systems | Regular patching of OpenMRS, OS, and dependencies |
+| Enforce access control | Role-based access, MFA for admin accounts, unique user IDs |
+| Monitor and log access | AWS CloudTrail, OpenMRS audit logs, regular log reviews |
+| Maintain security policies | Documented access control and incident response policies |
+
+Going through that mapping reinforced something I have been noticing throughout this first week: the same core controls keep appearing across every framework. Encrypt data. Control access. Monitor what is happening. Keep systems patched. Train people. Document your decisions. The frameworks differ in structure and emphasis — but the underlying security fundamentals are remarkably consistent.
 
 ---
 
-#GRC #PCI_DSS #HealthcareSecurity #OpenMRS #Day8 #CybersecurityLeadership #DataProtection #AuditControls #SecurityBestPractices
+## What I Am Still Thinking About
+
+Something I want to understand better: how do organizations handle PCI DSS compliance when payment processing is just one small part of what they do? A hospital that accepts card payments for copays, for example, has to maintain PCI DSS compliance for that function while also managing HIPAA for everything else.
+
+Managing two overlapping compliance frameworks simultaneously — with different audit cycles, different requirements, and different enforcement bodies — sounds genuinely complex. I imagine there is a lot of work involved in identifying where the frameworks overlap so you are not duplicating effort. That feels like a practical GRC skill I want to develop over time.
+
+---
+
+## What's Next
+
+Day 9 is about **ISO/IEC 27001** — often described as the international gold standard for building an Information Security Management System. I am curious to compare it with PCI DSS, which is highly prescriptive, and see how a process-oriented framework approaches the same security challenges differently.
+
+---
+
+## Resources I Found Helpful Today
+- [PCI Security Standards Council – PCI DSS Overview](https://www.pcisecuritystandards.org/pci_security/)
+- [PCI DSS v4.0 Quick Reference Guide](https://www.pcisecuritystandards.org/document_library/)
+- [Target Data Breach – Case Study Overview](https://www.commerce.senate.gov/services/files/24d3c229-4f2f-405d-b8db-a3a67f183883)
+- [HIPAA vs PCI DSS – Key Differences](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #PCIDSS #PaymentSecurity #HealthcareSecurity #100DaysOfGRC #OpenMRS #AWS #Day8*
