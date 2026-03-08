@@ -1,78 +1,110 @@
-# 📅 Day 9 – ISO 27001: Building a Security Management System.  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+# 📅 Day 9 – ISO 27001: Building a System That Makes Security an Ongoing Habit | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🔍 Topic Overview:
+## Coming Off Day 8
 
-Today we explored **ISO/IEC 27001**, the **international gold standard** for building a comprehensive **Information Security Management System (ISMS)**. While frameworks like NIST RMF guide you through individual risk steps, ISO 27001 provides a **full lifecycle model** for managing information security across the organization — with **risk assessments, continuous improvement, and top-down governance** at its core.
-
-What makes ISO 27001 especially powerful is its flexibility — instead of a fixed checklist, it asks organizations to tailor their security controls based on **their own unique risks**.
-
-> 🔁 The core idea: **Plan-Do-Check-Act** — repeat, refine, improve. Security isn’t static — and ISO 27001 helps ensure you never treat it that way.
+Yesterday I spent time with PCI DSS — a framework that is highly prescriptive and tells you almost exactly what to do. Today I moved into something quite different: **ISO/IEC 27001**, which is far less about checklists and far more about building a system for managing security over time. The contrast between the two was genuinely useful, and I came away from today with a much clearer sense of why different frameworks exist and when each one is the right tool.
 
 ---
 
-## 🧠 Key Elements of ISO 27001:
+## What I Worked On Today
 
-### ✅ Risk Assessment
-- Organizations must **identify threats and vulnerabilities**, determine the likelihood and impact, and evaluate overall risk to information assets.
-- *Example for OpenMRS:* Risks like **unauthorized access to patient records**, **downtime**, or **ransomware infections** should be identified and scored.
+ISO 27001 is an international standard for building what is called an **Information Security Management System — or ISMS**. The name sounds technical but the idea behind it is fairly straightforward: rather than treating security as a one-time project or a list of controls to implement and forget, ISO 27001 asks organizations to build a living system that continuously identifies risks, responds to them, and improves over time.
 
-### ✅ Controls Selection (Annex A)
-- Annex A of ISO 27001 contains **93 controls** across categories like Access Control, Cryptography, Physical Security, and Incident Response.
-- Controls are **selected based on the risk assessment**, not blindly applied.
+What sets ISO 27001 apart from something like PCI DSS is its flexibility. PCI DSS says "here are 12 requirements — implement them." ISO 27001 says "here is a process for figuring out what your specific risks are — and then selecting the controls that actually address those risks." That requires more judgment, more organizational maturity, and more ongoing effort. But it also means the security program you end up with is tailored to your actual environment rather than a generic baseline.
 
-### ✅ Management System (Plan-Do-Check-Act Cycle)
-- **Plan:** Define policies, assess risks, select controls.
-- **Do:** Implement the controls (e.g., configure systems, train users).
-- **Check:** Monitor, audit, and review performance.
-- **Act:** Adjust based on findings (e.g., patch weaknesses, update policies).
-- *This cycle ensures continuous improvement and relevance over time.*
+The framework is organized around a few key elements:
+
+**Risk Assessment** is the starting point. Before you can decide what controls to implement, you need to understand what your actual risks are. What assets are most sensitive? What threats apply to your environment? What vulnerabilities exist? What is the potential impact if something goes wrong? For an OpenMRS deployment, this means thinking carefully about patient records, system availability, and the specific ways an attacker might try to compromise the system.
+
+**Annex A Controls** is a library of 93 security controls organized into categories — access control, cryptography, physical security, incident response, supplier relationships, and more. Importantly, you do not implement all 93. You use your risk assessment to decide which controls are relevant to your environment and document your reasoning for the ones you choose not to implement. That documentation is itself part of the standard.
+
+**The Plan-Do-Check-Act cycle** is what makes ISO 27001 a management system rather than just a control framework. Plan your security approach. Implement it. Check whether it is working. Act on what you find — fix what is broken, update what has changed, improve what could be better. Then repeat. Security is never finished, and ISO 27001 is designed around that reality.
 
 ---
 
-## 🏥 Applying ISO 27001 to OpenMRS:
+## What Actually Clicked for Me
 
-While OpenMRS isn’t a payment or federal system, it's a **critical healthcare application**. ISO 27001’s flexible, risk-based approach makes it ideal for adapting to a system like OpenMRS.
+The Plan-Do-Check-Act cycle was the thing that clicked most for me today — specifically because of what it implies about how organizations often approach security in practice.
 
-For example:
+A lot of organizations treat security like a project with a start and an end date. You implement controls, you pass an audit, you move on. ISO 27001 explicitly rejects that model. The Check and Act phases exist to make sure that what was implemented is actually working and that it stays relevant as the threat environment changes. That is not a one-time effort — it is an ongoing operational commitment.
 
-- You identify **ePHI** as highly sensitive.
-- You implement role-based access control to restrict who can view/edit records.
-- You monitor access logs.
-- You continuously review these practices as threats evolve.
+What I found interesting is that this connects directly back to something from Day 6 — the NIST RMF's Monitor step. Both frameworks are independently arriving at the same conclusion: security programs that do not include continuous review and improvement will eventually fall behind the threats they are trying to address. The frameworks are different in structure but consistent in philosophy.
 
-This is **ISMS in action** — smart, risk-aligned, and dynamic.
+The other thing that clicked was the concept of the **Statement of Applicability** — the document where an organization lists all 93 Annex A controls, states which ones they are implementing and why, and explains their reasoning for any they are excluding. I had not encountered anything quite like this in the other frameworks I have studied. It forces a level of intentional decision-making and documentation that I think would be genuinely valuable — not just for auditors, but for the security team itself.
 
 ---
 
-## ✍️ Hands-On Exercise:
+## Applying This to OpenMRS on AWS
 
-### ✅ Control Chosen from ISO 27001 Annex A:  
-**A.9.1.1 – Access Control Policy**
+Walking through how ISO 27001 would apply to an OpenMRS deployment, here is how the key elements map:
 
-> This control is highly relevant to OpenMRS. In a healthcare setting, we must ensure only **authorized clinicians** can access sensitive patient data. An access control policy would define roles (e.g., doctor, nurse, IT admin) and what each can do in OpenMRS.
+**Risk Assessment for OpenMRS:**
+The most sensitive asset is clearly ePHI — patient health records. Key risks include unauthorized access to patient data, ransomware taking the system offline, insider misuse of access privileges, and misconfigured AWS services exposing data publicly. Each of these would be assessed for likelihood and impact and then used to drive control selection.
 
-This not only aligns with **data protection and patient privacy**, but also supports **compliance with HIPAA** and reduces insider risk.
+**Annex A Control Example — A.9.1.1 Access Control Policy:**
+This control requires a documented policy defining who can access what information and under what conditions. For OpenMRS this means defining roles — clinician, nurse, administrator, IT staff — and specifying exactly what each role can view, edit, or export. It means ensuring those roles are reviewed regularly and that access is removed promptly when someone leaves or changes responsibilities.
 
----
+This single control touches HIPAA's access control requirements, reduces insider risk, and creates an auditable record of access decisions. It is a good example of how one well-implemented ISO 27001 control can satisfy multiple compliance requirements simultaneously.
 
-## 💡 Reflection:
-
-ISO 27001’s flexible, risk-based structure gives **security teams the freedom to choose what fits**, rather than enforcing one-size-fits-all checklists like PCI DSS. While this can be harder — it requires **deep understanding and judgment** — it also means **better, more relevant security**.
-
-The **Plan-Do-Check-Act cycle** really resonates with me. Too often, orgs “set and forget” their security. I believe real resilience comes from **ongoing review and adaptation** — especially in fast-changing fields like healthcare IT. If I were leading a security program, I’d prioritize **continuous tuning** of controls to stay ahead of emerging threats.
-
----
-
-## 📖 Optional Search Terms for Deeper Learning:
-- `ISO 27001 Annex A summary`
-- `ISO 27001 certification process`
-- `ISO 27001 vs NIST CSF`
+**Ongoing PDCA for OpenMRS:**
+- **Plan:** Conduct a risk assessment, select relevant Annex A controls, document the ISMS scope
+- **Do:** Implement access controls, encryption, logging, incident response procedures
+- **Check:** Review audit logs regularly, conduct internal audits, test controls through vulnerability assessments
+- **Act:** Update controls when new risks emerge, patch vulnerabilities, revise policies when gaps are found
 
 ---
 
-✅ _Stay tuned for Day 10 – where we revisit healthcare and reflect on how GRC isn’t just about compliance — it’s about trust, ethics, and protecting lives._
+## A Real-World Example That Made This Click
 
-📌 #GRC #ISO27001 #ISMS #PlanDoCheckAct #Cybersecurity #AccessControl #AnnexA #OpenMRS #InfoSec #HealthcareSecurity #100DayChallenge
+While researching today's topic I came across the **2017 Equifax data breach** — one of the largest and most consequential breaches in history, exposing the personal data of approximately 147 million people. The cause was a known vulnerability in the Apache Struts web framework that had a patch available for months before the breach occurred. Equifax had simply not applied it.
+
+What this case illustrates from an ISO 27001 perspective is a failure in the Check and Act phases of the PDCA cycle. The vulnerability was known. The patch existed. The process for identifying and applying patches — vulnerability management — had broken down somewhere between detection and action.
+
+An organization genuinely operating an ISMS under ISO 27001 would have vulnerability management as an active, monitored process — not something that happens when time allows. The Annex A controls include requirements for technical vulnerability management specifically because this kind of failure is so common and so costly.
+
+I found it sobering that the breach was not caused by a sophisticated zero-day attack. It was caused by a known vulnerability with a patch sitting unused. That is a process failure, not a technical one — and it is exactly the kind of failure that a well-maintained management system is designed to prevent.
+
+---
+
+## ISO 27001 vs PCI DSS — What I Took From Comparing Them
+
+After spending a day on each, here is how I am thinking about the difference:
+
+| | PCI DSS | ISO 27001 |
+|---|---|---|
+| Approach | Prescriptive checklist | Risk-based management system |
+| Flexibility | Low — specific requirements | High — controls tailored to your risks |
+| Best for | Organizations needing clear, auditable baseline | Organizations building mature, long-term security programs |
+| Ongoing requirement | Annual audit | Continuous PDCA cycle |
+| Certification | Compliance attestation | Third-party certification available |
+
+Neither is better in an absolute sense. PCI DSS is valuable precisely because it is explicit — it reduces ambiguity and is easier to audit. ISO 27001 is valuable because it builds organizational capability rather than just meeting a checklist. The most mature security programs probably draw from both.
+
+---
+
+## What I Am Still Thinking About
+
+ISO 27001 certification is a significant undertaking — it requires extensive documentation, internal audits, and eventually a third-party audit by an accredited certification body. For a large organization that can dedicate resources to it, the certification carries real weight. But for a smaller healthcare organization or an OpenMRS deployment in a low-resource setting, full ISO 27001 certification may not be realistic.
+
+I keep wondering: what does it look like to apply ISO 27001 *principles* without pursuing formal certification? Is that a meaningful approach, or does the value of the framework depend on the accountability that comes with the certification process? I do not have a clear answer yet, but I think it is an important practical question for organizations that want to improve their security maturity without the resources for a full certification program.
+
+---
+
+## What's Next
+
+Day 10 brings me back to healthcare specifically — reflecting on how GRC connects to something bigger than compliance or frameworks. It is about trust, ethics, and the responsibility that comes with handling information about people's health. After nine days of frameworks and standards, I am looking forward to stepping back and thinking about the human side of all this.
+
+---
+
+## Resources I Found Helpful Today
+- [ISO/IEC 27001 Overview – ISO.org](https://www.iso.org/isoiec-27001-information-security.html)
+- [ISO 27001 Annex A Controls Summary](https://www.isms.online/iso-27001/annex-a/)
+- [Equifax Data Breach – FTC Case Summary](https://www.ftc.gov/enforcement/cases-proceedings/refunds/equifax-data-breach-settlement)
+- [ISO 27001 vs NIST CSF Comparison](https://www.nist.gov/cyberframework)
+
+---
+
+*#GRC #ISO27001 #ISMS #InformationSecurity #HealthcareSecurity #100DaysOfGRC #OpenMRS #AWS #Day9*
