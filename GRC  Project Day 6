@@ -1,109 +1,101 @@
-# 📅 Day 6 – Overview of Key Frameworks: NIST RMF | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+# 📅 Day 6 – Getting to Know the NIST Risk Management Framework | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  My Leadership Insights: Why RMF Matters
+## Where I Am in the Journey
 
-As a cybersecurity leader and GRC professional, I have learned that **structured frameworks are critical** for ensuring no gaps in risk management.
-
-One of the best in the field is the **NIST Risk Management Framework (RMF)**. Even though it was originally built for U.S. federal agencies under FISMA, the lessons and steps apply **beautifully to any sector** — including healthcare and OpenMRS implementations.
-
-**Why RMF?**  
-Because it takes the guesswork out of security, it gives a **repeatable, defensible, and auditable process** to follow — essential when managing sensitive systems like Electronic Health Records (EHR).
-
-I teach this to teams:  
-> Without a framework like RMF, your security efforts will be inconsistent — some areas will be over-engineered, others under-protected, and things will inevitably fall through the cracks.
+The first five days gave me a solid foundation in what GRC means and how the three pillars connect. Starting week two, I am moving into the actual frameworks that GRC professionals use in the real world. Today that meant sitting down with the **NIST Risk Management Framework (RMF)** — and honestly, it was one of the more eye-opening days so far.
 
 ---
 
-##  What is the NIST RMF?
+## What I Worked On Today
 
-NIST RMF is a 7-step lifecycle framework for managing cybersecurity risk. It tells you **what to do and when** — so you stay aligned to governance, risk, and compliance goals throughout a system’s life.
+The NIST RMF is a seven-step framework originally built for U.S. federal agencies to manage cybersecurity risk in a structured, repeatable way. Even though it started in the government space, it applies to any organization managing sensitive systems — including healthcare environments running something like OpenMRS.
 
-Here are the 7 RMF steps — explained in my words:
+Before today I had heard of NIST but did not really understand what RMF meant in practice. I assumed it was a dense government document full of technical requirements. What I found instead was something closer to a logical process — a way of thinking about security across the full lifecycle of a system, from before it is built to long after it is deployed.
 
-1️⃣ **Prepare**  
-Lay the foundation:  
-Define mission, assign roles (system owner, ISSO, AO), understand regulatory environment, and establish risk tolerance.
+Here are the seven steps and how I am understanding them:
 
-2️⃣ **Categorize**  
-Label your system:  
-Classify the data and system based on impact levels (Confidentiality, Integrity, Availability). Example: ePHI in OpenMRS is typically *Moderate to High impact* — which drives everything that follows.
+**Step 1 – Prepare**
+Before anything else, you lay the groundwork. Who owns this system? What is it supposed to do? What regulations apply to it? What is the organization's risk tolerance? This step is about making sure everyone understands the context before any security decisions are made.
 
-3️⃣ **Select**  
-Choose controls:  
-Based on categorization, select an appropriate set of security controls (usually from **NIST SP 800-53**). For OpenMRS, this could be the Moderate baseline — including access controls, encryption, monitoring, backups, etc.
+**Step 2 – Categorize**
+You classify the system based on the sensitivity of the data it handles and the potential impact if something goes wrong — looking at confidentiality, integrity, and availability. For OpenMRS handling patient health records, this would likely land at a moderate to high impact level, which then drives every decision that follows.
 
-4️⃣ **Implement**  
-Put controls into action:  
-Deploy and configure the selected controls. This is where the hard work happens — encrypting databases, enabling MFA, setting up log monitoring, making the paper plan real.
+**Step 3 – Select**
+Based on the categorization, you choose an appropriate set of security controls from NIST SP 800-53. A moderate-impact system like OpenMRS would pull from the moderate baseline — things like access controls, encryption, audit logging, backup requirements, and incident response procedures.
 
-5️⃣ **Assess**  
-**Test and evaluate** the controls:  
-Independent assessors verify that controls are properly implemented and working. Example: For OpenMRS, this means testing encryption, auditing logs, and confirming access restrictions work.  
-➡️ **This is the step where controls are tested** — crucial before going live.
+**Step 4 – Implement**
+This is where the controls move from a document into reality. You configure encryption, set up MFA, deploy monitoring tools, restrict access — the actual technical and administrative work of building a secure system.
 
-6️⃣ **Authorize**  
-Leadership review:  
-Authorizing Official (AO) reviews the results and **accepts or rejects the risk**. If controls work, the system gets an Authorization to Operate (ATO). No ATO = system can’t operate in production.
+**Step 5 – Assess**
+This is the step that stood out most to me today. An independent assessor tests whether the controls that were supposed to be implemented are actually working. Not assumed to be working — actually verified. For OpenMRS that means testing whether encryption is functioning, whether access restrictions hold up, whether audit logs are capturing what they should.
 
-7️⃣ **Monitor**  
-Ongoing vigilance:  
-Continuously monitor controls, detect new risks, assess system changes, and maintain compliance. For OpenMRS, this could mean regular patching, log reviews, new risk assessments after feature changes, etc.
+**Step 6 – Authorize**
+A senior official — called the Authorizing Official — reviews the assessment results and makes a risk-based decision: is this system safe to operate? If the answer is yes, the system receives an Authorization to Operate (ATO). Without an ATO, the system does not go into production.
+
+**Step 7 – Monitor**
+Security does not stop at authorization. Controls are continuously monitored, new risks are assessed as the system changes, and the whole process stays active for as long as the system is running. This is what prevents the "set it and forget it" mentality that leads to breaches years after a system was originally secured.
 
 ---
 
-## Teaching Application: OpenMRS and RMF
+## What Actually Clicked for Me
 
-Even though RMF started with U.S. government systems, I would absolutely apply it to OpenMRS or any healthcare EHR system. Why?
+The step that surprised me most was **Step 5 – Assess**. I had assumed that implementing a control was enough — that if you configured encryption correctly, you could move on. What RMF makes clear is that implementation and verification are two separate things, and skipping the verification step is exactly how organizations end up with controls that look good on paper but fail in practice.
 
-Because **EHR systems are high-value, high-risk targets.** Patient care and privacy depend on their security. RMF gives us:
-
- A formalized process  
- Risk-driven prioritization  
- Lifecycle management (instead of “set and forget”)  
- Measurable assurance for leadership and auditors
-
-**Without RMF?** You get chaos — controls missed, ad-hoc decisions, and regulators unhappy.
+The other thing that clicked was the idea of the **Authorization to Operate**. There is something powerful about requiring a named senior official to formally review security findings and accept responsibility for the residual risk before a system goes live. It makes risk management a leadership decision, not just a technical one. That connects directly back to what I learned about governance in Day 2.
 
 ---
 
-## 🛠️ Hands-On Reflection: Testing Controls
+## A Real-World Example That Made This Click
 
- The step that **explicitly tests the controls** is:  
-**Step 5 – Assess.**
+While researching today's topic I came across the **2020 SolarWinds breach** — one of the most significant cybersecurity incidents in recent history. Attackers compromised SolarWinds' software build process and used it to distribute malicious updates to thousands of organizations, including US federal agencies.
 
-This step matters because **nothing is truly secure until verified**. In an OpenMRS project, we don’t want to assume our encryption is working — we must prove it. We test whether access restrictions prevent unauthorized users, whether backups can be restored, whether logs detect tampering — all before putting the system into production.
+What stood out to me from a GRC perspective is how the breach exposed gaps in the continuous monitoring step of the risk management lifecycle. Many affected organizations had authorized their SolarWinds deployments and considered them secure — but the monitoring and reassessment processes were not robust enough to detect that a trusted software update had been weaponized.
 
----
+The RMF's Step 7 — Monitor — exists precisely to catch this kind of change. A software update is a system change. System changes should trigger reassessment. That is not a perfect defense against a sophisticated attack, but it is the kind of structured thinking that makes breaches harder to pull off and easier to detect early.
 
-##  Strategic Reflection
-
-I firmly believe that adopting frameworks like NIST RMF prevents complacency. Without it, organizations often:
-
-- Miss critical controls  
-- Skip formal testing  
-- Leave legacy risks unaddressed  
-- Rely on “we think we’re secure” instead of “we know because we assessed”
-
-In OpenMRS implementations, **using RMF creates discipline** — and that’s what keeps patients’ data safe and leadership out of trouble.
+I am still early in learning how RMF works in practice, but that example made the monitoring step feel a lot more concrete and important than I initially gave it credit for.
 
 ---
 
-##  What’s Next?
+## Applying This to OpenMRS on AWS
 
-Tomorrow, I’ll be tackling **HIPAA** — the healthcare law that makes security and privacy non-negotiable. I look forward to applying what I’ve learned about GRC to regulatory frameworks like HIPAA — and showing how RMF and HIPAA can align.
+Thinking through how RMF would apply to an OpenMRS deployment on AWS, here is roughly how I see the framework mapping:
+
+- **Prepare:** Define the system owner, assign an ISSO, understand HIPAA obligations, establish risk tolerance for patient data
+- **Categorize:** OpenMRS handles ePHI — moderate to high impact across confidentiality, integrity, and availability
+- **Select:** Pull from the NIST SP 800-53 moderate baseline — access controls, encryption, audit logging, contingency planning
+- **Implement:** Configure AWS security groups, enable S3 encryption, set up CloudTrail logging, enforce MFA for admin access
+- **Assess:** Test that controls are actually working — verify encryption, test access restrictions, review audit log coverage
+- **Authorize:** Present findings to leadership for a formal risk acceptance decision before going live
+- **Monitor:** Schedule regular reviews, monitor AWS CloudTrail alerts, reassess after any significant system changes
+
+Working through that mapping made RMF feel like a real tool rather than an abstract framework. It gave me a much clearer picture of what "securing OpenMRS" actually looks like as a structured process.
 
 ---
 
-## Search Terms I Recommend:
+## What I Am Still Thinking About
 
-- “NIST RMF 7 steps summary”  
-- “FISMA RMF requirements”  
-- “NIST RMF vs ISO 27001” (Compare global frameworks)  
-- “SP 800-53 Moderate baseline”
+One thing I am not fully clear on yet: how do organizations realistically maintain the monitoring step over time? Step 7 implies continuous reassessment — but in a resource-constrained environment, continuous monitoring can be expensive and labor-intensive.
+
+Is there a practical threshold for how often controls should be reassessed? Does it depend on the risk level of the system? I imagine the answer involves some combination of automated monitoring tools and scheduled manual reviews — but I want to understand what that looks like in a real healthcare environment. Something to dig into further.
 
 ---
 
-#GRC #NISTRMF #CybersecurityLeadership #RiskManagement #OpenMRS #HIPAA #SecurityFrameworks #Day6
+## What's Next
+
+Day 7 is about **HIPAA** — the regulation that makes security and privacy non-negotiable in US healthcare. I am curious to see how HIPAA's requirements map onto what I have learned about RMF, and where the two frameworks reinforce each other versus where they diverge.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST Risk Management Framework Overview](https://csrc.nist.gov/projects/risk-management/about-rmf)
+- [NIST SP 800-53 Rev 5 – Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [NIST SP 800-37 – RMF for Information Systems](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [SolarWinds Breach Overview – CISA](https://www.cisa.gov/news-events/news/joint-statement-federal-bureau-investigation-fbi-cybersecurity-and-infrastructure-security-agency)
+
+---
+
+*#GRC #NISTRMF #RiskManagement #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day6*
