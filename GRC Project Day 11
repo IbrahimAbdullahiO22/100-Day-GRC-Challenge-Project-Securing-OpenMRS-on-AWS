@@ -1,76 +1,142 @@
-# 📅 Day 11 – GRC Roles: Who Does What (and Who Could You Be?)  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+# Day 11 – GRC Roles: The People Who Make It All Actually Work | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🔍 Topic Overview:
+## Shifting From Frameworks to People
 
-Today, we explored the **people and roles** behind successful GRC programs. GRC is not just frameworks and checklists — it’s a **team effort** involving leaders, analysts, engineers, compliance professionals, and decision-makers. Each role contributes to ensuring governance is set, risks are managed, and compliance is maintained — and together, they keep systems like **OpenMRS** safe and effective.
+The first ten days of this challenge were heavy on frameworks — NIST RMF, HIPAA, ISO 27001, PCI DSS. All of that was necessary and genuinely useful. But today felt like a different kind of important. Because frameworks do not implement themselves. Policies do not write themselves. Risk assessments do not happen automatically. Behind every GRC program that actually works, there are people with defined roles, clear responsibilities, and the ability to collaborate across functions.
 
-> 🔑 Key takeaway: GRC requires **defined roles and collaboration**. Knowing who does what reduces confusion, increases accountability, and strengthens security and compliance.
-
----
-
-## 👥 Key GRC Roles and How They Interact:
-
-### ✅ CISO (Chief Information Security Officer) / Security Lead
-- **Sets the security strategy** and leads the design and implementation of policies and controls.
-- Guides the risk management process and aligns security with business goals.
-- *In OpenMRS context:* Might be the IT Director in a small clinic who sets encryption policies and leads incident response.
-
-### ✅ Risk Manager
-- Identifies and evaluates risks, performs assessments, and ensures risk registers are maintained.
-- Coordinates with IT, compliance, and clinical teams to understand threats to systems like OpenMRS.
-
-### ✅ Compliance Officer (or CCO)
-- Ensures adherence to regulatory requirements (e.g., HIPAA, HITECH).
-- Conducts trainings, audits, and manages documentation.
-- Works closely with the CISO to align policies with legal standards.
-
-### ✅ System Owner
-- Manages the **daily operations** and **security posture** of specific systems like OpenMRS.
-- Makes decisions on system configuration, access control, and remediation when issues arise.
-
-### ✅ Authorizing Official (AO)
-- Senior executive who **formally accepts the risk** of operating a system.
-- Makes go/no-go decisions based on input from CISO, Risk Manager, and Compliance teams.
-- *In OpenMRS usage:* Could be a Clinic Director or CEO authorizing system rollout.
+Today I tried to understand who those people are, what they do, and honestly — where someone like me might fit in all of this.
 
 ---
 
-## 🏥 GRC in Action – OpenMRS Example:
+## What I Worked On Today
 
-Imagine launching OpenMRS in a healthcare facility:
-- The **System Owner** (IT Manager) configures the platform.
-- The **CISO** ensures encryption and access controls follow policy.
-- The **Risk Manager** identifies threats to system availability or privacy.
-- The **Compliance Officer** ensures HIPAA documents, training, and agreements are in place.
-- The **AO** reviews the residual risk and authorizes the system to go live.
+GRC programs in healthcare organizations typically involve several distinct roles. In large organizations these are separate people with separate teams. In smaller organizations — like a community clinic running OpenMRS — one person might cover two or three of these responsibilities simultaneously. What matters is not the org chart but that every responsibility is actually owned by someone.
 
-> In large orgs, these are distinct roles. In small teams, **one person may wear multiple hats**. The key is making sure **each responsibility is covered**.
+Here are the key roles I studied today:
 
 ---
 
-## ✍️ Hands-On Exercise:
+### CISO — Chief Information Security Officer
 
-### 👤 My GRC Identity:
-I resonate with the **Risk Manager** role. I naturally think about what could go wrong in a project and like coordinating with different teams to prepare for those risks. In my current role, I often document informal risk assessments, raise red flags about potential system weaknesses, and suggest mitigation plans. This aligns well with the **core duties of a Risk Manager** — and it’s a role I see myself growing into formally.
+The CISO sits at the top of the security function and is responsible for the overall security strategy of the organization. They translate business goals and regulatory requirements into security policies, oversee risk management programs, and make sure that security is represented at the leadership level.
 
----
+In a large hospital system the CISO might lead a team of dozens. In a small clinic using OpenMRS, the equivalent might be an IT Director who is wearing the CISO hat alongside several other responsibilities. The title matters less than the function: someone needs to own the security direction of the organization and have the authority to act on it.
 
-## 💡 Reflection:
-
-I’m impressed by how **many distinct roles** are involved in GRC — and how **critical coordination** is. In past jobs, I’ve seen things fall through because **responsibility wasn’t clearly assigned** — for example, when no one claimed ownership of a security policy or user access review. Now I see how clear role definition could have prevented that. Going forward, I’ll advocate for identifying GRC roles explicitly, even if they’re shared among team members.
+What I found interesting about this role is how much of it is communication rather than technical work. A CISO who cannot explain risk to a board of directors or justify security investment to a CFO will struggle to get anything done — no matter how technically skilled they are. That is a pattern I keep noticing in GRC: the most important skills are often judgment, communication, and the ability to connect security decisions to organizational outcomes.
 
 ---
 
-## 📖 Optional Search Terms for Further Learning:
-- `NIST RMF roles and responsibilities`
-- `GRC team roles examples`
-- `CISO vs Compliance Officer duties`
+### Risk Manager
+
+The Risk Manager is responsible for identifying, assessing, and tracking risks across the organization. They maintain the risk register, coordinate risk assessments with IT and clinical teams, and make sure that identified risks are being actively managed rather than just documented.
+
+In the context of OpenMRS, the Risk Manager would be the person asking: what are the realistic threats to this system? What vulnerabilities exist? If something goes wrong, what is the impact on patient care? They are the person who makes sure the organization has an honest picture of its risk environment — not an optimistic one.
+
+This is the role I find myself most drawn to so far in this challenge. There is something about the combination of analytical thinking, cross-functional collaboration, and the need to communicate findings clearly that feels like a natural fit for how I approach problems. I am still learning — but this is the direction I want to grow.
 
 ---
 
-✅ _Stay tuned for Day 12 – where we begin to apply GRC principles with practical tools like risk assessments and planning exercises for systems like OpenMRS._
+### Compliance Officer
 
-📌 #GRC #RiskManager #CISO #ComplianceOfficer #SystemOwner #HealthcareSecurity #OpenMRS #CybersecurityCareers #100DayChallenge
+The Compliance Officer is responsible for ensuring the organization meets its regulatory obligations — HIPAA, HITECH, state privacy laws, and any other applicable requirements. They manage documentation, conduct staff training, perform internal audits, and act as the point of contact when regulators come asking questions.
+
+What I found interesting about this role today is how much it depends on relationships. A Compliance Officer who only enforces rules from a distance will struggle to build the kind of culture where people actually follow them. The most effective compliance programs I have read about involve compliance officers who work closely with clinical and technical teams — explaining why requirements exist, not just that they exist.
+
+The tension between compliance and security that I wrote about on Day 4 often plays out at the level of these roles. The Compliance Officer is responsible for meeting the regulatory floor. The CISO is responsible for building security above that floor. Getting those two functions aligned — rather than pulling in different directions — is one of the most important coordination challenges in healthcare GRC.
+
+---
+
+### System Owner
+
+The System Owner is responsible for the day-to-day security and operational posture of a specific system. In this project that system is OpenMRS. The System Owner makes decisions about configuration, access control, patching schedules, and what happens when something goes wrong.
+
+This role is important because it provides accountability at the system level rather than the organizational level. The CISO sets the policy. The System Owner implements it for their specific system and is responsible for keeping it aligned with that policy over time.
+
+In a small clinic, the System Owner might be the same person as the IT Manager — someone who knows OpenMRS well, understands the clinical workflows it supports, and has the technical ability to configure and maintain it securely.
+
+---
+
+### Authorizing Official (AO)
+
+The Authorizing Official is a senior executive — a Clinic Director, CEO, or equivalent — who formally accepts the residual risk of operating a system and authorizes it to go live. This role comes directly from the NIST RMF framework I covered on Day 6.
+
+What I find significant about this role is what it represents: a named senior leader who has reviewed the security findings, understands the risks that remain, and is willing to put their name on the decision to proceed. That is not a rubber stamp — it is a genuine accountability mechanism. If something goes wrong after authorization, there is a documented record of who reviewed the risk and what they accepted.
+
+In an OpenMRS deployment, the AO might be the Medical Director or the Executive Director of the organization. They are not expected to be technical experts — but they are expected to understand the risk picture well enough to make an informed decision.
+
+---
+
+## What Actually Clicked for Me
+
+The thing that clicked most today is how much GRC depends on coordination between these roles rather than any one of them working in isolation.
+
+A Risk Manager who identifies a critical vulnerability but cannot get the CISO to prioritize it has not managed the risk. A Compliance Officer who documents HIPAA requirements but cannot get the System Owner to implement the controls has not achieved compliance. An Authorizing Official who approves a system without a meaningful briefing from the risk team has not made a real risk decision.
+
+GRC works when these roles communicate well, when responsibilities are clearly defined, and when findings from one function actually inform decisions in another. It breaks down when people work in silos — which, from everything I have read, is far more common than the ideal.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the aftermath of the **2015 Office of Personnel Management (OPM) breach** — one of the largest breaches of US government data in history, affecting over 21 million people. Congressional investigations and post-incident reviews identified a pattern of GRC role failures that contributed to the breach.
+
+Among the findings: the organization's IT security roles were not clearly defined, risk assessments had not been conducted on key systems, and system authorizations had been granted to systems that had not been properly assessed. In other words, the people and roles that should have been providing oversight were either absent, under-resourced, or not communicating effectively with each other.
+
+What I took from that: the OPM breach was not primarily a technical failure. It was an organizational and governance failure. The NIST RMF framework that the agency was supposed to be following — including the Authorize step with a named Authorizing Official — existed precisely to prevent this kind of gap. But having a framework on paper and actually operationalizing it through people with clear roles and accountability are two very different things.
+
+That example made today's topic feel much more concrete and much more consequential than a list of job titles would suggest.
+
+---
+
+## Applying This to OpenMRS on AWS
+
+Thinking through what these roles would look like in a realistic small-to-medium OpenMRS deployment:
+
+| Role | Who Might Fill It | Key Responsibility |
+|---|---|---|
+| CISO / Security Lead | IT Director or Senior IT Staff | Sets encryption policy, leads incident response, aligns security with organizational goals |
+| Risk Manager | IT Security Staff or GRC Analyst | Maintains risk register, conducts risk assessments, tracks mitigation progress |
+| Compliance Officer | Operations Manager or dedicated staff | Manages HIPAA documentation, conducts staff training, handles audit preparation |
+| System Owner | IT Manager or OpenMRS Administrator | Configures and maintains OpenMRS securely, manages access controls and patching |
+| Authorizing Official | Medical Director or Executive Director | Reviews risk findings and formally authorizes the system to operate |
+
+In a small clinic these five responsibilities might be covered by two or three people. That is realistic and not inherently a problem — as long as every responsibility is actually owned and not falling through the cracks.
+
+---
+
+## Where I See Myself in This
+
+I want to be honest about where I am right now. I do not have formal professional experience in any of these roles yet. That is part of why I am doing this challenge — to build the knowledge and demonstrate the thinking that would qualify me to step into one of them.
+
+The role I am most drawn to is Risk Manager. The work of identifying what could go wrong, assessing it honestly, communicating it clearly, and tracking whether it is being addressed feels like a natural fit for how I think. It is also a role where the skills I am building through this project — risk assessment, framework knowledge, written communication — are directly applicable.
+
+I also find the System Owner role interesting in the context of this project specifically. Going through 100 days of securing OpenMRS on AWS is essentially practicing what a System Owner does — understanding the system deeply, making security decisions, and documenting the reasoning behind them.
+
+---
+
+## What I Am Still Thinking About
+
+One thing I keep wondering: in organizations where GRC roles are not formally defined — which is common in smaller healthcare settings — how do you make the case for defining them? The value of role clarity is obvious once something goes wrong. But before that, it can feel like unnecessary overhead to leadership that is already stretched thin.
+
+Is there a practical way to introduce role definition incrementally — starting with the most critical responsibilities — without requiring a full organizational restructuring? I think the answer is probably yes, but I want to think more carefully about what that looks like in practice.
+
+---
+
+## What's Next
+
+Day 12 starts moving into more practical territory — applying GRC principles through actual risk assessments and planning exercises for OpenMRS. After eleven days of building conceptual foundations, I am genuinely looking forward to getting more hands-on.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST RMF Roles and Responsibilities – SP 800-37](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [OPM Data Breach – Congressional Report Summary](https://oversight.house.gov/wp-content/uploads/2016/09/The-OPM-Data-Breach-How-the-Government-Jeopardized-Our-National-Security-for-More-than-a-Generation.pdf)
+- [CISO Role Overview – ISACA](https://www.isaca.org/resources/isaca-journal/issues/2021/volume-1/the-evolving-role-of-the-ciso)
+- [HHS – HIPAA Compliance Roles and Responsibilities](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #CybersecurityCareers #CISO #RiskManager #ComplianceOfficer #HealthcareSecurity #100DaysOfGRC #OpenMRS #AWS #Day11*
