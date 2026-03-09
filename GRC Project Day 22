@@ -1,85 +1,150 @@
-# 📅 Day 22 – Who’s Who in Risk Management (Establishing RMF Roles)  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 22 – RMF Step 1 (Prepare): Defining Who Is Responsible for What | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🎯 Topic Overview:
+## Why Roles Come Before Everything Else
 
-Today marks the first action in the **Prepare** step of the **NIST Risk Management Framework (RMF)** — defining **key roles** in the risk management process.
+The NIST RMF Prepare step covers a lot of ground — organizational context, risk tolerance, system boundaries, resource planning. But the first and most foundational activity in Prepare is defining roles. Before you conduct a risk assessment, before you select controls, before you write a single security policy — you need to know who is responsible for what.
 
-Roles like the **Authorizing Official (AO)**, **System Owner**, and **Information System Security Officer (ISSO)** create structure, accountability, and efficiency. Without clearly assigned roles, risk decisions become unclear and critical tasks may be neglected.
+This might seem like an administrative task compared to the technical work that comes later. But I have come to understand it differently over the past few weeks. Every breach case I have studied in this challenge had a human and organizational dimension alongside the technical one. Roles that were unclear, responsibilities that were assumed rather than assigned, decisions that nobody owned. The OPM breach on Day 11. The Premera case on Day 14. The Excellus breach on Day 15. In each case, the technical failures were enabled or worsened by organizational failures — and organizational failures almost always trace back to unclear accountability.
 
----
-
-## 👥 Key RMF Roles in Plain Language:
-
-### 🛡️ Authorizing Official (AO):
-- **Who**: Senior executive (e.g., CIO or IT Director)
-- **What They Do**: Approves the system for operation by accepting the level of risk  
-- **In Our OpenMRS Case**: Likely the **Hospital CIO** or **Clinic Director**
-- **Note**: Must have authority and independence from day-to-day operations to avoid conflicts of interest
+Defining roles clearly is how you prevent that. It is not glamorous work, but it is foundational.
 
 ---
 
-### 🖥️ System Owner:
-- **Who**: Manager responsible for OpenMRS (e.g., Head of Health IT or EHR Project Manager)
-- **What They Do**: Manages system lifecycle, coordinates implementation of security controls
-- **In Our Case**: Likely the **Health IT Manager** at MyClinic
+## What I Worked On Today
+
+The NIST RMF identifies several key roles that need to be formally assigned before the framework can function properly. Today I worked through the three most critical ones for the OpenMRS deployment and thought carefully about what each role actually requires — not just the title but the authority, the independence, and the practical responsibilities that make the role meaningful.
 
 ---
 
-### 🔐 Information System Security Officer (ISSO):
-- **Who**: Security-focused individual (e.g., Infosec Lead or Security Engineer)
-- **What They Do**: Oversees the implementation and assessment of security controls, prepares documentation and reports
-- **In Our Case**: Likely the **Infosec Lead or Compliance Officer** for MyClinic
+## The Three Core RMF Roles
 
-> 🔄 These roles interact throughout the RMF process — from planning and implementation to approval and monitoring.
+### Authorizing Official (AO)
 
----
+The Authorizing Official is the senior executive who formally accepts the risk of operating a system and issues the Authorization to Operate. This is one of the most consequential roles in the entire RMF process — because the AO is not just signing a document, they are making a genuine risk management decision on behalf of the organization.
 
-## ✅ Hands-On Exercise:
+For that decision to be meaningful, the AO needs two things that are sometimes hard to find in the same person: sufficient technical and security literacy to understand the risk findings being presented to them, and sufficient organizational authority to actually accept responsibility for the decision. A junior manager who understands the technical details but does not have authority over the system is not a suitable AO. A senior executive who has authority but rubber-stamps authorizations without engaging with the findings is not a suitable AO either.
 
-**Who would approve the Authority to Operate (ATO) for OpenMRS?**
+The AO also needs independence from day-to-day system operations. If the person authorizing a system is also the person who built it and wants it to go live, there is an obvious conflict of interest. The whole point of the authorization step is an independent review of residual risk — and that independence requires organizational distance from the implementation team.
 
-➡️ **Answer**: The **Chief Information Officer (CIO)** at MyClinic would likely be the Authorizing Official (AO).  
-They have the executive authority to accept residual risk and approve the system for production use.
+**For MyClinic's OpenMRS deployment:** The most appropriate Authorizing Official is the **Chief Information Officer (CIO)** or, in a smaller organization without a dedicated CIO, the **Clinic Director or Executive Director**. They have the organizational authority to accept risk on behalf of the organization and the leadership responsibility to engage seriously with the findings before signing off.
 
 ---
 
-## 💬 Reflection Prompt:
+### System Owner
 
-**Why is it important to designate RMF roles early?**
+The System Owner is responsible for the day-to-day security posture and operational health of the specific system being managed. In the context of the RMF, the System Owner coordinates the implementation of security controls, maintains the System Security Plan, and serves as the primary point of accountability for the system's security throughout its lifecycle.
 
-➡️ Clearly defining roles creates **accountability** and ensures no critical tasks are overlooked.  
-> “If everyone knows who’s in charge of what, then decisions are made faster, gaps are closed sooner, and risks are managed intentionally.”
+This role requires someone who knows the system well — its purpose, its data flows, its dependencies, its users, and its operational requirements. The System Owner does not need to be the most technically skilled person in the organization, but they need to understand the system well enough to make informed decisions about its security configuration and to communicate effectively with the technical staff who maintain it.
 
-**What could go wrong if roles weren’t clearly assigned?**
+The System Owner also has a coordination function. They work with the ISSO on security planning, with the AO on risk decisions, with compliance staff on regulatory requirements, and with clinical or operational staff on understanding how security controls affect the workflows the system supports.
 
-- Missed deadlines due to confusion over responsibility  
-- No one updating or enforcing security controls  
-- Risks being accepted by default, without formal approval  
-- Increased likelihood of compliance failures or security incidents
+**For MyClinic's OpenMRS deployment:** The **Health IT Manager** or **EHR Project Manager** is the natural System Owner. They manage the OpenMRS implementation, understand the clinical workflows it supports, and have the organizational relationships needed to coordinate security activities across functions.
 
 ---
 
-## 🏥 OpenMRS Org Chart (Simplified):
+### Information System Security Officer (ISSO)
 
-```text
-    MyClinic - OpenMRS Risk Management Roles
+The ISSO is the security specialist responsible for implementing, monitoring, and assessing the security controls for a specific system. Where the System Owner provides operational management and coordination, the ISSO provides security expertise and technical oversight.
 
-       +---------------------------+
-       |  Chief Information Officer|
-       |     (Authorizing Official)|
-       +---------------------------+
-                  |
-                  v
-       +---------------------------+
-       |     Health IT Manager     |
-       |       (System Owner)      |
-       +---------------------------+
-                  |
-                  v
-       +---------------------------+
-       |      Infosec Lead         |
-       |     (ISSO / Security)     |
-       +---------------------------+
+In practice, the ISSO is often the person doing the most detailed day-to-day security work — reviewing audit logs, tracking vulnerabilities, preparing assessment documentation, managing the Plan of Action and Milestones for open findings, and staying current on emerging threats relevant to the system. The ISSO reports to the System Owner and provides security input to the AO through the assessment and authorization process.
+
+For smaller organizations, the ISSO role is often combined with other responsibilities — an IT security lead who also handles network security, or a compliance officer with security responsibilities. What matters is that the ISSO function is genuinely filled by someone with security expertise, not just assigned to whoever is available.
+
+**For MyClinic's OpenMRS deployment:** The **Information Security Lead** or **Compliance Officer with security responsibilities** is the appropriate ISSO. If MyClinic does not have a dedicated security specialist, this is an area where the organization may need to invest in staff development or bring in external support — because the ISSO function cannot be effectively filled by someone without genuine security knowledge.
+
+---
+
+## How These Roles Interact
+
+The three roles do not operate independently — they form a working relationship that drives the RMF process from beginning to end.
+```
+    MyClinic – OpenMRS RMF Role Structure
+    
+    +---------------------------------------+
+    |     Chief Information Officer (CIO)   |
+    |        Authorizing Official (AO)      |
+    |                                       |
+    |  Reviews risk findings and makes      |
+    |  the formal authorization decision    |
+    +------------------+--------------------+
+                       |
+                       | Reviews and accepts
+                       | residual risk
+                       |
+    +------------------v--------------------+
+    |        Health IT Manager              |
+    |           System Owner                |
+    |                                       |
+    |  Manages system lifecycle and         |
+    |  coordinates security implementation  |
+    +------------------+--------------------+
+                       |
+                       | Provides security
+                       | oversight and documentation
+                       |
+    +------------------v--------------------+
+    |       Information Security Lead       |
+    |      ISSO (Security Officer)          |
+    |                                       |
+    |  Implements and monitors controls,    |
+    |  prepares assessment documentation,   |
+    |  manages findings and remediation     |
+    +---------------------------------------+
+```
+
+The ISSO does the detailed security work and feeds findings up to the System Owner. The System Owner coordinates implementation and escalates risk decisions to the AO. The AO reviews the overall risk picture and makes the formal authorization decision. Information flows in both directions — the AO's risk tolerance and organizational priorities should inform the System Owner's security planning, and the ISSO's technical findings should inform the AO's authorization decision.
+
+When this structure works well, risk management decisions are grounded in technical reality and owned at the appropriate level of organizational authority. When it breaks down — when the AO is disconnected from the actual risk picture, or when the ISSO's findings are not taken seriously by the System Owner — the framework becomes a documentation exercise rather than a genuine risk management process.
+
+---
+
+## Additional Roles Worth Knowing
+
+Beyond the three core roles, the RMF identifies several others that play supporting parts:
+
+**Common Control Provider** — an individual or team responsible for security controls that are inherited by multiple systems. In a cloud environment, some AWS security controls can be documented as common controls that all systems hosted on that infrastructure inherit. Understanding which controls are common — and therefore already documented elsewhere — reduces duplication of effort across the organization.
+
+**Security Control Assessor** — the individual or team responsible for independently assessing whether controls are functioning as intended. Importantly, the assessor should be independent from the implementation team to avoid conflicts of interest. In smaller organizations this independence can be challenging to achieve — which is one reason some organizations bring in external assessors for this role.
+
+**Risk Executive Function** — a senior-level function responsible for ensuring that risk management is consistent across the organization and that individual system authorization decisions align with the organization's overall risk posture. In a small clinic, this function might be filled by the CIO wearing a second hat. In a larger health system, it might be a dedicated risk committee.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the post-incident analysis of the **2014 US Office of Personnel Management breach** — which I touched on briefly on Day 11 but want to revisit through the specific lens of role clarity.
+
+Congressional investigators found that OPM's IT security roles were poorly defined and inconsistently applied. System authorization decisions had been made without the full involvement of qualified Authorizing Officials. ISSOs had been assigned to systems without the resources or authority needed to fulfill the role effectively. The result was that the formal RMF process was producing authorization documentation without producing genuine security assurance — because the people filling the roles did not have what they needed to do the job properly.
+
+The breach ultimately exposed the personal records of over 21 million people. The technical attack was sophisticated. But the organizational conditions that allowed it to persist undetected — unclear roles, under-resourced security staff, authorization decisions disconnected from real risk assessment — were governance failures of exactly the kind that clearly defined RMF roles are designed to prevent.
+
+That case reinforces something I want to carry through the rest of Phase 2: the value of the RMF comes from how seriously people take their roles within it. Assigning the titles is the easy part. Building an organization where the AO actually engages with risk findings, the System Owner actually coordinates security implementation, and the ISSO actually has the resources and authority to do their job — that is the hard part, and it is the part that determines whether the framework produces real security or just documentation.
+
+---
+
+## What I Am Still Thinking About
+
+Something I am genuinely uncertain about for small healthcare organizations: how do you handle the independence requirement for the Security Control Assessor when the organization is too small to have separate implementation and assessment teams?
+
+NIST acknowledges this challenge and provides some flexibility — allowing for compensating measures when full independence is not achievable. But I want to understand what those compensating measures look like in practice. Does bringing in an external consultant for the assessment fulfill the independence requirement? Does peer review within a small team count? This feels like a practical question that comes up constantly in real-world RMF implementations outside the federal government context.
+
+---
+
+## What's Next
+
+Day 23 continues in the Prepare step — moving from roles to **organizational context and mission understanding**. Before you can assess risk to a system, you need to understand what the system exists to do, who depends on it, and what organizational goals it supports. That context shapes every risk decision that follows.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – RMF Roles and Responsibilities](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-39 – Managing Information Security Risk](https://csrc.nist.gov/publications/detail/sp/800-39/final)
+- [OPM Data Breach Congressional Investigation Report](https://oversight.house.gov/wp-content/uploads/2016/09/The-OPM-Data-Breach-How-the-Government-Jeopardized-Our-National-Security-for-More-than-a-Generation.pdf)
+- [CISA – FISMA Implementation and RMF Guidance](https://www.cisa.gov/topics/cyber-threats-and-advisories/federal-information-security-modernization-act)
+
+---
+
+*#GRC #NISTRMF #RiskManagement #Prepare #SystemOwner #ISSO #AuthorizingOfficial #HealthcareSecurity #100DaysOfGRC #OpenMRS #AWS #Day22*
