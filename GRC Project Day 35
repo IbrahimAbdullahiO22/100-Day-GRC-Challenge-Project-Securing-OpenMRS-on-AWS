@@ -1,66 +1,238 @@
-# 📅 Day 35 – Classifying the Lifeblood of OpenMRS: Information Types  
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 35 – Identifying Information Types: Classifying the Data That Flows Through OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🧠 GRC Leadership Insight: You Can’t Secure What You Haven’t Classified
+## From Assets to Information
 
-As I lead this project forward, today’s focus sharpened my mindset around **data-centric risk governance**. In healthcare systems like OpenMRS, data is more than digital—it’s deeply human. It represents lives, care decisions, medical histories, and futures. That’s why **Task P-12** of NIST RMF is a critical checkpoint: **identifying and categorizing the information types** within our system.
+Day 33 built an inventory of the *assets* — the servers, databases, software, and endpoints that make up the OpenMRS deployment. Today shifts the lens from assets to *information* — the actual data that flows through, is stored in, and is processed by those assets.
 
----
+The distinction matters because security decisions are ultimately about protecting information. The EC2 instance is a means to an end. The MySQL database is a container. What we are actually trying to protect is the clinical data about real patients that lives inside those assets — and understanding that data in detail is what Task P-12 of the NIST RMF asks for.
 
-## 💡 Why This Matters
-
-Classifying data isn’t just paperwork — it drives protection. It helps us:
-
-- Understand **what** we’re protecting
-- Determine **how sensitive** the data is
-- Decide **which controls** are appropriate (encryption, access, retention)
-- Prepare for **impact analysis** under NIST SP 800-60
+NIST SP 800-60 provides the specific guidance for mapping information types to security impact levels. It establishes a taxonomy of information types with provisional impact ratings that organizations use as a starting point, then adjust based on their specific operational context. Working through that mapping for OpenMRS today produced a more structured and nuanced picture of the data landscape than I had before.
 
 ---
 
-## 🧾 My OpenMRS Info-Type Inventory (Leadership Perspective)
+## What I Worked On Today
 
-| Information Type                  | Description                                                                 | Sensitivity  | Risk Consideration                                      |
-|----------------------------------|-----------------------------------------------------------------------------|--------------|----------------------------------------------------------|
-| **1. Patient Personal Information**  | Names, MRNs, contact details, IDs (PII & PHI)                                  | High         | Identity theft, privacy violation                       |
-| **2. Clinical Health Data**         | Diagnoses, medications, lab results, visit notes (core PHI)                   | High         | Misdiagnosis risk, legal exposure, regulatory fines     |
-| **3. User Account & Audit Info**    | Usernames, roles, activity logs, privileges                                  | Medium-High  | Insider threat, privilege abuse, system impersonation   |
-| **4. Billing/Insurance Records**    | Payment details, codes, insurance numbers                                    | Medium       | Fraud risk, regulatory compliance (PCI, HIPAA)          |
-| **5. Metadata & Config Files**      | Drug formularies, system settings, coded lists                               | Low-Medium   | Operational integrity issues if tampered                |
-| **6. Analytics/De-Identified Reports** | Trend reports, population metrics                                            | Low-High*    | Low risk unless re-identifiable                         |
+Task P-12 asks for a complete identification of the information types that the system processes, stores, or transmits — with provisional security impact ratings for each type across confidentiality, integrity, and availability. The output feeds directly into the formal FIPS 199 categorization and provides the evidentiary basis for the impact ratings documented in the System Security Plan.
 
-> 🔒 *Note: Even aggregated data must be evaluated for re-identification risk when cross-referenced with other datasets.*
+NIST SP 800-60 Volume II organizes information types into categories. For a healthcare EHR system, the relevant categories span health services, administrative information, financial information, and supporting IT functions. I worked through each category systematically and mapped it to the data types that actually exist in OpenMRS at MyClinic.
 
 ---
 
-## 🧠 Reflection as a Future CISO
+## What Actually Clicked for Me
 
-This exercise reminded me that **information governance isn’t static** — it must evolve with use cases. A report may start as harmless, but gain risk if it includes sensitive flags or rare conditions.
+Two things clicked for me today that changed how I was thinking about information type classification.
 
-Every data type has a lifecycle, and **risk follows data** wherever it flows. Classifying upfront sets the tone for how we manage encryption, access control, and audit readiness across the board.
+The first is the difference between *provisional* and *adjusted* impact ratings. NIST SP 800-60 provides provisional ratings — its best estimate of the typical impact level for each information type — but those are starting points, not final answers. The organization is expected to review each provisional rating and adjust it based on the specific operational context, regulatory environment, and the actual consequences of a compromise in that particular setting.
 
----
+For healthcare, the adjustments almost always go up from the provisional ratings, not down. The provisional impact ratings in SP 800-60 were developed for federal information systems and may not fully capture the heightened sensitivity of clinical health information in a direct patient care context. A moderate provisional confidentiality rating for health records does not reflect the severity of exposure of HIV status, mental health records, or reproductive health information for a patient in a vulnerable situation. The adjustment process is where that context gets factored in.
 
-## 🧰 Next Action Steps
-
-As part of building our OpenMRS Security Strategy, I’ll now:
-
-- Tag data types with impact ratings per NIST SP 800-60
-- Ensure PHI and clinical data are encrypted in storage and transit
-- Limit access to sensitive records using RBAC
-- Build in alerts around unusual access to high-risk data types
+The second thing that clicked is the concept of **re-identification risk** for de-identified data. Data that has been de-identified — stripped of direct identifiers like names and medical record numbers — is generally treated as lower sensitivity. But genuinely de-identified data is harder to produce than it sounds. If a dataset contains rare diagnoses, unusual combinations of demographics, or geographic information granular enough to identify individuals in a small community, re-identification may be possible even without direct identifiers. The sensitivity of de-identified data is not zero — it is contextual and depends on what other data it might be combined with.
 
 ---
 
-## 🔗 Standards & References
+## Complete Information Type Inventory for OpenMRS
 
-- `NIST SP 800-37 Task P-12: Identify Information Types`
-- `NIST SP 800-60 Volume II: Map of Data to Security Categories`
-- `HIPAA Security Rule (45 CFR Part 164)`
-- `CIS Control 3: Data Protection`
+### Information Type 1 — Patient Identity and Demographic Information
+
+**Description:** Names, dates of birth, addresses, phone numbers, email addresses, medical record numbers (MRN), government-issued identification numbers (Social Security numbers, national ID numbers), insurance member IDs, emergency contact information, and next-of-kin details.
+
+**NIST SP 800-60 Mapping:** Individual Health Information (C.2.3.1)
+
+**Provisional Impact Ratings:** Confidentiality — Moderate; Integrity — Moderate; Availability — Moderate
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — High.* The provisional Moderate rating underestimates the sensitivity in a direct patient care context. Demographic information combined with the fact of a patient's relationship with a healthcare provider constitutes PHI under HIPAA. Unauthorized disclosure can enable identity theft, insurance fraud, and — depending on the nature of the clinic — exposure of sensitive facts such as a patient seeking care at a reproductive health or mental health clinic. The contextual sensitivity warrants a High adjustment.
+
+*Integrity — High.* Errors in patient identity information — wrong date of birth, incorrect insurance ID, transposed address — can result in care being delivered to the wrong patient, billing errors, delayed care authorization, or inability to contact patients for critical follow-up. In a setting where the MRN is the primary patient identifier, integrity failures in identity data have cascading effects on every other data type in the system.
+
+*Availability — Moderate.* While unavailability of demographic data is disruptive, care can often be delivered to an identified patient using alternative identification methods during a brief outage. Extended unavailability would become a High impact scenario for scheduled care delivery.
 
 ---
 
-📌 #Day35 #InformationGovernance #DataClassification #OpenMRS #HIPAA #NISTRMF #PHIProtection #CyberLeadership #HealthcareSecurity #100DaysOfGRC #IbrahimAbdullahi
+### Information Type 2 — Clinical Health Records
+
+**Description:** Medical diagnoses, clinical encounter notes, treatment histories, prescribed medications, known allergies, immunization records, surgical histories, family medical history, clinical observations, vital signs, referral documentation, and care plans. This is the core clinical data that defines OpenMRS's primary purpose.
+
+**NIST SP 800-60 Mapping:** Individual Health Information (C.2.3.1); Patient Health Information (C.2.3.2)
+
+**Provisional Impact Ratings:** Confidentiality — Moderate; Integrity — Moderate; Availability — Moderate
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — High.* This adjustment is clearly warranted. Clinical health records are the most sensitive category of personal information that exists. HIPAA recognizes special sensitivity for mental health records, substance use treatment records, HIV/AIDS status, reproductive health information, and genetic information — all of which may appear in OpenMRS clinical records. Unauthorized disclosure can cause profound harm to patients — affecting employment, insurance, family relationships, immigration status, and personal safety. The confidentiality impact is High.
+
+*Integrity — High.* Clinical health records are directly used in care decision-making. A medication allergy not recorded correctly could result in a patient receiving a contraindicated drug. A diagnosis recorded inaccurately could lead to inappropriate treatment. Lab results attributed to the wrong patient could produce harmful clinical decisions. The direct clinical safety implications of integrity failure in health records warrant a High rating — and NIST SP 800-60 acknowledges that health information integrity failures can have life-safety consequences.
+
+*Availability — High.* In a clinical setting where OpenMRS is the sole EHR system, unavailability of clinical health records during an active clinical session creates direct patient safety risk. A clinician who cannot access a patient's allergy list, current medications, or recent diagnoses cannot safely deliver care. Extended unavailability — as illustrated by the Vermont Medical Center ransomware case from Day 29 — can force diversion of patients and suspension of clinical services. High availability impact is warranted for the primary clinical data type.
+
+---
+
+### Information Type 3 — Laboratory and Diagnostic Results
+
+**Description:** Laboratory test orders and results (blood work, urinalysis, culture results), diagnostic imaging orders and reports (X-ray, ultrasound, CT references), pathology results, and point-of-care test results transmitted from the laboratory system integration.
+
+**NIST SP 800-60 Mapping:** Individual Health Information (C.2.3.1); Healthcare Delivery Services (C.2.3)
+
+**Provisional Impact Ratings:** Confidentiality — Moderate; Integrity — Moderate; Availability — Moderate
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — High.* Laboratory results can reveal highly sensitive health information — HIV status, pregnancy, genetic conditions, substance use, infectious disease status. The sensitivity is equivalent to other clinical health records and warrants the same High confidentiality adjustment.
+
+*Integrity — High.* Laboratory results are a direct input to clinical decision-making. A result attributed to the wrong patient, a value transcribed incorrectly, or a result altered in transit from the laboratory system integration can lead directly to incorrect treatment. Given the external integration pathway — results arriving via REST API from the laboratory system — integrity verification of incoming data is an important control requirement. High integrity impact is warranted.
+
+*Availability — Moderate.* Laboratory results are typically available in the lab system as well as OpenMRS. Short-term unavailability of results in OpenMRS is disruptive but can be managed through the source system. Extended unavailability would escalate.
+
+---
+
+### Information Type 4 — User Account and Access Control Information
+
+**Description:** OpenMRS user accounts, usernames, role assignments, permission configurations, password hashes, session tokens, account creation and modification history, and role-based access control definitions.
+
+**NIST SP 800-60 Mapping:** Identity Management (D.20.1); Access Management (D.20.2)
+
+**Provisional Impact Ratings:** Confidentiality — Moderate; Integrity — Moderate; Availability — Moderate
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — Moderate.* User account information is not PHI, but it is sensitive system information. Exposure of role assignments and permission structures could assist an attacker in planning privilege escalation. Password hashes, if exposed, could be subjected to offline cracking. Moderate confidentiality is appropriate.
+
+*Integrity — High.* The integrity of access control configuration is directly tied to the security of all other data in the system. An attacker who can modify role assignments or create unauthorized accounts gains access to clinical health records and all other High-sensitivity information types. Access control integrity failure is effectively a failure of the entire access control framework — warranting a High integrity rating.
+
+*Availability — Moderate.* Temporary unavailability of the ability to create or modify accounts is disruptive but manageable. Users with existing valid sessions can generally continue working.
+
+---
+
+### Information Type 5 — Audit Logs and Access Records
+
+**Description:** Application-level audit logs recording all access to patient records — user identifier, timestamp, patient record accessed, action taken (view, modify, create, delete), session information, and system events. Also includes AWS CloudTrail logs and CloudWatch logs for infrastructure-level audit.
+
+**NIST SP 800-60 Mapping:** Audit Trail (D.20.4); Security Management (D.20)
+
+**Provisional Impact Ratings:** Confidentiality — Moderate; Integrity — Moderate; Availability — Low
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — Moderate.* Audit logs do not contain full clinical records, but they do reveal which users accessed which patients — information that could be sensitive in some contexts (revealing that a specific clinician accessed a specific patient's records). Moderate confidentiality is appropriate.
+
+*Integrity — High.* Audit log integrity is a foundational security property. If an attacker can modify or delete audit logs, they can cover their tracks — eliminating the forensic evidence that would enable detection and investigation of a breach. HIPAA's audit control requirement exists precisely because audit log integrity is required for accountability. High integrity adjustment is warranted.
+
+*Availability — Moderate.* New audit events need to be captured continuously — extended unavailability of the audit logging function creates gaps in the audit trail that are a compliance concern. Adjusted upward from Low.
+
+---
+
+### Information Type 6 — Billing and Financial Information
+
+**Description:** Insurance coverage details, insurance member IDs, billing codes (ICD-10, CPT), claims documentation, payment records, financial account identifiers, and explanation of benefits information where maintained in OpenMRS.
+
+**NIST SP 800-60 Mapping:** Financial Management (C.1); Health Insurance Information (C.2.3.3)
+
+**Provisional Impact Ratings:** Confidentiality — Moderate; Integrity — Moderate; Availability — Low
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — High.* Billing information is PHI under HIPAA when it identifies an individual and relates to healthcare services. Insurance IDs combined with diagnosis codes constitute PHI. Insurance fraud enabled by exposure of this information can cause direct financial harm to patients. High adjustment warranted.
+
+*Integrity — Moderate.* Billing errors are costly and require remediation, but they generally do not create immediate patient safety risk. Moderate integrity is appropriate, with the acknowledgment that systematic billing integrity failures create regulatory compliance exposure.
+
+*Availability — Low.* Billing processing can typically tolerate short-term unavailability without immediate operational impact. Scheduled billing cycles provide some buffer.
+
+---
+
+### Information Type 7 — System Configuration and Operational Data
+
+**Description:** Application configuration files, database schema definitions, drug formulary and clinical decision support configurations, system integration settings, infrastructure configuration (Terraform definitions, security group rules documented as code), and operational parameters.
+
+**NIST SP 800-60 Mapping:** Information Technology Infrastructure Maintenance (D.17)
+
+**Provisional Impact Ratings:** Confidentiality — Low; Integrity — Moderate; Availability — Low
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — Low to Moderate.* Configuration data is not PHI and is generally not sensitive in isolation. However, detailed knowledge of system configuration — security group rules, API endpoint structures, authentication configurations — could assist an attacker in planning exploitation. Low-Moderate is appropriate; full disclosure of configuration details externally warrants protection.
+
+*Integrity — High.* Configuration integrity is directly tied to system security and clinical safety. Unauthorized modification of drug formulary data could affect clinical decision support in ways that harm patients. Modification of security configuration could disable controls. Modification of integration settings could redirect data to unauthorized destinations. High integrity adjustment is warranted for configuration data that affects clinical function or security posture.
+
+*Availability — Moderate.* Configuration data unavailability affects the ability to deploy changes and recover from failures, but generally does not immediately affect operational clinical function if the running system is intact.
+
+---
+
+### Information Type 8 — De-Identified and Aggregated Analytics Data
+
+**Description:** Population health reports, aggregate clinical statistics, de-identified datasets used for quality improvement or research purposes, and operational metrics derived from OpenMRS data.
+
+**NIST SP 800-60 Mapping:** Individual Health Information (C.2.3.1) — varies based on de-identification status
+
+**Provisional Impact Ratings:** Confidentiality — Low; Integrity — Low; Availability — Low
+
+**Adjusted Impact Ratings for MyClinic:**
+
+*Confidentiality — Low to Moderate (context dependent).* Properly de-identified data meeting HIPAA's Safe Harbor or Expert Determination standards is not PHI and carries lower confidentiality sensitivity. However, re-identification risk must be assessed for each dataset. Aggregate data containing rare diagnoses or small population subgroups may carry meaningful re-identification risk even without direct identifiers. The confidentiality rating should be assessed per dataset rather than applied uniformly to this category.
+
+*Integrity — Moderate.* Errors in aggregate reports could lead to incorrect quality improvement decisions or inaccurate public health reporting. Moderate integrity is appropriate.
+
+*Availability — Low.* Aggregate analytics data is not used in real-time clinical care. Unavailability is disruptive to reporting functions but does not create immediate operational or patient safety risk.
+
+---
+
+## Consolidated Information Type Impact Table
+
+| Information Type | Provisional C/I/A | Adjusted C/I/A | Adjustment Rationale |
+|---|---|---|---|
+| Patient Identity & Demographics | M/M/M | H/H/M | PHI context; identity theft risk; care continuity |
+| Clinical Health Records | M/M/M | H/H/H | Highest sensitivity PHI; direct care safety implications |
+| Laboratory & Diagnostic Results | M/M/M | H/H/M | Sensitive PHI; direct clinical decision input |
+| User Account & Access Control | M/M/M | M/H/M | Access control integrity = system-wide security |
+| Audit Logs | M/M/L | M/H/M | Log integrity required for accountability; HIPAA |
+| Billing & Financial Information | M/M/L | H/M/L | PHI when combined with diagnosis codes; fraud risk |
+| System Configuration | L/M/L | L-M/H/M | Configuration integrity affects clinical safety and security |
+| De-Identified Analytics | L/L/L | L-M/L/L | Re-identification risk is context-dependent |
+
+**High watermark across all information types: Confidentiality — High | Integrity — High | Availability — High**
+
+This confirms the overall system categorization of **HIGH** established on Day 29 and provides the information-type-level evidentiary basis for that categorization.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2015 Anthem breach** — which I covered earlier in this project — but want to revisit with a specific focus on information type scope.
+
+One of the notable aspects of the Anthem breach is that the exposed data included not just traditional clinical records but the full breadth of member identity and demographic information: names, Social Security numbers, dates of birth, addresses, employment information, and income data. The breach affected approximately 79 million people, many of whom were not current patients but were enrolled members whose data Anthem maintained for administrative purposes.
+
+The Anthem case is a useful reminder that information type identification needs to be comprehensive — not just the obvious clinical data, but all categories of information the system holds. Organizations that focus their security programs on protecting the most obviously sensitive data while underinvesting in protection of "administrative" data create the exact gap that the Anthem breach exploited. Demographic and identity information — often classified as lower sensitivity than clinical records — enabled identity theft and fraud at massive scale when exposed.
+
+For OpenMRS at MyClinic, the information type inventory deliberately includes all eight categories rather than focusing only on clinical health records. The patient identity and billing information — sometimes treated as less sensitive than diagnoses and medications — carries real harm potential when exposed and warrants the same structural protections as the more obviously sensitive clinical data.
+
+---
+
+## What I Am Still Thinking About
+
+The re-identification risk question for de-identified analytics data is something I want to understand more technically. HIPAA provides two methods for de-identification — the Safe Harbor method (removing a defined list of 18 identifiers) and the Expert Determination method (a statistical analysis demonstrating that the risk of re-identification is very small). 
+
+In practice, researchers have demonstrated that even Safe Harbor de-identified data can sometimes be re-identified when cross-referenced with other available datasets. A 2000 study by Latanya Sweeney demonstrated that 87% of the US population could be uniquely identified using only ZIP code, birth date, and sex — three data points that the Safe Harbor method does not require to be removed in full.
+
+For a small clinic like MyClinic, the population served may be small enough that aggregate reports about rare conditions could effectively identify individuals even without any direct identifiers. I want to develop a more concrete understanding of when de-identification is genuinely protective versus when it provides false assurance of low sensitivity — because that distinction matters for access control and sharing decisions involving analytics data.
+
+---
+
+## What's Next
+
+Day 36 completes the formal system categorization documentation — assembling the FIPS 199 categorization, information type impact ratings from today, mission documentation from Day 31, and system boundary from Day 34 into the complete categorization section of the System Security Plan. This is the first major formal artifact of the RMF process and the foundation for control selection in the next phase.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-60 Volume I – Guide for Mapping Types of Information to Security Categories](https://csrc.nist.gov/publications/detail/sp/800-60/vol-1-rev-1/final)
+- [NIST SP 800-60 Volume II – Appendices to Guide for Mapping Information Types](https://csrc.nist.gov/publications/detail/sp/800-60/vol-2-rev-1/final)
+- [HIPAA De-Identification Guidance – HHS](https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html)
+- [Anthem Breach – HHS OCR Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/anthem/index.html)
+- [Sweeney Re-Identification Research – Carnegie Mellon](https://dataprivacylab.org/projects/identifiability/)
+
+---
+
+*#GRC #InformationTypes #DataClassification #NISTRMF #SP800-60 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #PHIProtection #Day35*
