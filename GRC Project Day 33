@@ -1,79 +1,220 @@
-# 📅 Day 33 – What Do We Have? OpenMRS Asset Inventory Time  
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 33 – Asset Inventory: You Cannot Protect What You Cannot See | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🔐 GRC Leadership Insight: If You Don't Know What You Have, You Can't Protect It
+## The Unglamorous Work That Makes Everything Else Possible
 
-Today’s lesson reinforced a foundational truth in Governance, Risk, and Compliance: **Asset visibility is everything.**  
+If I am being honest, asset inventory does not sound exciting. Compared to threat modeling or incident response planning, cataloguing what servers and software you have feels like administrative housekeeping. But the more I worked through today's task, the more I understood why it sits where it does in the RMF — before categorization is finalized, before controls are selected, before any meaningful risk assessment can be complete.
 
-In Task P-10 of the NIST RMF, we zero in on **asset identification** — the critical step before any real risk management can begin. You can’t classify, monitor, or protect what you haven’t mapped. For a system like **OpenMRS**, which plays a vital role in healthcare delivery in low-resource settings, that’s non-negotiable.
+The reason is simple: every security decision made in this project is implicitly a decision about specific assets. The FIPS 199 categorization from Day 29 applies to a system made up of real components. The controls selected in the next phase will be implemented on real infrastructure. The monitoring strategy from Day 30 needs to know what it is monitoring. If the asset picture is incomplete or inaccurate, everything built on top of it is built on a shaky foundation.
 
----
-
-## 🧾 My High-Level Asset Inventory for OpenMRS in the Cloud
-
-As a security strategist and future GRC leader in healthcare, here’s how I approached our OpenMRS inventory today:
-
-1. **☁️ Cloud Server (Ubuntu VM on AWS EC2)**  
-   - Primary hosting environment for OpenMRS application  
-   - Needs hardening, continuous patching, and access control  
-
-2. **🗃️ OpenMRS MySQL Database**  
-   - Stores all patient records, forms, and system configurations  
-   - Critical confidentiality and integrity asset  
-
-3. **📦 Backups on AWS S3 (Encrypted)**  
-   - Full nightly snapshots of the OpenMRS DB and app  
-   - Secured with IAM roles and object encryption  
-
-4. **🧠 OpenMRS Core Application (v2.x with custom modules)**  
-   - Includes APIs, modules, and UI components  
-   - Requires version control, patch tracking, and code review  
-
-5. **💻 Clinic Workstations (Web Browser Access to OpenMRS)**  
-   - Doctor and nurse access points  
-   - These endpoints can become the weakest link — require antivirus, MFA, browser hardening  
+NIST SP 800-37 Task P-10 formalizes asset identification as a required output of the Prepare step for exactly this reason. Today I worked through building a complete asset inventory for the OpenMRS deployment at MyClinic — not just listing components, but documenting what each asset is, what data it handles, what its security classification is, and what the consequences would be if it were compromised.
 
 ---
 
-## 💡 Why This Step Matters
+## What I Worked On Today
 
-Asset inventory isn’t just about documentation — it’s about **setting the stage for prioritization, control selection, monitoring, and compliance**.
+Asset identification in the NIST RMF context covers both the information assets — the data the system handles — and the system assets — the hardware, software, and services that store, process, and transmit that data. CIS Control 1 and CIS Control 2, which address hardware and software asset inventory respectively, align directly with this task and provide practical implementation guidance beyond the NIST framework.
 
-If even one of these components is forgotten (e.g., a neglected backup on a contractor’s drive), it becomes a blind spot — and **you can’t defend a blind spot**.
-
-In my leadership path toward GRC maturity, I’m adopting **CIS Control 1** as a non-negotiable baseline:  
-> “Actively manage all hardware and software assets... so only authorized devices and software are given access.”  
+For OpenMRS at MyClinic, I worked through the asset inventory systematically — starting with the architecture diagram from Day 17 and building a complete picture of every component, its function, the data it handles, and its security requirements.
 
 ---
 
-## 🧠 Reflection: Asset Confidence Check
+## What Actually Clicked for Me
 
-The asset I feel least confident about?  
-**Clinic endpoints.** Why? Because user behavior introduces unpredictable risk. From phishing to unpatched browsers, they require constant education, monitoring, and policy enforcement.  
+The thing that clicked most today is the concept of the **attack surface** and how asset inventory defines it. Every asset in the inventory is a potential entry point for an attacker, a potential point of data exposure, or a potential point of failure. The completeness of the asset inventory is essentially the completeness of your understanding of your own attack surface.
 
-🔍 **Actionable Next Step**:  
-Create endpoint baseline configurations, enforce web access via VPN, and implement browser security policies organization-wide.
+An asset that is not in the inventory is an asset that has no controls assigned to it, no monitoring coverage, and no owner responsible for its security. In security terms, it is a blind spot — and attackers are very good at finding blind spots. The history of significant breaches is full of cases where the compromised entry point was something the organization did not know was there or had forgotten about — an old server that was never decommissioned, a cloud storage bucket that was provisioned and forgotten, a third-party integration that nobody had reviewed since it was set up.
 
----
-
-## Leadership Takeaway
-
-Building GRC maturity starts here — **with visibility**.  
-As I guide healthcare-focused organizations toward resilience, my approach is clear: **inventory first, then secure smartly.**
-
-This exercise is not a checkbox. It’s a habit.
+That framing transformed the asset inventory exercise from a documentation formality into something that felt genuinely important.
 
 ---
 
-## 🔗 Relevant Standards & Resources
+## Complete Asset Inventory for OpenMRS at MyClinic
 
-- `NIST SP 800-37 Task P-10`
-- `CIS Control 1 – Inventory and Control of Enterprise Assets`
-- `OpenMRS Architecture Overview`
-- `AWS Trusted Advisor & Config for Asset Inventory`
+### Category 1 — Compute Assets
 
 ---
 
-📌 #Day33 #NISTRMF #AssetInventory #OpenMRS #GRCLeadership #CISControls #HealthcareSecurity #CyberGovernance #100DaysOfGRC #CloudSecurity #VisibilityFirst
+**Asset: OpenMRS Application Server**
+- *Type:* AWS EC2 instance (Ubuntu Linux)
+- *Function:* Hosts the OpenMRS web application and application logic. Processes all user requests, manages session state, executes business logic, and communicates with the database tier.
+- *Data handled:* ePHI in transit between user browsers and the application layer. Application configuration data. Session tokens.
+- *Security classification:* High — directly processes ePHI
+- *Key security requirements:* Operating system hardening per CIS Benchmark for Ubuntu. Regular patching with defined SLA for critical CVEs. SSH access restricted to authorized administrators via key-based authentication only. Security group configured to allow only necessary inbound traffic. IMDSv2 enforced to prevent SSRF-based metadata service attacks.
+- *Owner:* IT Administrator / ISSO
+- *Biggest risk:* Unpatched vulnerabilities in the OS or OpenMRS application. Misconfigured security group allowing unnecessary inbound access. Compromised SSH credentials.
+
+---
+
+**Asset: Clinic Endpoint Workstations**
+- *Type:* Physical workstations and laptops used by clinical and administrative staff to access OpenMRS via web browser
+- *Function:* The access point through which clinicians and staff interact with OpenMRS. All ePHI viewed or entered by users passes through these devices.
+- *Data handled:* ePHI displayed in browser sessions. Authentication credentials. Potentially cached session data.
+- *Security classification:* High — access point to High-impact system
+- *Key security requirements:* Endpoint security software (antivirus/EDR). OS and browser patching. Full-disk encryption (BitLocker or equivalent). Screen lock policy enforced. MFA for OpenMRS access. Browser security policy restricting unauthorized extensions. VPN required for remote access to OpenMRS.
+- *Owner:* IT Administrator
+- *Biggest risk:* This is the asset I feel least confident about in the entire inventory. Endpoint security depends heavily on user behavior — phishing susceptibility, password management practices, whether staff leave sessions open, whether personal devices are used to access the system. The technical controls are necessary but insufficient without consistent security awareness training and enforcement of endpoint security policies.
+
+---
+
+### Category 2 — Data Storage Assets
+
+---
+
+**Asset: OpenMRS MySQL Database (AWS RDS)**
+- *Type:* AWS RDS MySQL instance
+- *Function:* Stores all persistent patient data — patient records, clinical encounter documentation, medication records, diagnostic results, system configuration, and audit logs. This is the authoritative data store for all ePHI in the system.
+- *Data handled:* Complete ePHI for all patients registered in OpenMRS. System configuration data. Application audit logs.
+- *Security classification:* High — contains the complete ePHI dataset
+- *Key security requirements:* Encryption at rest enabled using AWS KMS (AES-256). Deployed in private subnet with no direct internet access. Security group restricted to connections from application server only. Automated backups enabled with defined retention period. RDS Enhanced Monitoring enabled. Database credential rotation on defined schedule. MySQL audit logging enabled for access tracking.
+- *Owner:* IT Administrator / ISSO
+- *Biggest risk:* Misconfigured security group or VPC routing that exposes the database to the internet. Unrotated database credentials. Insufficient backup retention or untested restoration procedures.
+
+---
+
+**Asset: Backup Storage (AWS S3)**
+- *Type:* AWS S3 bucket containing encrypted database backups and application data snapshots
+- *Function:* Provides the backup and recovery capability for OpenMRS. Nightly snapshots of the RDS database and application configuration are stored here and used for recovery in the event of data loss or ransomware.
+- *Data handled:* Encrypted copies of all ePHI stored in the OpenMRS database.
+- *Security classification:* High — contains ePHI even in encrypted form; unauthorized access to backup files could enable offline decryption attacks
+- *Key security requirements:* Server-side encryption using SSE-KMS. Block all public access enabled at bucket level. Bucket policy restricted to authorized IAM roles only. Versioning enabled to protect against accidental deletion. S3 Object Lock (WORM) configured for critical backup files to protect against ransomware deletion. Access logging enabled. Lifecycle policy defined for retention period.
+- *Owner:* IT Administrator / ISSO
+- *Biggest risk:* Publicly accessible bucket — one of the most common and consequential cloud misconfigurations. Overly permissive IAM policy granting unnecessary access. Backup files that exist but have never been tested for restoration.
+
+---
+
+**Asset: Application Audit Logs**
+- *Type:* Log files generated by OpenMRS application; stored in CloudWatch Logs and locally on the application server
+- *Function:* Records all access to patient records — who logged in, which records were accessed, what changes were made, and when. Required by HIPAA's audit control standard (§164.312(b)).
+- *Data handled:* User identifiers, timestamps, record identifiers, action types. Indirectly identifies which patients were accessed by which users.
+- *Security classification:* High — audit logs are both a compliance requirement and a forensic asset; their integrity must be protected
+- *Key security requirements:* Logs shipped to CloudWatch Logs in near-real-time to prevent local deletion. CloudWatch log group retention policy defined. IAM policy restricting log deletion to authorized administrators only. Log integrity verified through CloudTrail (which records CloudWatch API calls). Regular review schedule established per monitoring strategy.
+- *Owner:* ISSO
+- *Biggest risk:* Audit logs stored only locally on the application server can be deleted by an attacker who compromises the server. Logs that are collected but never reviewed do not function as a security control — they are only useful if someone is actually looking at them.
+
+---
+
+### Category 3 — Application and Software Assets
+
+---
+
+**Asset: OpenMRS Application Software**
+- *Type:* Open-source Java web application; version-controlled via OpenMRS community releases
+- *Function:* The application codebase that implements all OpenMRS functionality — patient registration, clinical documentation, medication management, reporting, API endpoints.
+- *Data handled:* Processes all ePHI flowing through the system.
+- *Security classification:* High — vulnerabilities in the application directly affect the security of all ePHI
+- *Key security requirements:* Maintain current supported version. Subscribe to OpenMRS security advisories and apply security patches within defined SLA (critical: 72 hours; high: 30 days). Disable unused modules. Review third-party module security before deployment. Maintain inventory of installed modules and their versions. HTTPS enforced for all connections.
+- *Owner:* IT Administrator / ISSO (in coordination with OpenMRS community)
+- *Biggest risk:* Running an outdated version with known unpatched vulnerabilities. Installing third-party modules without security review. The open-source nature of OpenMRS means vulnerability details are publicly available once disclosed — patching speed is critical.
+
+---
+
+**Asset: OpenMRS Custom Modules**
+- *Type:* Custom or third-party OpenMRS modules installed at MyClinic
+- *Function:* Extend core OpenMRS functionality — clinical forms, reporting modules, integration adapters, or workflow customizations specific to MyClinic's clinical environment.
+- *Data handled:* Depending on the module, may process ePHI directly.
+- *Security classification:* High — modules execute within the OpenMRS application context and have access to the same data
+- *Key security requirements:* Maintain inventory of all installed modules with version numbers and source. Review module source code or community reputation before installation. Establish update policy for modules that receive security patches. Remove modules that are no longer actively maintained.
+- *Owner:* IT Administrator
+- *Biggest risk:* Third-party modules with vulnerabilities that are not tracked or patched. Abandoned modules that no longer receive security updates but remain installed and active.
+
+---
+
+### Category 4 — Network and Access Management Assets
+
+---
+
+**Asset: VPC and Network Configuration**
+- *Type:* AWS Virtual Private Cloud configuration — subnets, security groups, routing tables, internet gateway, NAT gateway
+- *Function:* Defines the network architecture that isolates OpenMRS infrastructure from the internet and controls traffic between components.
+- *Data handled:* All network traffic to and from OpenMRS components passes through this configuration.
+- *Security classification:* High — network misconfiguration is one of the most common root causes of cloud security incidents
+- *Key security requirements:* Application server in public subnet (HTTPS only); database in private subnet with no internet routing. Security groups follow least privilege — each component allows only the specific ports and sources required for its function. VPC Flow Logs enabled for network traffic monitoring. Regular security group review per monitoring strategy schedule.
+- *Owner:* IT Administrator / ISSO
+- *Biggest risk:* Security group misconfiguration exposing the database or application management ports to the internet. Overly permissive rules added during troubleshooting and never removed.
+
+---
+
+**Asset: IAM Roles and Policies**
+- *Type:* AWS Identity and Access Management configuration — roles, policies, and permission boundaries governing access to AWS resources
+- *Function:* Controls which AWS services and users can access which AWS resources. Implements least-privilege access for all components of the OpenMRS deployment.
+- *Data handled:* IAM configuration determines who can access the data assets — the RDS database, S3 backups, EC2 instance.
+- *Security classification:* High — overprivileged IAM configuration can enable an attacker who compromises one component to access all components
+- *Key security requirements:* Principle of least privilege applied to all roles. No use of root account for operational tasks. MFA required for all human IAM users. Regular access reviews per monitoring strategy. CloudTrail monitoring of sensitive IAM actions.
+- *Owner:* IT Administrator / ISSO
+- *Biggest risk:* Overly permissive policies that grant broader access than required. IAM credentials stored in application code or configuration files rather than using IAM roles. Root account credentials not protected with MFA.
+
+---
+
+**Asset: SSL/TLS Certificate**
+- *Type:* SSL/TLS certificate for the OpenMRS web application domain; managed via AWS Certificate Manager
+- *Function:* Enables HTTPS encryption for all traffic between user browsers and the OpenMRS application server. Authenticates the server to users.
+- *Data handled:* Protects ePHI in transit between endpoints and the application server.
+- *Security classification:* Moderate — certificate expiration or misconfiguration degrades security but does not directly expose data
+- *Key security requirements:* Certificate renewal automated through AWS Certificate Manager. Certificate validity monitored with alerts before expiration. HTTPS enforced with HTTP redirect disabled or returning 301 to HTTPS.
+- *Owner:* IT Administrator
+- *Biggest risk:* Certificate expiration causing browser security warnings that erode user trust or cause staff to accept insecure connections. Manual renewal processes that fail due to oversight.
+
+---
+
+## Complete Asset Inventory Summary Table
+
+| Asset | Type | Data Classification | Security Level | Primary Owner | Biggest Risk |
+|---|---|---|---|---|---|
+| EC2 Application Server | Compute | ePHI in transit | High | IT Admin / ISSO | Unpatched OS or app vulnerabilities |
+| Clinic Workstations | Endpoint | ePHI in browser | High | IT Admin | User behavior; phishing; unmanaged devices |
+| RDS MySQL Database | Data store | ePHI at rest | High | IT Admin / ISSO | Misconfigured security group; unrotated credentials |
+| S3 Backup Bucket | Data store | Encrypted ePHI | High | IT Admin / ISSO | Public access misconfiguration; untested restoration |
+| Application Audit Logs | Logging | Access metadata | High | ISSO | Local-only storage; logs never reviewed |
+| OpenMRS Application | Software | Processes all ePHI | High | IT Admin / ISSO | Outdated version with known CVEs |
+| Custom Modules | Software | May process ePHI | High | IT Admin | Unmaintained third-party modules |
+| VPC / Network Config | Network | All traffic | High | IT Admin / ISSO | Security group misconfiguration |
+| IAM Roles and Policies | Access control | Governs all access | High | IT Admin / ISSO | Overprivileged policies; no MFA on accounts |
+| SSL/TLS Certificate | Cryptographic | Protects ePHI in transit | Moderate | IT Admin | Certificate expiration; manual renewal failure |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2019 Capital One breach** — which I have referenced before in this project, but today I want to focus on a specific detail that is directly relevant to asset inventory.
+
+The root cause of the Capital One breach was a misconfigured Web Application Firewall that allowed a Server-Side Request Forgery (SSRF) attack, enabling the attacker to query the AWS EC2 Instance Metadata Service and retrieve temporary credentials for an overprivileged IAM role. Those credentials were then used to list and download data from over 700 S3 buckets containing sensitive customer information.
+
+The detail that connects to today's topic: Capital One had over 700 S3 buckets containing sensitive data. Some of those buckets contained data from applications that were no longer active. The breach exposed data across the breadth of that asset landscape because the IAM role the attacker compromised had overly broad access — access that reflected an incomplete picture of which assets needed protection and what level of access each component legitimately required.
+
+An accurate, maintained asset inventory is one of the prerequisites for implementing least-privilege access effectively. You cannot scope IAM permissions appropriately if you do not have a clear picture of which assets exist, what data they contain, and which components legitimately need access to them. Capital One's breach spread across hundreds of assets in part because the access model had not been tightly aligned with a current, accurate picture of the asset landscape.
+
+For OpenMRS at MyClinic, maintaining an accurate and current asset inventory — and reviewing it regularly as part of the monitoring strategy — is how we prevent a similar sprawl from developing over time.
+
+---
+
+## What I Am Still Thinking About
+
+The asset I am least confident about in this inventory is the clinic workstations — and I think that uncertainty is appropriate, because endpoint security is genuinely the hardest part of this picture to get right.
+
+The technical controls for endpoints — EDR software, full-disk encryption, browser policy, MFA — are well understood and implementable. The hard part is the human layer. A workstation with all the right technical controls is still a vulnerability if the person using it clicks a phishing link, shares their password with a colleague, or leaves an OpenMRS session open when they walk away from the desk.
+
+Endpoint security in a clinical environment has an additional layer of complexity because security friction has a real cost — a nurse who has to re-authenticate multiple times during a busy clinic hour is losing time that could be spent on patient care. The right answer is not maximum friction or minimum friction — it is the right friction, implemented in ways that clinical workflows can absorb without generating dangerous workarounds.
+
+I want to develop a more specific endpoint security standard for the MyClinic context that addresses both the technical requirements and the workflow constraints. That feels like a topic worth dedicating a full day to as the project continues.
+
+---
+
+## What's Next
+
+Day 34 moves into the formal documentation of the system boundary — defining exactly where OpenMRS begins and ends, what is inside the authorization boundary, and how the system connects to external services and systems. Boundary definition is closely related to asset inventory and is a prerequisite for completing the formal system categorization documentation.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-10 Asset Identification](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [CIS Control 1 – Inventory and Control of Enterprise Assets](https://www.cisecurity.org/controls/inventory-and-control-of-enterprise-assets)
+- [CIS Control 2 – Inventory and Control of Software Assets](https://www.cisecurity.org/controls/inventory-and-control-of-software-assets)
+- [Capital One Breach – Senate Banking Committee Report](https://www.banking.senate.gov/imo/media/doc/Capital%20One%20Data%20Breach.pdf)
+- [OpenMRS Architecture Overview](https://wiki.openmrs.org/display/docs/Architecture)
+
+---
+
+*#GRC #AssetInventory #NISTRMF #CISControls #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #CloudSecurity #AWS #Day33*
