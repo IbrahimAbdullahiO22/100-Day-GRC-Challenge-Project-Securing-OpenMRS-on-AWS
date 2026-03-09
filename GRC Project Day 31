@@ -115,4 +115,22 @@ One thing that came up today that I want to think about more: how do you write a
 
 There is a version of this exercise where you write a generic mission statement that could apply to any healthcare EHR, check the Task P-8 box, and move on. The documentation exists but does not actually inform anything.
 
-The version I tried to do today — working through who depends on the system, for what, and what the spe
+The version I tried to do today — working through who depends on the system, for what, and what the specific consequences of different failure modes would be — takes more effort and produces something that actually connects to the rest of the security program. I want to remember the difference as the project continues into the Categorize and Select steps.
+
+---
+
+## What's Next
+
+Day 32 begins the formal **Categorize step** of the NIST RMF — taking the foundation built in the Prepare step and producing the official system categorization documentation. This includes formally documenting the FIPS 199 categorization worked out on Day 29, mapping the information types flowing through OpenMRS, and recording the categorization decision in the System Security Plan in a way that is auditable and defensible.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-8 Mission and Business Focus](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [OpenMRS Project – About and Mission](https://openmrs.org/about/)
+- [NIST SP 800-160 Vol 1 – Systems Security Engineering](https://csrc.nist.gov/publications/detail/sp/800-160/vol-1/final)
+- [Düsseldorf Hospital Ransomware Attack – Background](https://www.wired.com/story/ransomware-hospital-death-germany/)
+
+---
+
+*#GRC #NISTRMF #OpenMRS #MissionDrivenSecurity #HealthcareSecurity #HIPAA #100DaysOfGRC #RiskManagement #AWS #Day31*
