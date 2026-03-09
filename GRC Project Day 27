@@ -1,80 +1,165 @@
-# 📅 Day 27 – Identifying Common Controls (Part 1)
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+# 📅 Day 27 – Common Controls: Building Security Once, Sharing It Everywhere | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Insight: Reuse What’s Proven. Focus on What’s Critical.
+## A Concept That Changes How You Think About Security at Scale
 
-As leaders in governance, risk, and compliance (GRC), one of our core responsibilities is to enable **secure scalability**. That’s where **common controls** come in — standardized, reusable safeguards that apply across multiple systems.
+Yesterday I worked through tailoring — adjusting the control baseline to fit the specific system and environment. Today builds on that with a concept that initially seemed straightforward but turned out to be more strategically interesting than I expected: common controls.
 
-Today, I explored **Task P-5 of the NIST Risk Management Framework (RMF)**, which emphasizes identifying common controls early in the process to **maximize efficiency, reduce redundancy**, and promote **consistent risk treatment** across the enterprise.
+The basic idea is simple. If multiple systems in an organization all need the same security control — say, physical security for the infrastructure they run on — why would each system implement that control separately? Instead, you implement it once at the organizational or infrastructure level, document it, and let individual systems inherit it. That is a common control.
 
----
-
-##  What Are Common Controls?
-
-In simple terms, **common controls** are security or privacy protections that multiple systems can **inherit** rather than create from scratch.
-
-Instead of every project building its own walls, common controls let us build a **strong fortress once** and let many projects live securely inside it.
-
-###  Real-World Examples
-
-- **AWS Physical Security**: Instead of building server rooms with guards, alarms, and temperature controls, we inherit AWS’s world-class infrastructure protections.
-- **Single Sign-On (SSO)**: A hospital-wide identity platform used by all apps (EHR, billing, lab systems) to enforce unified authentication.
-- **Corporate VPN**: Centralized secure access that serves multiple internal systems.
-- **Organization-Wide Logging & Monitoring**: Enterprise SIEM tools like Splunk or AWS CloudTrail serve as common monitoring controls.
+But the implications of this concept go further than just efficiency. Common controls are a key part of how large organizations — and cloud-hosted systems specifically — achieve consistent security across complex environments without duplicating effort at every level. Understanding how they work is directly relevant to the OpenMRS deployment and to GRC practice more broadly.
 
 ---
 
-##  Case Study: MyClinic + OpenMRS (Cloud-Based EHR)
+## What I Worked On Today
 
-In our scenario, MyClinic is deploying OpenMRS on AWS. Instead of building security from the ground up, the team smartly inherits:
+NIST SP 800-37 Task P-5 identifies common controls as a key output of the Prepare step. Before individual systems go through categorization and control selection, the organization should identify which controls are available for inheritance — so that system owners and ISSOs are not spending time and resources implementing controls that already exist at a higher level.
 
- **AWS Data Center Physical Security**  
-– Includes perimeter defense, badge access, surveillance, climate control, and backup power systems  
-→ _This is a powerful common control that OpenMRS doesn't need to replicate locally._
+NIST defines three types of controls based on how they are implemented and inherited:
 
- **AWS Network Infrastructure Protections**  
-– DDoS mitigation, firewalls, and secure routing  
-→ _Another area where we trust and document inherited controls._
+**Common controls** are implemented by an entity other than the system owner and inherited by one or more systems. The inheriting system does not need to implement the control separately — it simply documents the inheritance and relies on the provider to maintain and assess the control.
 
- **Shared Identity Management**  
-– If the hospital uses enterprise-wide SSO, OpenMRS simply plugs in.
+**System-specific controls** are implemented and maintained by the individual system owner for that system alone. These are the controls that are unique to OpenMRS — role-based access within the application, OpenMRS-specific audit logging, clinical workflow configurations.
 
-By identifying these controls, we reduce overhead and stay focused on tailoring only what’s **unique** to OpenMRS (e.g., role-based access within the EHR, clinical audit logs, patient consent workflows).
+**Hybrid controls** have both a common component and a system-specific component. A good example is audit logging — the infrastructure-level logging provided by AWS CloudTrail is a common control, while the application-level audit logging specific to OpenMRS is a system-specific control. Together they form a hybrid that covers both layers.
+
+Understanding which category each control falls into is important because it affects who is responsible for implementing and maintaining the control, who assesses it, and how it is documented in the System Security Plan.
 
 ---
 
-##  Hands-On Exercise: My Common Control Pick
+## What Actually Clicked for Me
 
-**Inheritable Control**: _AWS Physical Infrastructure Security_  
-**Why It Matters**:  
-> “This control removes the burden of physical safeguards from the MyClinic IT team. It ensures compliance with standards like SOC 2, ISO 27001, and HIPAA physical security, allowing the OpenMRS project team to focus on software-layer risks.”
+The thing that clicked most today is how the shared responsibility model from Day 16 and the concept of common controls are really the same idea expressed in different frameworks.
 
----
+When AWS says "we are responsible for security of the cloud," they are describing a set of common controls that MyClinic inherits automatically by using AWS services. The physical security of data centers, the security of the hypervisor, the network infrastructure protections — these are all common controls in NIST RMF terms. They are implemented by AWS, documented in AWS compliance certifications, and inherited by every customer system running on AWS infrastructure.
 
-##  Leadership Reflection
+Making that connection between the shared responsibility model and the RMF common control concept helped me see both frameworks more clearly. The shared responsibility model is the business and contractual framing. The NIST RMF common control concept is the security and compliance framing. They describe the same underlying reality.
 
-Recognizing and leveraging **common controls** is a hallmark of **mature GRC leadership**. It ensures:
-
--  **Consistency** across systems
--  **Faster implementation** of risk strategies
--  **Smarter resource allocation**
--  **Clearer audit trails** for inherited responsibilities
-
->  As a GRC leader, I don't just build controls. I orchestrate a **control ecosystem** where shared protections strengthen every system under the organization’s umbrella.
+The other thing that clicked is the documentation requirement. Inheriting a common control is not the same as ignoring it. The inheriting system still needs to document the inheritance — identifying which common control provider is responsible, what evidence demonstrates the control is in place, and any limitations or gaps that the inherited control does not fully address. That documentation is what makes the inheritance auditable and defensible.
 
 ---
 
-##  Further Exploration
+## Mapping Common Controls for OpenMRS at MyClinic
 
-- `"NIST SP 800-37 Task P-5 Common Controls"`
-- `"AWS inherited security controls"`
-- `"Common vs System-Specific Controls"`
-- `"Cloud security shared responsibility model"`
+Working through today's exercise I built out a structured picture of which controls are available for inheritance by OpenMRS and which need to be implemented at the system level.
 
 ---
 
-📌 #GRC #Cybersecurity #NISTRMF #CommonControls #RiskManagement #AWS #HealthcareSecurity #OpenMRS #InfoSecLeadership #Compliance #CloudSecurity #100DayChallenge #StrategicThinking #InheritControls #FERPAtoHIPAA
+### Inherited from AWS — Common Controls
 
- _Tomorrow (Day 28):_ We’ll go deeper into enterprise-level common controls — like centralized Security Operations Centers (SOCs) and AWS compliance programs — and see how they support holistic GRC efforts.
+**Physical and Environmental Protection (PE family)**
+AWS maintains comprehensive physical security across all its data center facilities — perimeter controls, biometric access, 24/7 security personnel, surveillance systems, environmental monitoring, power redundancy, and fire suppression. These controls are validated through AWS's SOC 1, SOC 2, ISO 27001, and FedRAMP certifications — all of which are available for review through AWS Artifact.
+
+For OpenMRS on AWS, MyClinic inherits all of these physical security controls automatically. The System Security Plan for OpenMRS will document this inheritance and reference the relevant AWS certifications as evidence.
+
+*Limitation to document:* Physical security for endpoint devices — the workstations and tablets used to access OpenMRS — is not covered by AWS's data center controls. MyClinic retains responsibility for endpoint physical security as a system-specific or organizational control.
+
+---
+
+**Network Infrastructure Protection**
+AWS provides foundational network security at the infrastructure level — DDoS mitigation through AWS Shield, network isolation between customer environments through virtualization, and secure global network routing. These protections are built into the AWS infrastructure and available to all customers.
+
+For OpenMRS, MyClinic inherits the infrastructure-level network protections from AWS. The system-specific network controls — security group configuration, VPC setup, subnet architecture — remain MyClinic's responsibility as system-specific controls.
+
+*Limitation to document:* AWS infrastructure-level network protections do not substitute for proper security group and VPC configuration. If MyClinic misconfigures the network controls within their AWS environment, the inherited AWS network protections do not compensate for that. The boundary between inherited and system-specific is important here.
+
+---
+
+**Virtualization and Hypervisor Security**
+The security of the hypervisor layer — the technology that creates and manages virtual machines — is entirely AWS's responsibility. Customers cannot access or modify the hypervisor, and vulnerabilities at the hypervisor level are AWS's responsibility to identify and patch. The isolation between one customer's EC2 instances and another's is maintained by AWS and inherited by all customers.
+
+*Limitation to document:* Hypervisor security does not protect against attacks that originate within the customer's own environment. If an attacker compromises MyClinic's AWS account through stolen credentials, the hypervisor security is not relevant to the resulting access.
+
+---
+
+### Inherited from MyClinic Organization — Common Controls
+
+**Identity and Access Management Foundation**
+If MyClinic operates an enterprise-wide identity management system — Single Sign-On, Active Directory, or similar — OpenMRS can potentially inherit the authentication infrastructure rather than building a separate credential management system from scratch.
+
+In practice, this depends on whether the enterprise identity system integrates with OpenMRS and whether MyClinic has implemented it with sufficient security controls. If MyClinic's enterprise identity system enforces MFA, password complexity requirements, and regular access reviews, those controls can be inherited by OpenMRS to the extent the integration is in place.
+
+*Limitation to document:* Enterprise identity systems need to be assessed for their own security posture before OpenMRS can rely on them as common controls. An enterprise identity system with weak password policies or no MFA provides a common control — but not a strong one.
+
+---
+
+**Organization-Wide Security Awareness Training**
+MyClinic's organization-wide security awareness training program — if one exists — can be inherited by OpenMRS as a common control for the general security awareness requirements in the NIST AT control family. Staff who have completed the organizational training do not need to complete a separate OpenMRS-specific training for the general awareness component.
+
+*Limitation to document:* As noted in the tailoring discussion on Day 26, OpenMRS-specific training elements — particularly around ePHI handling, HIPAA obligations, and clinical workflow security — need to be implemented as system-specific supplements even when the general awareness training is inherited.
+
+---
+
+**Incident Response Program**
+If MyClinic has an organization-wide incident response program — documented procedures, defined roles, tested response plans — OpenMRS can inherit the general incident response framework as a common control. The system-specific component is the OpenMRS-specific runbooks and escalation procedures that connect the general IR framework to the specific system.
+
+---
+
+### System-Specific Controls — OpenMRS Only
+
+These controls cannot be inherited and must be implemented specifically for OpenMRS:
+
+- Role-based access control within the OpenMRS application — defining clinical, administrative, and IT roles and their permissions
+- Application-level audit logging — capturing ePHI access events at the application layer
+- OpenMRS-specific backup and recovery procedures — including tested restoration from RDS snapshots
+- Database encryption configuration — enabling and verifying RDS encryption at rest
+- HTTPS enforcement for OpenMRS web traffic — application-level configuration
+- Clinical downtime procedures — paper-based backup workflows specific to OpenMRS unavailability
+
+---
+
+## Common Control Inheritance Summary
+
+| Control | Type | Provider | OpenMRS Inherits? | Limitation |
+|---|---|---|---|---|
+| Data center physical security | Common | AWS | Yes | Does not cover endpoints |
+| Network infrastructure protection | Common | AWS | Yes | Does not substitute for security group config |
+| Hypervisor security | Common | AWS | Yes | Does not protect against account compromise |
+| Enterprise SSO/identity management | Common | MyClinic | Partially | Depends on integration and SSO security posture |
+| Organization-wide security training | Common | MyClinic | Partially | OpenMRS-specific content still required |
+| Incident response framework | Common | MyClinic | Partially | System-specific runbooks still required |
+| Application role-based access | System-specific | MyClinic/ISSO | No — must implement | Core OpenMRS security control |
+| Application audit logging | Hybrid | AWS + MyClinic | Partial | Infrastructure logging from AWS; app logging from OpenMRS |
+| Database encryption | System-specific | MyClinic/ISSO | No — must configure | Must be enabled on RDS instance |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2021 Microsoft Exchange Server vulnerabilities** — a series of critical zero-day vulnerabilities that affected on-premises Exchange Server installations worldwide. Attackers exploited the vulnerabilities to gain access to email systems across thousands of organizations including healthcare providers.
+
+What makes this case relevant to common controls is the contrast between organizations running Exchange on-premises and those using Microsoft's cloud-based Exchange Online service. For cloud customers, Microsoft had already patched the underlying infrastructure before the vulnerabilities were publicly disclosed — the fix was a common control delivered by the provider. On-premises customers had to apply patches themselves, and many were compromised during the window between public disclosure and patch application.
+
+This is one of the concrete security benefits of the common control model in cloud environments. When a vulnerability affects infrastructure that a cloud provider manages as a common control, the provider can patch it across their entire infrastructure simultaneously. The inheriting customer benefits from that patch without having to do anything — and without the window of exposure that on-premises customers face.
+
+For OpenMRS on AWS, this means that vulnerabilities in the underlying EC2 hypervisor, the RDS database engine managed layer, or the S3 infrastructure are patched by AWS as common control maintenance. MyClinic does not manage those patches and does not face the patch lag risk for those components. That is a real and meaningful security benefit of the cloud hosting model — one that the common control framework helps make explicit and documented.
+
+---
+
+## What I Am Still Thinking About
+
+One question that came up today: how do you assess the quality of an inherited common control? Documenting that a control is inherited from AWS is straightforward — the AWS certifications provide the evidence. But for common controls inherited from within the organization — like MyClinic's enterprise identity management system or its incident response program — the quality of those controls varies widely depending on how mature the organization's security program is.
+
+If MyClinic's enterprise identity system has not been assessed recently, or if the incident response program has never been tested, then the common controls being inherited by OpenMRS may not actually be providing the protection that the inheritance documentation suggests. The inheriting system is only as secure as the common controls it relies on.
+
+I want to think more carefully about what due diligence looks like when inheriting organizational common controls — what evidence should be reviewed, how recently the common control should have been assessed, and what the System Owner and ISSO's responsibilities are when they identify a quality concern with an inherited control.
+
+---
+
+## What's Next
+
+Day 28 goes deeper into enterprise-level common controls — specifically looking at centralized security operations, AWS compliance programs, and how common controls function within larger health system environments where OpenMRS might be one of many systems sharing the same organizational security infrastructure.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-5, Common Controls](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-53 Rev 5 – Common Control Definitions](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [AWS Compliance Programs – Available Certifications](https://aws.amazon.com/compliance/programs/)
+- [Microsoft Exchange Vulnerabilities 2021 – CISA Advisory](https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-062a)
+
+---
+
+*#GRC #CommonControls #NISTRMF #CloudSecurity #AWS #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #Day27*
