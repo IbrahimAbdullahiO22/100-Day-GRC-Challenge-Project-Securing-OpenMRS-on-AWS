@@ -1,103 +1,168 @@
-# Day 28 – Leveraging AWS & Enterprise Controls (Part 2)
+#  Day 28 – Enterprise-Level Common Controls: AWS Security Tools and the SOC | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Insight: Don't Just Build Security — Integrate It Enterprise-Wide
+## Building on Yesterday's Foundation
 
-In GRC, smart leaders don’t try to secure everything from scratch — they **inherit, integrate, and orchestrate** enterprise and cloud controls to create a unified, cost-effective, and robust security posture.
+Day 27 established the concept of common controls and mapped out which AWS infrastructure controls OpenMRS inherits automatically. Today I went a level deeper — looking at the specific AWS security services that function as enterprise-wide common controls, and exploring how a Security Operations Center fits into the picture for an organization like MyClinic.
 
-Today, I deepened my focus on **Task P-5 of the NIST RMF**, exploring how AWS’s own security framework and enterprise-wide teams like the **Security Operations Center (SOC)** support the **OpenMRS healthcare project** and other systems from the top down.
-
----
-
-##  Leveraging AWS Security & Compliance
-
-AWS doesn’t just offer infrastructure — it delivers **audited, world-class security** with certifications like:
-
--  **SOC 2 Type II** – external attestation of AWS’s operational security
--  **ISO 27001** – global information security standard
--  **FedRAMP / HIPAA compliance mappings** for regulated workloads
-
-###  GRC Takeaway:
-> _“When deploying OpenMRS in AWS, I inherit these robust infrastructure-level controls. This drastically reduces risk ownership at the application level and speeds up compliance efforts.”_
-
-AWS operates under a **shared responsibility model**:
-
-- **AWS Secures the Cloud**: physical servers, core networking, power, etc.
-- **We Secure What’s In the Cloud**: configurations, data, IAM, app logic.
+The theme that kept coming up today is the difference between having security tools available and actually integrating them into a functioning security program. AWS offers powerful native security services. But they do not configure themselves, they do not respond to alerts on their own, and they do not replace the need for people and processes. Understanding what each tool does — and what it does not do — is what makes the difference between a security posture that looks good on paper and one that actually works.
 
 ---
 
-##  AWS Security Tools for Multi-System Monitoring
+## What I Worked On Today
 
-To support OpenMRS and other systems, I would rely on these **cross-cutting AWS services**:
+Today covered two related areas: the enterprise-level security services AWS provides that OpenMRS can leverage as common controls, and the role of a Security Operations Center in providing centralized threat monitoring and response across all of an organization's systems.
 
-###  Amazon GuardDuty
-- AI-powered threat detection across AWS accounts, EC2, S3, IAM activity.
-- Alerts on suspicious behavior and unusual API usage.
-- _“Ideal for monitoring OpenMRS infrastructure without deploying separate tools.”_
-
-###  AWS CloudTrail
-- Records every API call and user action across AWS services.
-- Vital for **incident response and forensic audits**.
-
-###  AWS Config
-- Continuously evaluates configurations for compliance.
-- Notifies if a resource drifts from the approved security baseline.
-
-###  AWS Security Hub
-- Centralized view of security findings from GuardDuty, Inspector, IAM Access Analyzer, etc.
-- Useful for **consolidated GRC dashboards**.
+Both topics connect directly to NIST SP 800-37 Task P-5 — identifying common controls available for inheritance — and to the continuous monitoring requirements that will be relevant in the later stages of the RMF.
 
 ---
 
-##  The Power of an Enterprise SOC (Security Operations Center)
+## AWS Security Services as Common Controls
 
-If MyClinic has an internal SOC, its centralized threat monitoring **augments cloud-native tooling**. Here’s what a mature SOC provides:
-
--  SIEM with correlated event analysis (e.g., Splunk, QRadar)
--  24/7 alerting and automated incident response
--  Coverage for ALL systems – not just OpenMRS
--  A seasoned security team driving governance at scale
-
-> “As a GRC leader, I know that embedding OpenMRS within these enterprise frameworks is not only efficient — it’s essential for modern cyber resilience.”
+AWS offers a set of security services that, when enabled at the account or organization level, provide monitoring and protection that applies across all systems running in that environment — including OpenMRS. These are common controls in the NIST RMF sense: implemented once, inherited by multiple systems, maintained by a central provider.
 
 ---
 
-##  Hands-On Reflection
+### Amazon GuardDuty — Threat Detection
 
-**Selected Control**: _Amazon GuardDuty_  
-**Use Case**:  
-> “GuardDuty provides unified, always-on detection across my AWS accounts. It’s a scalable, low-maintenance solution that strengthens OpenMRS monitoring while minimizing cost and complexity.”
+GuardDuty is AWS's managed threat detection service. It continuously analyzes data from multiple sources — CloudTrail API logs, VPC Flow Logs, DNS logs, and increasingly S3 access logs and EKS audit logs — using machine learning and threat intelligence to identify suspicious activity.
 
-**Why This Matters**:
-- Enhances my security **without installing agents**
-- Speeds up detection of lateral movement, credential abuse, or data exfiltration
-- Boosts stakeholder confidence through proactive defense
+What makes GuardDuty particularly valuable as a common control is that it requires no agents to be installed and no complex configuration to get started. You enable it at the account level and it begins monitoring immediately. For OpenMRS, GuardDuty would detect things like:
 
----
+- API calls from unusual geographic locations or IP addresses associated with known malicious actors
+- Attempts to disable CloudTrail logging — a common attacker tactic to cover tracks
+- EC2 instances communicating with known command-and-control infrastructure
+- Unusual data transfer patterns from S3 buckets containing patient data
+- Credential abuse — for example, an IAM role making API calls it has never made before
 
-##  Leadership Reflection
-
-AWS’s third-party certifications give me a **credible foundation** to assure stakeholders that our infrastructure is secure by design.
-
-By plugging OpenMRS into AWS’s secure ecosystem and my organization’s SOC:
-
--  I **reduce the burden** of implementing redundant controls
--  I **focus on system-specific risks** and compliance (e.g., HIPAA, FERPA)
--  I ensure **real-time visibility** across the environment
-
->  This is what **GRC leadership** looks like in action: knowing when to build, when to inherit, and when to integrate — all to deliver secure, scalable, and compliant systems.
+The limitation worth documenting: GuardDuty detects and alerts. It does not automatically respond or remediate. Someone needs to be monitoring the alerts and taking action when findings are generated. An organization that enables GuardDuty but never reviews the findings has spent money without gaining security.
 
 ---
 
-##  Further Exploration
+### AWS CloudTrail — Audit Logging
 
-- `"AWS compliance programs SOC 2 ISO 27001"`
-- `"Shared responsibility model AWS explained"`
-- `"How Amazon GuardDuty works"`
-- `"Enterprise SOC vs SOC 2: What's the difference?"`
+CloudTrail records every API call made in an AWS account — who made it, from where, at what time, and what the result was. It is both a security monitoring tool and a compliance requirement — HIPAA's audit control requirements demand the kind of access trail that CloudTrail provides for the AWS infrastructure layer.
+
+As a common control, CloudTrail enabled at the organization level covers all systems in the AWS environment simultaneously. For OpenMRS, CloudTrail captures:
+
+- All console and API access to the AWS account
+- Changes to security group rules — helping detect misconfiguration or unauthorized changes
+- IAM changes — new users, modified permissions, deleted policies
+- S3 bucket access — who accessed which objects and when
+- RDS API calls — database instance modifications, snapshot creations
+
+The limitation: CloudTrail captures AWS API activity, not application-level activity. It does not capture who logged into OpenMRS or which patient records they accessed. That application-level audit logging is a system-specific control that OpenMRS itself must provide — as I noted in the tailoring and common controls work from the past two days.
 
 ---
 
-📌 #Day28 #GRC #CybersecurityLeadership #AWS #NISTRMF #OpenMRS #CloudSecurity #Compliance #GuardDuty #ISO27001 #SOC2 #SharedResponsibility #SecurityOperations #HealthcareIT #HIPAA #100DaysOfGRC #CISOView #SecureByDesign #ModernGRC
+### AWS Config — Configuration Compliance Monitoring
+
+AWS Config continuously evaluates the configuration of AWS resources against defined rules and alerts when something drifts from the approved baseline. For OpenMRS, relevant Config rules might include:
+
+- Verify that RDS instances have encryption at rest enabled
+- Confirm that S3 buckets do not have public access enabled
+- Check that security groups do not allow unrestricted inbound access on sensitive ports
+- Ensure CloudTrail is enabled and logging to a protected bucket
+- Verify that MFA is enabled on all IAM user accounts
+
+Config's value as a common control is that it provides continuous compliance verification rather than point-in-time assessment. Instead of discovering during an annual audit that an S3 bucket was misconfigured six months ago, Config alerts immediately when a configuration change creates a compliance gap. That shift from periodic to continuous is directly aligned with the RMF's continuous monitoring requirements.
+
+The limitation: Config evaluates configurations — it does not test whether controls are actually effective. A security group rule might be technically compliant with a Config rule but still not provide adequate protection if the rule is written too broadly. Config is a necessary but not sufficient compliance tool.
+
+---
+
+### AWS Security Hub — Centralized Security Findings
+
+Security Hub aggregates findings from GuardDuty, AWS Inspector, IAM Access Analyzer, AWS Config, and third-party security tools into a single dashboard. For an organization managing multiple systems in AWS — not just OpenMRS but billing systems, HR platforms, clinical tools — Security Hub provides the unified visibility that a GRC program needs.
+
+For MyClinic specifically, Security Hub would allow the ISSO to see the security posture of all AWS-hosted systems in one place, prioritize findings by severity, track remediation progress, and demonstrate compliance status to the Authorizing Official without having to manually aggregate data from multiple sources.
+
+The limitation: Security Hub is only as useful as the tools feeding into it. If GuardDuty is not enabled, or if Inspector is not running vulnerability assessments, Security Hub will have gaps in its picture. The value of centralization depends on the quality and completeness of the underlying sources.
+
+---
+
+## The Security Operations Center — Enterprise Monitoring at Scale
+
+A Security Operations Center is a centralized team and capability responsible for monitoring, detecting, and responding to security events across an organization's entire environment. For MyClinic, a SOC — whether internal or provided by a managed security service provider — would monitor not just OpenMRS but every system in the environment simultaneously.
+
+The SOC model represents a common control at the organizational level. Rather than each system having its own monitoring and response capability, the SOC provides that capability centrally and applies it across all systems. This is the Security Information and Event Management (SIEM) model — tools like Splunk, IBM QRadar, or Microsoft Sentinel collect log data from all systems, correlate it, and surface events that require investigation.
+
+For OpenMRS, integration with a SOC would mean:
+
+- CloudTrail logs, GuardDuty findings, and application logs from OpenMRS all flowing into the central SIEM
+- The SOC team monitoring those feeds for anomalous activity
+- Defined escalation procedures when OpenMRS-specific events — like unusual access to patient records — are detected
+- The SOC serving as the first responder for security incidents affecting OpenMRS, with the ISSO notified based on the incident severity
+
+The practical reality for many small healthcare organizations is that a full internal SOC is not financially viable. The alternative is a Managed Security Service Provider (MSSP) — a third-party organization that provides SOC-like monitoring and response services on a subscription basis. For MyClinic, an MSSP that specializes in healthcare environments and understands HIPAA compliance requirements would be a realistic way to access SOC capabilities without building them from scratch.
+
+---
+
+## What Actually Clicked for Me
+
+The insight that clicked most today is the relationship between AWS native security tools and the people and processes that make them useful.
+
+GuardDuty, CloudTrail, Config, and Security Hub are genuinely powerful. Enabled together, they provide a level of visibility into the AWS environment that would be extremely difficult to replicate with on-premises infrastructure. But they all require someone to act on what they surface. A GuardDuty finding that goes unreviewed for two weeks is not a security control — it is a log entry. A Config alert about a misconfigured S3 bucket that nobody is assigned to remediate is not a compliance mechanism — it is documentation of an existing gap.
+
+This connects directly back to the GRC roles from Day 22. The ISSO needs to be monitoring GuardDuty findings, reviewing Config compliance reports, and acting on Security Hub alerts. If the ISSO is stretched too thin — a common reality in small healthcare organizations — the tools exist but the program does not function. That is a people and resource problem that technology cannot solve.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2019 Capital One breach** — which I covered briefly on Day 16, but want to revisit through the specific lens of detection tools.
+
+Capital One had AWS GuardDuty enabled at the time of the breach. GuardDuty actually generated findings related to the attacker's activity — the exfiltration of data from S3 involved activity patterns that the tool was designed to detect. But the findings were not acted on quickly enough to prevent the breach. The attacker exfiltrated data over a period of time before the activity was investigated and the breach was confirmed.
+
+That is not a criticism of GuardDuty — the tool did what it was supposed to do. It is a reminder that detection without response is incomplete. The Capital One breach led to significant improvements in how AWS native security tools are integrated with response processes — including the development of automated response playbooks that can trigger remediation actions in real time rather than waiting for human review.
+
+For OpenMRS, the lesson is that enabling GuardDuty and CloudTrail is necessary but not sufficient. The security program needs defined processes for reviewing findings, prioritizing them, escalating them, and responding to them. Those processes are what transform a collection of security tools into a functioning security program.
+
+---
+
+## Connecting Today's Work to the Risk Register
+
+Looking back at the risk register from Day 25, today's AWS security tools directly address several of the registered risks:
+
+| Risk Register Entry | Relevant AWS Tool | How It Helps |
+|---|---|---|
+| Ransomware attack (MYC-002) | GuardDuty | Detects C2 communication, unusual API calls, lateral movement indicators |
+| Insider access/data misuse (MYC-005) | CloudTrail + Security Hub | Records all API activity; surfaces anomalous access patterns |
+| HIPAA compliance failure (MYC-003) | AWS Config | Continuously verifies encryption, access control, and logging configurations |
+| Third-party vendor failure (MYC-004) | CloudTrail + GuardDuty | Monitors vendor API activity; detects unusual access patterns from third-party credentials |
+| System downtime (MYC-001) | AWS Config + CloudTrail | Detects configuration changes that could affect availability; supports incident investigation |
+
+Making that connection explicit is useful because it shows that the security tools are not independent additions — they are direct implementations of the risk treatment decisions documented in the register. Each tool addresses specific risks that have been identified, assessed, and prioritized through the GRC process.
+
+---
+
+## What I Am Still Thinking About
+
+One thing I want to understand better is how small healthcare organizations make realistic decisions about which AWS security tools to prioritize when budget is limited.
+
+GuardDuty, Config, CloudTrail, and Security Hub all carry costs — not enormous costs, but real ones that accumulate. For a small clinic running OpenMRS, the question is not "should we use all of these?" but "which ones provide the most value per dollar given our specific risk environment?"
+
+My instinct is that CloudTrail is non-negotiable — the audit logging it provides is both a HIPAA compliance requirement and a foundational security capability that everything else depends on. GuardDuty is high value for the cost given the threat environment healthcare organizations face. Config provides continuous compliance verification that is worth the investment given the cost of misconfiguration-related breaches. Security Hub is most valuable when multiple other tools are already feeding into it — less so if you are only running one or two sources.
+
+But I want to think through this more carefully with actual cost estimates as the project develops.
+
+---
+
+## What's Next
+
+Day 29 moves into the next phase of the Prepare step — looking at how information system boundaries are defined and documented before moving into system categorization. Understanding where OpenMRS begins and ends, and how it connects to other systems in MyClinic's environment, is foundational for everything that follows in the RMF.
+
+---
+
+## Resources I Found Helpful Today
+- [Amazon GuardDuty Documentation](https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html)
+- [AWS CloudTrail Overview](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html)
+- [AWS Config Documentation](https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html)
+- [AWS Security Hub Overview](https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html)
+- [Capital One Breach – Senate Banking Committee Report](https://www.banking.senate.gov/imo/media/doc/Capital%20One%20Data%20Breach.pdf)
+
+---
+
+*#GRC #AWS #GuardDuty #CloudTrail #SecurityHub #CommonControls #NISTRMF #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #Day28*
