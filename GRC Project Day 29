@@ -1,83 +1,162 @@
-# 📅 Day 29 – Prioritizing Systems by Impact (FIPS 199)
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 29 – Prioritizing Systems by Impact: FIPS 199 and Security Categorization | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Insight: Prioritization Is Power in GRC
+## Why Not All Systems Deserve the Same Level of Attention
 
-Not all systems carry the same weight — and effective cybersecurity leadership means knowing **where to focus first**.
+One of the practical realities of working in GRC is that no organization has unlimited resources. You cannot apply maximum security controls to every system simultaneously — and trying to do so would mean spreading effort so thin that nothing gets done well. The answer to that constraint is prioritization. And the foundation for prioritization in the NIST RMF is security categorization.
 
-Today, I explored **Task P-6 of the NIST RMF** and FIPS 199 — the foundation for categorizing information systems by impact level across:
-
--  **Confidentiality**
--  **Integrity**
--  **Availability**
-
-This step ensures that systems like OpenMRS, which handle **sensitive patient data**, are given the heightened security attention and resources they rightfully deserve.
+Today I worked through FIPS 199 — the Federal Information Processing Standard that defines how information systems are categorized based on the potential impact of a security failure. This is NIST RMF Task P-6, and it is one of the most consequential steps in the entire framework because the categorization result drives the control baseline, the assessment rigor, and the authorization requirements for everything that follows.
 
 ---
 
-##  FIPS 199 – Security Impact Categories
+## What I Worked On Today
 
-| Impact Level | Description                                                                 |
-|--------------|-----------------------------------------------------------------------------|
-| **Low**      | Limited adverse effect (minor inconvenience or operational disruption)     |
-| **Moderate** | Serious adverse effect (harm to operations, finances, or privacy)           |
-| **High**     | Severe or catastrophic impact (loss of life, critical missions, legal harm) |
+FIPS 199 establishes a framework for categorizing information and information systems based on three security objectives — **Confidentiality**, **Integrity**, and **Availability** — and three impact levels — **Low**, **Moderate**, and **High**.
 
-###  Case Study: OpenMRS (Electronic Medical Records System)
+The definitions matter:
 
-Here’s how I evaluated the impact levels for OpenMRS in a clinical environment:
+**Low impact** means that a compromise would have a limited adverse effect on organizational operations, organizational assets, or individuals. The consequences are minor — some inconvenience, some financial cost, but nothing severe or prolonged.
 
-| Security Objective | Impact Level | Justification                                                                                 |
-|--------------------|--------------|-----------------------------------------------------------------------------------------------|
-| **Confidentiality**| High         | Exposure of PHI (e.g. HIV status, mental health data) could cause **serious harm** and violate HIPAA |
-| **Integrity**      | High         | Tampering with records could lead to **incorrect treatments or diagnoses**                     |
-| **Availability**   | Moderate–High| Downtime could **delay care**, especially in under-resourced clinics without paper backups     |
+**Moderate impact** means a serious adverse effect. Operations are significantly degraded. There is significant financial damage. Individuals may experience significant harm — not catastrophic, but meaningful and real.
 
->  As a GRC leader, I categorize OpenMRS as a **High-Impact System**, demanding **rigorous security controls, increased oversight, and continuous monitoring**.
+**High impact** means a severe or catastrophic adverse effect. Operations may be unable to perform one or more primary functions. There may be major financial damage. Individuals may experience severe or catastrophic harm — which in healthcare explicitly includes loss of life.
+
+The categorization process assigns one of these three impact levels to each of the three security objectives, and the overall system categorization is the highest of the three — a concept known as the **high watermark principle**. If a system is High for confidentiality, Moderate for integrity, and Moderate for availability, the overall system categorization is High.
 
 ---
 
-##  Why This Matters
+## What Actually Clicked for Me
 
-This step of prioritizing systems by impact helps answer key leadership questions:
+The thing that clicked most today is why the high watermark principle exists. It might seem conservative — why should one High rating override two Moderate ratings? The answer is that you cannot meaningfully separate the security objectives from each other when it comes to control selection and resource allocation.
 
-- Where should we **invest the most** in cybersecurity?
-- Which systems, if breached, would **pose the greatest threat** to lives or the business?
-- How do we align limited **budgets and resources** to protect what matters most?
+If a system handles highly sensitive data — high confidentiality impact — then the controls protecting that system need to be strong enough to protect that sensitive data. You cannot implement High-impact confidentiality controls on a system that is otherwise treated as Moderate across the board. The controls need to be designed for the most demanding requirement.
 
-> “Cybersecurity strategy is triage. Impact categorization ensures we secure the crown jewels before locking the broom closet.” 🛡️
+The high watermark principle ensures that the most demanding security objective sets the floor for the entire control baseline. That is not arbitrary conservatism — it is a recognition that security programs need to be coherent and that the weakest link determines the overall strength.
 
 ---
 
-##  Hands-On Application
+## Categorizing OpenMRS at MyClinic
 
-**Exercise Response**:
-> _“I rate OpenMRS’s confidentiality as **High**, because unauthorized disclosure of patient health data could cause significant harm to individuals, breach public trust, and result in regulatory violations.”_
-
----
-
-##  Reflection as a GRC Professional
-
-Impact-level thinking trains your mindset to:
-
-- Analyze **business-critical risks**
-- Communicate threats to **executive leadership**
-- Justify controls and budget decisions based on **tangible risk impact**
-
-It’s not just theory — it’s how effective security programs scale and stay aligned with mission objectives.
-
-> “Impact-first thinking is what transforms reactive compliance into proactive risk leadership.”
+Working through the FIPS 199 categorization for OpenMRS was one of the more substantive exercises in this project so far. Here is how I approached each security objective:
 
 ---
 
-##  Further Exploration
+### Confidentiality — High
 
-- `"FIPS 199 impact levels explained"`
-- `"System security categorization examples healthcare"`
-- `"NIST RMF Task P-6 system prioritization"`
+OpenMRS stores and processes electronic protected health information — ePHI. Patient health records include diagnoses, medications, treatment histories, lab results, and in many cases highly sensitive categories of health information such as mental health records, substance use treatment records, HIV status, and reproductive health information.
+
+Under HIPAA, these categories of information have heightened privacy protections beyond standard ePHI requirements. Unauthorized disclosure of this information could cause serious harm to individuals — affecting employment, insurance, relationships, and personal safety. It could result in significant regulatory penalties under HIPAA. It would damage MyClinic's reputation and erode the patient trust that the organization's mission depends on.
+
+The potential impact of a confidentiality failure for OpenMRS is severe. The categorization is **High**.
+
+**Supporting standard:** FIPS 199 defines High confidentiality impact as situations where unauthorized disclosure could be expected to have a severe or catastrophic adverse effect on organizational operations, organizational assets, or individuals.
 
 ---
 
-📌 #Day29 #GRCLeadership #FIPS199 #SystemCategorization #NISTRMF #CybersecurityStrategy #ImpactAssessment #HIPAACompliance #OpenMRS #HealthcareIT #SecurityByDesign #100DaysOfGRC #CISOReady #RiskPrioritization #CloudSecurity
+### Integrity — High
+
+The integrity of data in OpenMRS is not just an IT concern — it is a patient safety concern. OpenMRS records contain the information that clinicians rely on to make treatment decisions: current medications, known allergies, recent diagnoses, active care plans. If that information is tampered with — whether by a malicious actor or through an accidental process failure — the consequences can be directly clinical.
+
+A clinician who administers a medication based on a record that shows no allergies, when the record has actually been altered to remove a known allergy, could cause serious patient harm. A care plan based on manipulated lab results could lead to incorrect treatment. The connection between data integrity and patient safety in an EHR system is direct and serious.
+
+There is also a secondary integrity concern: audit log integrity. If the logs that record access to patient records can be tampered with, investigating a potential breach or inappropriate access becomes significantly harder. Audit log integrity is foundational to the monitoring and compliance functions of the system.
+
+The potential impact of an integrity failure for OpenMRS is severe. The categorization is **High**.
+
+---
+
+### Availability — High
+
+I want to be thoughtful about this one because there is a genuine question about whether Moderate or High is more appropriate, and I want to work through the reasoning rather than just pick one.
+
+The argument for Moderate is that healthcare has operated without electronic systems for most of its history, and a fallback to paper records — while disruptive and slower — is theoretically possible. Some disruption is tolerable if the fallback process is functional.
+
+The argument for High is that in the specific context of OpenMRS deployments — particularly in under-resourced healthcare settings where OpenMRS is often used — the fallback to paper may not be realistic. Clinics that have fully transitioned to electronic records may not maintain paper chart systems. Clinicians who have never worked with paper records may not be able to work efficiently with them. In settings where OpenMRS is the only record system, unavailability means unavailability of the patient's entire medical history.
+
+Additionally, for acute clinical settings, even a few hours of unavailability during active clinic hours can create meaningful care disruption — missed medication windows, delayed diagnoses, inability to verify allergies before treatment.
+
+Taking the specific operational context of MyClinic's OpenMRS deployment into account — a primary care clinic where OpenMRS is the sole EHR system and paper backup processes have not been maintained — the potential impact of extended unavailability is severe enough to warrant a **High** availability categorization.
+
+---
+
+### Overall System Categorization
+
+Applying the high watermark principle:
+
+| Security Objective | Impact Level | Reasoning |
+|---|---|---|
+| Confidentiality | High | ePHI including highly sensitive health categories |
+| Integrity | High | Direct patient safety implications of record tampering |
+| Availability | High | Sole EHR system; extended unavailability disrupts care delivery |
+
+**Overall System Categorization: HIGH**
+
+This means OpenMRS at MyClinic requires the High baseline from NIST SP 800-53 — the most comprehensive set of security controls. It also means the assessment rigor, authorization requirements, and continuous monitoring intensity are all set at the highest level.
+
+---
+
+## What This Means for the Rest of the RMF
+
+The High categorization has direct implications for everything that follows in the RMF process:
+
+**Control Selection (Step 3):** The High baseline from NIST SP 800-53B applies. This is a substantially more comprehensive set of controls than the Moderate baseline — additional requirements across access control, audit logging, incident response, contingency planning, and configuration management among others.
+
+**Assessment (Step 5):** High-impact systems require more rigorous assessment — greater depth of testing, more comprehensive evidence collection, and typically independent assessment rather than self-assessment.
+
+**Authorization (Step 6):** The Authorizing Official's risk acceptance decision for a High-impact system carries more weight and requires more thorough review of the assessment findings than for a lower-impact system.
+
+**Monitoring (Step 7):** High-impact systems require more frequent and comprehensive continuous monitoring — more frequent log reviews, more frequent vulnerability scanning, and more aggressive response timelines for identified issues.
+
+The categorization result is not just a label. It is the input that calibrates the entire rest of the security program.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2020 Vermont Medical Center ransomware attack** — a significant incident that took the hospital's network offline for weeks and directly affected patient care across the facility. Staff could not access electronic records, laboratory systems, and pharmacy systems. Cancer patients had appointments delayed. The recovery took months and cost an estimated $63 million.
+
+What made this case particularly relevant to today's topic is the availability dimension. Vermont Medical Center is a full-service hospital where the EHR system is deeply integrated into clinical workflows across every department. The availability impact of losing that system was not just inconvenient — it was operationally catastrophic in ways that directly affected patients.
+
+A FIPS 199 categorization exercise for Vermont Medical Center's EHR would have produced a High availability rating — which would have required contingency planning controls at the High baseline level, including tested backup and recovery procedures, offline access capabilities, and documented downtime procedures for all clinical workflows that depend on the system.
+
+Whether those controls were in place before the attack is not fully public. But the scale of the operational impact — weeks of disruption, $63 million in recovery costs, direct effects on patient care — illustrates exactly what High availability impact means in practice for a healthcare EHR. It is not an abstract categorization. It is a prediction of consequences that the security program needs to be designed to prevent or recover from.
+
+---
+
+## The Difference Between Categorization and Risk Assessment
+
+One thing I want to note because it clarified my own thinking today: FIPS 199 categorization and the risk assessment work from Days 13 and 24 are related but different activities.
+
+The risk assessment identifies specific threats, vulnerabilities, and risk scenarios — what could go wrong and how likely and severe it is. The FIPS 199 categorization asks a broader question: if the worst credible outcome for each security objective occurred, how bad would it be? It is not asking about specific scenarios — it is asking about the maximum potential impact.
+
+That distinction matters because categorization is used to set the control baseline — a standardized, scalable approach to security requirements. The risk assessment is used to tailor and supplement that baseline based on specific threats and vulnerabilities. Both are necessary, and they complement each other rather than replacing each other.
+
+---
+
+## What I Am Still Thinking About
+
+One thing I want to explore further: how does FIPS 199 categorization work for systems that handle multiple types of information with different sensitivity levels?
+
+OpenMRS is relatively straightforward — it primarily handles ePHI, and the categorization flows from the sensitivity of that information. But many real-world systems handle a mix of information types — some highly sensitive, some not. A hospital's administrative system might handle both financial records and some patient scheduling information. How do you categorize a system that handles both Low-sensitivity financial data and Moderate-sensitivity scheduling data?
+
+NIST SP 800-60 provides specific guidance on mapping information types to impact levels, and I want to work through that guidance more carefully as the project develops. The answer is probably that the highest-sensitivity information type in the system determines the relevant security objective ratings — but the details matter.
+
+---
+
+## What's Next
+
+Day 30 moves into the formal **Categorize step** of the NIST RMF — building on today's FIPS 199 work to produce the official system categorization documentation for OpenMRS. This includes the System Security Plan entry for categorization, the data flow documentation that supports it, and the formal recording of the categorization decision that the Authorizing Official will eventually review.
+
+---
+
+## Resources I Found Helpful Today
+- [FIPS 199 – Standards for Security Categorization](https://csrc.nist.gov/publications/detail/fips/199/final)
+- [NIST SP 800-60 Vol 1 – Guide for Mapping Information Types](https://csrc.nist.gov/publications/detail/sp/800-60/vol-1-rev-1/final)
+- [NIST SP 800-37 Rev 2 – Task P-6 System Prioritization](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [Vermont Medical Center Ransomware Attack – Overview](https://www.healthcareitnews.com/news/university-vermont-health-network-hit-cyberattack)
+
+---
+
+*#GRC #FIPS199 #SystemCategorization #NISTRMF #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #RiskManagement #Day29*
