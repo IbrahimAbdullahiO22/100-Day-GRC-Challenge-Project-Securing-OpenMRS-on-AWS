@@ -1,68 +1,118 @@
-# 📅 Day 31 – Defining System Mission & Purpose (Task P-8)
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 31 – Defining System Mission and Business Purpose: Why OpenMRS Exists | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🎯 GRC Leadership Insight: Mission First, Security Always
+## Stepping Back Before Moving Forward
 
-Before we select controls or conduct risk assessments, we must ask a foundational question:
+After ten days in the Prepare step — working through risk tolerance, common controls, impact categorization, and monitoring strategy — today felt intentionally different. Task P-8 of the NIST RMF asks you to stop and clearly articulate the mission and business purpose of the system you are trying to protect. Before moving into the formal Categorize step, the framework wants you to make sure everyone involved understands *why* this system exists and what would be lost if it failed.
 
-> **"Why does this system exist?"**
-
-Today, as part of **Task P-8** in the NIST RMF, I stepped back from technical tasks to focus on the **mission and business purpose** of OpenMRS — a critical step in ensuring that our security decisions are always anchored in **organizational impact and human value**.
+My first reaction was that this seemed straightforward for OpenMRS — it is an electronic health record system, the purpose is obvious. But working through the exercise properly revealed that there is more nuance here than the obvious answer captures, and that the nuance actually matters for the security decisions that follow.
 
 ---
 
-##  OpenMRS Mission Statement
+## What I Worked On Today
 
-**“OpenMRS exists to improve healthcare delivery in resource-constrained environments by providing a robust, open-source electronic medical record platform.”**
+NIST SP 800-37 Task P-8 asks for a clear articulation of the mission and business purpose of the information system. The output feeds into the System Security Plan and informs how the security program is framed and justified throughout the RMF process. It also serves a communication function — helping stakeholders who are not technical security professionals understand why the security investment is warranted and what is at stake.
 
-This mission isn't about code.  
-It's about **saving lives**, **supporting clinicians**, and **scaling equity in global health** through technology.
+The task sounds simple but doing it well requires thinking carefully about several dimensions of the system's purpose:
 
----
+- What does the system do at a functional level?
+- Who depends on it, and for what?
+- What happens if it is unavailable, corrupted, or breached?
+- How does it connect to the broader mission of the organization?
+- What would be lost — to patients, to clinicians, to the organization — if this system did not exist?
 
-## 💡 Why Mission Clarity Matters in GRC
-
-Understanding a system’s mission helps us:
-
--  Align security controls with **real-world risk**
--  Prioritize availability where patient outcomes depend on uptime
--  Justify investments in privacy and integrity safeguards
--  Communicate the *why* behind GRC efforts to non-technical leaders
-
-When patient outcomes, clinician workflows, and community trust are on the line, **every control we implement must serve that mission**.
+Working through those questions for OpenMRS at MyClinic produced a richer picture than a one-line mission statement captures.
 
 ---
 
-##  Leadership Takeaway
+## OpenMRS Mission and Business Purpose — Full Documentation
 
-Security without purpose is noise.  
-But when tied to mission, it becomes **strategic action**.
+### What OpenMRS Does
 
-> "As a GRC leader, I don’t just protect systems — I protect the mission they serve."
+OpenMRS is an open-source electronic medical record platform originally developed to support healthcare delivery in resource-constrained settings, particularly in low- and middle-income countries where commercial EHR systems are financially inaccessible. It provides the core functions that clinical operations depend on: patient registration, medical history recording, clinical encounter documentation, medication management, diagnostic and laboratory result tracking, and clinical reporting.
 
-OpenMRS is more than software.  
-It's a lifeline for clinics that can't afford failure.  
-**That’s why GRC isn’t optional — it’s essential.**
+For MyClinic, OpenMRS is the single system of record for all patient health information. Every clinical encounter is documented in OpenMRS. Every medication prescribed is recorded there. Every lab result is stored and accessed through it. Clinicians use OpenMRS before, during, and after patient visits to access history, document findings, and plan care.
+
+### Who Depends on It
+
+**Patients** are the ultimate stakeholders. Their health information — diagnoses, medications, allergies, treatment history — lives in OpenMRS. That information is what enables safe, continuous, coordinated care. A patient who visits MyClinic six months after their last visit depends on their clinician being able to access their complete history. A patient with a known drug allergy depends on that information being accurately recorded and accessible at the point of care.
+
+**Clinicians** depend on OpenMRS to do their jobs. Without access to the system, they are working without the patient history, medication list, and clinical documentation that informed care decisions require. This is not just inconvenient — it is clinically risky. The safe delivery of care in a modern clinic depends on access to accurate, complete records.
+
+**Administrative staff** depend on OpenMRS for scheduling, patient registration, and reporting. Regulatory reporting requirements — including those tied to HIPAA compliance and public health obligations — are fulfilled in part through data maintained in OpenMRS.
+
+**MyClinic's leadership** depends on OpenMRS for operational visibility — patient volume, clinical outcomes, resource utilization, and regulatory compliance status all flow through data that lives in the system.
+
+### What Would Be Lost If OpenMRS Failed
+
+This is where the mission articulation becomes most useful for security purposes — because it forces clarity about what the consequences of different failure modes actually look like.
+
+**Confidentiality failure:** If patient health records were exposed — through a breach, misconfiguration, or unauthorized access — the harm would be direct and personal to the affected patients. Health information is among the most sensitive categories of personal data. Exposure of mental health records, HIV status, reproductive health information, or substance use treatment records can affect employment, insurance, relationships, and personal safety. Beyond individual harm, a breach would damage the trust that the patient-provider relationship depends on. Patients who do not trust that their information is protected may withhold clinically relevant information, which directly affects care quality. And regulatory penalties under HIPAA could threaten the financial viability of a small clinic.
+
+**Integrity failure:** If records were altered — whether by a malicious actor or through an accidental process failure — the consequences could be directly clinical. A medication list with an error. An allergy record with a missing entry. A diagnosis that has been changed without authorization. Clinicians making decisions based on corrupted records could harm patients. This is not a hypothetical concern — it is why integrity is categorized as High for an EHR system.
+
+**Availability failure:** If OpenMRS were unavailable — through ransomware, infrastructure failure, or accidental deletion — clinical operations at MyClinic would be significantly disrupted. Clinicians would not have access to patient histories. New encounters could not be documented in the system. Medication management would become error-prone without the system's allergy checking and current medication list. For a clinic that has fully transitioned to electronic records and does not maintain paper backups, extended unavailability is a genuine operational crisis.
+
+### The Mission Statement
+
+Bringing those dimensions together, the mission and business purpose of OpenMRS at MyClinic can be stated as:
+
+> *OpenMRS exists to support the safe, continuous, and coordinated delivery of patient care at MyClinic by providing a secure, reliable, and accurate system of record for all patient health information. The system enables clinicians to make informed care decisions, supports administrative operations and regulatory compliance, and protects the privacy of patients who have entrusted their most sensitive personal information to MyClinic's care.*
+
+That statement is longer than a tagline, but it captures the dimensions that matter for a security program: safety, continuity, accuracy, privacy, and trust. Each of those dimensions corresponds to a security objective — availability, availability, integrity, confidentiality — and the mission statement makes the connection between those security objectives and real human outcomes explicit.
 
 ---
 
-##  Reflection
+## Why This Exercise Matters Beyond Documentation
 
-Crafting a one-line mission taught me this:  
-When security feels overwhelming, **return to the mission**.  
-That’s your north star. That’s how you lead.
+I want to be honest that my initial reaction to Task P-8 was mild skepticism. After the substantive work of the past ten days — risk registers, monitoring strategies, control tailoring — writing a mission statement felt like a documentation formality. But working through it carefully changed my view.
 
----
+The mission and business purpose documentation does three things that are genuinely useful:
 
-##  Further Exploration
+**First, it grounds technical security decisions in human outcomes.** When the question is "should we require MFA for all OpenMRS user accounts?" the answer is obviously yes from a security standpoint. But the mission documentation makes the *why* explicit — because the system holds the health information of patients who have trusted us with it, and unauthorized access to that information causes real harm to real people. That framing matters when communicating security requirements to stakeholders who may push back on controls that add friction to clinical workflows.
 
-- `"OpenMRS mission in global health IT"`
-- `"NIST RMF Task P-8 purpose alignment"`
-- `"Aligning cybersecurity with organizational mission"`
-- `"Security priorities in healthcare systems"`
+**Second, it establishes the justification for the High impact categorization.** A reviewer looking at the System Security Plan for OpenMRS needs to understand why the system is categorized as High before the categorization is credible. The mission documentation provides that context — it explains who depends on the system, for what, and what the consequences of failure are. The High categorization flows naturally from that explanation rather than appearing as an arbitrary choice.
+
+**Third, it sets the frame for the entire security program.** Every control, every policy, every monitoring activity in this project exists to protect the mission described in Task P-8. When the program feels overwhelming — when the number of controls is large and the resources are limited — the mission statement is the prioritization filter. Which controls most directly protect the ability to deliver safe care? Those come first.
 
 ---
 
-📌 #Day31 #GRCLens #NISTRMF #OpenMRS #MissionDrivenSecurity #CyberLeadership #HealthcareIT #RiskManagement #100DaysOfGRC #Infosec #PurposeFirstSecurity
+## Connecting the Mission to Previous Work
+
+Looking back at the work done in Days 21 through 30, the mission documentation connects to almost everything:
+
+The **risk appetite statement** from Day 23 — very low tolerance for ePHI exposure, low tolerance for extended unavailability — flows directly from the mission. Those tolerances are set that way because the mission depends on data confidentiality and system availability.
+
+The **enterprise risk register** from Day 24 — ransomware, insider access, third-party failure — represents threats to the mission. Each risk is ultimately a risk to the organization's ability to deliver safe, continuous, coordinated care.
+
+The **FIPS 199 High categorization** from Day 29 is justified by the mission. High confidentiality because patients have trusted us with sensitive information. High integrity because care decisions depend on accurate records. High availability because clinical operations depend on system uptime.
+
+The **continuous monitoring strategy** from Day 30 exists to protect the mission. The monitoring activities are not ends in themselves — they are how the organization maintains confidence that OpenMRS continues to serve its mission safely.
+
+The mission is not a separate document. It is the foundation that the rest of the security program sits on.
+
+---
+
+## A Real-World Example That Made This Click
+
+While thinking through today's topic I came back to the **2020 Düsseldorf University Hospital ransomware attack** — which I covered on Day 10 but want to revisit specifically through the mission lens.
+
+Düsseldorf University Hospital's EHR and clinical systems were taken offline by a ransomware attack. The hospital had to divert emergency patients to other facilities. A patient who required urgent care was redirected to a hospital approximately 30 kilometers away, experiencing a delay in treatment. The patient died, and while establishing direct causal connection between the delay and the death is complex, German prosecutors opened an investigation into negligent homicide — the first time a ransomware attack was investigated as a potential contributing cause of a patient death.
+
+That case illustrates what it means for a healthcare EHR system to have a High availability impact categorization in human terms. The mission of the hospital was to deliver care to patients who needed it. When the EHR system went down, that mission was compromised in a way that may have directly cost a life.
+
+For MyClinic's OpenMRS deployment, that case is a concrete reminder of what the security program is ultimately protecting. The controls, the monitoring, the risk management — all of it exists to prevent OpenMRS from failing in a way that compromises the delivery of care to patients who depend on it.
+
+That is not abstract. That is the mission.
+
+---
+
+## What I Am Still Thinking About
+
+One thing that came up today that I want to think about more: how do you write a mission and business purpose statement that is genuinely useful versus one that is compliance theater?
+
+There is a version of this exercise where you write a generic mission statement that could apply to any healthcare EHR, check the Task P-8 box, and move on. The documentation exists but does not actually inform anything.
+
+The version I tried to do today — working through who depends on the system, for what, and what the spe
