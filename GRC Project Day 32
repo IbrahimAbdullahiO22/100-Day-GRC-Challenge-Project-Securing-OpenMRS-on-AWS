@@ -1,73 +1,225 @@
-# 📅 Day 32 – Who’s Who in OpenMRS? Identifying Stakeholders (Task P-9)
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 32 – Identifying Stakeholders: Who Has a Stake in OpenMRS Security? | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Insight: Security Starts with People
+## Security Is Not Just a Technical Problem
 
-In today’s Risk Management Framework focus (Task P-9), I shifted from technical assets to **human assets** — because **no system exists in isolation from its people**. As a cybersecurity leader, I know this: to secure a system like OpenMRS effectively, we must first know **who we’re securing it for, who’s running it, and who’s accountable for its outcomes**.
+One thing that has become clearer to me as this project has developed is that the hardest parts of GRC work are not the technical parts. Understanding FIPS 199 impact levels or configuring AWS GuardDuty are learnable skills. The harder challenge is the human side — getting the right people involved in security decisions, communicating risk in ways that resonate with different audiences, and making sure that the people who depend on a system have a meaningful voice in how it is secured.
 
-That means mapping out stakeholders — and more importantly, understanding their priorities.
-
----
-
-## 🧩 Stakeholder Mapping for OpenMRS
-
-Here’s my leadership-level breakdown of critical stakeholder roles for OpenMRS:
-
-- ** Developers & Implementers**  
-  *Focus*: Functionality, code stability, and integrations  
-  *Why they matter*: They build the foundation; security must be embedded from day one.
-
-- **🩺 Clinicians (Doctors/Nurses)**  
-  *Focus*: Ease of use, speed, and data availability  
-  *Why they matter*: They're the frontline users; poor UX or downtime equals care disruption.
-
-- **🛠️ IT Administrators**  
-  *Focus*: System uptime, patching, backups, and support  
-  *Why they matter*: They keep the system alive; their insights influence operational risk.
-
-- **📊 Executives & Compliance Officers**  
-  *Focus*: Strategic value, risk exposure, cost-benefit, legal compliance  
-  *Why they matter*: They approve funding and policy — you need their buy-in to implement change.
-
-- **🌍 Community & Technology Partners (e.g., AWS, OpenMRS community)**  
-  *Focus*: Ecosystem growth, infrastructure security, patch lifecycle  
-  *Why they matter*: OpenMRS doesn’t exist in a silo. These contributors shape its evolution.
+That is what Task P-9 of the NIST RMF is about. Before moving into the formal Categorize step, the framework asks you to identify the key stakeholders — the individuals and groups who have an interest in the system, who are affected by its security posture, or whose decisions shape how the security program functions. Getting that picture right early in the process prevents the security program from being designed in a vacuum and then failing to gain adoption because the people who actually use the system were not involved.
 
 ---
 
-## 💡 Why This Matters for GRC
+## What I Worked On Today
 
-Every role represents **a different risk perspective**. Ignoring any of them means introducing blind spots in your threat model.  
-As a GRC professional and future leader in digital health security, I make it a priority to **translate technical controls into stakeholder value**.
+NIST SP 800-37 Task P-9 focuses on identifying stakeholders — both internal and external — who have an interest in the mission and business operations of the information system. The goal is not just to list names and titles. It is to understand what each stakeholder group cares about, what their relationship to the system's security is, what risks they introduce or help manage, and how they need to be engaged in the security program.
 
-For example:
-- **Clinician feedback** → Usability flaws → May expose data to accidental disclosure  
-- **Executive risk appetite** → Defines how strict or lean we are on control selection  
-- **IT support gaps** → Signal weak monitoring or delayed incident response  
-
-Understanding these interconnections helps me **proactively shape policies, not just reactively defend systems**.
+For OpenMRS at MyClinic, I worked through stakeholder identification systematically — thinking about who interacts with the system, who is accountable for decisions about it, who bears the consequences if something goes wrong, and who has influence over the security posture even if they are not directly responsible for it.
 
 ---
 
-## ✍️ My Stakeholder Engagement Plan
+## What Actually Clicked for Me
 
-- **Action**: Create a stakeholder matrix for OpenMRS, including concerns and communication preferences  
-- **Priority**: Increase visibility and voice of end users (clinicians), often overlooked during control selection  
-- **Leadership Lesson**: A successful GRC strategy is not just technical — it’s **relational and inclusive**.
+The insight that clicked hardest today is that different stakeholders do not just have different roles — they have genuinely different and sometimes competing interests, and a security program that does not acknowledge those tensions will struggle to get implemented.
 
----
+The clearest example for OpenMRS is the tension between clinicians and security administrators. Clinicians care about speed and access — they need to get to patient information quickly, without friction, in the middle of a busy clinical day. Security controls that add steps — MFA prompts, session timeouts, access request workflows — create friction that clinicians experience as obstacles to doing their jobs. That friction is not imaginary or unreasonable. In a clinical environment, an extra thirty seconds of authentication delay multiplied across dozens of patient encounters adds up to meaningful time that could be spent on care.
 
-## 🔎 Reference Topics
+Security administrators care about access control, audit trails, and minimizing the risk of unauthorized access to ePHI. From their perspective, MFA and session timeouts are basic safeguards for a High-impact system handling sensitive patient data.
 
-- `NIST SP 800-37 Task P-9`
-- `OpenMRS stakeholder engagement`
-- `Stakeholder analysis in cybersecurity planning`
-- `People-centric risk governance`
+Both perspectives are legitimate. The security program that ignores the clinician perspective and implements controls purely from a security standpoint will face workarounds — shared passwords, propped-open sessions, shadow systems. The security program that ignores the security perspective and defers to clinician convenience will have real gaps.
+
+The stakeholder mapping exercise is how you identify those tensions before they become implementation failures.
 
 ---
 
-📌 #Day32 #NISTRMF #StakeholderMapping #OpenMRS #GRCLeadership #CyberGovernance #100DaysOfGRC #HealthcareSecurity #DigitalHealth #RiskManagement #InfoSecStrategy
-```
+## Full Stakeholder Map for OpenMRS at MyClinic
 
+### Internal Stakeholders
+
+---
+
+**Authorizing Official (AO) — MyClinic Executive Director or Medical Director**
+
+The AO is responsible for accepting the organizational risk associated with operating OpenMRS. They approve the Authorization to Operate based on the security assessment findings and the ISSO's recommendation. Their primary interests are organizational risk exposure, regulatory compliance, and the cost-benefit balance of security investments.
+
+*Security relationship:* The AO's risk appetite directly shapes what risks are acceptable for the system. An AO who understands healthcare cybersecurity risk will make different authorization decisions than one who views security primarily through a cost lens. The AO needs to be engaged early in the process — not just presented with a completed security package at the authorization stage.
+
+*Communication need:* Business-level risk framing. Not technical control details — strategic risk exposure, regulatory consequences, and the cost of inadequate security versus the cost of implementing controls.
+
+---
+
+**System Owner — Health IT Manager**
+
+The System Owner is responsible for the overall procurement, development, integration, and maintenance of OpenMRS. They are accountable for ensuring the system operates as intended and that the security program is resourced and implemented. Day-to-day, they coordinate between clinical staff, IT, and the ISSO.
+
+*Security relationship:* The System Owner makes operational decisions that have security implications — hardware procurement, software updates, vendor contracts, staffing. Their understanding of the security requirements and their commitment to implementing them is foundational to the success of the security program.
+
+*Communication need:* Operational risk framing. How do security requirements affect implementation timelines, resource requirements, and operational procedures? What are the consequences of specific implementation choices?
+
+---
+
+**ISSO — Information System Security Officer**
+
+The ISSO is the primary security practitioner responsible for the day-to-day security of OpenMRS. They implement controls, monitor the environment, manage vulnerabilities, conduct or coordinate assessments, and maintain the System Security Plan. They are the person who connects the GRC framework to the actual technical implementation.
+
+*Security relationship:* The ISSO is the center of the security program. Their technical competence, their access to resources, and their relationship with other stakeholders determines whether the security program actually functions or exists primarily as documentation.
+
+*Communication need:* Technical detail and clear authority. The ISSO needs to understand the full technical requirements, have the authority to implement controls and escalate issues, and have clear channels to the System Owner and AO when resource or risk decisions are required.
+
+---
+
+**Clinicians — Physicians, Nurses, Clinical Staff**
+
+Clinicians are the primary operational users of OpenMRS. They access patient records before and during clinical encounters, document findings, manage medications, and review results. Their workflows are directly affected by every security control that touches the user interface or access process.
+
+*Security relationship:* Clinicians are both a security asset and a security risk. As trained professionals with legitimate access to ePHI, they are essential to the system's operation. As busy humans operating under time pressure, they are a realistic source of security incidents — phishing susceptibility, password sharing, session management shortcuts.
+
+*Primary concerns:* System availability and response time during clinic hours. Authentication friction. Session timeout behavior during long patient encounters. The ability to access records quickly in emergency situations.
+
+*Tension to manage:* Security controls that add friction to clinical workflows will generate pushback and may produce workarounds that reduce security rather than increasing it. The ISSO and System Owner need to engage clinicians early in control selection — understanding their workflows before designing access controls, not after.
+
+*Communication need:* Practical and workflow-focused. Clinicians need to understand *why* security requirements exist in terms that connect to patient safety and their professional obligations — not in terms of regulatory compliance or technical risk scores.
+
+---
+
+**IT Administrators**
+
+IT administrators handle the infrastructure that supports OpenMRS — server maintenance, patching, backup operations, network management, and user account administration. They are often the first responders when something goes wrong technically.
+
+*Security relationship:* IT administrators implement many of the system-specific security controls — applying patches, managing security group configurations, executing backup procedures, provisioning and deprovisioning user accounts. Their diligence and competence directly affects the security posture.
+
+*Primary concerns:* System stability and maintainability. Clear procedures for security-related tasks. Adequate documentation. Realistic maintenance windows. Clear escalation paths for security issues they identify.
+
+*Tension to manage:* IT administrators sometimes view security requirements as adding complexity to their work without commensurate operational benefit. Building their understanding of why specific controls matter — and giving them clear, actionable procedures rather than abstract requirements — improves implementation quality.
+
+*Communication need:* Procedural and operational. Clear runbooks, documented procedures, and realistic expectations about what security activities require and how they fit into operational schedules.
+
+---
+
+**Compliance Officer**
+
+The Compliance Officer is responsible for MyClinic's regulatory compliance posture — HIPAA, state health information privacy laws, and any applicable federal requirements. They have a direct stake in OpenMRS security because a breach or compliance failure creates regulatory exposure that falls within their accountability.
+
+*Security relationship:* The Compliance Officer connects the security program to the regulatory requirements it must satisfy. They are a key stakeholder for audit preparation, breach notification procedures, and any regulatory interactions related to OpenMRS.
+
+*Primary concerns:* HIPAA compliance status. Audit trail completeness and integrity. Breach notification readiness. Documentation of security decisions and risk acceptance.
+
+*Communication need:* Regulatory framing. How do security controls map to specific HIPAA requirements? What is the compliance status for each required safeguard? What documentation exists to demonstrate compliance to a regulator?
+
+---
+
+**Patients**
+
+Patients are not direct users of the administrative OpenMRS interface, but they are the ultimate stakeholders. Their health information is what the system holds, and they are the people who bear the consequences of a security failure most directly.
+
+*Security relationship:* Patients have a right to expect that their health information is handled with appropriate care and that MyClinic has implemented reasonable safeguards to protect it. HIPAA Notice of Privacy Practices and breach notification requirements exist because of this stakeholder relationship.
+
+*Primary concerns:* Privacy of their health information. Continuity of their care records. The ability to access their own information.
+
+*Communication need:* Plain language privacy communications. Clear information about what data is collected, how it is protected, and what happens in the event of a breach.
+
+---
+
+### External Stakeholders
+
+---
+
+**AWS — Infrastructure Provider**
+
+AWS is the infrastructure provider for the OpenMRS deployment and a key common control provider as established in Days 27 and 28. Under the AWS Business Associate Agreement for HIPAA-covered workloads, AWS takes on specific obligations related to the security of the infrastructure layer.
+
+*Security relationship:* AWS manages the physical infrastructure, hypervisor layer, and infrastructure-level network security that MyClinic's OpenMRS deployment inherits as common controls. AWS also provides the security services — GuardDuty, CloudTrail, Config, Security Hub — that the continuous monitoring strategy depends on.
+
+*Primary concerns from AWS's perspective:* Customer compliance with AWS's Acceptable Use Policy. Proper configuration of customer-managed controls. Appropriate use of AWS security services.
+
+*MyClinic's concern regarding AWS:* Maintaining the BAA, staying current with AWS's compliance documentation, and tracking any changes to AWS's shared responsibility model or security service capabilities that affect the OpenMRS security posture.
+
+*Communication need:* Formal contractual and documentation-based. BAA maintenance, AWS Artifact compliance documentation review, and staying current with AWS security service updates.
+
+---
+
+**OpenMRS Community — Open Source Maintainers**
+
+OpenMRS is an open-source platform maintained by a global community of developers and implementers. Security patches, version updates, and vulnerability disclosures for OpenMRS come through this community.
+
+*Security relationship:* The OpenMRS community is responsible for the security of the OpenMRS application codebase. When vulnerabilities are identified in OpenMRS, the community develops and releases patches. MyClinic's security posture is affected by how quickly those patches are released and how quickly MyClinic applies them.
+
+*Primary concerns:* The OpenMRS community is primarily focused on healthcare delivery impact — building a platform that serves clinicians in resource-constrained settings. Security is a concern but may not always be the primary driver of release timelines.
+
+*MyClinic's concern regarding the OpenMRS community:* Monitoring OpenMRS security advisories, understanding the support and patch lifecycle for the version MyClinic is running, and having a process for evaluating and applying security patches on a defined timeline.
+
+*Communication need:* Monitoring-based. Subscribe to OpenMRS security advisories, participate in the community to the extent feasible, and maintain awareness of the version lifecycle.
+
+---
+
+**Regulators — HHS Office for Civil Rights**
+
+The HHS Office for Civil Rights enforces HIPAA and investigates breach notifications and complaints related to covered entities and their business associates. OCR is an external stakeholder whose requirements shape the entire security program.
+
+*Security relationship:* OCR's enforcement authority and the regulatory requirements under HIPAA define the compliance floor for the OpenMRS security program. The possibility of OCR investigation — in the event of a breach or a patient complaint — is a real organizational risk that affects security investment decisions.
+
+*Primary concerns from OCR's perspective:* Whether MyClinic has implemented reasonable and appropriate safeguards for ePHI, whether required documentation exists, and whether breach notification obligations are met.
+
+*Communication need:* Formal and regulatory. MyClinic's primary interaction with OCR is through required filings, breach notifications, and potentially investigations. The documentation-heavy work of the RMF process exists in part to demonstrate that reasonable and appropriate safeguards have been implemented.
+
+---
+
+## Full Stakeholder Matrix
+
+| Stakeholder | Type | Primary Interest | Security Role | Key Concern | Communication Approach |
+|---|---|---|---|---|---|
+| Authorizing Official | Internal | Risk acceptance, compliance | Approve ATO | Organizational risk exposure | Business risk framing |
+| System Owner | Internal | Operational effectiveness | Resource and manage program | Implementation feasibility | Operational risk framing |
+| ISSO | Internal | Security posture | Implement and monitor controls | Technical requirements, authority | Technical detail, clear authority |
+| Clinicians | Internal | Care delivery, usability | Primary users | Authentication friction, availability | Workflow-focused, patient safety framing |
+| IT Administrators | Internal | System stability | Implement technical controls | Clear procedures, realistic timelines | Procedural, operational runbooks |
+| Compliance Officer | Internal | Regulatory compliance | Map controls to requirements | HIPAA documentation, audit readiness | Regulatory framing |
+| Patients | External | Privacy, care continuity | Ultimate stakeholders | Information protection | Plain language privacy communications |
+| AWS | External | Infrastructure provider | Common control provider | BAA maintenance, customer compliance | Contractual, documentation-based |
+| OpenMRS Community | External | Healthcare delivery impact | Application security maintainer | Patch lifecycle, version support | Monitoring, advisory subscriptions |
+| HHS OCR | External | HIPAA enforcement | Regulatory authority | Reasonable and appropriate safeguards | Formal regulatory documentation |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2015 Anthem Health Insurance breach** — which I covered briefly on Day 5 but want to revisit specifically through the stakeholder lens.
+
+The Anthem breach affected approximately 79 million people and exposed names, Social Security numbers, birth dates, addresses, and employment information. Post-breach investigation and litigation revealed that multiple stakeholder groups had raised security concerns that were not adequately addressed before the breach occurred.
+
+IT security staff had identified the lack of encryption for stored data as a concern. The technical team responsible for the database infrastructure had flagged configuration issues. But the organizational structure at Anthem did not create clear channels for those concerns to reach the decision-makers who could authorize remediation investments. The stakeholder communication pathways were inadequate.
+
+The Anthem case illustrates a specific failure mode in stakeholder management: security concerns identified at the technical level did not reach the organizational level where decisions could be made and resources allocated. The people who knew about the risks did not have an effective way to communicate them to the people with authority to act.
+
+For MyClinic's OpenMRS program, the stakeholder matrix and engagement plan are not just documentation exercises. They are the mechanism that ensures the ISSO can communicate risk findings to the System Owner, that the System Owner can escalate resource needs to the AO, and that clinician concerns about security controls reach the security program before those concerns become workarounds. The communication pathways matter.
+
+---
+
+## What I Am Still Thinking About
+
+One question today's work raised that I want to think more carefully about: how do you genuinely engage clinicians in security control design rather than just presenting them with completed requirements?
+
+In practice, security programs often involve security and IT staff designing controls and then asking clinical staff to comply with them. The result is controls that are technically sound but operationally awkward — session timeouts that fire during long documentation sessions, MFA workflows that are difficult on mobile clinical devices, access request processes that are too slow for emergency situations.
+
+The better approach is to involve clinical stakeholders in the design process — understanding their workflows before designing controls, testing proposed controls against real clinical scenarios, and treating usability concerns as legitimate security concerns rather than complaints. A control that generates workarounds does not improve security; it redirects the risk.
+
+I want to develop a more concrete picture of what that kind of collaborative control design looks like in a small clinic setting, where the ISSO and clinical staff may be in close enough contact to actually have those conversations.
+
+---
+
+## What's Next
+
+Day 33 begins the formal **Categorize step** of the NIST RMF — producing the official system categorization documentation that builds on the FIPS 199 work from Day 29, the mission documentation from Day 31, and the stakeholder map from today. The categorization documentation is the first major formal artifact of the RMF process, and getting it right is essential because it drives the control baseline for everything that follows.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-9 Stakeholder Identification](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-100 – Information Security Handbook, Stakeholder Roles](https://csrc.nist.gov/publications/detail/sp/800-100/final)
+- [Anthem Breach – HHS OCR Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/anthem/index.html)
+- [OpenMRS Community Security Resources](https://openmrs.org/security/)
+
+---
+
+*#GRC #NISTRMF #StakeholderMapping #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #RiskManagement #AWS #Day32*
