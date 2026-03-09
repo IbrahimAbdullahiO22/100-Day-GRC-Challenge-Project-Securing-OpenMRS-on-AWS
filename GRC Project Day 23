@@ -1,79 +1,140 @@
-# 📅 Day 23 – What’s Your Risk Appetite? Crafting a Risk Management Strategy  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 23 – What Is Your Risk Appetite? Building a Risk Management Strategy for OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🎯 Topic Overview:
+## Still in the Prepare Step — and It Keeps Getting More Interesting
 
-Today’s focus was on developing a **Risk Management Strategy**, including defining our organization’s **risk tolerance**. This sets the tone for all future risk decisions and aligns security efforts with business values.
+Day 22 established the roles that make the RMF work. Today I stayed in the Prepare step and worked on something that I initially underestimated: the risk management strategy. Specifically, the question of risk tolerance — how much uncertainty is the organization willing to accept, and where does it draw the line?
 
-In leadership, understanding and documenting risk tolerance isn’t just a compliance checkbox — it’s about empowering decision-makers at all levels to act consistently and wisely when risk arises.
-
----
-
-##  What Is a Risk Management Strategy?
-
-- It defines **how** your organization approaches risk: its priorities, boundaries, and decision-making process.
-- It includes the **level of risk** the organization is willing to accept (aka **risk tolerance** or **risk appetite**).
-- NIST SP 800-37 (Task P-2) recommends this be formalized before diving into system-specific actions.
-
-> “Risk tolerance is the degree of uncertainty an organization is willing to accept in pursuit of its objectives.” – NIST
+I went into today thinking this would be a relatively straightforward documentation exercise. What I found instead is that answering "how much risk is acceptable?" honestly and specifically is one of the harder governance challenges in the whole framework. It requires organizational self-knowledge, honest assessment of resources and constraints, and the willingness to commit to positions that will be tested when real risk decisions have to be made.
 
 ---
 
-##  OpenMRS Case Example:
+## What I Worked On Today
 
-###  Example Risk Tolerance Statement for MyClinic:
-> “We have **zero tolerance** for any risk that could result in the unauthorized disclosure of Protected Health Information (PHI) or compromise patient safety.”
+NIST SP 800-37 Revision 2 identifies the development of a risk management strategy as Task P-2 in the Prepare step. The strategy needs to be established at the organizational level — before system-specific risk work begins — because it provides the decision-making framework that all subsequent risk decisions will reference.
 
-**Why it matters:**  
-In healthcare, the stakes are life and death. Data confidentiality and system availability directly affect **trust**, **safety**, and **compliance** (e.g., HIPAA).
+A risk management strategy covers several things:
 
-MyClinic may accept some operational or financial risk (e.g., minor project delays, resource constraints), but not if it endangers patients or exposes sensitive data.
+- How the organization identifies and assesses risk
+- How risk information is communicated across the organization
+- How risk decisions are made and by whom
+- What the organization's risk tolerance looks like — where the lines are
 
----
+The concept at the center of all of this is **risk tolerance** — sometimes called risk appetite. These two terms are related but slightly different, and I found the distinction useful today.
 
-##  Hands-On Exercise:
+**Risk appetite** describes the broad level of risk an organization is willing to pursue or accept in order to achieve its objectives. It is a strategic, forward-looking statement about how much uncertainty the organization is comfortable operating with.
 
-**Drafted Risk Tolerance Statement (as a leader):**
+**Risk tolerance** describes the acceptable variation around specific risk objectives — the boundaries within which risk can fluctuate before action is required. If risk appetite is the direction, risk tolerance is the guardrails.
 
-> “Our organization maintains **zero tolerance** for security risks that compromise patient data confidentiality, and **minimal tolerance** for operational interruptions during critical clinical hours.”
-
-This statement clearly outlines where **no risk is allowed** and where **limited risk may be accepted** for functionality or performance.
-
----
-
-##  Reflection Prompt:
-
-**Why is this risk intolerable?**
-
-As a leader, protecting **human life and dignity** must come first. A breach of PHI can result in **loss of patient trust**, **legal consequences**, and **irreversible harm** to our mission and community reputation.
-
-**Where is risk acceptable?**
-
-We recognize some **technical debt** and **operational risk** may be necessary to innovate or maintain services — such as tolerating scheduled downtimes or minor feature delays.
-
-> Having a written risk tolerance strategy ensures **every team** — from IT to executive leadership — can make **consistent and principled decisions**, even under pressure.
+For a practical example: a healthcare organization might have a low risk appetite for anything affecting patient safety — meaning they are not willing to take on much uncertainty in that area. But within that broad appetite, they might have a specific risk tolerance for system availability that says: unplanned downtime of more than two hours during clinical hours triggers an immediate incident response. That is the tolerance threshold — the point at which the acceptable variance has been exceeded and action is required.
 
 ---
 
-##  Leadership Insight:
+## What Actually Clicked for Me
 
-- A documented strategy enables **proactive governance**, rather than reactive crisis management.
-- Leaders must balance **mission-critical risk intolerance** with **real-world resource constraints**.
-- Clear boundaries reduce decision fatigue and support accountability at all levels.
+The thing that clicked most today is that risk tolerance is only useful if it is specific enough to actually guide decisions.
 
----
+A statement like "we have zero tolerance for risks to patient safety" sounds strong, but it is so broad that it provides almost no practical guidance. Every security risk in a healthcare system could theoretically be connected to patient safety if you follow the chain far enough. A statement that rules out everything rules out nothing.
 
-## 🔍 Optional Search Terms for Deeper Learning:
+What makes a risk tolerance statement useful is specificity and operationalization — connecting the statement to actual thresholds that trigger actual responses. Something like: "We will not operate the OpenMRS system without encryption of ePHI at rest and in transit. If encryption is found to be disabled or misconfigured, the system will be taken offline until the issue is resolved." That is a risk tolerance statement that guides a real decision in a real scenario.
 
-- `NIST SP 800-37 P-2 risk management strategy`  
-- `Risk tolerance vs risk appetite examples`  
-- `Healthcare risk appetite statement`  
-- `Setting risk thresholds for IT projects`  
+I also found it interesting how risk tolerance interacts with resource constraints. In theory, a healthcare organization might want zero tolerance for any vulnerability in its EHR system. In practice, no organization has unlimited resources to address every possible risk immediately. A realistic risk tolerance statement acknowledges this — distinguishing between risks that are truly intolerable and require immediate action regardless of cost, and risks that are serious but can be managed through a prioritized remediation plan.
+
+That honesty about constraints is not a weakness. It is what makes the risk management strategy credible and usable rather than aspirational and ignored.
 
 ---
 
-✅ _Stay tuned for Day 24 – We'll conduct a broader organizational risk assessment and see how OpenMRS fits into the hospital’s overall risk landscape._
+## Drafting a Risk Management Strategy for MyClinic's OpenMRS Deployment
 
-📌 #GRC #RiskManagement #Cybersecurity #RiskTolerance #HealthcareIT #NISTRMF #Leadership #Compliance #DataProtection #OpenMRS #100DayChallenge #InfoSec
+Working through today's exercise I tried to draft a realistic risk management strategy for the fictional MyClinic organization running OpenMRS on AWS. Here is what that looks like:
+
+---
+
+**MyClinic Risk Management Strategy — OpenMRS on AWS**
+*Draft for learning purposes*
+
+**Organizational Mission Context**
+MyClinic provides primary and specialty healthcare services to a community of approximately 50,000 patients. OpenMRS is the core electronic health records system supporting clinical operations across all facilities. The confidentiality, integrity, and availability of OpenMRS directly affects patient care quality and safety.
+
+**Risk Appetite Statement**
+MyClinic has a low risk appetite for any risk that could compromise the confidentiality of patient health information, affect the accuracy of clinical records, or cause unplanned system outages during clinical hours. MyClinic accepts a moderate risk appetite for operational and financial risks that do not directly affect patient care or regulatory standing — including scheduled maintenance windows, phased technology upgrades, and resource allocation decisions under budget constraints.
+
+**Risk Tolerance Thresholds**
+
+| Risk Category | Tolerance Level | Action Trigger |
+|---|---|---|
+| Unauthorized access to ePHI | Zero tolerance | Immediate incident response; system isolation if necessary |
+| Encryption disabled on RDS or S3 | Zero tolerance | System taken offline until resolved |
+| Unplanned system downtime during clinical hours | Less than 2 hours per month | Immediate escalation to System Owner and AO |
+| Critical vulnerability (CVSS 9.0+) unpatched | Maximum 72 hours after discovery | Emergency patching process activated |
+| High vulnerability (CVSS 7.0–8.9) unpatched | Maximum 30 days after discovery | Tracked in Plan of Action and Milestones |
+| Medium/Low vulnerability unpatched | Maximum 90 days after discovery | Tracked in risk register; prioritized in next patch cycle |
+| Failed access control review | Zero tolerance beyond 30 days | Access review completed; findings remediated |
+
+**Risk Decision Authority**
+- Risks rated Critical: Authorizing Official must be notified within 24 hours; System Owner and ISSO coordinate immediate response
+- Risks rated High: System Owner and ISSO develop remediation plan within 5 business days; AO informed
+- Risks rated Medium or Low: ISSO manages through standard Plan of Action and Milestones process; reported to System Owner monthly
+
+**Risk Communication**
+The ISSO will provide a monthly security status report to the System Owner covering open findings, remediation progress, new risks identified, and any changes to the system's security posture. The System Owner will provide a quarterly summary to the AO. Any critical finding triggers immediate notification outside the regular reporting cycle.
+
+---
+
+That draft is longer than what might appear in a real strategy document — but working through it at this level of detail helped me understand what it actually means to operationalize risk tolerance rather than just state it.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2020 Universal Health Services ransomware attack** — which I first mentioned on Day 3 but want to revisit through the specific lens of risk tolerance.
+
+UHS is one of the largest hospital networks in the United States. The ransomware attack took down IT systems across hundreds of facilities simultaneously, forcing staff to use paper records for over a week. The recovery cost was estimated at approximately $67 million.
+
+Post-incident reporting indicated that UHS had known about vulnerabilities in its environment that could have been addressed before the attack. The decision not to prioritize those remediations was in effect a risk acceptance decision — but one that was never formally made, documented, or reviewed at the appropriate level of organizational authority.
+
+That is the difference between implicit risk acceptance and a genuine risk management strategy. A documented risk tolerance framework would have required someone to formally evaluate whether the known vulnerabilities fell within acceptable thresholds, and if not, to activate a remediation process. Instead, the risks accumulated in an organizational blind spot — not formally accepted, not formally mitigated, just existing.
+
+The $67 million recovery cost and the disruption to patient care across hundreds of facilities was the consequence of that gap. A risk management strategy does not guarantee you will never be breached. But it does mean that your most significant risks are visible, evaluated, and owned by someone with the authority to act on them.
+
+---
+
+## The Challenge of "Zero Tolerance"
+
+I want to address something that came up in today's exercise. The phrase "zero tolerance" gets used a lot in risk statements — and I used it myself in the draft above. But I am starting to think it needs to be handled carefully.
+
+In a strict sense, zero tolerance for any risk means zero operation — because all systems carry some residual risk. What organizations usually mean when they say zero tolerance is something more specific: that certain categories of risk are so serious that they will not be accepted at any level as a permanent state, and that any instance of the risk will trigger an immediate and mandatory response.
+
+That is a useful commitment — but it needs to be coupled with the resources and processes to actually follow through. A zero tolerance statement that is not backed by a functioning incident response process is not a risk management strategy. It is a statement of aspiration that will be quietly abandoned the first time following through is inconvenient.
+
+I want to make sure the risk tolerance framework I develop for this project is honest about what zero tolerance actually means in operational terms — and backed by the processes that make it real.
+
+---
+
+## What I Am Still Thinking About
+
+One thing I am sitting with after today: how does risk tolerance change over time? An organization's risk appetite should not be static — it should evolve as the threat environment changes, as the organization's resources and capabilities change, and as the regulatory environment shifts.
+
+The NIST RMF's continuous monitoring step implicitly addresses this — monitoring findings can and should trigger reassessment of risk tolerance thresholds. But I want to understand what that looks like in practice. How often should a risk management strategy be formally reviewed? Who triggers that review? And what does it take to actually change a documented risk tolerance threshold once it has been established?
+
+These feel like important governance questions that go beyond the technical framework — and I want to come back to them as Phase 2 develops.
+
+---
+
+## What's Next
+
+Day 24 moves into a broader organizational risk assessment — looking at how OpenMRS fits into MyClinic's overall risk landscape and what other systems and dependencies need to be understood before the system-specific RMF work can proceed effectively.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-2, Risk Management Strategy](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-39 – Risk Framing and Organizational Risk Tolerance](https://csrc.nist.gov/publications/detail/sp/800-39/final)
+- [UHS Ransomware Attack – Healthcare IT News](https://www.healthcareitnews.com/news/universal-health-services-hit-ransomware-attack)
+- [HHS – Risk Management in Healthcare Settings](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #RiskTolerance #RiskAppetite #NISTRMF #RiskManagement #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day23*
