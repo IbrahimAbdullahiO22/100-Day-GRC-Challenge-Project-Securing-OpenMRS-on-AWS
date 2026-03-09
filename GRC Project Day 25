@@ -1,73 +1,201 @@
-# 📅 Day 25 – Tracking Risks Made Easy: Meet the Risk Register  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 25 – The Risk Register: Turning Risk Awareness Into Risk Accountability | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🧭 Today’s Focus: From Risk Awareness to Risk Accountability
+## From Identifying Risk to Managing It
 
-Leadership isn’t just about seeing the risks — it’s about **systematically managing** them.  
-Today, I applied that mindset by building and documenting my first **Risk Register** entry as part of Task P-3 in the NIST RMF.
+Yesterday I worked through an enterprise risk assessment for MyClinic — identifying the major risk categories, assessing likelihood and impact, and building a high-level view of the threat landscape. That exercise was valuable, but it raised an obvious follow-on question: once you have identified risks, how do you make sure they are actually managed over time rather than documented once and forgotten?
 
-> "What gets tracked, gets managed. What gets ignored, becomes a threat."
-
----
-
-## 🧠 What Is a Risk Register?
-
-A **Risk Register** is a central place where all known risks are logged and reviewed.  
-It helps organizations move from reactive to **proactive** — identifying risk early, assigning ownership, and tracking mitigation.
-
-### Why It’s Critical for Leaders:
-- Aligns teams around shared risk awareness  
-- Creates **accountability** for each risk  
-- Enables informed decisions at the executive level  
-- Bridges **technical, clinical, and operational** risk views
-
-In short, it turns fear into **actionable strategy**.
+That is exactly what a Risk Register is for. Today I built my first real Risk Register entries for the OpenMRS deployment, and the process was more instructive than I expected. Putting risks into a structured format forces a level of specificity and accountability that a general risk assessment does not require — and that specificity is what makes risk management operational rather than theoretical.
 
 ---
 
-## 🏥 Sample Risk Register Entry – MyClinic (OpenMRS Case)
+## What I Worked On Today
 
-| Field              | Entry                                                                 |
-|--------------------|------------------------------------------------------------------------|
-| **Risk Name**      | Prolonged OpenMRS Downtime During Clinic Hours                        |
-| **Impact**         | **High** – Prevents access to patient records, risking care quality   |
-| **Likelihood**     | **Medium** – Single internet failure or cloud outage could trigger it |
-| **Mitigation**     | Secondary internet connection, offline chart exports, provider SLAs   |
-| **Owner**          | Director of IT Infrastructure                                          |
-| **Status**         | Contingency plan drafted; testing scheduled quarterly                 |
+A Risk Register is a centralized document — or more commonly a maintained database — where all identified risks are logged, assessed, assigned, and tracked over time. It is the living artifact that connects the risk identification work of an assessment to the day-to-day work of managing risk as an organizational function.
 
-This risk touches both **technology** and **patient care**, showing the **interdependence** that enterprise leaders must constantly evaluate.
+The key word is *living*. A Risk Register that is created once and never updated is just a snapshot. Its value comes from being maintained — updated as new risks are identified, as existing risks change in likelihood or impact, as mitigations are implemented and their effectiveness is assessed, and as risk owners report on progress.
+
+NIST references the Risk Register concept across several publications — SP 800-37, SP 800-39, and NISTIR 8286, which specifically addresses enterprise risk registers and how they connect individual system risks to organizational risk management. The consistent theme is that a Risk Register is a communication and accountability tool as much as it is a documentation tool.
 
 ---
 
-## 🔍 Reflection as a Future GRC Leader
+## What Actually Clicked for Me
 
-Creating this entry forced me to:
-- Think **holistically** (not just about the system, but its business impact)
-- Identify a clear **owner** (who ensures follow-through)
-- Consider **ongoing visibility** (status updates, reviews, etc.)
+The thing that clicked most today is the **owner** field. It sounds like a small administrative detail — just a name or a role. But assigning an owner to a risk changes something fundamental about how that risk is managed.
 
-> "Good risk management isn't about eliminating all risk — it's about making risk **visible, owned, and understood.**"
+Without a named owner, a risk exists in a kind of organizational limbo. Everyone knows about it in a general sense, but nobody is specifically responsible for it. Nobody is checking whether the mitigation is working. Nobody is reporting on its status. Nobody is accountable if the risk materializes.
 
-I see the **Risk Register** as a leadership tool — not a checkbox exercise.  
-It enables collaboration across departments and keeps risk conversations grounded in facts, not fear.
+With a named owner, that changes. The owner is the person who knows the current status of the risk, who is responsible for driving remediation, who reports on progress, and who escalates when the risk changes. Ownership transforms a risk from a documented concern into a managed responsibility.
+
+I kept thinking about the breach cases throughout this challenge — the Premera case where known vulnerabilities were not addressed, the OPM breach where nobody had clear accountability for security oversight, the Excellus case where monitoring was insufficient for nearly two years. In each of those cases, the risks were in some sense known. What was missing was ownership — somebody whose explicit job was to make sure the risk was being actively managed.
 
 ---
 
-## 📚 Further Learning:
+## Building the MyClinic Risk Register
 
-- `Risk register template cybersecurity`  
-- `Risk register vs risk assessment`  
-- `NISTIR 8286 risk register ERM`  
-- `IT risk register example healthcare`
+I built out the full Risk Register for the enterprise risks identified on Day 24, adding the specificity and structure that turns a risk list into an actionable management tool.
 
 ---
 
-✅ **Tomorrow: Day 26 – Tailored Control Baselines**  
-We’ll learn how to fine-tune security controls for our system needs — adding what matters, removing what doesn’t. Leadership is about making **context-aware decisions**, and tailoring your controls is a powerful way to do that.
+### Risk Register — MyClinic OpenMRS Deployment
 
 ---
 
-📌 #GRC #Cybersecurity #NISTRMF #RiskRegister #InfoSecLeadership #HealthcareIT #OpenMRS #100DayChallenge #Compliance #FERPAtoHIPAA #Governance #RiskOwnership
+**Risk 1**
+
+| Field | Detail |
+|---|---|
+| **Risk ID** | MYC-001 |
+| **Risk Name** | Prolonged OpenMRS downtime during clinical hours |
+| **Description** | Unplanned unavailability of the OpenMRS application during active clinic hours, preventing clinician access to patient records, medication histories, and care documentation |
+| **Threat** | Ransomware attack, cloud service outage, application failure, or network disruption |
+| **Vulnerability** | No tested failover configuration; no offline access capability for critical patient data |
+| **Likelihood** | Medium |
+| **Impact** | High — direct effect on care delivery and patient safety |
+| **Risk Rating** | High |
+| **Current Controls** | AWS infrastructure availability SLAs; automated RDS snapshots |
+| **Mitigation Plan** | Implement and test disaster recovery procedure; establish offline export process for critical patient data; define and document downtime procedures for clinical staff |
+| **Risk Owner** | Health IT Manager (System Owner) |
+| **Target Resolution Date** | 60 days |
+| **Status** | Mitigation plan drafted; testing not yet completed |
+| **Last Reviewed** | Day 25 of project |
+
+---
+
+**Risk 2**
+
+| Field | Detail |
+|---|---|
+| **Risk ID** | MYC-002 |
+| **Risk Name** | Ransomware attack encrypting OpenMRS and network systems |
+| **Description** | Malicious actors deploy ransomware across MyClinic's network, encrypting the OpenMRS application server, patient database, and potentially other critical systems |
+| **Threat** | Ransomware delivered via phishing email, compromised credentials, or unpatched vulnerability |
+| **Vulnerability** | Potential gaps in endpoint protection, incomplete network segmentation, staff susceptibility to phishing |
+| **Likelihood** | High — healthcare is one of the most targeted sectors for ransomware |
+| **Impact** | Critical — operational shutdown, HIPAA breach notification obligations, significant recovery costs |
+| **Risk Rating** | Critical |
+| **Current Controls** | AWS security groups; RDS automated backups; staff awareness training (status unknown) |
+| **Mitigation Plan** | Deploy endpoint detection and response (EDR) tools; conduct phishing simulation and targeted staff training; verify network segmentation between clinical and administrative systems; test backup restoration procedure |
+| **Risk Owner** | Information Security Lead (ISSO) |
+| **Target Resolution Date** | 30 days for critical mitigations |
+| **Status** | Open — mitigation plan in development |
+| **Last Reviewed** | Day 25 of project |
+
+---
+
+**Risk 3**
+
+| Field | Detail |
+|---|---|
+| **Risk ID** | MYC-003 |
+| **Risk Name** | HIPAA violation due to inadequate security controls or late breach notification |
+| **Description** | Failure to implement required HIPAA safeguards, or failure to meet the 60-day breach notification timeline following a security incident, resulting in HHS enforcement action |
+| **Threat** | Security incident triggering breach notification obligation; OCR audit revealing control gaps |
+| **Vulnerability** | Incomplete HIPAA security control implementation; absence of documented incident response procedures |
+| **Likelihood** | Medium |
+| **Impact** | High — financial penalties, corrective action plan, reputational damage |
+| **Risk Rating** | High |
+| **Current Controls** | HIPAA BAA with AWS (to be signed); draft security policies |
+| **Mitigation Plan** | Complete HIPAA security rule control gap assessment; finalize and sign AWS BAA; document and test incident response procedure including breach notification workflow |
+| **Risk Owner** | Compliance Officer |
+| **Target Resolution Date** | 45 days |
+| **Status** | Open — BAA not yet signed; incident response procedure not documented |
+| **Last Reviewed** | Day 25 of project |
+
+---
+
+**Risk 4**
+
+| Field | Detail |
+|---|---|
+| **Risk ID** | MYC-004 |
+| **Risk Name** | Third-party vendor security failure exposing MyClinic data |
+| **Description** | A vendor with access to MyClinic systems or patient data experiences a security breach, resulting in unauthorized access to or exfiltration of ePHI |
+| **Threat** | Vendor breach, compromised vendor credentials, supply chain attack |
+| **Vulnerability** | Incomplete vendor security assessment process; not all vendor relationships covered by Business Associate Agreements |
+| **Likelihood** | Medium |
+| **Impact** | High — ePHI exposure, HIPAA notification obligations, reputational damage |
+| **Risk Rating** | High |
+| **Current Controls** | AWS BAA (pending); informal vendor review process |
+| **Mitigation Plan** | Conduct vendor inventory; verify BAA coverage for all vendors handling ePHI; implement vendor security assessment questionnaire; review and restrict vendor access permissions |
+| **Risk Owner** | System Owner in coordination with Legal |
+| **Target Resolution Date** | 60 days |
+| **Status** | Open — vendor inventory not yet completed |
+| **Last Reviewed** | Day 25 of project |
+
+---
+
+**Risk 5**
+
+| Field | Detail |
+|---|---|
+| **Risk ID** | MYC-005 |
+| **Risk Name** | Insider access to patient data — unauthorized or accidental |
+| **Description** | A staff member accesses patient records they are not authorized to view, or accidentally discloses ePHI through email or other channels |
+| **Threat** | Insider curiosity, malicious insider, accidental disclosure, phishing leading to credential compromise |
+| **Vulnerability** | Overly broad role-based access in OpenMRS; no regular access review process; insufficient phishing awareness training |
+| **Likelihood** | High — insider incidents are among the most common causes of healthcare data exposure |
+| **Impact** | Medium to High — HIPAA notification may be triggered; patient trust affected |
+| **Risk Rating** | High |
+| **Current Controls** | OpenMRS role-based access control (configuration not verified); informal access review |
+| **Mitigation Plan** | Audit current OpenMRS role assignments against least privilege principle; implement quarterly access review process; deploy MFA for all user accounts; conduct phishing awareness training |
+| **Risk Owner** | ISSO in coordination with HR |
+| **Target Resolution Date** | 45 days |
+| **Status** | Open — role audit not yet conducted |
+| **Last Reviewed** | Day 25 of project |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2019 Oregon Department of Human Services data breach** — a phishing attack that led to the exposure of approximately 350,000 individuals' personal information including some health-related data. The post-incident review found that the organization did not have a formal risk register or risk tracking process in place. Risks related to phishing susceptibility and email security had been identified in previous assessments but had not been formally tracked, assigned to owners, or monitored for remediation progress.
+
+The result was predictable in retrospect: a known risk category, unowned and untracked, materialized into a significant breach. The organization faced regulatory scrutiny, mandatory corrective actions, and the operational cost of breach response and notification.
+
+What that case illustrates is the gap between risk awareness and risk accountability. The organization was not unaware of phishing risk. What it lacked was the structure — specifically the ownership and tracking function of a Risk Register — that would have turned that awareness into active management. A named owner for the phishing risk, a documented mitigation plan, and a status field showing "open — training not yet implemented" would have made the unresolved risk visible to leadership. Visible risks get addressed. Invisible risks become incidents.
+
+---
+
+## How the Risk Register Connects to the Broader RMF
+
+It is worth stepping back and noting where the Risk Register fits in the overall RMF picture. This work is still in the **Prepare** step — we are building the organizational foundation before moving into system categorization, control selection, and implementation.
+
+The Risk Register developed here will feed directly into later steps:
+
+- **Categorize** — the risk ratings inform the impact level determination for OpenMRS
+- **Select** — the specific risks documented here guide which controls are prioritized in the selection process
+- **Implement** — the mitigation plans in the register become the implementation work items
+- **Assess** — the controls implemented to address registered risks are the controls that get assessed for effectiveness
+- **Monitor** — the Risk Register is updated continuously as part of the monitoring function
+
+It is not a standalone artifact. It is a thread that runs through the entire lifecycle.
+
+---
+
+## What I Am Still Thinking About
+
+One practical question I want to answer as this project develops: what is the right review cadence for a Risk Register in a small healthcare organization?
+
+The five risks in today's register each have target resolution dates — 30, 45, or 60 days depending on the severity. But what happens after those dates? How often should the register be formally reviewed by leadership? Monthly? Quarterly? What triggers an out-of-cycle review?
+
+I think the answer connects back to the risk tolerance thresholds from Day 23 — Critical risks should be reviewed more frequently than High risks, which should be reviewed more frequently than Medium and Low risks. But I want to work through what that looks like as a formal process rather than just a principle.
+
+---
+
+## What's Next
+
+Day 26 moves into **tailored control baselines** — the process of taking the NIST SP 800-53 control catalog and selecting, adjusting, and scoping the specific controls that apply to OpenMRS based on its categorization and risk environment. After building the risk picture over the past several days, I am ready to start connecting that picture to specific security controls.
+
+---
+
+## Resources I Found Helpful Today
+- [NISTIR 8286 – Integrating Cybersecurity and Enterprise Risk Management](https://csrc.nist.gov/publications/detail/nistir/8286/final)
+- [NIST SP 800-37 Rev 2 – Risk Register Guidance](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [Oregon DHS Data Breach – Office of the Inspector General Report](https://www.oregon.gov/oha/ERD/Pages/index.aspx)
+- [NIST SP 800-39 – Risk Monitoring and Risk Register](https://csrc.nist.gov/publications/detail/sp/800-39/final)
+
+---
+
+*#GRC #RiskRegister #RiskManagement #NISTRMF #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day25*
