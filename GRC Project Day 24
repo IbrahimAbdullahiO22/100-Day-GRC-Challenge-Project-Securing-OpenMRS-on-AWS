@@ -1,76 +1,153 @@
-#  Day 24 – Big-Picture Risks: Enterprise Risk Assessment for MyClinic  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 24 – Enterprise Risk Assessment: Seeing the Big Picture for MyClinic | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Topic Overview:
+## Zooming Out From the System to the Organization
 
-Today, we elevated our perspective from individual systems to **enterprise-level risk**.  
-We explored how leaders in healthcare organizations like **MyClinic** conduct **organizational risk assessments** — identifying major threats that could disrupt not just IT, but the **entire mission of patient care**.
+The past few days in the Prepare step have been about building the organizational foundation for risk management — defining roles, establishing risk tolerance, documenting context. Today felt like a shift in perspective that I found genuinely useful. Instead of looking at OpenMRS as a system with specific technical risks, today was about stepping back and asking: what are the big-picture risks facing MyClinic as an organization — and how does OpenMRS fit into that larger picture?
 
-> As a future GRC leader, I see this as moving from **fixing what’s broken** to **anticipating what could break us**.
-
----
-
-##  What Is an Enterprise Risk Assessment?
-
-An **Enterprise Risk Assessment** evaluates risks across departments, operations, and technology to answer:
-
-- What could stop us from delivering safe, quality care?
-- Where do the most critical risks intersect?
-- How should we prioritize mitigation based on **impact** and **likelihood**?
-
-Per **NIST SP 800-37 (Task P-3)**, this is part of the **Prepare** step — a proactive process that aligns risk awareness with strategic planning and resource allocation.
+That shift from system-level thinking to enterprise-level thinking is what an organizational risk assessment is about. And it changes how you prioritize and communicate risk in ways that matter for anyone working in GRC.
 
 ---
 
-##  Hands-On Exercise (Leadership View):
+## What I Worked On Today
 
-### 1. **Clinical/Operational Risk:**
-> **Patient care interruption due to OpenMRS system downtime during clinical hours**
+NIST SP 800-37 Task P-3 describes the organizational risk assessment as part of the Prepare step — a process of identifying and evaluating risks at the enterprise level before drilling down into individual systems. The goal is to understand the threat landscape that the organization operates in, identify the most significant risks to the mission, and ensure that system-level security decisions are made in the context of that broader picture.
 
-- *Impact*: Clinicians may be unable to access allergy histories or medication records, resulting in care delays or medical errors.
-- *Why it’s enterprise-level*: This directly jeopardizes patient safety — the **core mission** of the hospital.
+For a healthcare organization like MyClinic, this means thinking about risk across multiple dimensions simultaneously — clinical, operational, financial, legal, and reputational. IT risk does not exist in isolation. A ransomware attack is a cybersecurity incident, but its consequences are clinical, financial, and regulatory. A system outage is a technical failure, but its impact is measured in patient care disruption. Understanding those connections is what enterprise risk management is about.
 
-### 2. **IT/Cybersecurity Risk:**
-> **Ransomware attack on the hospital network encrypts OpenMRS and other critical systems**
-
-- *Impact*: Operational shutdown, legal exposure under HIPAA, reputational damage.
-- *Why it’s enterprise-level*: Disrupts not just systems, but trust, compliance, and financial stability.
+The framework I used today to structure the assessment draws from both NIST SP 800-37 and the broader Enterprise Risk Management literature, particularly the guidance in **NIST SP 800-39** on managing risk at the organizational tier.
 
 ---
 
-##  Reflection (Leadership Insight):
+## What Actually Clicked for Me
 
-Although these risks come from different angles, they are **deeply connected**:
+The insight that clicked most today is that enterprise risks are almost never purely technical or purely clinical or purely financial — they are intersections. A cybersecurity failure becomes a patient safety risk. A compliance gap becomes a financial risk. A staffing shortage in the IT team becomes a vulnerability management risk. The categories overlap, and the most dangerous risks are often the ones that sit at the intersection of multiple dimensions.
 
-- A **technical failure** (ransomware or downtime) leads to **clinical consequences**.
-- A **clinical error** could expose the organization to **legal or compliance risk**.
+That insight has direct implications for how GRC programs are structured. A risk management program that only talks to IT will miss the clinical consequences of technical failures. A compliance program that only talks to legal will miss the operational realities that make compliance requirements hard to implement. Effective enterprise risk management requires cross-functional visibility — bringing together perspectives from clinical operations, IT, finance, legal, and leadership into a single coherent risk picture.
 
-> As a leader, I see clearly: **IT and clinical teams cannot work in silos.** Enterprise risk demands cross-functional awareness and collaboration.
-
-Hospital executives need **one unified view** — not fragmented reports — to make informed decisions about risk, budget, and policy.
+I have been noting throughout this challenge that organizational failures often underlie technical breaches. Today's work on enterprise risk assessment helps explain why: when different functions operate in silos, risks that cross functional boundaries fall through the gaps. Nobody owns them. Nobody sees the full picture. And by the time someone does, the risk has often already materialized.
 
 ---
 
-##  Strategic Takeaway:
+## Enterprise Risk Assessment for MyClinic
 
-- **Enterprise Risk Management (ERM)** isn't about documenting every possible threat.  
-It’s about **surfacing the risks that matter most** to your mission — then assigning owners, making decisions, and allocating resources accordingly.
-
-- When risk managers, IT, clinical staff, and compliance officers all contribute to this big-picture view, we create **organizational resilience**, not just technical safeguards.
+Working through today's exercise I identified the major enterprise-level risk categories for MyClinic and assessed each one in terms of likelihood, impact, and the OpenMRS connection.
 
 ---
 
-##  Optional Search Terms for Further Learning:
+### Risk Category 1 — Clinical Operations Risk
 
-- `NIST SP 800-37 P-3 organizational risk assessment`  
-- `Enterprise risk management healthcare examples`  
-- `Hospital risk assessment threats`  
-- `Business vs IT risk examples in healthcare`  
+**Risk: System downtime causing care delivery disruption**
+
+MyClinic's clinical operations depend on OpenMRS for patient record access, medication management, clinical documentation, and care coordination. Unplanned system downtime during clinical hours means clinicians cannot access allergy histories, current medications, recent lab results, or care plans. In a busy clinical environment, that information gap creates conditions for medical errors.
+
+- **Likelihood:** Medium to High — cloud systems are generally reliable, but ransomware, configuration errors, and software failures are all realistic threats
+- **Impact:** High — direct effect on patient safety, which is MyClinic's core mission
+- **Enterprise dimension:** This is not an IT problem. It is a patient safety problem that originates in IT. The clinical leadership and IT team need a shared understanding of this risk and a joint response plan.
+- **OpenMRS connection:** OpenMRS is the single system supporting clinical documentation. There is no redundant EHR. If OpenMRS is unavailable, the fallback is paper — which is slower, error-prone, and creates data reconciliation challenges when the system comes back online.
 
 ---
 
-✅ _Up next for Day 25: We’ll translate these identified risks into a practical tool — the **Risk Register** — where risks are logged, tracked, and assigned for action._
+### Risk Category 2 — Cybersecurity and Data Risk
 
-📌 #GRC #RiskManagement #Cybersecurity #HealthcareIT #NISTRMF #OpenMRS #EnterpriseRisk #Leadership #Compliance #InfoSec #100DayChallenge
+**Risk: Ransomware attack encrypting critical systems including OpenMRS**
+
+Healthcare organizations are among the most heavily targeted sectors for ransomware. The combination of sensitive data, operational urgency, and historically underfunded IT security makes healthcare a consistently attractive target. A successful ransomware attack on MyClinic's network could encrypt the OpenMRS database and application server, take the system offline for days or weeks, and expose the organization to significant regulatory and legal consequences.
+
+- **Likelihood:** High — ransomware attacks on healthcare organizations are increasingly common and increasingly sophisticated
+- **Impact:** Critical — operational shutdown, HIPAA breach notification obligations, potential HHS investigation, reputational damage, and significant recovery costs
+- **Enterprise dimension:** A ransomware attack affects not just IT but clinical operations, finance, legal, communications, and executive leadership simultaneously. The response requires coordination across all of these functions.
+- **OpenMRS connection:** The OpenMRS database contains the ePHI of all active patients. Encryption or exfiltration of that data triggers HIPAA breach notification requirements and potential enforcement action.
+
+---
+
+### Risk Category 3 — Compliance and Regulatory Risk
+
+**Risk: HIPAA violation due to inadequate security controls or breach notification failure**
+
+MyClinic operates under HIPAA as a covered entity. A failure to implement required safeguards — or a failure to meet breach notification timelines after a security incident — creates regulatory exposure. HHS enforcement actions can result in significant financial penalties, corrective action plans, and ongoing monitoring requirements that consume organizational resources for years.
+
+- **Likelihood:** Medium — the risk of a HIPAA violation increases with every gap in the security control framework and every undocumented risk acceptance decision
+- **Impact:** High — financial penalties, mandatory corrective action, reputational damage, and potential loss of patient trust
+- **Enterprise dimension:** Compliance risk affects legal, finance, operations, and clinical leadership. It cannot be managed by IT alone.
+- **OpenMRS connection:** OpenMRS is the primary system through which ePHI is created, stored, and accessed. Almost every HIPAA technical safeguard requirement applies directly to the OpenMRS deployment.
+
+---
+
+### Risk Category 4 — Third-Party and Supply Chain Risk
+
+**Risk: Security failure in a vendor or partner with access to MyClinic systems**
+
+MyClinic uses third-party vendors for a range of services — cloud hosting (AWS), software maintenance, billing, and potentially telehealth integrations. Each of these relationships introduces risk: a vendor with access to MyClinic systems or data is a potential attack vector. The 2020 SolarWinds attack demonstrated how deeply supply chain compromises can affect organizations that had no direct vulnerability of their own.
+
+- **Likelihood:** Medium — vendor security incidents are increasingly common and often go undetected for extended periods
+- **Impact:** High — a compromised vendor with access to OpenMRS data or MyClinic's AWS environment could expose ePHI without any direct failure on MyClinic's part
+- **Enterprise dimension:** Vendor risk management requires legal (Business Associate Agreements), procurement (vendor assessment), and IT (technical access controls) working together
+- **OpenMRS connection:** AWS is a critical vendor. The HIPAA BAA discussed on Day 18 is the foundational risk management control for this relationship. Any other vendor with access to OpenMRS data needs equivalent contractual and technical safeguards.
+
+---
+
+### Risk Category 5 — Workforce and Insider Risk
+
+**Risk: Accidental or intentional insider access to patient data**
+
+Healthcare data breaches are frequently caused by insiders — employees who access records they are not authorized to view, staff who fall for phishing attacks, or individuals who deliberately misuse their access. OpenMRS is accessed by clinicians, administrators, and IT staff — each with different access levels and different risk profiles.
+
+- **Likelihood:** High — insider incidents are among the most common causes of healthcare data exposure
+- **Impact:** Medium to High — depending on the scope of unauthorized access and whether it triggers HIPAA breach notification requirements
+- **Enterprise dimension:** Workforce risk spans HR, clinical operations, IT, and compliance. Access management policies need to be enforced consistently across all functions.
+- **OpenMRS connection:** Role-based access control in OpenMRS is the primary technical control for insider risk. Regular access reviews — discussed in the risk tolerance framework on Day 23 — are the ongoing operational control.
+
+---
+
+## The Enterprise Risk Register — Summary View
+
+| Risk | Category | Likelihood | Impact | Priority | Owner |
+|---|---|---|---|---|---|
+| System downtime during clinical hours | Clinical/Operational | Medium-High | High | High | System Owner + Clinical Lead |
+| Ransomware attack on network | Cybersecurity | High | Critical | Critical | ISSO + AO |
+| HIPAA violation / compliance failure | Regulatory | Medium | High | High | Compliance Officer + AO |
+| Third-party vendor security failure | Supply Chain | Medium | High | High | System Owner + Legal |
+| Insider access or data misuse | Workforce | High | Medium-High | High | ISSO + HR |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2020 Blackbaud data breach** — a cloud software provider used by hundreds of healthcare organizations, nonprofits, and universities. Attackers gained access to Blackbaud's systems and exfiltrated data belonging to thousands of Blackbaud customers — including patient and donor data from numerous healthcare organizations that had no direct security failure of their own.
+
+What made this case a perfect illustration of enterprise risk thinking is the supply chain dimension. The affected healthcare organizations had done their own security work — they had policies, they had technical controls, they had compliance programs. But they had a third-party vendor with access to their data, and that vendor had a security failure. The enterprise risk register entry for "third-party vendor security failure" was not a theoretical concern. It materialized across hundreds of organizations simultaneously because of one vendor's breach.
+
+Blackbaud paid a $49.5 million settlement to state attorneys general in 2023. Many of the affected healthcare organizations faced their own notification and compliance obligations even though the breach originated entirely outside their environments.
+
+That case reinforced for me why enterprise risk assessment cannot stop at the organization's own systems. The risk landscape extends to every vendor, partner, and third party with access to your data or your infrastructure. Understanding that landscape — and building it into the risk management strategy — is what distinguishes a mature GRC program from one that only manages the risks it directly controls.
+
+---
+
+## What I Am Still Thinking About
+
+Something I want to explore further as Phase 2 continues: how do you prioritize enterprise risks when resources are limited and multiple high-priority risks exist simultaneously?
+
+MyClinic's enterprise risk register above has five risks rated High or Critical. In an ideal world, all of them would be addressed with equal urgency. In reality, a small healthcare organization has finite staff, finite budget, and finite time. How do you sequence remediation efforts? Do you address the highest-impact risks first, the most likely risks first, or the ones with the most available mitigations?
+
+I think the answer involves the risk tolerance framework from Day 23 — using the documented thresholds to determine which risks are truly intolerable and must be addressed immediately regardless of cost, and which can be managed through a prioritized remediation plan. But I want to work through that more concretely as the project develops.
+
+---
+
+## What's Next
+
+Day 25 translates today's enterprise risk picture into a practical management tool — the **Risk Register**. A risk register takes the identified risks, assigns them owners, documents their current status, and tracks remediation progress over time. It is the operational artifact that turns enterprise risk assessment from a one-time exercise into an ongoing management process.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-3, Organizational Risk Assessment](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-39 – Organizational Risk Management Tiers](https://csrc.nist.gov/publications/detail/sp/800-39/final)
+- [Blackbaud Data Breach – State AG Settlement Overview](https://www.ftc.gov/news-events/news/press-releases/2023/10/blackbaud-agrees-49-million-settlement)
+- [HHS – Healthcare Cybersecurity Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #EnterpriseRisk #RiskAssessment #NISTRMF #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day24*
