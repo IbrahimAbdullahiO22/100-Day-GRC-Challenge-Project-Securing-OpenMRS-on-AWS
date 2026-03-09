@@ -1,91 +1,246 @@
-# 📅 Day 34 – Drawing the Line: Defining Your OpenMRS System Boundary  
-_100 Days of GRC • By Ibrahim Abdullahi_
-
---
-
-## 🧭 GRC Leadership Insight: If You Don’t Define the Scope, Risk Will Define It for You
-
-Today’s task in the RMF journey (Task P-11) focuses on one of the most strategic decisions we make in governance and risk: **drawing the system boundary**.
-
-We’re not just listing parts of a system — we’re **clarifying ownership, accountability, and control**. A well-defined boundary helps us determine:
-- What’s inside our protection perimeter,
-- What interfaces with us but isn’t owned by us,
-- And what falls outside our responsibility.
+#  Day 34 – Defining the System Boundary: Where Does OpenMRS Begin and End? | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🔍 My OpenMRS System Boundary (Cloud Deployment – Health Sector Context)
+## The Question That Forces Clarity
 
-As I lead this cloud-based OpenMRS deployment, here’s how I scoped the system:
+There is a deceptively simple question at the heart of today's task: where does this system end?
 
-### ✅ Inside the Boundary (Owned/Controlled):
-1. **OpenMRS Application (Core + Custom Modules)**  
-   - Running on a hardened Ubuntu VM (AWS EC2)  
-   - Source-controlled and maintained internally
+It sounds like it should have an obvious answer. OpenMRS is the electronic health record system. The boundary is around OpenMRS. Done.
 
-2. **MySQL Database (Patient Records)**  
-   - Stores all structured health data and configuration  
-   - Encrypted at rest and in transit
+But working through NIST SP 800-37 Task P-11 properly revealed that the boundary question is more complex and more consequential than it first appears. The system boundary determines what falls under the authorization — which components are subject to the security controls, which assets are assessed, and which risks are formally owned by MyClinic. Everything outside the boundary is an external dependency that needs to be managed through interconnection agreements, inherited controls, or vendor assurance — but is not directly controlled by the system owner.
 
-3. **Encrypted Backups (AWS S3, Versioned)**  
-   - Full and incremental snapshots  
-   - IAM-restricted access policies
-
-4. **Cloud Infrastructure Config (AWS Security Groups, IAM, Load Balancer)**  
-   - Defined in Terraform; reviewed quarterly  
-   - VPC segmentation applied
-
-5. **Admin & Support Workstations (Clinical Staff Laptops/Desktops)**  
-   - Device compliance enforced (AV, disk encryption, MFA)
-   - Domain-joined and monitored via endpoint security tools
+Getting the boundary wrong in either direction has real consequences. Draw it too narrowly and you leave components out of scope that carry real risk to the system — an unscoped integration that handles ePHI, a workstation that accesses the system but has no endpoint controls applied. Draw it too broadly and you take on responsibility for components you do not actually control, creating accountability gaps that undermine the security program.
 
 ---
 
-### 🟡 Connected but Outside the Boundary:
-1. **3rd-Party Laboratory System**  
-   - API integration via secure REST endpoints  
-   - Governed by MOU; data in-transit only
+## What I Worked On Today
 
-2. **Cloud Provider Physical Infrastructure (AWS Data Center Security)**  
-   - Inherited controls via AWS Shared Responsibility Model  
-   - Audited via SOC 2, ISO 27001
+Task P-11 asks for a defined system boundary that clearly identifies what is inside the authorization boundary, what connects to the system from outside the boundary, and how those external connections are governed. The boundary is documented in the System Security Plan and informs everything that follows — control selection, assessment scope, and the Authorizing Official's risk acceptance decision.
 
-3. **Email Gateway (External Notification System)**  
-   - Uses secure SMTP relay service  
-   - Boundary ends at outbound traffic point
+I worked through the boundary definition for OpenMRS at MyClinic systematically, starting from the asset inventory built on Day 33 and asking for each asset: is this directly controlled by MyClinic's IT team? Does it process, store, or transmit ePHI on behalf of the OpenMRS system? Is its security posture directly within MyClinic's authority to configure and maintain?
+
+Assets that meet those criteria are inside the boundary. Assets that connect to the system but are owned and controlled by another party — AWS's physical infrastructure, a third-party laboratory system, an external email relay — are outside the boundary and governed through different mechanisms.
 
 ---
 
-## 🧠 Reflection as a Security Leader
+## What Actually Clicked for Me
 
-Defining the boundary forced me to think like a **risk architect**. Without this line in the sand, confusion would reign:
-- Who patches the system?
-- Who encrypts the backups?
-- Who audits access?
+The concept that clicked most clearly today is the relationship between boundary definition and accountability. The authorization boundary is not just a technical diagram — it is a statement of organizational accountability. Everything inside the boundary is something the Authorizing Official is formally accepting risk for when they approve the Authorization to Operate. Everything outside the boundary is risk that either lives with another party or needs to be addressed through formal agreements before the ATO is granted.
 
-Answer: **Whoever owns the asset inside the boundary.**
+That framing explains why boundary decisions are not purely technical. Expanding the boundary to include a component means accepting accountability for its security. Excluding a component from the boundary means having an explicit answer to the question: how is the risk associated with that component managed if it is not managed through this authorization?
 
-💡 _Leadership Insight:_  
-> "Scope defines responsibility. Responsibility defines action. Action defines resilience."
+For OpenMRS, the most interesting boundary decision is around clinic workstations. They are not running OpenMRS — they are running web browsers that access OpenMRS. But they are the access point through which all clinical users interact with ePHI. If a workstation is compromised, an attacker can access OpenMRS through the legitimate session of the compromised user. The workstation risk is real and directly relevant to the OpenMRS security posture.
+
+The boundary decision I made — and the reasoning I want to document carefully — is to include workstations within the authorization boundary. The rationale is that workstation security is directly within MyClinic's control, workstations are the primary access point for ePHI in the OpenMRS system, and excluding them from scope would leave a significant risk pathway unaddressed by the formal security program.
 
 ---
 
-## 🧰 Next Action
+## OpenMRS System Boundary — Full Documentation
 
-Now that the boundary is defined, I’ll:
-- Update our system security plan (SSP)
-- Align our control selection (FIPS 199 moderate baseline)
-- Coordinate with external stakeholders for interconnection agreements
+### Inside the Authorization Boundary
 
 ---
 
-## 🔗 Relevant Standards & References
+**OpenMRS Application Server (AWS EC2)**
 
-- `NIST SP 800-37, Task P-11: Define System Boundary`
-- `NIST SP 800-18: System Security Plan (SSP)`
-- `AWS Shared Responsibility Model`
-- `CIS Controls 1 & 2: Inventory & Control of Assets`
+The EC2 instance running the OpenMRS Java application is fully within the authorization boundary. MyClinic controls the operating system configuration, application installation and updates, security group settings, and all software running on the instance. The security of this component is entirely MyClinic's responsibility under the AWS shared responsibility model.
+
+*Why inside:* Directly processes ePHI. Fully within MyClinic's operational control. Security configuration is MyClinic's responsibility.
+
+*Boundary note:* The underlying EC2 hardware, hypervisor, and physical infrastructure are AWS's responsibility and sit outside the boundary as inherited common controls.
 
 ---
 
-📌 #Day34 #NISTRMF #SystemBoundary #OpenMRS #GRCLeadership #SecurityArchitecture #SharedResponsibility #CloudGovernance #100DaysOfGRC #CyberRiskManagement
+**OpenMRS MySQL Database (AWS RDS)**
+
+The RDS MySQL instance storing all patient records, clinical data, and system configuration is inside the authorization boundary. MyClinic controls the database configuration, encryption settings, access credentials, security group rules governing database access, and backup configuration. While AWS manages the RDS managed service layer — patching the database engine, maintaining the underlying infrastructure — the data and the configuration decisions are MyClinic's responsibility.
+
+*Why inside:* Contains the complete ePHI dataset for all OpenMRS patients. Configuration and access control are MyClinic's responsibility. Data classification is High.
+
+*Boundary note:* The RDS managed service infrastructure — the physical servers running the database engine, the managed patching of the RDS engine itself — is AWS's responsibility and sits outside the boundary as an inherited control.
+
+---
+
+**Backup Storage (AWS S3)**
+
+The S3 bucket containing encrypted database backups is inside the authorization boundary. MyClinic configures the bucket policies, encryption settings, access controls, versioning, and retention policies. The backup data represents the recovery asset for the most critical data in the system.
+
+*Why inside:* Contains encrypted copies of all ePHI. Bucket configuration is fully within MyClinic's control. Misconfiguration of this asset — such as accidental public access — would be a MyClinic responsibility and a significant risk.
+
+*Boundary note:* The S3 infrastructure and storage hardware are AWS's responsibility. The S3 service itself — availability, durability, infrastructure security — is an inherited control.
+
+---
+
+**Application Audit Logs (CloudWatch Logs)**
+
+The audit log data generated by the OpenMRS application and shipped to CloudWatch Logs is inside the authorization boundary. The audit log content — who accessed what records and when — is a compliance asset that MyClinic is responsible for generating, protecting, and reviewing. The configuration decisions about what is logged, how long logs are retained, and who can access them are MyClinic's responsibility.
+
+*Why inside:* Audit logs are a required HIPAA control. Their integrity and availability are MyClinic's responsibility. The log content is derived from ePHI access events.
+
+*Boundary note:* The CloudWatch infrastructure is an AWS managed service and sits outside the boundary as an inherited control.
+
+---
+
+**OpenMRS Application Software and Custom Modules**
+
+The OpenMRS application codebase and all installed modules are inside the authorization boundary. MyClinic is responsible for version management, patch application, module selection and review, and configuration of the application layer.
+
+*Why inside:* The application directly processes all ePHI. Vulnerabilities in the application are MyClinic's responsibility to identify and remediate. Application configuration determines the security behavior of the system.
+
+---
+
+**VPC, Security Groups, and IAM Configuration**
+
+The network architecture — VPC configuration, subnet design, security group rules, routing tables — and the IAM roles and policies governing access to AWS resources are inside the authorization boundary. These are customer-managed configurations that determine how components communicate with each other and who can access which resources.
+
+*Why inside:* Network and access configuration is entirely within MyClinic's control. Misconfiguration of security groups or IAM policies is a MyClinic risk and one of the most common root causes of cloud security incidents.
+
+---
+
+**Clinic Workstations — Included with Documented Rationale**
+
+Clinic workstations are included within the authorization boundary. This deserves explicit justification because workstations do not run OpenMRS directly — they run browsers that access OpenMRS. The argument for including them is:
+
+First, workstations are the access point for all ePHI viewed or entered by clinical users. A compromised workstation allows an attacker to interact with OpenMRS through the legitimate session of the compromised user, accessing and potentially modifying patient records within the scope of that user's permissions. The workstation risk is directly relevant to the OpenMRS security posture.
+
+Second, workstation security is within MyClinic's direct operational control. MyClinic owns the devices, configures them, deploys security software on them, and enforces policies on them. There is no shared responsibility ambiguity — these are MyClinic-owned and MyClinic-managed assets.
+
+Third, excluding workstations from the boundary would leave a significant risk pathway — user endpoint compromise — without formal control coverage under the OpenMRS authorization. The monitoring strategy, incident response procedures, and access control requirements all need to address this risk.
+
+*Boundary note:* The inclusion of workstations in the boundary means that endpoint security requirements — EDR, full-disk encryption, MFA, OS patching, browser policy — are subject to assessment as part of the OpenMRS authorization process. This increases the assessment scope but provides a more accurate and complete picture of the system's security posture.
+
+---
+
+### Outside the Authorization Boundary — Connected Systems
+
+---
+
+**AWS Physical Infrastructure and Managed Service Layer**
+
+AWS's physical data centers, network infrastructure, hypervisor layer, and the managed service components of RDS, S3, EC2, and CloudWatch sit outside the authorization boundary. These are governed by the AWS Shared Responsibility Model and assured through AWS compliance certifications — SOC 2 Type II, ISO 27001, FedRAMP, and the AWS HIPAA BAA.
+
+*Governance mechanism:* AWS Business Associate Agreement. AWS compliance documentation reviewed through AWS Artifact. Inherited common controls documented in System Security Plan.
+
+*Risk to document:* MyClinic has no ability to directly audit or test AWS infrastructure controls. Assurance relies entirely on third-party certifications and contractual commitments. If AWS's security posture degrades, MyClinic's inherited controls degrade with it — and MyClinic would not necessarily know.
+
+---
+
+**Third-Party Laboratory Information System**
+
+MyClinic's laboratory system — operated by a third-party laboratory provider — connects to OpenMRS via a REST API integration. Laboratory results are transmitted from the lab system to OpenMRS and stored in the patient record. The laboratory system itself, including its infrastructure and security posture, is outside the authorization boundary.
+
+*Governance mechanism:* Business Associate Agreement with the laboratory provider required under HIPAA. Interconnection Security Agreement (ISA) documenting the technical details of the integration — authentication method, encryption in transit, data formats, and incident notification requirements. The ISA should be reviewed and renewed on a defined schedule.
+
+*Risk to document:* The API integration represents an external entry point to OpenMRS. Compromise of the laboratory system or its credentials could allow malicious data to be injected into OpenMRS patient records — an integrity risk. Authentication for the API connection should use dedicated service account credentials, not shared user credentials, with access scoped to the minimum required for the integration.
+
+---
+
+**External Email Notification Service**
+
+OpenMRS is configured to send automated notifications — appointment reminders, system alerts — through an external SMTP relay service. The email service provider is outside the authorization boundary.
+
+*Governance mechanism:* Business Associate Agreement if the email service processes ePHI in the content of notifications. Review of email content to determine whether notification messages contain ePHI or only non-sensitive identifiers. If ePHI is included in email notifications, additional controls — encryption of email content, TLS enforcement for SMTP connections — are required.
+
+*Risk to document:* Email notification content should be reviewed to ensure minimum necessary ePHI is included. Outbound SMTP connections should require TLS. API credentials for the email service should be rotated on a defined schedule.
+
+---
+
+**OpenMRS Open Source Community**
+
+The OpenMRS development community maintains the application codebase and releases patches and updates. The community infrastructure — code repositories, release servers, distribution mechanisms — is outside the authorization boundary.
+
+*Governance mechanism:* Vendor assurance through the OpenMRS community security advisory process. MyClinic's responsibility is to monitor advisories, verify the integrity of downloaded software (checksum verification), and apply patches within the defined SLA.
+
+*Risk to document:* Software supply chain risk — the possibility that a malicious actor compromises the OpenMRS distribution mechanism and inserts malicious code into a legitimate-appearing release. Checksum verification against official release signatures is a critical mitigation.
+
+---
+
+## System Boundary Diagram
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    AUTHORIZATION BOUNDARY                        │
+│                                                                   │
+│  ┌─────────────────┐         ┌──────────────────────────────┐   │
+│  │  Clinic          │  HTTPS  │  AWS VPC (MyClinic)           │   │
+│  │  Workstations    │────────▶│                               │   │
+│  │  (EC2 access)    │         │  ┌──────────────┐            │   │
+│  └─────────────────┘         │  │  EC2          │            │   │
+│                               │  │  OpenMRS App  │            │   │
+│                               │  └──────┬───────┘            │   │
+│                               │         │ Private subnet      │   │
+│                               │  ┌──────▼───────┐            │   │
+│                               │  │  RDS MySQL    │            │   │
+│                               │  │  Patient DB   │            │   │
+│                               │  └──────────────┘            │   │
+│                               │                               │   │
+│                               │  ┌──────────────┐            │   │
+│                               │  │  S3 Backups   │            │   │
+│                               │  └──────────────┘            │   │
+│                               └──────────────────────────────┘   │
+│                                                                   │
+│    CloudWatch Logs / CloudTrail / GuardDuty / Config              │
+│    (Customer-configured — inside boundary)                        │
+└─────────────────────────────────────────────────────────────────┘
+          │                    │                     │
+          ▼                    ▼                     ▼
+  ┌──────────────┐   ┌─────────────────┐   ┌──────────────────┐
+  │  AWS Physical │   │  Lab System     │   │  Email Service   │
+  │  Infrastructure│  │  (REST API/BAA) │   │  (SMTP/BAA)      │
+  │  (Inherited)  │   │  Outside Boundary│  │  Outside Boundary│
+  └──────────────┘   └─────────────────┘   └──────────────────┘
+```
+
+---
+
+## Interconnection Summary Table
+
+| External System | Connection Type | Data Exchanged | Governance Mechanism | Key Risk |
+|---|---|---|---|---|
+| AWS Infrastructure | Infrastructure dependency | All system traffic | AWS BAA + SOC2/ISO certifications | No direct audit capability; reliance on third-party assurance |
+| Laboratory System | REST API | Lab results (ePHI) | BAA + Interconnection Security Agreement | API credential compromise; malicious data injection |
+| Email Notification Service | SMTP relay | Notification content (may include ePHI) | BAA if ePHI in content; TLS required | ePHI in email content; credential rotation |
+| OpenMRS Community | Software distribution | Application updates | Advisory monitoring; checksum verification | Supply chain compromise of update mechanism |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2020 Blackbaud data breach** — which I covered on Day 24 from the third-party risk perspective, but want to revisit specifically through the system boundary lens.
+
+Blackbaud is a software provider used by hundreds of healthcare organizations for donor management and fundraising. When Blackbaud was breached, the data exposed belonged to the healthcare organizations that were Blackbaud's customers — not to Blackbaud itself. Those organizations had a system boundary that treated Blackbaud as an external vendor, outside the authorization boundary, governed by a Business Associate Agreement.
+
+The breach exposed a critical gap in how boundary definitions and vendor assurance actually function in practice. The healthcare organizations had formal governance mechanisms in place — BAAs, vendor agreements — but those governance mechanisms did not provide visibility into Blackbaud's actual security posture. The BAA created legal accountability after the fact but did not prevent the breach or provide early warning.
+
+The lesson for the system boundary work today is that governance mechanisms for external systems — BAAs, ISAs, vendor certifications — are necessary but not sufficient. The risk associated with external dependencies needs to be explicitly documented, actively monitored, and periodically reassessed. A BAA filed and forgotten is compliance theater. A BAA combined with annual vendor security review, contractual security requirements, and monitoring of vendor security advisories is meaningful third-party risk management.
+
+For MyClinic's OpenMRS boundary, the external systems — the laboratory provider, the email service — need active governance, not just signed agreements.
+
+---
+
+## What I Am Still Thinking About
+
+One question that came up in working through the boundary definition: how should the boundary evolve as the system evolves?
+
+The OpenMRS deployment at MyClinic will likely change over time — new integrations added, new modules installed, infrastructure changes made. Each of those changes potentially affects the boundary definition and the authorization. NIST RMF provides for ongoing authorization as an alternative to periodic re-authorization, which means the boundary and the security posture are continuously maintained rather than reassessed on a fixed schedule.
+
+But maintaining boundary documentation in sync with a system that is actively changing requires process discipline that small organizations often struggle with. A change management process — requiring that boundary-affecting changes be reviewed for security impact before implementation — is the mechanism that keeps the authorization current. I want to think through what a realistic change management process looks like for a small clinic IT environment as the project continues.
+
+---
+
+## What's Next
+
+Day 35 begins the formal **Categorize step** documentation — producing the complete system categorization artifact that brings together the FIPS 199 work from Day 29, the mission documentation from Day 31, the asset inventory from Day 33, and the boundary definition from today into the official System Security Plan categorization section.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-11 System Boundary Definition](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-18 – Guide for Developing Security Plans](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-47 – Managing the Security of IT Interconnections](https://csrc.nist.gov/publications/detail/sp/800-47/rev-1/final)
+- [Blackbaud Breach – HHS Analysis](https://www.hhs.gov/sites/default/files/blackbaud-breach.pdf)
+
+---
+
+*#GRC #SystemBoundary #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #CloudSecurity #AWS #RiskManagement #Day34*
