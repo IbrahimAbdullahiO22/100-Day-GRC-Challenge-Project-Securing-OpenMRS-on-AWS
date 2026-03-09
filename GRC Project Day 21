@@ -1,116 +1,153 @@
-# 📅 Day 21 – Kicking off Phase 2: NIST RMF (Overview & Game Plan)  
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 21 – Phase 2 Begins: Getting Serious About NIST RMF | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Topic Overview:
+## A New Phase, A Different Kind of Work
 
-Welcome to **Phase 2** of the challenge — we’re diving into the **NIST Risk Management Framework (RMF)**.  
-The RMF is a structured, step-by-step process for managing cybersecurity risk for information systems.  
-Today’s goal was to understand the **7 RMF steps** and see how they apply to our **OpenMRS on AWS** scenario.
+Phase 1 was about building a foundation — understanding what GRC means, learning the major frameworks, studying regulations, and getting familiar with the architecture of the system I am securing. It was necessarily conceptual because you cannot apply a framework you do not understand.
 
----
+Phase 2 is different. The goal now is to take the NIST Risk Management Framework and actually work through it — step by step, applied to OpenMRS on AWS, producing real artifacts and making real security decisions rather than just describing them. That shift from learning about GRC to doing GRC is what Phase 2 is about.
 
-##  RMF in a Nutshell – 7 Steps (Simplified):
-
-1. **Prepare** – Set the foundation at both the organization and system level (roles, policies, mission context).  
-2. **Categorize** – Assess the system’s impact based on the sensitivity of data (e.g., PHI in OpenMRS = High confidentiality).  
-3. **Select Controls** – Choose safeguards from NIST SP 800-53 tailored to the system's risk level.  
-4. **Implement Controls** – Configure the system (AWS, OpenMRS) to apply those controls (e.g., encryption, IAM).  
-5. **Assess Controls** – Verify the controls work through testing, audits, and scans.  
-6. **Authorize the System** – Management reviews risk and decides whether the system can operate.  
-7. **Monitor Controls** – Continuously check for threats, re-scan, and update controls as needed.
-
->  RMF is a **cycle**, not a one-time checklist — it adapts to evolving threats and environments.
+Today was an orientation day for that work — stepping back and looking at the full RMF picture before diving into individual steps. I wanted to understand not just what the seven steps are but how they connect, why the sequence matters, and where I expect the hardest work to be for this specific project.
 
 ---
 
-##  Application to Our OpenMRS Case Study:
+## What I Worked On Today
 
-We’ll be applying each step to our cloud-hosted OpenMRS system:  
-- When we **categorize**, we’ll classify PHI data  
-- When we **select**, we’ll choose practical AWS security controls  
-- When we **implement**, we’ll apply encryption, IAM roles, and backups  
-- When we **assess**, we’ll simulate testing and audit logs  
-- Eventually, we’ll walk through **authorization** and **monitoring** as well
+The NIST Risk Management Framework is documented in **NIST SP 800-37 Revision 2** — a publication that provides the authoritative guidance on how the framework should be applied. I spent time today reading through the overview sections and trying to build a clear mental model of the full lifecycle before getting into the details of individual steps.
 
-Each RMF step will be mapped to **real-world actions** and artifacts.
+The RMF has seven steps. What matters is not just knowing what each step is called but understanding why the sequence exists and what each step depends on from the ones before it.
 
 ---
 
-##  Hands-On Exercise:
+## The Seven Steps — How I Am Understanding Them Now
 
- **Found RMF Diagram** – I searched for **"NIST RMF steps diagram"** and found the official flowchart in **NIST SP 800-37 Rev. 2**.  
-Yes — I see the **loop**: Continuous Monitoring feeds back into other steps.
-## 🗺️ NIST RMF - 7 Steps Overview (Visual Diagram)
+**Step 1 — Prepare**
+Prepare is the foundation step that was added in Revision 2 of SP 800-37, and it is important enough that it was worth adding. Before you can manage risk in a system, you need to establish the organizational context — who owns what, what the mission is, what the regulatory environment looks like, what risk tolerance the organization has, and what resources are available. Prepare also involves system-level preparation — documenting what the system is, what it does, and how it connects to other systems and organizational processes.
 
-```text
+For OpenMRS, this means defining who the System Owner is, documenting the system's purpose and scope, identifying the stakeholders whose missions depend on it, and establishing the baseline understanding that every subsequent step will build on.
+
+**Step 2 — Categorize**
+Categorization is where you formally classify the system based on the sensitivity of the information it processes and the potential impact if confidentiality, integrity, or availability is compromised. The methodology comes from **FIPS 199** and **NIST SP 800-60**, which provide structured guidance for determining impact levels.
+
+For OpenMRS, the answer is fairly clear — the system handles ePHI, which means high sensitivity for confidentiality, and clinical workflows that depend on data integrity and system availability. The categorization result drives everything that follows, particularly which security controls are required.
+
+**Step 3 — Select**
+Based on the categorization, you select an appropriate baseline of security controls from **NIST SP 800-53**. SP 800-53 contains hundreds of controls organized into families — access control, audit and accountability, configuration management, incident response, and many more. A high-impact system requires a more comprehensive set of controls than a low-impact one.
+
+The selection process is not just picking from a list. It involves tailoring — adjusting the baseline to account for the specific technology, threat environment, and operational context of the system. For OpenMRS on AWS, that means thinking carefully about which controls AWS satisfies through the shared responsibility model and which remain the customer's responsibility.
+
+**Step 4 — Implement**
+Implementation is where controls move from a document into reality. You configure encryption, set up access controls, deploy monitoring tools, establish backup procedures, and make the security plan operational. This is the step I have been building toward through the AWS-specific work in Phase 1 — understanding what encryption means for RDS and S3, how IAM least privilege works, what CloudTrail captures.
+
+Implementation also involves documenting how each control was implemented — recording the configuration decisions, the tools used, and any deviations from the selected baseline. That documentation feeds directly into the next step.
+
+**Step 5 — Assess**
+Assessment is independent verification that the controls are actually working. An assessor — ideally someone not directly involved in implementing the controls — reviews the implementation documentation, tests controls through technical methods, interviews staff, and examines evidence to determine whether each control is in place, operating as intended, and producing the desired security outcome.
+
+This is one of the steps I identified as a gap at the end of Phase 1. I understand the principle. What I need to build is practical familiarity with what a real assessment looks like — what questions are asked, what evidence is collected, how findings are documented.
+
+**Step 6 — Authorize**
+Authorization is the formal risk acceptance decision. The Authorizing Official reviews the assessment findings, understands the residual risk that remains after controls are in place, and makes a documented decision — authorize the system to operate, authorize with conditions, or deny authorization. This is the step that makes risk management a leadership responsibility rather than just a technical one.
+
+The output is an Authorization to Operate — or, if the risk is too high to accept, a denial that requires additional risk treatment before the system can go live.
+
+**Step 7 — Monitor**
+Monitoring is what happens after authorization — and it never ends. Controls are continuously verified, new risks are assessed as the system and threat environment change, and significant changes to the system trigger reassessment. Monitoring is what prevents the "authorize and forget" pattern that leaves systems gradually falling out of their approved security posture.
+
+---
+
+## The RMF as a Cycle
+
+One of the most important things I took from today's reading is that the RMF is explicitly designed as a cycle, not a linear process. The diagram in SP 800-37 shows continuous monitoring feeding back into earlier steps — because monitoring findings may require revisiting categorization if new data types are introduced, reselecting controls if new threats emerge, or reimplementing controls if assessment reveals gaps.
+```
 +------------------+
-|     Prepare      |  ← Organizational & System Prep (New in Rev.2)
+|     PREPARE      |
 +--------+---------+
          |
          v
 +--------+---------+
-|    Categorize    |  ← Define impact levels (Confidentiality, Integrity, Availability)
+|    CATEGORIZE    |
 +--------+---------+
          |
          v
 +--------+---------+
-|     Select       |  ← Choose baseline controls (SP 800-53) based on categorization
+|      SELECT      |
 +--------+---------+
          |
          v
 +--------+---------+
-|    Implement     |  ← Apply selected controls (encryption, access control, etc.)
+|    IMPLEMENT     |
 +--------+---------+
          |
          v
 +--------+---------+
-|     Assess       |  ← Evaluate effectiveness of controls (testing, auditing)
+|      ASSESS      |
 +--------+---------+
          |
          v
 +--------+---------+
-|   Authorize      |  ← Risk acceptance decision (ATO – Authority to Operate)
+|    AUTHORIZE     |
 +--------+---------+
          |
          v
 +--------+---------+
-|    Monitor       |  ← Continuous monitoring, scanning, and adjustment
-+------------------+
+|     MONITOR      |
++--------+---------+
+         |
+         +──────────────────────────────────────────┐
+                                                    |
+         Monitoring findings feed back into         |
+         Categorize, Select, and Implement          |
+         as the system and threat environment ──────+
+         evolve over time
+```
 
-              
-         ⤴───────────────────────────────────────────⤵
-             ← Continuous Monitoring Feeds Back
-                into Categorize / Select Steps
-
-📍 **Where does OpenMRS need the most work?**  
-➡️ I believe **Continuous Monitoring** will be the most resource-intensive step for OpenMRS because cloud environments evolve constantly.  
-➡️ Also, **Selecting Controls** might be challenging due to the vast number of options and cloud-specific configurations.
+That cyclical design reflects a mature understanding of how security actually works. Threats are not static. Systems change. Organizations evolve. A framework that treats authorization as the end state rather than a milestone in an ongoing process will always fall behind the threat environment it is trying to address.
 
 ---
 
-##  Reflection Prompt:
+## Where I Expect the Hardest Work to Be
 
-**How do I feel about starting RMF?**  
-✅ *Excited!* It’s structured and logical, and I like working with repeatable frameworks. But I also expect some complexity.
+Having worked through the overview today, here is my honest assessment of where Phase 2 will be most challenging:
 
-**Most Challenging Step for Me:**  
-➡️ *Select Controls* — because of the depth of NIST SP 800-53 and deciding which controls fit our OpenMRS setup best.
+**Select Controls** is going to require the most careful thinking. NIST SP 800-53 Revision 5 contains 20 control families and hundreds of individual controls. Selecting the right baseline for OpenMRS — and then tailoring it appropriately for a cloud-hosted, healthcare-focused deployment — requires understanding both the framework and the system in detail. The AWS shared responsibility model adds another layer of complexity, because some controls are partially or fully satisfied by AWS and others remain entirely the customer's responsibility.
 
-**Most Exciting Step:**  
-➡️ *Implement Controls* — I enjoy hands-on security tasks like enabling encryption, setting up IAM, and tightening configs.
+**Assess Controls** is where I have the biggest knowledge gap. I understand implementation. I am less clear on what rigorous assessment looks like in practice — the testing methods, the evidence standards, the documentation format. I want to go as deep as I can on this in Phase 2.
 
----
-
-##  Optional Search Terms for Further Learning:
-
-- `NIST RMF seven steps summary`  
-- `Risk Management Framework diagram NIST`  
-- `RMF steps explained in simple terms`  
+**Monitor** is where I expect the most ongoing complexity. Cloud environments change constantly — new services get added, configurations drift, new vulnerabilities are discovered, access patterns shift. Building a continuous monitoring program that is genuinely useful rather than just a compliance artifact feels like one of the hardest practical challenges in the entire framework.
 
 ---
 
- _Stay tuned for Day 22 as we tackle Step 1: **Prepare** — where we’ll set the stage for successful risk management in OpenMRS._
+## A Real-World Connection for Phase 2
 
-📌 #GRC #NISTRMF #Cybersecurity #RiskManagement #Compliance #OpenMRS #100DayChallenge #CloudSecurity #InfoSec #Governance #AWS #HIPAA #Frameworks
+As I start Phase 2 I want to keep a real-world anchor in mind. The **2020 FISMA report from the Government Accountability Office** — which I mentioned on Day 19 — found that many federal agencies had significant gaps specifically in the Assess and Monitor steps of the RMF. Systems were being authorized based on documentation that had not been independently tested, and continuous monitoring programs were not functioning as intended.
+
+That finding matters for this project because it highlights exactly the steps that are easiest to shortcut. Prepare, Categorize, and Select produce documents. Implement produces configurations. But Assess requires genuine independent verification, and Monitor requires sustained operational effort. Those are the steps where organizations most often fall short — and they are the steps I am going to focus on most carefully as Phase 2 develops.
+
+---
+
+## What I Am Still Thinking About
+
+One question I want to answer as Phase 2 progresses: how do you right-size the RMF for a small or medium healthcare organization? The full framework as documented in SP 800-37 was designed primarily for federal information systems, where dedicated security teams, independent assessors, and formal authorization processes are expected. For a community health clinic running OpenMRS with limited staff and budget, the full formal process may not be realistic.
+
+NIST has published guidance on tailoring the RMF for different organizational contexts, and I want to understand what that looks like in practice. The goal is not to shortcut the framework but to apply its principles in a way that produces real security value for organizations that do not have the resources of a federal agency.
+
+---
+
+## What's Next
+
+Day 22 goes into **Step 1 — Prepare** in detail. This is the foundation that every other step depends on, and I want to work through it carefully for OpenMRS — defining the organizational context, assigning roles, documenting the system scope, and establishing the risk management baseline that will guide everything that follows.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Risk Management Framework](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-53 Rev 5 – Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [FIPS 199 – Standards for Security Categorization](https://csrc.nist.gov/publications/detail/fips/199/final)
+- [GAO – Federal Information Security Report 2021](https://www.gao.gov/products/gao-21-204)
+
+---
+
+*#GRC #NISTRMF #RiskManagement #Phase2 #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day21*
