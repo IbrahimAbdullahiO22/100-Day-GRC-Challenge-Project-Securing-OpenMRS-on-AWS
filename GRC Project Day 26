@@ -1,78 +1,152 @@
-# 📅 Day 26 – Custom-Fitting Your Security Controls (Tailored Baselines)
-_100-Day GRC Cybersecurity Challenge by Ibrahim Abdullahi_
+#  Day 26 – Tailoring Security Controls: Choosing the Right Safeguards for OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Focus: Smart Security = Relevant Security
+## Not Every Control Fits Every System
 
-Today, I adopted a powerful concept in strategic risk management — tailoring security control baselines.  
-In the world of GRC, it’s not just about checking boxes — it’s about choosing **the right boxes** to check.
+One of the things that initially intimidated me about NIST SP 800-53 is the sheer volume of it. Revision 5 contains over 1,000 individual control requirements organized across 20 control families. When I first looked at it I wondered: does every system need to implement all of these?
 
-Security is not one-size-fits-all. As a future GRC leader in healthcare IT, I’m learning how to refine and optimize controls in ways that support both **security** and **operational agility**.
-
----
-
-##  What Are Tailored Security Baselines?
-
-Security control baselines are predefined sets of safeguards recommended for systems based on their impact level (e.g., Low, Moderate, High). For example, a Moderate baseline in NIST SP 800-53 might require ~300 controls.
-
-**Tailoring** means:
--  **Removing** non-applicable controls
--  **Adding** necessary controls unique to your environment
--  **Justifying** each decision based on actual risk
-
-It's like tailoring a suit for your system — fit it to the mission and environment, not the other way around.
+The answer is no — and today's topic explains why. The concept of tailoring is what makes SP 800-53 practical rather than overwhelming. It is the process of taking a baseline set of controls and adjusting it — removing what does not apply, adding what is specifically needed, and documenting the reasoning behind every decision. Today I worked through what that looks like for the OpenMRS deployment at MyClinic.
 
 ---
 
-##  Case Study: MyClinic + OpenMRS (Cloud Deployment on AWS)
+## What I Worked On Today
 
-### ✔ Tailoring Example – Dropping Irrelevant Controls
+NIST SP 800-53B provides specific guidance on control baselines and tailoring. It defines three baseline levels — Low, Moderate, and High — based on the impact categorization of the system. A Moderate baseline, which is where OpenMRS on AWS is likely to land given the ePHI it handles, includes several hundred controls across all 20 families.
 
-**Control to Tailor Out**: Physical access controls (PE-family, e.g., CCTV in server room)
+Tailoring is the process of making that baseline fit the actual system and environment. NIST describes three main tailoring activities:
 
-**Justification**:  
-OpenMRS is hosted in the AWS cloud. MyClinic does not own or manage physical data centers.  
-Physical security is **inherited from AWS** as part of the shared responsibility model.
+**Scoping** — identifying which controls are applicable to the specific system and environment. Some controls are designed for physical infrastructure that does not exist in a cloud deployment. Some are designed for specific technologies or operational contexts that simply do not apply. Scoping removes these from the applicable control set with documented justification.
 
-📌 _Lesson_: Smart tailoring avoids wasted resources on controls that don’t apply and focuses on what actually protects the system.
+**Compensating controls** — when a baseline control cannot be implemented as specified, a compensating control is an alternative that provides equivalent protection through a different mechanism. Compensating controls require careful justification — you need to demonstrate that the alternative actually addresses the same risk.
 
----
+**Supplementing** — adding controls beyond the baseline when the specific risk environment requires it. A system handling particularly sensitive data, operating in a high-threat environment, or subject to specific regulatory requirements may need controls that are not in the standard baseline.
 
-##  Reflection: The Leadership Balancing Act
-
-As a future GRC strategist, I see tailoring as an exercise in **disciplined customization**.  
-Done right, it creates **clarity**, **efficiency**, and **risk-aligned protection**.
-
-But tailoring comes with responsibility:
-- Every dropped control must be justified
-- Risks must still be **fully mitigated**, even if addressed differently
-- Decisions must stand up to **audit scrutiny** and leadership review
-
-> As a leader, tailoring isn’t about doing less.  
-> It’s about doing what **matters most**, with clarity and accountability.
+The critical principle throughout all of this: every tailoring decision must be documented and justified. The documentation serves two purposes — it creates an audit trail that demonstrates the organization made deliberate, reasoned decisions rather than arbitrary ones, and it forces the decision-makers to articulate their reasoning in a way that can be reviewed and challenged.
 
 ---
 
-##  Quick Practice Entry
+## What Actually Clicked for Me
 
-| Control Area                  | Action               | Justification                                                                 |
-|------------------------------|----------------------|-------------------------------------------------------------------------------|
-| Physical Server Protection   | Tailor OUT           | OpenMRS is cloud-hosted; physical security is inherited from AWS              |
-| Removable Media Controls     | Tailor OUT           | Organizational policy prohibits USB or tape backups in the OpenMRS workflow   |
-| Volunteer Staff Training     | Tailor IN (Add)      | Volunteers must also receive security briefings due to data access exposure   |
+What clicked today is that tailoring is fundamentally a risk-based exercise. You are not just asking "does this control technically apply to our system?" You are asking "does this control address a real risk in our environment, and if not, is that risk addressed some other way?"
 
----
+That framing connects tailoring directly to the risk assessment and risk register work from Days 24 and 25. The risks documented in the register — ransomware, insider access, HIPAA violations, vendor failures, system downtime — are the risks that the control set needs to address. If a baseline control does not address any of those risks and does not apply to the technical environment, removing it is a reasonable decision. If a risk in the register is not addressed by any baseline control, adding a supplementary control is necessary.
 
-##  Further Exploration
-
-- `Tailored security control baseline NIST`
-- `NIST SP 800-53B tailoring guidance`
-- `Example of tailoring for AWS cloud deployments`
-- `HIPAA vs NIST 800-53 baseline control mapping`
+Tailoring done poorly looks like an exercise in minimizing the number of controls an organization has to implement. Tailoring done well looks like an exercise in making sure every significant risk is addressed by at least one control, and that no resources are wasted on controls that do not contribute to the actual security of the system.
 
 ---
 
-📌 #GRC #Cybersecurity #NISTRMF #TailoredBaseline #HealthcareSecurity #OpenMRS #CloudSecurity #AWS #FERPAtoHIPAA #InfoSecLeadership #100DayChallenge #RiskManagement #Compliance
+## Tailoring the Control Baseline for OpenMRS on AWS
 
- _Tomorrow (Day 27):_ We’ll explore **Common Controls** — powerful tools for scaling risk management across an organization.
+Working through the tailoring exercise for the MyClinic OpenMRS deployment, I identified three categories of adjustments:
+
+---
+
+### Controls to Scope Out — With Justification
+
+**Physical and Environmental Protection (PE family)**
+
+The PE control family covers physical security of the facilities and infrastructure where information systems operate — things like physical access controls to server rooms, environmental monitoring for temperature and humidity, power redundancy, and physical media disposal.
+
+For OpenMRS hosted on AWS, MyClinic does not own or operate any of the physical infrastructure. The servers running the EC2 instances, the storage systems behind RDS and S3, and the network hardware all live in AWS data centers. Physical security for that infrastructure is AWS's responsibility under the shared responsibility model — and AWS maintains extensive physical security certifications including SOC 2, ISO 27001, and FedRAMP that document and validate those controls.
+
+This does not mean physical security is irrelevant. Endpoint devices — the workstations and tablets that clinicians use to access OpenMRS — still require physical security consideration. But the PE controls that apply to data center infrastructure are inherited from AWS and do not need to be separately implemented by MyClinic.
+
+*Tailoring decision: Scope out PE controls related to data center infrastructure; retain and document workstation physical security requirements as organization-level controls.*
+
+---
+
+**Removable Media Controls (MP-7)**
+
+Several controls in the Media Protection family address the use of removable media — USB drives, external hard drives, optical media — for storing or transferring system data. For OpenMRS specifically, the clinical workflow does not involve removable media. Patient data does not move in and out of the system via USB drives. Backups go to S3. Data exports go through the application interface.
+
+If MyClinic has an organizational policy explicitly prohibiting removable media use with clinical systems — which is a reasonable policy to have — then controls specifically designed to manage removable media risk do not apply to OpenMRS in the same way they would to a system where removable media is actually used.
+
+*Tailoring decision: Scope out removable media controls specific to OpenMRS with documented justification that removable media is not part of the system's operational workflow and is prohibited by organizational policy.*
+
+---
+
+### Controls to Supplement — Adding Beyond the Baseline
+
+**Volunteer and Non-Employee Staff Training (AT family supplement)**
+
+The NIST SP 800-53 awareness and training controls are written primarily with employees in mind. But MyClinic — like many healthcare organizations — has volunteers, medical students, and contractors who may interact with clinical systems including OpenMRS. These individuals access the same patient data as employed clinical staff, but they may not be covered by the same onboarding processes that deliver security training to regular employees.
+
+If a volunteer accesses an OpenMRS record inappropriately, HIPAA does not care that they were a volunteer rather than an employee. The breach is the same. The notification obligation is the same. The risk is the same.
+
+*Tailoring decision: Supplement the AT control baseline with an explicit requirement that all individuals with access to OpenMRS — regardless of employment status — complete security awareness training before system access is granted and annually thereafter.*
+
+---
+
+**Healthcare-Specific Audit Logging (AU family supplement)**
+
+The NIST baseline audit controls require logging of security-relevant events — logins, configuration changes, access control decisions. But HIPAA has specific requirements for audit controls that go beyond the generic NIST baseline — specifically the requirement to audit access to ePHI in a way that supports investigation of potential inappropriate access.
+
+For OpenMRS, this means the audit logging requirements are more specific than the NIST baseline alone would require. Application-level logging — who accessed which patient record, when, and from which account — needs to be captured in addition to the infrastructure-level logging that the NIST controls cover.
+
+*Tailoring decision: Supplement the AU control baseline with explicit application-level audit logging requirements for OpenMRS that satisfy HIPAA §164.312(b) audit control requirements.*
+
+---
+
+**Enhanced Backup and Recovery Controls (CP family supplement)**
+
+The standard NIST contingency planning controls address backup and recovery at a general level. For OpenMRS in a clinical environment, the stakes of a recovery failure are higher than in a typical enterprise application — system unavailability directly affects patient care, as documented in the risk register.
+
+A supplementary control requiring tested recovery procedures — with documented recovery time objectives (RTO) and recovery point objectives (RPO) specific to clinical operations — goes beyond the baseline but is warranted by the operational risk.
+
+*Tailoring decision: Supplement CP controls with specific RTO/RPO requirements reflecting clinical operational needs, and require quarterly tested recovery exercises rather than the annual cadence in the baseline.*
+
+---
+
+## Full Tailoring Summary for OpenMRS at MyClinic
+
+| Control Area | Action | Justification |
+|---|---|---|
+| Physical security — data center (PE family) | Scope Out | Inherited from AWS; documented in AWS compliance certifications |
+| Removable media controls (MP-7) | Scope Out | Removable media not used in OpenMRS workflow; prohibited by policy |
+| Volunteer/non-employee training (AT supplement) | Add | Volunteers with OpenMRS access face same HIPAA obligations as employees |
+| Application-level audit logging (AU supplement) | Add | HIPAA §164.312(b) requires ePHI access logging beyond NIST baseline |
+| Enhanced backup/recovery with RTO/RPO (CP supplement) | Add | Clinical operational risk warrants tested recovery beyond annual baseline cadence |
+| Encryption at rest and in transit (SC family) | Retain and strengthen | ePHI sensitivity requires full encryption implementation per HIPAA |
+| MFA for all privileged access (IA family) | Retain and strengthen | High insider risk and phishing threat warrant MFA beyond baseline recommendation |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2018 Allscripts ransomware attack** — a healthcare IT vendor whose systems were taken offline by ransomware, affecting thousands of physician practices and hospitals that depended on Allscripts for EHR and practice management services.
+
+What made this case relevant to tailoring is the contingency planning dimension. Many of the affected practices had not developed downtime procedures specific to their clinical workflows — they had accepted the standard baseline contingency planning controls without supplementing them to reflect the operational reality that their entire clinical operation depended on a single vendor's platform.
+
+When Allscripts went down, practices that had tested downtime procedures and had paper-based backup workflows were able to continue seeing patients with degraded but functional operations. Practices that had not were effectively unable to operate.
+
+The standard NIST contingency planning baseline is designed for a generic enterprise system. A clinical EHR system — whether it is Allscripts, Epic, or OpenMRS — requires supplementary controls that account for the specific clinical operational context. The Allscripts incident is a clear example of what happens when the baseline is accepted without the supplementary tailoring that the actual risk environment requires.
+
+---
+
+## What I Am Still Thinking About
+
+One thing I want to understand better is the documentation standard for tailoring decisions. NIST says every tailoring decision must be documented and justified — but what does "justified" mean in practice?
+
+For a large federal agency, a tailoring decision might require a formal risk acceptance memo signed by the Authorizing Official. For a small healthcare organization, the same level of formality might be impractical. What is the minimum documentation that makes a tailoring decision defensible in an audit? Is a sentence in the System Security Plan sufficient, or does each decision require its own supporting analysis?
+
+I think the answer is that it scales with the significance of the decision — scoping out a control that genuinely does not apply is a relatively straightforward documentation task, while adding a compensating control for something in the baseline requires more rigorous justification. But I want to work through concrete examples as the project continues.
+
+---
+
+## What's Next
+
+Day 27 is about **Common Controls** — security controls that are implemented at the organizational level and inherited by multiple systems. Understanding which controls can be shared across systems — rather than implemented separately for each one — is an important efficiency concept in large-scale GRC programs, and it connects directly to the tailoring work from today.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53B – Control Baselines for Information Systems](https://csrc.nist.gov/publications/detail/sp/800-53b/final)
+- [NIST SP 800-37 Rev 2 – Tailoring Guidance](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [Allscripts Ransomware Attack – Healthcare IT News](https://www.healthcareitnews.com/news/allscripts-ransomware-attack-what-happened)
+- [AWS Compliance Programs – Inherited Controls](https://aws.amazon.com/compliance/programs/)
+
+---
+
+*#GRC #NISTRMF #TailoredBaseline #SecurityControls #HealthcareSecurity #HIPAA #100DaysOfGRC #OpenMRS #AWS #Day26*
