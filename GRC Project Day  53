@@ -1,111 +1,208 @@
-# 📅 Day 53: Task S-6 – Security Plan Review and Approval  
-_100 Days of GRC – OpenMRS-on-AWS Project_
+# Day 53 – Task S-6: Security Plan Review and Approval | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Today’s Objectives
+## The Select Step Closes Here
 
-- Understand the **Security Plan Review** process and its significance  
-- Learn who reviews and approves the System Security Plan (SSP) and why  
-- Anticipate key questions from the **Authorizing Official (AO)**  
-- Demonstrate leadership perspective in GRC by thinking like a risk acceptor  
+Days 46 through 52 built the Select step deliverables: the High baseline selection, the tailoring documentation, the allocation record, the SSP control implementation descriptions for technical and administrative controls, and the continuous monitoring strategy. Task S-6 is the closing gate of the Select step — submitting the completed SSP to the System Owner and Authorizing Official for formal review, addressing any questions or concerns that arise during that review, and receiving the documented approval that authorizes the system to proceed to the Implement step.
 
----
+This is worth pausing on because of what the SSP review represents structurally in the RMF. The AO's review of the SSP is not the same as the AO's authorization decision. The authorization decision — granting or denying the Authority to Operate — comes at the end of the Assess step, after the security controls have been independently tested and the assessment results are in. What the AO is approving today is the security plan — the documented commitment of what controls will be implemented and how the system will be monitored. Approving the plan means the AO agrees that if the plan is executed as documented, the resulting system's risk posture would be acceptable.
 
-##  What is the Security Plan Review?
-
-After spending weeks carefully selecting, tailoring, and documenting our controls in the **System Security Plan (SSP)**, we arrive at a critical milestone: review and approval.
-
-In most GRC frameworks (especially NIST RMF), a senior leader—often a **Chief Information Officer (CIO)**, **Chief Information Security Officer (CISO)**, or a formally designated **Authorizing Official (AO)**—must review the security posture of the system and formally accept the residual risk.
-
-This stage is about **accountability** and **due diligence**. The AO does not need to dive into every line of code or every firewall rule. What they want to know is:
-
-- Are all required controls addressed?
-- Are known risks documented and acceptable?
-- Is the system ready to move forward?
-- Do we have a **Continuous Monitoring Strategy** in place?
+That distinction matters because it clarifies what the SSP review is actually evaluating. The AO is not trying to determine whether the controls are currently working — that is the assessor's job. The AO is evaluating whether the plan, as documented, represents a credible, complete, and appropriately rigorous approach to security for a High-impact system handling ePHI.
 
 ---
 
-##  What Happens During the Review?
+## What I Worked On Today
 
-The AO receives the full SSP and any supporting documents (e.g., Risk Assessment, Privacy Impact Assessment, POA&M). Here's what typically happens:
-
-1. **Risk-Based Review**: The AO checks if the residual risks are aligned with the organization’s risk appetite.
-2. **Clarification Requests**: If anything is unclear—say, a critical control is marked "Not Applicable"—the AO may flag it and send it back for revision.
-3. **Policy Alignment**: The AO compares your SSP against internal policies and external regulations (like HIPAA, if applicable).
-4. **Approval or Rejection**: If satisfied, the AO signs a formal **authorization memo** or grants **Authority to Operate (ATO)**.
-
-In some cases, interim approvals may be issued, such as an **Interim Authority to Test (IATT)**, especially if certain conditions must still be met.
+Task S-6 requires the SSP to be reviewed by the System Owner, reviewed and approved by the Authorizing Official, and the approval documented. NIST SP 800-37 also requires that the SSP be made available to the assessment team before the assessment begins. Today I work through: what the review package contains, how to prepare for the AO review conversation, what questions the AO should be asking, how to handle SSP revisions that arise from review, and what the formal approval record looks like.
 
 ---
 
-##  OpenMRS-on-AWS Case Study
+## What Actually Clicked for Me
 
-Let’s put this in real terms.
+The insight that clarified the SSP review for me today is understanding the AO's perspective — specifically, the asymmetry of information the AO is working with.
 
-We’ve built OpenMRS (an open-source electronic health record system) on AWS. We've documented:
+The ISSO has spent weeks developing the SSP. Every control entry, every allocation decision, every tailoring rationale is familiar territory. The AO is reviewing a document that represents months of work in a single sitting. The AO cannot and should not try to evaluate every technical detail — they do not have the technical depth to assess whether the TLS cipher suite configuration is appropriate, and that is not their job.
 
-- **Inherited AWS controls** (e.g., physical security, hypervisor patching)
-- **System-specific controls** (e.g., MFA for admins, role-based access in OpenMRS)
-- **Continuous Monitoring Plan** (e.g., weekly CloudTrail reviews, monthly vuln scans)
+What the AO can and should evaluate is: does the overall security program make sense? Are the highest-risk scenarios addressed? Is the documentation honest — do the partially implemented controls and POA&M items reflect a credible, realistic picture rather than claiming complete implementation of everything? Is the organization behind this SSP capable of executing and maintaining what it has documented?
 
-Now, imagine our **hospital’s CIO** is serving as the AO. During her review, she notices:
-
-> "You’ve enabled MFA for admins—why not for clinicians accessing PHI daily?"
-
-This prompts a healthy security discussion. Perhaps clinicians use shared terminals in a clinic and MFA isn't feasible—or maybe it *is*, and we revise our plan to include it.
-
-The **AO is not a roadblock**—they’re a **partner in secure operations**. Their questions sharpen our implementation and ensure we’ve closed gaps *before* going live.
+Understanding the AO's perspective changes how I prepare the review package. The technical details need to be in the SSP because the assessment team needs them — but the AO review conversation should be organized around the AO's questions, not the ISSO's comfort zone. That means leading with risk, not compliance.
 
 ---
 
-##  Example AO Questions (Hands-On)
+## Preparing the SSP Review Package
 
-If I were the AO reviewing OpenMRS-on-AWS, here’s a question I’d ask:
+The SSP review package submitted to the AO for Task S-6 contains more than just the SSP document. A complete review package allows the AO to evaluate the system's security posture with full context.
 
-> “Can you confirm that all third-party libraries in the OpenMRS deployment are monitored for vulnerabilities and patched in a timely manner?”
+**Core documents:**
 
-This reflects real-world risk: third-party dependencies often introduce risk if left unmonitored.
+*System Security Plan (current version):* The complete SSP as developed through Days 43-52, including all sections: system description, categorization, tailored control set, allocation record, implementation descriptions for all controls (technical and administrative), and continuous monitoring strategy.
 
----
+*Risk Assessment Summary:* The risk register from Day 38 (RS-001 through RS-007) with current status — noting which risk scenarios have controls implemented, which have controls planned (POA&M), and what the residual risk level is for each scenario after controls are applied.
 
-##  Reflection: Leading Through Risk Acceptance
+*Plan of Action and Milestones (POA&M):* The current POA&M documenting all identified gaps: clinical downtime procedures (CP-2), IR technical response simulation (IR-3), CloudWatch patient-record-level anomaly queries (AU-6), and the alternate processing site test (CP-4). Each POA&M item includes the owner, target remediation date, compensating controls in place during the remediation period, and residual risk during the gap period.
 
-As someone who aspires to become a security leader, I recognize that the AO's role carries **real-world accountability**. They are the ones who answer when things go wrong.
+*Control Allocation Summary Table:* The one-page summary from Day 49 showing how controls are distributed across Common (AWS), System-Specific (MyClinic), and Hybrid categories. This gives the AO a clear picture of where MyClinic's security responsibility lies versus what is inherited from AWS.
 
-If I were in that seat, I’d only sign off if:
+*Categorization Approval Record:* The signed categorization approval from Day 45 showing that the High categorization was reviewed and approved by the System Owner, Privacy Officer, Compliance Officer, and AO at the time of the categorization decision.
 
-- I trusted the team’s competence and documentation  
-- There was a clear monitoring and incident response plan  
-- All high-risk issues were either mitigated or tracked via POA&M  
+**Executive Summary (prepared specifically for the AO):**
 
-The **courage to accept residual risk** requires confidence in your people, your process, and your preparedness.
+The executive summary is not the same as the SSP introduction. It is written for an audience that needs to understand the security posture without reading the full technical documentation. The executive summary for the OpenMRS SSP covers:
 
----
+*What the system is and why it matters:* OpenMRS is the sole EHR system for MyClinic — the only authoritative record of patient health information. Its security directly affects patient safety and organizational compliance.
 
-##  Summary
+*What the risk level is:* HIGH. The highest impact category for all three security objectives. This drives the most rigorous control baseline and the most intensive monitoring and assessment requirements.
 
-The Security Plan Review is more than a formality. It’s the moment where **security becomes operational reality**. Getting that approval signifies:
+*What the biggest risks are and how they are addressed:* The three highest-priority risk scenarios are ransomware (RS-001), web application exploit (RS-002), and insider PHI misuse (RS-004). MFA for all users, WAF deployment, and automated audit logging with anomaly detection are the primary controls addressing these scenarios.
 
-- Our controls are sufficient  
-- Our documentation is trustworthy  
-- Our risk is understood and owned  
+*What is not yet fully implemented:* Four POA&M items are open. The most significant is clinical downtime procedures — the absence of tested procedures for clinical operations during EHR unavailability is the primary driver of the High availability categorization. The POA&M target for this item is [date], before the authorization package is finalized.
 
-This process also reinforces a key GRC principle: **Transparency builds trust**. A well-documented, well-defended SSP earns buy-in—not just from the AO, but from the entire organization.
+*What the monitoring commitment is:* Continuous automated monitoring via GuardDuty and AWS Config; daily backup and authentication review; weekly CloudTrail analysis; monthly vulnerability scanning; quarterly access recertification and backup restoration testing; annual security assessment.
 
 ---
 
-## 🔭 Tomorrow’s Teaser:  
-Now that we have approval, it’s time to **move into the real world**. Day 54 kicks off the **Implementation and Assessment** phase—where controls are tested, systems go live, and readiness is validated.
+## The AO Review Conversation — Anticipated Questions
+
+The ISSO should anticipate the AO's questions rather than waiting for them reactively. For the OpenMRS SSP, the questions most likely to arise from a careful AO review are:
 
 ---
 
-## 🔍 Suggested Search Terms
+**"The system is categorized High across all three objectives. Walk me through the availability case — why High and not Moderate?"**
 
-- “NIST RMF ATO process explained”  
-- “Authority to Operate (ATO) example memo”  
-- “security plan approval risk acceptance questions”  
-- “how CISOs review SSP documentation”
+This is the question most likely to arise because the availability High rating is the one that requires the most nuanced justification. The answer draws on the Day 44 analysis:
+
+"The High availability rating reflects two specific conditions. First, OpenMRS is the sole EHR — there is no parallel system with patient data. When OpenMRS is unavailable, clinicians cannot access medication lists, allergy records, or recent lab results without the electronic record. Second, MyClinic has not maintained paper record systems since transitioning to OpenMRS, and clinical downtime procedures have not been documented and tested. That combination — sole system, no functional alternative — means extended unavailability creates direct patient safety risk rather than inconvenience.
+
+The most honest thing I can tell you is that if we complete the CP-2 clinical downtime procedures and train clinical staff to use them effectively, the availability impact becomes more arguable. An organization with tested, functional paper backup procedures can sustain clinical operations during an EHR outage. Until those procedures exist and are tested, High is the accurate characterization."
 
 ---
+
+**"The POA&M shows clinical downtime procedures as open. Can we grant the ATO without those procedures in place?"**
+
+This is an AO judgment call, but the ISSO should be prepared to frame the risk honestly:
+
+"The clinical downtime procedures gap is the most operationally significant open item. Without them, a ransomware attack that takes OpenMRS offline — the RS-001 scenario — creates immediate clinical disruption with no structured response. My recommendation is that authorization be conditioned on completion and testing of downtime procedures before go-live, or that the ATO include a specific condition requiring completion within a defined timeframe with a mandatory check-in before clinical operations begin.
+
+An alternative would be to issue an Interim Authority to Operate that permits technical testing and limited clinical use with restrictions, converting to a full ATO when the downtime procedures are complete and tested. That approach lets the implementation proceed while ensuring the most significant availability gap is closed before full operational reliance."
+
+---
+
+**"You have third-party library vulnerability scanning as a monthly activity. What happens between scans if a critical vulnerability is disclosed?"**
+
+This tests whether the monitoring strategy has considered the detection gap between scheduled scans. The answer draws on the SR-3 supplement from Day 47:
+
+"The ISSO subscribes to the OpenMRS security advisory list and the National Vulnerability Database new CVE feed for Java components. When a critical advisory is published — something like Log4Shell — the subscription generates immediate notification rather than waiting for the next monthly scan. For CVSS 9.0 or higher, the remediation timeline is 72 hours, not the next monthly scan cycle. The monthly scan verifies that the remediation was applied, but critical vulnerabilities trigger out-of-cycle response. The combination of continuous advisory monitoring and scheduled scanning covers both the immediate critical response and the cumulative patch compliance picture."
+
+---
+
+**"How are you ensuring that the MFA requirement for all users is actually being enforced, not just documented?"**
+
+This tests the connection between documented control and operational enforcement:
+
+"MFA enforcement in OpenMRS is configured at the application level — a user cannot complete authentication without providing a valid TOTP factor. It is not policy-only enforcement that depends on users choosing to comply. The OpenMRS authentication configuration requires MFA enrollment before account activation, and the authentication flow cannot proceed to an authenticated session without the second factor. The quarterly access review includes a verification step where the ISSO confirms MFA is enrolled for all active accounts. The assessment team will be able to test this directly by attempting to authenticate without MFA and confirming the attempt fails."
+
+---
+
+**"The control allocation shows several hybrid controls where AWS provides capability and MyClinic configures it. How are you ensuring that the MyClinic configuration portions are actually implemented — specifically encryption?"**
+
+This is the Capital One breach question applied to OpenMRS:
+
+"The hybrid control documentation specifically notes that AWS providing encryption capability does not mean encryption is enabled — MyClinic must enable it. The SSP documents the specific configuration evidence for each encryption control: RDS instance showing encryption enabled with the specific customer-managed KMS key identifier, S3 bucket policy requiring SSE-KMS, EBS volume encryption enabled. The assessment team can verify each of these directly in the AWS console. For ongoing monitoring, AWS Config rules for rds-storage-encrypted and ec2-ebs-encryption-by-default generate immediate alerts if encryption is ever disabled — so the enabled state is monitored continuously, not just verified at assessment."
+
+---
+
+## Handling SSP Revisions During Review
+
+AO review often surfaces items that require SSP revisions before approval. The revision process should be efficient and documented:
+
+**Category 1 — Clarification revisions:** The implementation description is unclear or ambiguous. The ISSO adds the requested detail, updates the SSP version number and revision date, and returns to the AO for confirmation. No security change is required — only documentation improvement.
+
+**Category 2 — Gap revisions:** The AO identifies a control gap that the ISSO missed or a risk scenario that is not adequately addressed. This may require adding a POA&M item, adding a supplemental control, or revising an implementation description to add a control element that was not previously documented. The ISSO updates the SSP and POA&M and returns to the AO.
+
+**Category 3 — Categorization disputes:** The AO believes a control is incorrectly scoped out, or that the tailoring rationale for a specific decision is not defensible. These require substantive discussion — the ISSO should present the rationale clearly and, if the AO's concern is valid, update the tailoring documentation. If the ISSO believes the original decision was correct, the disagreement should be documented — the AO has final authority to require revisions, but the ISSO's original rationale should remain in the record.
+
+All revisions are tracked with version control on the SSP document. The AO approves the final revised version, not an intermediate draft.
+
+---
+
+## The Formal Approval Record
+
+The SSP approval produces two documented artifacts:
+
+**SSP Approval Memo from the Authorizing Official:**
+
+The AO signs a formal memo approving the System Security Plan. The memo records: the system name and identifier, the SSP version approved, the date of approval, the AO's name and title, any conditions attached to the approval (such as POA&M completion requirements), and the AO's signature.
+
+The approval memo is stored in the authorization package and becomes part of the permanent record for the system.
+
+**Updated SSP Cover Page:**
+
+The SSP cover page is updated to reflect: current version number, AO approval date, AO name and signature, and System Owner concurrence. The cover page shows anyone who reviews the document that it has been through the formal review and approval process.
+
+**What the Approval Does Not Do:**
+
+The AO's approval of the SSP does not grant the Authority to Operate. The ATO comes after the security assessment, when the assessment results are reviewed and the AO determines whether the actual implemented controls provide adequate protection. Approving the SSP means the plan is sound; granting the ATO means the implementation has been tested and the residual risk is acceptable.
+
+---
+
+## What the SSP Approval Means for the Authorization Package
+
+With the SSP approved, the Select step is complete. The authorization package at this point contains:
+
+- System description (Task C-1) — approved
+- Security categorization (Task C-2) — AO-approved
+- Categorization review record (Task C-3) — signed by all reviewers
+- Tailored control set with allocation and implementation documentation (Tasks S-1 through S-4)
+- Continuous monitoring strategy (Task S-5)
+- SSP approval memo (Task S-6)
+
+The next step is the Implement step — where the controls documented in the SSP are actually built, configured, and deployed. For some controls, implementation is already complete (encryption was enabled, MFA was configured, audit logging was set up as part of the system deployment). For others — specifically the POA&M items — implementation is still in progress. The Implement step also includes the security configuration documentation and the initial configuration baseline capture that the assessment team will use as a reference.
+
+---
+
+## A Real-World Example That Made This Click
+
+While reviewing the AO risk acceptance discussion today I came across the circumstances of the **2014 OPM breach** — which I covered on Day 42 from the system registration angle — but want to revisit through the SSP review and AO accountability lens.
+
+OPM's breach, which exposed the records of 21.5 million federal employees and contractors, occurred in an environment where the federal Inspector General had repeatedly flagged security deficiencies in OPM's systems in prior audit reports. Some of the systems that were breached were operating under expired authorizations — meaning the ATO had lapsed and the system was running without a current, valid authorization.
+
+The connection to today's task is specific: the ATO process requires AO review of the security posture and formal risk acceptance. When systems operate on expired ATOs, no one has formally reviewed and accepted the risk of continued operation in the current security state. The controls may have drifted from what was originally assessed. New vulnerabilities may have been discovered. The system may have changed in ways that were not reflected in the SSP.
+
+OPM's IG audit findings — which flagged authorization lapses and security deficiencies — were exactly the kind of signals that should have triggered SSP reviews and updated authorizations. The failure to act on those findings meant the formal risk acceptance process that the ATO is designed to enforce was not functioning.
+
+For MyClinic's OpenMRS authorization, the lesson is about treating the authorization as a living commitment, not a one-time event. The SSP approval today is the first formal risk acceptance. Annual security assessments, continuous monitoring results reviewed by the AO, and prompt response to POA&M items are what keep that risk acceptance current and meaningful over the life of the system.
+
+---
+
+## What I Am Still Thinking About
+
+One aspect of the AO review that I want to think through more carefully: how should the AO handle the POA&M items during the authorization decision?
+
+Standard RMF practice allows systems to receive ATOs with open POA&M items — the ATO represents risk acceptance that accounts for the residual risk from those open items. The AO is accepting not just the risk of the implemented controls, but the additional residual risk from what is not yet implemented.
+
+For OpenMRS at MyClinic, the most significant open POA&M item — clinical downtime procedures — creates real availability risk. The question I am still thinking about is: should the AO grant an unconditional ATO with the downtime procedures as an open POA&M item, or should the authorization be conditioned on downtime procedure completion?
+
+My instinct is that an unconditional ATO for a High-impact system with an open POA&M item that directly affects the availability categorization rationale is hard to defend. If the availability impact was rated High partly because downtime procedures do not exist, and the ATO is granted without those procedures, the AO has accepted a higher level of availability risk than the categorization analysis assumed.
+
+A conditional ATO — or an IATT that converts to a full ATO when the downtime procedures are complete and tested — seems more appropriate. I want to raise this explicitly with the AO rather than leaving it as an implicit assumption that the open POA&M is acceptable as-is.
+
+---
+
+## What's Next
+
+Day 54 begins the Implement step — the fourth step of the NIST RMF. Implementation is where the SSP's documented controls are translated into actual system configuration, deployed procedures, and operational reality. For OpenMRS, some implementation is already complete. The Implement step also addresses the security configuration documentation and baseline capture that provides the assessment team's reference point.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task S-6 Security Plan Review and Approval](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-18 Rev 1 – Guide for Developing System Security Plans](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [OPM Data Breach House Oversight Committee Report](https://oversight.house.gov/report/opm-data-breach-how-the-government-jeopardized-our-national-security-for-more-than-a-generation/)
+- [NIST RMF Authorization to Operate Overview](https://csrc.nist.gov/projects/risk-management/authorization-to-operate)
+- [HHS OCR HIPAA Security Rule Guidance – Risk Management](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #SecurityPlanApproval #NISTRMF #ATO #AuthorizingOfficial #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day53*
