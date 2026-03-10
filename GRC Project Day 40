@@ -1,163 +1,210 @@
-# 📅 Day 40 – Fitting OpenMRS into the Bigger IT Picture  
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 40 – Enterprise Architecture: How OpenMRS Fits Into the Bigger Picture | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  No System Is an Island – Making OpenMRS a Team Player in the Enterprise
+## The System That Exists in Isolation Is the System That Gets Forgotten
 
-When I first started in IT support, I once watched a new application bring down half the network — not because it was malicious, but because it wasn’t designed with the *whole* system in mind. It had its own user directory, didn’t log activity where our SIEM could see it, and operated outside our normal backup process. That experience stuck with me.
+There is a specific failure mode in healthcare IT that I have read about repeatedly in breach post-mortems: a system that was deployed without being properly integrated into the organization's security infrastructure. No centralized logging. No connection to the identity management system. No inclusion in the backup monitoring program. Not covered by the vulnerability scanning schedule. A system that exists on the network but is invisible to the security program.
 
-Now, leading security and GRC discussions around OpenMRS, I make it a point to ask one core question:
+These are sometimes called shadow systems or rogue deployments — not necessarily malicious, often just the result of a rapid deployment driven by operational need without adequate architecture review. The consequences are predictable: unmonitored vulnerabilities, inconsistent access controls, audit gaps, and a system that becomes a security blind spot precisely because it handles sensitive data but nobody is watching it.
 
-> **“How does this system fit into the larger picture?”**
+Today's work — enterprise architecture alignment for OpenMRS — is the structural answer to that failure mode. By explicitly mapping how OpenMRS connects to every component of MyClinic's broader IT environment, we ensure the system is visible to, integrated with, and governed by the organizational security infrastructure rather than operating as an island.
 
-Today is about **enterprise architecture** – the blueprint that ensures all our tech works together to serve the mission efficiently, securely, and reliably.
-
----
-
-##  Today’s Focus
-
-- Understand enterprise architecture in simple terms  
-- Identify the systems, services, and standards OpenMRS must align with  
-- Ensure we avoid siloed deployments  
-- Map how OpenMRS integrates into MyClinic’s AWS-based infrastructure  
+This is NIST RMF Task C-2 territory — understanding the enterprise architecture context before finalizing the system categorization and moving into control selection. The architecture picture directly affects which controls are inherited versus system-specific, which integrations create external dependencies requiring governance, and which architectural decisions create security requirements of their own.
 
 ---
 
-##  Enterprise Architecture: The City Planning of IT
+## What I Worked On Today
 
-Think of our IT environment like a smart city. Every new application, like OpenMRS, is a new building – it must connect to the **roads (networks)**, **utilities (logging, security, backups)**, and **identity systems (SSO/LDAP)**. You wouldn’t put up a skyscraper without checking the zoning laws or where the power lines are – and the same goes for enterprise systems.
-
-In my clinic scenario, OpenMRS doesn’t stand alone – it’s part of an AWS-based digital healthcare ecosystem.
+Enterprise architecture alignment for OpenMRS means working through five integration dimensions: identity and access management, network and infrastructure placement, data interoperability and external connections, centralized logging and monitoring, and technology standards alignment. For each dimension I mapped the current state of the OpenMRS deployment against MyClinic's enterprise environment and identified where integration is complete, where it is planned, and where architectural deviations need to be documented and justified.
 
 ---
 
-##  Key Integration Points for OpenMRS
+## What Actually Clicked for Me
 
-###  1. AWS Cloud Services
+The concept that clicked most clearly today is the security difference between a system that is *integrated* with enterprise infrastructure versus one that merely *coexists* with it.
 
-OpenMRS is deployed in **AWS**, with infrastructure like:
+A system that coexists uses the same AWS account and network but has its own separate user directory, logs to a local file that nobody reads, and is backed up through a manual process that is separate from the enterprise backup program. From a network diagram it looks connected — it is in the same VPC. But from a security operations perspective it is effectively invisible.
 
-- **Amazon RDS** (for the database)  
-- **EC2 instances** (for the application)  
-- **S3 buckets** (for backups and storage)  
-- **AWS WAF & Shield** (for perimeter protection)  
-- **Route 53** (DNS management)
+A system that is integrated has its authentication managed through the enterprise identity provider, ships logs to the centralized monitoring platform in real time, is covered by the enterprise backup policy and included in the restoration testing schedule, and generates alerts that flow into the same dashboard that the ISSO monitors for every other system.
 
-🛠 **Key Enterprise Action**: Make sure OpenMRS lives in the correct **VPC** and AWS account tied to MyClinic’s AWS Organizations structure — not some personal test account. This ensures proper monitoring, billing, access control, and governance.
+The difference between those two states is not primarily technical — it is architectural and organizational. The technical integrations are achievable. The harder work is the decisions, documentation, and stakeholder coordination that ensure the integrations actually happen and are maintained over time. That is what enterprise architecture alignment in a GRC context is about.
 
 ---
 
-###  2. Identity & Access Management
+## Integration Dimension 1 — Identity and Access Management
 
-Does MyClinic use LDAP, Active Directory, or SSO (SAML or OAuth)? If yes, then **OpenMRS must plug into that.**
+### Current State and Requirements
 
-🎯 Why? Because:
-- It simplifies user login (one identity across systems)  
-- It centralizes account management and offboarding  
-- It enforces **multi-factor authentication (MFA)** policy consistently  
+OpenMRS has its own built-in user management system — accounts, roles, and permissions are managed within the OpenMRS application. For a standalone deployment, this is functional. For an enterprise deployment at MyClinic where the same staff access multiple systems, standalone identity management creates several problems:
 
-🛠 **Key Enterprise Action**: Integrate OpenMRS with existing identity provider and enforce MFA and session timeout policies.
+Staff have separate credentials for OpenMRS and for every other system they use. Password policies may be inconsistently enforced across systems. When a staff member is terminated, their accounts must be deactivated in each system separately — creating the window of continued access that V-013 identified as a vulnerability. MFA must be configured and enforced separately in each system.
 
----
+The enterprise architecture solution is integration with MyClinic's central identity provider. If MyClinic uses Active Directory, Azure AD, or a SAML-compatible identity provider, OpenMRS can be configured to authenticate users through that provider rather than managing its own credential store. The result:
 
-### 3. Data Interoperability
+- Single Sign-On for staff: one set of credentials for OpenMRS and all other MyClinic systems
+- Centralized MFA enforcement: the identity provider enforces MFA for all connected applications simultaneously
+- Centralized account lifecycle management: when a staff member's account is disabled in the identity provider, access to OpenMRS is automatically revoked — eliminating the manual deprovisioning gap
+- Consistent password and authentication policies across all systems
 
-OpenMRS may need to **talk to other systems** such as:
+### Architecture Decision and Security Implication
 
-- **Lab Information Systems (LIS)**  
-- **Billing & Insurance Platforms**  
-- **Pharmacy Management**  
-- **Analytics Platforms or Data Warehouses**
+If MyClinic does not currently operate a SAML-compatible enterprise identity provider, there are two paths: implement one (higher investment, higher long-term value across all systems) or manage OpenMRS authentication natively with strict controls (lower investment, requires separate management discipline for each system).
 
-Even if not implemented yet, designing OpenMRS with **API or HL7 integration potential** prevents painful rebuilds later.
+For the System Security Plan, this architectural decision needs to be documented with its security rationale. If native OpenMRS authentication is used, the controls required — MFA configuration within OpenMRS, strict account deprovisioning process, consistent password policy enforcement — become system-specific requirements rather than inherited from an enterprise capability.
 
-🛠 **Key Enterprise Action**: Document potential data flows early. Plan for secure, standards-based integration, even if deferred.
+### Connection to Risk Register
 
----
-
-### 📊 4. Logging, Monitoring & Backup
-
-No modern enterprise app should log to a local file and call it a day.
-
-🛠 **Key Enterprise Action**:
-- Stream OpenMRS logs to centralized tools (e.g., **CloudWatch**, **Splunk**, **SIEM**)  
-- Integrate with **central backup services** to enforce retention and encryption  
-- Include OpenMRS in enterprise-wide **monitoring dashboards** for uptime and performance  
+This integration directly addresses RS-004 (insider PHI misuse) through automated deprovisioning, RS-005 (phishing and credential compromise) through centralized MFA, and RS-001 (ransomware via credential access) through the same MFA enforcement.
 
 ---
 
-### 🧱 5. Technology Alignment
+## Integration Dimension 2 — Network and Infrastructure Placement
 
-MyClinic might prefer **PostgreSQL**, but OpenMRS defaults to **MySQL**.  
-MyClinic might deploy apps via **Kubernetes**, but OpenMRS is currently on EC2.
+### Current Architecture
 
-This is where **GRC meets architecture pragmatism**:
+The OpenMRS deployment lives within MyClinic's AWS account, in a VPC configured with public and private subnets. The application server (EC2) is in a public subnet accessible via HTTPS. The database (RDS) is in a private subnet with no direct internet routing. Backups are stored in S3 with access restricted to authorized IAM roles.
 
-> Do we adapt the system, or allow an exception?
+### Enterprise Architecture Alignment Questions
 
-🛠 **Key Enterprise Action**: Document these architectural deviations and justify them based on technical feasibility and business need. Avoid tech sprawl when possible, but don’t force a square peg into a round hole.
+**AWS Organizations placement:** Is the MyClinic AWS account organized within an AWS Organizations structure? If MyClinic operates multiple AWS accounts — a common architecture for separating production, development, and testing environments — the OpenMRS production account should be in the correct organizational unit with appropriate Service Control Policies applied. SCPs at the organization level can enforce security guardrails across all accounts — for example, preventing anyone from disabling CloudTrail or creating publicly accessible S3 buckets, regardless of the permissions in individual accounts.
 
----
+**Shared services vs. dedicated:** Does MyClinic operate shared security services across multiple AWS accounts — centralized GuardDuty, centralized Security Hub, centralized CloudTrail logging to a separate security account? If so, the OpenMRS deployment should be integrated with those shared services rather than deploying separate monitoring capabilities that are not visible to the central security operations function.
 
-##  Architecture at a Glance
+**Network connectivity to on-premises systems:** If MyClinic operates on-premises systems — workstations, printers, local servers — connected to the AWS environment via VPN or AWS Direct Connect, the OpenMRS VPC routing needs to be designed so that traffic from on-premises systems to OpenMRS flows through appropriate security controls rather than directly.
 
-Let’s revisit the high-level diagram from earlier:
-
-[Clinic Users] ---> Route53 ---> AWS WAF & Shield ---> OpenMRS (EC2 in Private Subnet)
-|
-Amazon RDS (MySQL)
-|
-Backups --> S3
-
-
-All components are in the **same AWS architecture** used by other systems, monitored centrally, protected at the perimeter, and integrated with shared enterprise services.
-
----
-
-## 🔎 Reflection
-
-**Why does this matter?**
-
-Because *rogue IT* leads to:
-
-- Unmonitored vulnerabilities  
-- Duplicate systems with inconsistent data  
-- Painful audits and security blind spots  
-- Lack of resilience when something goes wrong  
-
-I’ve seen organizations scramble because no one knew where a critical system’s logs were stored. Or worse, because no one *owned* it. Aligning OpenMRS to enterprise architecture prevents that.
-
----
-
-## ✍️ Hands-On Recap
-
-Here’s how I mapped OpenMRS to MyClinic’s ecosystem:
-
--  **Authentication**: LDAP/SSO via SAML  
--  **Data Sharing**: Future integration with LIS via API  
--  **Backups**: Daily to S3, encrypted, monitored  
--  **Logging**: Stream to centralized SIEM  
--  **Network**: Private subnet in multi-AZ VPC  
--  **Standards**: Follows MyClinic’s AWS hardening guide  
+### Architecture Diagram — Enterprise Context
+```
+┌─────────────────────────────────────────────────────────────┐
+│              AWS ORGANIZATIONS — MyClinic                    │
+│                                                              │
+│  ┌──────────────────┐    ┌──────────────────────────────┐  │
+│  │  Security        │    │  Production Account           │  │
+│  │  Account         │    │                               │  │
+│  │                  │    │  ┌──────────────────────┐    │  │
+│  │  - CloudTrail    │◀───┤  │  OpenMRS VPC          │    │  │
+│  │    (central)     │    │  │  EC2 / RDS / S3       │    │  │
+│  │  - Security Hub  │◀───┤  └──────────────────────┘    │  │
+│  │  - GuardDuty     │◀───┤                               │  │
+│  │    (delegated)   │    │  Other MyClinic Systems       │  │
+│  └──────────────────┘    └──────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+          │
+          ▼
+  ┌───────────────┐
+  │  On-Premises  │
+  │  Workstations │
+  │  (VPN/Direct  │
+  │   Connect)    │
+  └───────────────┘
+```
 
 ---
 
-## 🔮 Tomorrow’s Insight: Who Does What?
+## Integration Dimension 3 — Data Interoperability and External Connections
 
-We’ll now allocate these requirements across stakeholders. Which ones are AWS’s job (e.g., data center security), and which ones are ours (e.g., application configuration, access control)? This is called **Requirements Allocation**, and it’s how we avoid saying “I thought *they* were doing it.”
+### Current Integrations
+
+The laboratory system integration via REST API is the primary current external data connection — documented in the boundary work on Day 34. This integration brings lab results into OpenMRS patient records and is governed by a Business Associate Agreement and Interconnection Security Agreement.
+
+### Planned Future Integrations
+
+Healthcare interoperability standards are evolving rapidly. The 21st Century Cures Act's information blocking provisions and the CMS and ONC interoperability rules have accelerated adoption of FHIR (Fast Healthcare Interoperability Resources) as the standard for health data exchange. As OpenMRS deployments mature, additional integration scenarios become relevant:
+
+**Billing and insurance platforms:** Diagnosis codes and service codes flowing from OpenMRS to billing systems for claims submission. Each integration creates a data flow carrying ePHI that requires its own BAA and security assessment.
+
+**Public health reporting:** Mandatory reporting of notifiable conditions to public health authorities. OpenMRS supports automated reporting for some public health use cases — each reporting endpoint is an external connection requiring documentation.
+
+**Patient portal or mobile access:** If MyClinic plans to provide patients with access to their own records via a portal or mobile application, those access channels require their own security architecture — separate authentication, audit logging, and access controls from the internal clinical interface.
+
+**Analytics and quality improvement:** Aggregate clinical data flowing to a data warehouse or analytics platform for population health management. De-identification requirements and access controls for the analytics environment need to be documented.
+
+### Architecture Principle for Interoperability
+
+Every integration is a risk. Each connection from OpenMRS to an external system is a potential pathway for data exfiltration, unauthorized access, or malicious data injection. The enterprise architecture principle is: document every integration before it is built, assess its security requirements, ensure appropriate contractual and technical controls are in place, and include it in the monitoring scope.
+
+Undocumented integrations are the enterprise architecture equivalent of the boundary scope problem from Day 34 — a connection that exists outside the documented picture is a connection outside the governance framework.
 
 ---
 
-## 📚 Explore More:
+## Integration Dimension 4 — Centralized Logging and Monitoring
 
-- “Enterprise architecture integration security”  
-- “OpenMRS system integration example”  
-- “AWS reference architecture for healthcare”  
-- “SSO and centralized logging for cloud apps”
+### The Integration Requirement
+
+The continuous monitoring strategy from Day 30 identified AWS CloudTrail, GuardDuty, Config, and CloudWatch as the primary monitoring tools for OpenMRS. But those tools generate findings and logs that need to be reviewed and acted on. In a mature enterprise environment, that review happens through a centralized platform — a SIEM or Security Hub aggregation — rather than through separate review of each tool's native interface.
+
+### Enterprise Integration Options
+
+**AWS Security Hub as aggregation layer:** If MyClinic's AWS environment uses Security Hub as a centralized finding aggregator — pulling from GuardDuty, Config, Inspector, and third-party tools — then OpenMRS findings are automatically included in the enterprise security operations picture without additional configuration. The ISSO reviews the enterprise Security Hub dashboard rather than logging into separate tools.
+
+**External SIEM integration:** If MyClinic operates a SIEM platform — Splunk, Microsoft Sentinel, IBM QRadar, or a managed security service — CloudWatch logs from the OpenMRS application server can be forwarded to the SIEM for correlation with events from other systems. This enables detection of attack patterns that span multiple systems — for example, a phishing email detected in the email gateway followed by an unusual OpenMRS login from the same workstation.
+
+**OpenMRS application logs to CloudWatch:** The application-level audit logs — the HIPAA-required audit control — should be shipped from the EC2 instance to CloudWatch Logs in near-real-time. This ensures the audit logs are preserved even if the application server is compromised and also makes them accessible to the enterprise monitoring platform.
+
+### The Gap to Document
+
+If MyClinic does not currently operate a centralized monitoring platform, OpenMRS monitoring will be conducted through the native AWS tools by the ISSO directly. This is workable but creates a higher manual burden and a risk that findings are missed during periods when the ISSO is occupied with other responsibilities. The monitoring strategy from Day 30 explicitly acknowledged this resource constraint — the enterprise architecture section of the SSP should document this gap and identify it as a future improvement target.
 
 ---
 
-📌 #Day40 #EnterpriseArchitecture #HealthcareIT #OpenMRS #SystemIntegration #AWS #100DaysOfGRC #IbrahimAbdullahi #SecurityArchitecture
+## Integration Dimension 5 — Technology Standards Alignment
 
+### Where OpenMRS Aligns
 
+**Database:** OpenMRS uses MySQL. AWS RDS supports MySQL natively — the deployment aligns with the AWS-first infrastructure approach.
+
+**Application hosting:** OpenMRS runs on Java with a Tomcat application server. EC2 hosting of the Tomcat application server is straightforward and aligns with the EC2-based approach used for other MyClinic applications.
+
+**Backup infrastructure:** S3 for backup storage aligns with MyClinic's AWS-native approach to data storage.
+
+**Encryption:** AWS KMS for key management aligns with MyClinic's use of AWS-managed encryption services.
+
+### Where Deviations Need Documentation
+
+**Container orchestration:** If MyClinic has adopted Kubernetes or AWS ECS for application deployment, OpenMRS on a standalone EC2 instance is an architectural deviation. This does not mean it is wrong — OpenMRS's deployment model is well-suited to EC2 — but the deviation should be documented with a technical justification so it is a deliberate choice rather than an oversight.
+
+**PostgreSQL vs. MySQL:** OpenMRS supports both MySQL and PostgreSQL. If MyClinic standardizes on PostgreSQL for other systems and maintains MySQL specifically for OpenMRS, that is a supportable deviation — but it should be documented as a known architectural exception that affects database administration, tooling, and potentially the skill set required for support.
+
+**Operating system:** If MyClinic standardizes on a specific Linux distribution for EC2 instances and OpenMRS requires a different configuration, the deviation from the enterprise OS standard needs to be documented, and the OS hardening baseline for the OpenMRS EC2 instance needs to be verified against the enterprise standard.
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across details from the **2014 Community Health Systems breach** — which I covered briefly on Day 13 in the context of the Heartbleed vulnerability, but want to revisit through the enterprise architecture lens.
+
+The CHS breach affected approximately 4.5 million patients. Post-incident analysis revealed that the attackers entered through an internet-facing system, moved laterally through the network, and ultimately accessed patient data in systems that were not the original target. The lateral movement was possible because network segmentation between systems was insufficient — the enterprise architecture had not enforced boundaries between systems that should have been isolated from each other.
+
+This is the architectural failure mode that today's work is designed to prevent. When OpenMRS is properly placed in a VPC with appropriate subnet architecture, security groups that restrict traffic between components, and monitoring that can detect lateral movement across the environment, the blast radius of any initial compromise is limited. An attacker who gains access to one system cannot automatically pivot to OpenMRS — they have to cross the architectural boundaries, which should generate detection events.
+
+Enterprise architecture alignment is not just about making systems work together efficiently. It is about ensuring that the security boundaries are designed into the architecture, not bolted on afterward.
+
+---
+
+## What I Am Still Thinking About
+
+One practical question that this work raised: how should the enterprise architecture documentation for OpenMRS be maintained as the environment evolves?
+
+The architecture diagram I documented today accurately represents the current deployment. But as new integrations are added, as the identity management approach evolves, as monitoring capabilities mature, the architecture changes. If the documentation does not keep pace with the system, it loses its value as an accurate representation of the security boundary and the control environment.
+
+The answer is probably change management — requiring that architecture-affecting changes go through a review process that includes updating the SSP and architecture documentation before the change is implemented. That connects to the change management question I raised at the end of Day 34 on boundary definition. I want to develop a lightweight change management process for the MyClinic context that is practical for a small organization without becoming a bureaucratic obstacle to necessary operational changes.
+
+---
+
+## What's Next
+
+Day 41 moves into requirements allocation — the process of explicitly assigning each security requirement to the party responsible for implementing and maintaining it: AWS as common control provider, MyClinic as system owner, or a shared responsibility. Requirements allocation is how we prevent the "I thought they were handling it" failure mode that leaves critical controls unimplemented because both parties assumed the other was responsible.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Enterprise Architecture Context](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [AWS Organizations – Security Best Practices](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_security_best-practices.html)
+- [HL7 FHIR Standard for Healthcare Interoperability](https://www.hl7.org/fhir/overview.html)
+- [Community Health Systems Breach – HHS OCR](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/chs/index.html)
+- [AWS Healthcare Reference Architecture](https://aws.amazon.com/health/healthcare-compliance/)
+
+---
+
+*#GRC #EnterpriseArchitecture #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #SystemIntegration #Day40*
