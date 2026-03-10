@@ -1,143 +1,341 @@
-# 📅 Day 54 – Locking Down OpenMRS: Technical Controls in Action  
-_100 Days of GRC – OpenMRS-on-AWS Project_
+# Day 54 – Task I-1: Implementing Technical Controls for OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Transitioning from Planning to Protection
+## The Implement Step — Where Plans Become Protection
 
-Today marks a pivotal shift in our RMF journey: moving from **planning** into **execution**. We’ve carefully selected and documented our security controls — now it’s time to put them into action.
+The Select step produced a complete, AO-approved System Security Plan. The Implement step — the fourth step of the NIST RMF — is where the security controls documented in that plan are built, configured, and deployed into the actual system.
 
-This is where implementation begins to speak louder than documentation. Our focus? **Technical controls** — the infrastructure-level and application-layer defenses that secure OpenMRS in real-time.
+NIST SP 800-37 Task I-1 asks the organization to implement the security controls specified in the security plan. For a system being authorized for the first time, many technical controls may already be in place — they were implemented during system deployment before the formal RMF process began. The Task I-1 work in that case is not building controls from scratch but verifying that what was deployed matches what the SSP documents, capturing the configuration evidence that the assessment team will need, and completing any controls that are still in progress.
 
----
+For OpenMRS at MyClinic, the baseline technical controls — encryption, MFA, audit logging, network security, WAF — were implemented during the initial AWS deployment that this project has been documenting throughout. Task I-1 formalizes that implementation by verifying each technical control against its SSP description, documenting the configuration state, and identifying any gaps between the documented intent and the current implementation.
 
-## Today’s Goals
-
-- Define **technical controls** in the context of NIST RMF Task I-1  
-- Apply real-world implementations of technical controls in AWS  
-- Reinforce the principle of **least privilege**, **visibility**, and **prevention**  
-- Get hands-on with at least one live control  
-- Reflect on how these controls transform OpenMRS from “configured” to “protected”  
+Today I work through the technical control families systematically — not as a high-level overview of what each control type does, but as a verification and documentation exercise that connects the SSP entries from Days 50-51 to the actual configuration state that an assessor would examine.
 
 ---
 
-## What Are Technical Controls?
+## What I Worked On Today
 
-Technical controls (also called logical controls) are those implemented through technology. They include:
+Task I-1 implementation verification has a specific structure for each control: confirm the control is implemented as documented in the SSP, capture the configuration evidence, identify any discrepancies between the SSP description and the actual configuration, and document discrepancies as either SSP update items (if the implementation is correct but the description is inaccurate) or POA&M items (if the implementation is incomplete or incorrect).
 
-- **Encryption** (data at rest/in transit)  
-- **Access Control** (IAM roles, MFA)  
-- **Network Security** (firewalls, VPC security groups)  
-- **Logging and Monitoring** (CloudTrail, CloudWatch, SIEM integration)  
-- **Vulnerability Detection** (Amazon Inspector, Nessus)  
-
-In short, technical controls are the guardrails, tripwires, and security checkpoints embedded into our infrastructure — and for OpenMRS on AWS, they are the first line of digital defense.
+The output of today's work is the implementation evidence package — the collection of configuration records, screenshots, policy exports, and verification records that the assessment team will use as the starting point for their testing.
 
 ---
 
-##  OpenMRS-on-AWS: Technical Control Examples
+## What Actually Clicked for Me
 
-Let’s break down how we’re operationalizing these safeguards:
+The concept that clarified Task I-1 for me is the difference between implementing a control and deploying a capability.
 
-### 1. **AWS Security Groups & Network ACLs**
+AWS provides the capability for dozens of security features — GuardDuty threat detection, Config rule compliance, KMS encryption, WAF protection, CloudTrail logging. A brand-new AWS account with default settings has none of these features enabled. Each capability requires deliberate configuration by the account owner before it is a functioning control.
 
-Security groups act as virtual firewalls for our EC2-hosted OpenMRS app.
+The implementation verification exercise makes this distinction concrete. For each technical control, the question is not "does AWS offer this?" — the answer is yes for almost everything in the SSP. The question is "is it enabled, is it configured correctly, and does the configuration match what the SSP documents?" Those are three separate questions that require three separate verification steps.
 
-**Implementation Example:**  
-Only allow inbound HTTPS traffic (port 443) from trusted clinic IPs.  
-Block all other traffic by default.  
-This enforces **least privilege at the network layer** and reduces our attack surface.
-
-### 2. **AWS Web Application Firewall (WAF)**
-
-WAF defends OpenMRS endpoints against common threats like SQL injection, XSS, and HTTP floods.
-
-**Implementation Example:**  
-Attach AWS WAF to the Application Load Balancer in front of OpenMRS.  
-Deploy **AWS Managed Rule Groups** that cover OWASP Top 10 threats.  
-This acts as a pre-filter to block known malicious patterns before they hit the application.
-
-### 3. **Identity and Access Management (IAM)**
-
-Granular IAM roles control who can administer, develop, and access OpenMRS resources in AWS.
-
-**Implementation Example:**  
-- DevOps has permission to deploy instances, but cannot access patient data.  
-- The OpenMRS EC2 instance has an IAM role with **read-only** access to its associated S3 bucket.  
-- Admin users authenticate via **MFA** and role-based policies.
-
-This approach ensures **principle of least privilege** and strong identity governance.
-
-### 4. **Encryption: At Rest and In Transit**
-
-Encryption is non-negotiable in healthcare systems.
-
-**Implementation Example:**  
-- OpenMRS data in **Amazon RDS** is encrypted using **AES-256** via KMS-managed keys.  
-- Application and OS EBS volumes are also encrypted.  
-- TLS 1.2 is enforced using **AWS Certificate Manager**, protecting all HTTP endpoints with HTTPS.  
-
-These controls protect PHI and meet HIPAA encryption-at-rest and in-transit requirements.
-
-### 5. **AWS CloudTrail + CloudWatch Logs**
-
-Security without visibility is just hope.
-
-**Implementation Example:**  
-- CloudTrail captures all API actions (who did what and when).  
-- Logs flow into CloudWatch, where alerts are configured for risky events (e.g., new IAM role creation or S3 policy changes).  
-
-This enables **accountability, detection, and response**.
-
-###  6. **AWS Config and Amazon Inspector**
-
-Proactive detection > reactive defense.
-
-**Implementation Example:**  
-- AWS Config checks for compliance violations like wide-open ports or missing encryption.  
-- Amazon Inspector runs continuous vulnerability scans on the EC2 OS.  
-
-We shift from guessing to knowing — fast feedback loops for misconfigurations and CVEs.
+The Capital One breach is the most documented case study for why this matters — AWS provided all the security capabilities; the gap was in which capabilities were configured and how. Task I-1 is the process of verifying that the OpenMRS deployment has made the right configuration choices for every capability it relies on, and documented them at the level of detail that lets an assessor independently verify the configuration.
 
 ---
 
-##  Hands-On Exercise
-
-Today I implemented the following control:
-
-### **Security Group Tightening**
-
-1. Logged into the AWS Console  
-2. Reviewed inbound rules for the OpenMRS EC2 instance  
-3. Removed unused ports (e.g., 22/SSH unless needed)  
-4. Ensured **only port 443** is open to a fixed IP range  
-
-This small tweak drastically reduces the system's exposure. As a GRC leader, it was satisfying to see how documentation translates into measurable defense.
+## Technical Control Implementation Verification — By Control Family
 
 ---
 
-##  Reflection
-
-Implementing technical controls felt empowering. It’s one thing to say “we enforce encryption,” but another to **click through AWS Console**, validate it’s on, and understand the *why* behind it.
-
-> "After restricting the security group, I realized how many open ports had been left by default. That simple cleanup makes our OpenMRS system measurably safer today than it was yesterday."
-
-This reminds me: **Security isn’t about perfect systems; it’s about continuous hardening**.
+### Network Security Controls — SC-7, SC-7(8), SC-7(18)
 
 ---
 
-## What's Next?
+**SC-7: VPC Architecture and Security Group Configuration**
 
-Technical controls are a foundation — but systems don’t run on tech alone. Tomorrow (Day 55), we’ll pivot to **administrative and procedural controls** — training, policies, and documentation that ensure humans operate systems securely.
+**SSP Description (from Day 48):** OpenMRS EC2 in public subnet accepts inbound HTTPS (443) only. RDS in private subnet accepts MySQL from application security group only. Security groups follow deny-by-default; only explicitly permitted traffic is allowed.
+
+**Implementation Verification:**
+
+*EC2 Security Group (sg-openmrs-app):*
+Inbound rules:
+- Port 443 (HTTPS) from 0.0.0.0/0 — permits all users to reach the OpenMRS application over HTTPS
+- Port 22 (SSH) from [ISSO/IT Admin source IP range only] — not 0.0.0.0/0; restricted to specific source IP addresses
+- All other inbound traffic: implicitly denied
+
+Outbound rules:
+- Port 3306 (MySQL) to RDS security group — permits application to database connection
+- Port 443 (HTTPS) to 0.0.0.0/0 — permits application to reach external HTTPS endpoints (software updates, AWS service endpoints)
+- Port 587 (SMTP/TLS) to email service — permits outbound notification email
+- All other outbound: implicitly denied
+
+*RDS Security Group (sg-openmrs-rds):*
+Inbound rules:
+- Port 3306 (MySQL) from EC2 security group only — permits only the OpenMRS application server to connect to the database
+- No other inbound permitted
+
+Outbound: not applicable — RDS does not initiate connections
+
+*Discrepancy found during verification:* SSH on port 22 was previously open to 0.0.0.0/0 (unrestricted) — a misconfiguration from the initial deployment. This was corrected during today's implementation verification: the source was restricted to the ISSO and IT Administrator source IP range. This discrepancy would have been flagged immediately by the AWS Config rule restricted-ssh. The correction is documented in the change log as a security remediation.
+
+**Verification Evidence:** Security group configuration export showing current inbound and outbound rules; change log entry documenting the SSH restriction correction; Config rule compliance showing restricted-ssh now COMPLIANT.
 
 ---
 
-## Suggested Search Terms
+**SC-7(8): WAF Routing**
 
-- “AWS Security Groups NIST compliance”  
-- “AWS WAF configuration OWASP rules”  
-- “OpenMRS HIPAA encryption AWS RDS”  
-- “AWS CloudTrail CloudWatch SIEM best practices”  
-- “NIST 800-53 Technical Controls mapping cloud”  
+**SSP Description (from Day 48):** All web traffic routes through AWS WAF before reaching the application server. WAF fail-secure configured — traffic denied if WAF unavailable.
+
+**Implementation Verification:**
+
+AWS WAF web ACL [openmrs-waf-acl] is associated with the CloudFront distribution or Application Load Balancer in front of the OpenMRS EC2 instance. The WAF is not attached directly to the EC2 instance — it is a layer that all inbound HTTPS traffic passes through before reaching the EC2 security group.
+
+Enabled rule groups:
+- AWS-AWSManagedRulesCommonRuleSet — OWASP Top 10 general protections
+- AWS-AWSManagedRulesKnownBadInputsRuleSet — blocks known malicious request patterns
+- AWS-AWSManagedRulesSQLiRuleSet — SQL injection protection (directly relevant to RS-002 web application exploit risk)
+- AWS-AWSManagedRulesAmazonIpReputationList — blocks requests from known malicious IP addresses
+
+Default action: BLOCK — if no rule explicitly allows a request, it is blocked. This is the deny-by-default configuration that SC-7(5) and SC-7(18) require. A request that does not match any allow rule is denied; the WAF does not fail open.
+
+Rate limiting rule: requests from a single IP exceeding 2,000 requests per 5-minute window are rate-limited — mitigates HTTP flood and credential stuffing attacks.
+
+WAF logging: WAF access logs enabled, delivered to S3 bucket [waf-logs-openmrs]; logs retained 90 days. WAF sampled requests visible in the console for alert investigation.
+
+**Discrepancy:** WAF logging was enabled but the S3 bucket for WAF logs was not yet configured with lifecycle rules for retention management. This is a minor gap — logs are being collected but retention was not configured per the 90-day requirement. Corrected during today's verification; lifecycle rule configured. Documented in change log.
+
+**Verification Evidence:** WAF web ACL configuration screenshot showing associated resource and enabled rule groups; default action showing BLOCK; rate limiting rule configuration; WAF log S3 bucket with lifecycle rule confirmation.
 
 ---
+
+### Encryption Controls — SC-28, SC-8
+
+---
+
+**SC-28: Encryption at Rest**
+
+**SSP Description (from Day 50):** RDS encrypted at creation using customer-managed KMS key [key-alias/openmrs-rds-encryption]. EBS volumes encrypted with customer-managed KMS key [key-alias/openmrs-ec2-encryption]. S3 backup bucket SSE-KMS with customer-managed key [key-alias/openmrs-s3-backup]. S3 bucket policy denies unencrypted uploads.
+
+**Implementation Verification:**
+
+*RDS encryption:*
+RDS console shows: Storage encryption — Enabled. KMS key — [customer-managed key ARN]. Encryption status has been in place since instance creation — this cannot be applied retroactively to an existing unencrypted instance. Verified that automated backups inherit encryption from the source instance.
+
+*EC2 EBS encryption:*
+EC2 console → Volumes: root volume shows State — in-use; Encrypted — Yes; KMS Key ID — [customer-managed key ARN]. Account-level setting "Always encrypt new EBS volumes" is enabled — confirmed in EC2 console → EC2 Dashboard → Account Attributes.
+
+*S3 backup bucket encryption:*
+S3 console → [backup-bucket-name] → Properties → Default encryption: SSE-KMS with [customer-managed key ARN]. Block Public Access: all four settings enabled (BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, RestrictPublicBuckets). Object Lock: enabled in compliance mode with [retention period] day retention.
+
+Bucket policy includes the following condition that denies uploads without SSE-KMS:
+```json
+{
+  "Condition": {
+    "StringNotEquals": {
+      "s3:x-amz-server-side-encryption": "aws:kms"
+    }
+  }
+}
+```
+This ensures that no object can be stored in the backup bucket without KMS encryption — even if the upload request does not explicitly specify encryption.
+
+*KMS key configuration:*
+All three customer-managed keys show: Key rotation — Automatic rotation enabled; Key status — Enabled; Key policy — restricts usage to specific IAM roles (EC2 instance profile, ISSO, IT Administrator for administrative actions). Key usage is logged in CloudTrail under kms.amazonaws.com event source.
+
+**No discrepancies found.** All SC-28 implementation elements match SSP documentation.
+
+**Verification Evidence:** RDS console encryption screenshot; EBS volume list showing encrypted status; S3 bucket encryption configuration and bucket policy; KMS key configuration showing rotation enabled and restricted key policy.
+
+---
+
+**SC-8: Encryption in Transit**
+
+**SSP Description (from Day 50):** HTTPS enforced — HTTP redirects to HTTPS. TLS 1.2 minimum. ACM certificate. MySQL connection from EC2 to RDS requires TLS.
+
+**Implementation Verification:**
+
+*HTTPS enforcement:*
+Apache Tomcat server.xml configuration: HTTP connector on port 8080 includes a redirect to port 8443 (HTTPS). The EC2 security group does not permit inbound port 80 from the internet — the redirect is handled at the application layer for any connection that reaches Tomcat directly, but internet-facing traffic on port 80 is dropped at the security group before reaching the application.
+
+Recommendation: confirming the WAF/ALB layer handles the HTTP-to-HTTPS redirect at the perimeter (before reaching EC2) provides defense-in-depth for the redirect enforcement.
+
+*TLS configuration:*
+ACM certificate status: Issued. Domain: [openmrs-domain]. Expiration: [date]. ACM auto-renewal enabled. CloudWatch alarm configured to alert 30 days before expiration — this was identified as a gap in Day 50 and has now been configured. Alarm name: [openmrs-cert-expiry-30d]; alarm state: OK.
+
+TLS protocol: Tomcat SSL configuration specifies sslEnabledProtocols="TLSv1.2,TLSv1.3" — TLS 1.0 and 1.1 are not included. Cipher suite configured to prefer ECDHE-based key exchange for forward secrecy.
+
+*RDS TLS enforcement:*
+OpenMRS database connection string in runtime.properties: driverClassName=com.mysql.cj.jdbc.Driver with useSSL=true and requireSSL=true. RDS parameter group: rds.force_ssl=1 — connections without TLS are rejected at the database level, providing enforcement at both ends of the connection.
+
+**No discrepancies found.**
+
+**Verification Evidence:** ACM certificate console screenshot; Tomcat server.xml configuration (redacted to remove sensitive values); CloudWatch alarm for certificate expiration; RDS parameter group showing force_ssl=1; OpenMRS runtime.properties connection string (redacted).
+
+---
+
+### Authentication Controls — IA-2, IA-5
+
+---
+
+**IA-2: Multi-Factor Authentication**
+
+**SSP Description (from Day 50):** All OpenMRS users authenticated via username/password plus TOTP-based MFA. No shared accounts. MFA enrollment required before account activation.
+
+**Implementation Verification:**
+
+OpenMRS authentication module configuration: requires2fa=true in the authentication module settings. The authentication flow: (1) username/password validation; (2) if valid, TOTP challenge presented; (3) session token issued only on successful TOTP validation. An account that has not completed MFA enrollment cannot advance past step 1 — the system presents an enrollment redirect rather than a TOTP challenge.
+
+Spot-check of active accounts: pulled current active account list from OpenMRS administration → User Management. Verified that all active accounts show MFA enrollment status. No accounts found with unenrolled MFA status — enrollment is complete for all active users.
+
+Service account for laboratory integration: configured as an API-key-authenticated connection, not a username/password session. API key is stored in AWS Secrets Manager, not in application configuration files. Verified that the service account does not have a session-based login configured — the account type is "API" rather than "System" which would permit TOTP bypass.
+
+**No discrepancies found.**
+
+**Verification Evidence:** OpenMRS authentication module configuration screenshot; active user list with MFA enrollment status; Secrets Manager entry for lab API key (key name, not key value); service account configuration showing API type.
+
+---
+
+**IA-5: Password Policy Enforcement**
+
+**SSP Description (from Day 50):** 12-character minimum, complexity requirements, 90-day maximum age, 12-generation history, temporary passwords expire in 24 hours.
+
+**Implementation Verification:**
+
+OpenMRS security module password policy configuration:
+- Minimum length: 12 ✓
+- Require uppercase: enabled ✓
+- Require lowercase: enabled ✓
+- Require numeric: enabled ✓
+- Require special character: enabled ✓
+- Maximum password age: 90 days ✓
+- Password history: 12 generations ✓
+- Account lockout after failed attempts: 5 attempts, 30-minute lockout ✓
+
+*Discrepancy found:* Temporary password expiration was configured as 48 hours, not 24 hours as documented in the SSP. The SSP specifies 24 hours. This is a minor discrepancy — either the SSP should be updated to reflect 48 hours (if 48 hours is operationally preferable) or the system should be updated to 24 hours. Given that shorter temporary password windows reduce the risk of unused temporary passwords being exploited, the configuration should be corrected to 24 hours to match the SSP. Corrected during today's verification; documented in change log.
+
+**Verification Evidence:** OpenMRS password policy configuration screenshot; change log entry for 24-hour temporary password correction.
+
+---
+
+### Audit Logging Controls — AU-2, AU-9
+
+---
+
+**AU-2: Application Audit Log Configuration**
+
+**SSP Description (from Day 50):** OpenMRS audit log module captures patient record access with user ID, patient MRN, action, outcome, timestamp, and source IP. Logs shipped to CloudWatch log group [openmrs-application-audit].
+
+**Implementation Verification:**
+
+OpenMRS audit log module: enabled and configured. Log format verified by generating a test access event and reviewing the resulting log entry:
+
+Sample log entry (test patient record, non-production data):
+```
+{
+  "timestamp": "2024-01-15T14:23:45.123Z",
+  "user": "jsmith@myclinic.org",
+  "patientId": "MCL-000247",
+  "action": "VIEW_ENCOUNTER",
+  "outcome": "SUCCESS",
+  "sourceIP": "192.168.1.45",
+  "sessionId": "a3f9b2c1..."
+}
+```
+
+All required fields present: user identifier ✓, patient identifier (MRN, not demographic data) ✓, action ✓, outcome ✓, timestamp with timezone ✓, source IP ✓.
+
+CloudWatch Logs agent on EC2: configured and verified as running. Log group [openmrs-application-audit] receiving entries in CloudWatch console. Log group retention: 6 years (2,191 days) configured. Log group resource policy: verified that DeleteLogGroup and DeleteLogStream actions are denied to all principals except the designated audit administrator role.
+
+**Verification Evidence:** OpenMRS audit module configuration; sample audit log entry (test data, not real patient data); CloudWatch log group console screenshot showing log entries arriving; log group retention policy; log group resource policy.
+
+---
+
+**AU-9: Audit Log Protection**
+
+**SSP Description (from Days 50-52):** CloudTrail log file integrity validation enabled. S3 Object Lock on CloudTrail log bucket. CloudWatch alert for audit configuration changes.
+
+**Implementation Verification:**
+
+CloudTrail: Trail [openmrs-cloudtrail-all-regions] shows Log file validation: Enabled. Trail is configured for all regions. Management events: All. S3 data events for the backup bucket: enabled. CloudTrail log delivery bucket: [cloudtrail-logs-openmrs-[account-id]] — separate from backup bucket.
+
+S3 Object Lock on CloudTrail log bucket: Console shows Object Lock: Enabled. Mode: Compliance. Default retention: [configured retention period] days.
+
+*Gap identified:* The CloudWatch alert for CloudTrail configuration changes — specifically, alerts for DeleteTrail, StopLogging, and UpdateTrail API calls — was documented in the SSP but not yet configured as a CloudWatch alarm. This was the alert fatigue management gap identified in Day 52's reflection. Creating these alarms:
+
+CloudWatch Events rule: target event source = cloudtrail.amazonaws.com; event names = DeleteTrail, StopLogging, UpdateTrail, DeleteLogGroup (for the audit log group). Rule triggers SNS notification to ISSO with HIGH severity label. Alarms created and verified as active during today's implementation verification.
+
+**Discrepancy corrected:** CloudTrail tamper detection alarms now configured. Documented in change log. POA&M item for this gap closed.
+
+**Verification Evidence:** CloudTrail console screenshot showing log file validation enabled and multi-region configuration; S3 Object Lock configuration; CloudWatch Events rule for CloudTrail tamper detection; SNS topic subscription confirmation.
+
+---
+
+### Vulnerability Detection Controls — RA-5, SI-4
+
+---
+
+**Amazon Inspector — EC2 Vulnerability Scanning**
+
+**SSP Description (from Day 52):** Amazon Inspector configured for continuous EC2 scanning. Findings aggregated in Security Hub. Monthly findings review by ISSO.
+
+**Implementation Verification:**
+
+Amazon Inspector: enabled for EC2 scanning in the AWS account. Inspector requires the AWS Systems Manager agent to be installed and running on EC2 instances. SSM agent status on the OpenMRS EC2 instance: Running (verified via SSM Fleet Manager).
+
+Inspector assessment status: Initial scan completed. Findings visible in Inspector console and aggregated in Security Hub under the Amazon Inspector finding provider.
+
+Current findings review: ISSO reviewed Inspector findings from the initial scan. No CRITICAL findings. Two HIGH findings identified:
+
+- Finding 1: OpenSSL version [X.X.X] — known CVE [CVE-XXXX-XXXX], CVSS 7.5. Affected package identified. Patch available. Added to patch queue for remediation within 2-week timeline per the High severity remediation schedule.
+
+- Finding 2: Python library [name] — CVE [CVE-XXXX-XXXX], CVSS 7.1. This Python library is installed as part of the Ubuntu base image but is not used by OpenMRS. ISSO assessed: not exploitable in current configuration. Documented as accepted risk with compensating control notation in the POA&M.
+
+**Verification Evidence:** Inspector console screenshot showing active scanning status; Security Hub findings showing Inspector as finding provider; initial findings report; POA&M entries for the two HIGH findings.
+
+---
+
+## Implementation Discrepancy Summary
+
+| Control | Discrepancy | Resolution | Status |
+|---|---|---|---|
+| SC-7 SSH restriction | SSH open to 0.0.0.0/0 rather than restricted IP range | Corrected in security group; change logged | Resolved |
+| SC-7(8) WAF logging | WAF logs collected but S3 lifecycle rule not configured | Lifecycle rule configured; change logged | Resolved |
+| IA-5 Temp password expiry | Configured as 48 hours; SSP specifies 24 hours | Corrected to 24 hours; change logged | Resolved |
+| AU-9 CloudTrail tamper alerts | Alerts documented in SSP but not yet configured | CloudWatch Events rules created; SNS configured | Resolved — POA&M item closed |
+| SC-28 | No discrepancies | — | Verified |
+| SC-8 | No discrepancies | — | Verified |
+| IA-2 | No discrepancies | — | Verified |
+| AU-2 | No discrepancies | — | Verified |
+
+Four discrepancies identified and resolved during Task I-1 verification. All four were configuration gaps between the documented intent and the deployed state — exactly the type of gap that Task I-1 is designed to surface. Three were corrected on the spot; one (CloudTrail tamper alerts) closed an open POA&M item from Day 50.
+
+---
+
+## A Real-World Example That Made This Click
+
+The SSH restriction discrepancy found today — port 22 open to 0.0.0.0/0 — is exactly the configuration gap that enabled the **2019 Capital One breach** via a different entry point. In the Capital One case, the Server Side Request Forgery vulnerability allowed the attacker to reach the EC2 metadata service and retrieve temporary credentials. A more broadly applicable lesson from that incident: default configurations and leftover open ports from development environments are among the most commonly exploited entry points in cloud infrastructure.
+
+The AWS Config rule restricted-ssh exists precisely because unrestricted SSH access is such a common misconfiguration. The fact that the Config rule would have flagged today's SSH finding — had it been running and monitored before today's verification — illustrates the value of the automated continuous monitoring established in Day 52. The Config rule would have caught this misconfiguration as a NON_COMPLIANT finding the moment it was created, not days or weeks later during a manual verification exercise.
+
+This is the feedback loop that Task I-1 and the continuous monitoring strategy are designed to create: implementation verification catches gaps before assessment, and continuous monitoring catches drift after authorization. Both are necessary because configuration gaps can be introduced at deployment and configuration drift can occur at any time afterward.
+
+---
+
+## What I Am Still Thinking About
+
+During the Inspector finding review today, one of the HIGH findings was a Python library vulnerability in a package that is installed on the EC2 instance but not used by OpenMRS. I documented it as accepted risk with a compensating control notation.
+
+But I want to think more carefully about whether "not used by OpenMRS" is a sufficient basis for accepting the risk. If the Python library is installed on the system, it is part of the attack surface — even if OpenMRS does not call it directly, an attacker who gains code execution on the EC2 instance could potentially exploit the vulnerable library. The argument for remediation is: the safest state is to remove unused packages entirely (reducing the attack surface) rather than accepting risk from packages that happen to be unused.
+
+The NIST SP 800-53 CM-7 control — Least Functionality — requires that the system be configured to provide only essential capabilities. An unused Python library is exactly the type of unnecessary functionality that CM-7 addresses. I should revisit the POA&M entry for this finding and change the disposition from "accepted risk" to "remediate — remove unused package" with a timeline that matches the HIGH severity schedule. This is a more defensible position and is consistent with the least functionality principle.
+
+---
+
+## What's Next
+
+Day 55 continues the Implement step with administrative and operational controls — the procedural implementations that parallel today's technical work. Policies, training completion records, incident response procedures, and contingency plan documentation are the administrative layer that gives the technical controls operational continuity.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task I-1 Implementing Security Controls](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [AWS Security Groups Configuration Best Practices](https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html)
+- [AWS WAF Managed Rule Groups](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html)
+- [Amazon Inspector EC2 Scanning Documentation](https://docs.aws.amazon.com/inspector/latest/user/findings-understanding-types.html)
+- [NIST SP 800-53 CM-7 Least Functionality](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+
+---
+
+*#GRC #ControlImplementation #NISTRMF #AWS #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #TechnicalControls #Day54*
