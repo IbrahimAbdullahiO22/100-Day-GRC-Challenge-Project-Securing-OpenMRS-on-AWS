@@ -1,104 +1,211 @@
-# 📅 Day 46 – Task S-1: Selecting the Moderate Baseline | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+# Day 46 – Task S-1: Selecting the High Baseline for OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Moving From Categorization to Controls
+## From Categorization to Controls — The Select Step Begins
 
-As a GRC leader, one thing I’ve internalized about RMF is this: **Categorization without controls is just theory**. The real test of risk management starts when we begin shaping the system’s defenses. That’s why today’s focus — selecting the appropriate baseline — is such a critical leadership moment.
+The Prepare step built the foundation. The Categorize step produced the official High categorization, reviewed and approved by the AO. Today begins the Select step — where the security program takes concrete shape in the form of specific controls that will be implemented, assessed, and maintained for the life of the system.
 
-Now that we’ve formally categorized our OpenMRS system as MODERATE (Task C-3 signed and approved ✅), my role is to chart the path toward ensuring this EHR system is protected at a level commensurate with its sensitivity and importance.
+Before going further I want to address the baseline selection directly. The original version of today's content selected the Moderate baseline. The categorization approved on Day 45 is High — and FIPS 200 is unambiguous: the control baseline must correspond to the system's security categorization. A High-impact system requires the High baseline from NIST SP 800-53B. Selecting Moderate for a High-impact system is not a conservative simplification — it is a compliance gap that would be identified immediately in any formal assessment.
 
----
-
-##  Why Use a Baseline?
-
-I often explain to teams that a **baseline** is not bureaucracy — it’s a form of professional wisdom.
-
-> *It’s what seasoned practitioners have already figured out about what works at different risk levels.*
-
-NIST SP 800-53B gives us that head start. For our MODERATE system, adopting the **MODERATE baseline** is the smart move:
-
-Avoids reinventing the wheel  
-Ensures comprehensive coverage  
-Aligns with regulatory expectations (HIPAA, FISMA Moderate mappings)  
-Gives auditors and stakeholders a trusted benchmark
-
-Leadership in this phase means recognizing when to leverage standards vs. when to tailor (more on that in tomorrow’s Task S-1 Part 2).
+Today I work through what the High baseline actually contains, why it is more demanding than Moderate in the areas that matter most for OpenMRS, and what the baseline selection means for the work ahead.
 
 ---
 
-##� What’s in the MODERATE Baseline?
+## What I Worked On Today
 
-As I reviewed the control families today, here are some of the key protections we’ll implement for OpenMRS:
+NIST SP 800-37 Task S-1 asks the organization to select the security controls for the information system based on the security categorization and to document the selected controls in the System Security Plan. The process has three components: identifying the initial control baseline from NIST SP 800-53B that corresponds to the categorization, reviewing the baseline for applicability through scoping considerations, and supplementing with additional controls where needed based on the risk assessment findings.
 
-### 1️⃣ Access Control (AC)  
-- **AC-2**: Rigorous user account management  
-- **AC-6**: Least privilege enforcement  
-- MFA for remote or privileged users — critical for a cloud-based EHR
-
-### 2️⃣ Audit & Accountability (AU)  
-- **AU-2, AU-6**: Detailed logging of access to PHI  
-- Required for HIPAA, but also key for forensic readiness
-
-### 3️⃣ Incident Response (IR)  
-- **IR-1 through IR-4**: Documented and tested incident response plan  
-- We must be prepared to respond to potential breaches
-
-### 4️⃣ Contingency Planning (CP)  
-- **CP-9**: Reliable encrypted backups (daily S3 snapshots + tested recovery)  
-- **CP-7**: AWS multi-AZ for availability  
-- Patients can’t wait — care continuity matters
-
-### 5️⃣ System & Communications Protection (SC)  
-- **SC-12, SC-13**: Encrypt PHI in transit (TLS 1.2+ across all web traffic)  
-- **SC-28**: Encrypt PHI at rest (RDS encryption + EC2 volume encryption)
+Today covers the first component — identifying and understanding the High baseline. Days 47 and 48 will cover tailoring (scoping and supplementing) and the HIPAA overlay mapping.
 
 ---
 
-##  My Perspective as a Leader
+## What Actually Clicked for Me
 
-Selecting this baseline also means thinking **beyond just compliance**:
+The thing that clicked most clearly today is what the difference between the Moderate and High baselines actually means in practice — not as an abstract number of controls, but as specific, meaningful security requirements.
 
-- **Resilience** — How do we ensure continuity of patient care?
-- **Trust** — How do we uphold patient privacy and public confidence?
-- **Operational Impact** — How do we balance controls with usability for clinical staff?
+The High baseline is not just more controls. It is more demanding requirements in the control families that matter most for a system like OpenMRS. Understanding those differences is what makes the baseline selection a substantive security decision rather than a bureaucratic category.
 
-I view NIST’s baseline not as a ceiling, but as **a floor to build upon**. We can (and should) enhance it — especially in healthcare contexts where human lives are involved.
+The most significant differences between Moderate and High for OpenMRS are in four areas: access control, audit and accountability, contingency planning, and system and communications protection. In each of those areas, the High baseline adds requirements that directly address the risk scenarios documented in Days 37 and 38.
 
 ---
 
-## Reflection
+## What the High Baseline Requires — Control Family by Control Family
 
-In my personal practice, I see baselines much like **pre-flight checklists for pilots**:
-
- You follow them religiously — because you know they’re there to keep the mission safe.  
- You also adapt them when new conditions emerge — because static defenses are brittle.
-
-As a GRC leader, I commit to never treating baselines as “checkboxes” — but as **living safeguards** that evolve with the system and the threat landscape.
+The NIST SP 800-53B High baseline covers all twenty control families. I am going to work through the families most directly relevant to the OpenMRS risk profile in detail, and provide a summary reference for the remaining families.
 
 ---
 
-##  What’s Next?
+### Access Control (AC) — High Baseline
 
-With our MODERATE baseline selected, I’ll now lead the **tailoring process**:
+The AC family governs who can access the system and under what conditions. The High baseline requirements go significantly beyond Moderate in areas directly relevant to the insider threat and credential compromise risks in the OpenMRS risk register.
 
-➡️ Map specific HIPAA overlays  
-➡️ Consider control enhancements where needed  
-➡️ Clarify shared responsibilities between AWS and our team  
-➡️ Document tailoring decisions (so nothing gets lost downstream)
+**AC-2 Account Management:** High baseline requires automated mechanisms for account management — creating, enabling, disabling, and removing accounts — with notifications to account managers when accounts are no longer needed. For OpenMRS, this means the account deprovisioning process must be automated or semi-automated rather than purely manual. The four-hour termination response window from the risk register is supported by automation, not just policy.
 
-Baseline chosen. Leadership mindset engaged. 🚀
+**AC-2(1) Account Management — Automated System Account Management:** High adds the requirement to use automated mechanisms to support account management. This enhancement is not in the Moderate baseline — it is specific to High-impact systems. For OpenMRS, this means integrating account management with the enterprise identity provider discussed on Day 40 rather than managing accounts manually in the OpenMRS application.
 
----
+**AC-3(7) Access Enforcement — Role-Based Access Control:** High baseline explicitly requires role-based access control as an enhancement to the base access enforcement requirement. For OpenMRS, every user must have a role that defines their access scope — clinical roles can access patient records within their care relationship; administrative roles are scoped to registration and scheduling functions; IT roles have no clinical record access.
 
-## 🔍 Key Search Terms
+**AC-6 Least Privilege:** High baseline adds AC-6(1) (authorize access to security functions for security personnel only), AC-6(2) (require non-privileged accounts for non-security functions — even administrators should use standard user accounts for routine clinical tasks), AC-6(5) (restrict privileged access to the minimum necessary), and AC-6(9) (log use of privileged functions). The combination of these enhancements means that privilege management for OpenMRS needs to be explicitly documented, reviewed, and monitored — not just applied at setup and forgotten.
 
-- NIST SP 800-53B Moderate baseline controls  
-- HIPAA to NIST 800-53 mapping  
-- AWS compliance tools for NIST 800-53  
-- Security control tailoring best practices  
+**AC-17 Remote Access:** High baseline adds requirements for automated monitoring of remote access sessions. For OpenMRS, remote clinical access via VPN requires session monitoring and defined conditions under which remote sessions are terminated. Staff accessing patient records from home or on mobile devices need to understand that those sessions are subject to the same monitoring as in-clinic sessions.
+
+**AC-17(1) Remote Access — Automated Monitoring and Control:** This High enhancement requires automated monitoring of remote access — a capability that connects directly to the GuardDuty and CloudWatch monitoring discussed in Day 28. Unusual remote access patterns — unexpected geographic origins, access at unusual hours, high-volume record access — should generate alerts.
+
+*Connection to risk register:* AC enhancements directly address RS-004 (insider PHI misuse) and RS-005 (phishing and credential compromise).
 
 ---
 
-📌 _#Cybersecurity #GRC #NISTRMF #ModerateBaseline #OpenMRS #HIPAACompliance #AWS #HealthcareIT #Leadership #Day46_
+### Audit and Accountability (AU) — High Baseline
+
+The AU family governs the generation, protection, and review of audit records. For a HIPAA-covered system, the AU family is where the technical safeguard audit control requirement lives — and the High baseline is significantly more demanding than Moderate.
+
+**AU-2 Event Logging:** High baseline requires logging of a more comprehensive set of events than Moderate. For OpenMRS, the required events include: successful and unsuccessful login attempts, access to patient records (read and write), changes to user accounts and permissions, use of administrative functions, changes to audit logging configuration (attempts to disable or modify logging are high-priority events), and security-relevant system events.
+
+**AU-3 Content of Audit Records:** High baseline requires that audit records contain sufficient information to establish what event occurred, when it occurred, where it occurred, the source of the event, the outcome of the event, and the identity of individuals or subjects associated with the event. For OpenMRS application audit logs, this means: user identifier, timestamp with timezone, patient record identifier accessed, action type (view/create/modify/delete), outcome (success/failure), and source IP address.
+
+**AU-6 Audit Record Review, Analysis, and Reporting:** High baseline requires automated tools to integrate and analyze audit records — not just manual periodic review. This pushes the monitoring program from the weekly manual log review in the Day 30 monitoring strategy toward tool-supported anomaly detection. AWS Security Hub and CloudWatch Logs Insights provide some of this capability; the application-level audit logs need a review process that can surface anomalous patterns.
+
+**AU-6(1) Audit Record Review — Automated Process Integration:** This High enhancement requires integrating the audit review process with automated analysis — specifically to support near-real-time detection of suspicious activity. For insider threat detection (RS-004), this means the audit log review cannot wait for the weekly manual review cycle; high-priority events should generate real-time alerts.
+
+**AU-9 Protection of Audit Information:** High baseline adds requirements to protect audit information from unauthorized access, modification, and deletion — and to alert on any attempts to modify or delete audit records. For OpenMRS, this means CloudWatch Log Groups must have IAM policies that prevent deletion, and any API call that attempts to delete or modify audit logs must generate a high-priority alert via CloudTrail.
+
+**AU-9(3) Protection of Audit Information — Cryptographic Protection:** High enhancement requires cryptographic mechanisms to protect audit record integrity. CloudTrail log file validation — which uses SHA-256 hashing to verify that log files have not been modified after delivery — implements this requirement for AWS API audit logs.
+
+**AU-12 Audit Record Generation:** High baseline requires that the information system generate audit records for the events defined in AU-2 from all system components. This means the OpenMRS application, the EC2 OS, and the AWS services all need to generate consistent audit records — not just some components.
+
+*Connection to risk register:* AU enhancements directly address RS-004 (insider PHI misuse) by ensuring comprehensive, tamper-evident audit logging with automated anomaly detection.
+
+---
+
+### Identification and Authentication (IA) — High Baseline
+
+The IA family governs how users prove their identity before accessing the system. The High baseline MFA requirements are one of the clearest differentiators from Moderate and one of the most important controls for the OpenMRS risk profile.
+
+**IA-2 Identification and Authentication — Organizational Users:** High baseline requires MFA for all access — not just remote access, not just privileged access, but all access to the system. For OpenMRS, this means every clinical and administrative user must authenticate with a second factor for every login session, including in-clinic workstation access.
+
+**IA-2(1) MFA for Privileged Access:** High baseline explicitly requires MFA for privileged accounts (IT administrators, ISSO) — this requirement exists in both Moderate and High baselines.
+
+**IA-2(2) MFA for Non-Privileged Access:** This is the High-baseline enhancement that is not in the Moderate baseline. It requires MFA for all non-privileged users — clinical staff, administrative staff, everyone. For OpenMRS, this is the control that most directly addresses RS-001 (ransomware via credential compromise) and RS-005 (phishing and credential compromise). A phished password without the second factor cannot access the system.
+
+**IA-5 Authenticator Management:** High baseline adds requirements for authenticator protection — minimum password length and complexity, password change on first use, prohibition on reuse of recent passwords, and requirements for protecting authenticators against disclosure. The High enhancement IA-5(1) adds automated enforcement of these password composition and lifetime rules.
+
+**IA-8 Identification and Authentication — Non-Organizational Users:** High baseline requires identification and authentication for the laboratory API integration and any other non-human connections to OpenMRS. Service account credentials for API integrations must be managed with the same rigor as human user credentials — separate credentials for each integration, minimum necessary permissions, rotation on defined schedule.
+
+*Connection to risk register:* IA enhancements directly address RS-001 and RS-005 as the primary technical control against credential-based attacks.
+
+---
+
+### Contingency Planning (CP) — High Baseline
+
+The CP family governs the organization's ability to maintain operations during disruptions and recover from them. The High baseline is significantly more demanding than Moderate — reflecting the High availability categorization of OpenMRS.
+
+**CP-2 Contingency Plan:** High baseline requires a documented contingency plan with defined roles, recovery priorities, recovery objectives, and contact information. The plan must address degraded operations during disruption — exactly the downtime procedures gap identified as V-015 in the vulnerability inventory. High enhancement CP-2(1) requires that the contingency plan be coordinated with organizational elements responsible for related plans (incident response, disaster recovery).
+
+**CP-3 Contingency Training:** High baseline requires contingency training for system personnel with defined roles in the contingency plan. For OpenMRS, this means clinical staff need to be trained on downtime procedures — not just IT staff. The training needs to be documented and repeated periodically.
+
+**CP-4 Contingency Plan Testing:** High baseline requires testing the contingency plan at a defined frequency — and High enhancement CP-4(1) requires coordination with organizational elements. For OpenMRS, the quarterly backup restoration test from the Day 30 monitoring strategy is necessary but not sufficient — a full contingency exercise that tests the clinical downtime procedures with actual clinical staff is required.
+
+**CP-6 Alternate Storage Site:** High baseline requires an alternate storage site for backup data — geographically separated from the primary site to protect against regional disasters. For OpenMRS on AWS, S3's cross-region replication capability can implement this requirement by replicating the backup bucket to a second AWS region.
+
+**CP-7 Alternate Processing Site:** High baseline enhancement CP-7(1) requires that the alternate processing site be separated from the primary site and that agreements are in place for alternate processing. For a single-region AWS deployment, this means having a documented plan for deploying OpenMRS in a secondary region if the primary region is unavailable.
+
+**CP-9 Information System Backup:** High baseline requires backup testing at a defined frequency — and High enhancement CP-9(1) requires testing backup reliability and information integrity. This is the quarterly restoration test from the monitoring strategy, but formalized as a required control with documented results.
+
+*Connection to risk register:* CP enhancements directly address RS-001 (ransomware recovery) and RS-006 (AWS regional disruption).
+
+---
+
+### Incident Response (IR) — High Baseline
+
+**IR-4 Incident Handling:** High baseline adds IR-4(1) — automated incident handling processes — requiring that the incident response process include automated mechanisms to support incident detection, analysis, and response. For OpenMRS, this means GuardDuty findings and CloudWatch alerts need to feed into an automated notification and escalation workflow, not just generate entries in a dashboard that someone might check periodically.
+
+**IR-6 Incident Reporting:** High baseline requires incident reporting to organizational officials within defined timeframes. For a HIPAA-covered system, this connects directly to the 60-day breach notification requirement — the incident response process must include a HIPAA breach assessment workflow that runs in parallel with technical incident response.
+
+**IR-10 Integrated Information Security Analysis Team:** High enhancement requires cross-functional participation in incident response — not just IT, but legal, communications, clinical operations. For a small clinic, this might mean a small incident response team with defined roles rather than a full security operations center, but the cross-functional structure must exist.
+
+---
+
+### System and Communications Protection (SC) — High Baseline
+
+**SC-7 Boundary Protection:** High baseline adds SC-7(3) (access points — limit the number of external network connections), SC-7(4) (external telecommunications services — implement controls for external connections), and SC-7(5) (deny by default). For OpenMRS, the security group configuration must implement deny-by-default — only explicitly permitted traffic is allowed; everything else is denied at the network layer.
+
+**SC-8 Transmission Confidentiality and Integrity:** High enhancement SC-8(1) requires cryptographic mechanisms — TLS — to prevent unauthorized disclosure and modification of data in transit. This formalizes the HTTPS requirement as a control requirement, not just a configuration choice.
+
+**SC-28 Protection of Information at Rest:** High enhancement SC-28(1) requires cryptographic protection of information at rest. This formalizes the RDS and S3 encryption requirements.
+
+**SC-39 Process Isolation:** High baseline requires the operating system to maintain a separate execution domain for each executing process — a requirement satisfied by modern operating systems and hypervisors but worth verifying in the EC2 configuration.
+
+---
+
+### High Baseline Summary — Additional Families
+
+The following families have High baseline requirements that apply to OpenMRS; full analysis will be documented in the System Security Plan:
+
+| Control Family | Key High Baseline Requirements for OpenMRS |
+|---|---|
+| Configuration Management (CM) | Automated baseline configuration monitoring; CM-6(1) automated management of configuration settings |
+| Risk Assessment (RA) | RA-5 vulnerability scanning at defined frequency; RA-5(1) automated scanning tools |
+| System Integrity (SI) | SI-2 flaw remediation with automated patching where possible; SI-3 malicious code protection on endpoints; SI-7 software and firmware integrity verification |
+| Personnel Security (PS) | PS-3 personnel screening; PS-4 personnel termination procedures — connects to account deprovisioning |
+| Media Protection (MP) | MP-6 media sanitization per NIST SP 800-88; MP-7 media use restrictions |
+| Physical Protection (PE) | PE family largely inherited from AWS; MyClinic retains responsibility for workstation physical security |
+| Planning (PL) | PL-2 system security plan; PL-4 rules of behavior for system users |
+| Program Management (PM) | Enterprise-level requirements; assessed at organizational level |
+
+---
+
+## High vs. Moderate — The Controls That Matter Most for OpenMRS
+
+| Control | Moderate Baseline | High Baseline | Risk Register Connection |
+|---|---|---|---|
+| IA-2(2) MFA for non-privileged users | Not required | Required | RS-001, RS-005 |
+| AC-2(1) Automated account management | Not required | Required | RS-004 |
+| AU-6(1) Automated audit analysis | Not required | Required | RS-004 |
+| AU-9(3) Cryptographic audit protection | Not required | Required | RS-004 |
+| CP-6 Alternate storage site | Not required | Required | RS-006 |
+| CP-7(1) Alternate processing site separation | Not required | Required | RS-006 |
+| SC-7(5) Deny-by-default boundary protection | Not required | Required | RS-001, RS-002 |
+| IR-4(1) Automated incident handling | Not required | Required | All RS |
+
+These eight controls — all required at High but not at Moderate — represent the most significant security investments that the High categorization drives. Each maps directly to one or more risk scenarios in the Day 38 risk register. This is why the categorization decision matters: Moderate would not require these controls, and the risk register shows these controls are specifically needed for the threat environment OpenMRS faces.
+
+---
+
+## A Real-World Example That Made This Click
+
+While reviewing the High baseline control families today I came back to the **2020 SolarWinds supply chain attack** — which I covered on Day 6 — to look at it through the specific lens of which High baseline controls would have aided detection.
+
+The SolarWinds attack was characterized by extraordinary stealth — attackers operated within compromised environments for months without detection. Post-incident analysis identified several monitoring gaps that enabled the long dwell time: audit logging that was not comprehensive enough to capture the attackers' lateral movement; alert thresholds set too broadly to surface the specific anomalies the attackers generated; and incident response processes that were not sufficiently automated to escalate the signals that did exist.
+
+The High baseline requirements for AU-6(1) (automated audit analysis), IR-4(1) (automated incident handling), and AC-6(9) (logging of privileged function use) are all directly relevant to the SolarWinds detection failure. Organizations with those controls implemented at the High baseline level would have had better automated visibility into the anomalous activity — though the sophistication of the SolarWinds attack means that even robust controls might not have caught it immediately.
+
+The broader lesson for OpenMRS is that the High baseline's emphasis on automation — automated account management, automated audit analysis, automated incident handling — reflects a recognition that manual processes cannot maintain adequate security visibility in complex environments. The High baseline is designed for systems where the consequences of a missed detection are severe — exactly the patient safety and regulatory stakes of an EHR breach.
+
+---
+
+## What I Am Still Thinking About
+
+Working through the High baseline today, one area I want to explore more carefully is the CP-7 alternate processing site requirement. For a single-region AWS deployment, meeting this requirement technically requires either a hot standby deployment in a second region (expensive), a warm standby with automated failover capability (moderate cost), or a documented manual procedure for deploying in a second region within the RTO (lower cost, higher recovery time).
+
+For a small clinic with a 4-hour RTO, a warm standby approach — maintaining infrastructure-as-code that can be deployed to a second region and using RDS cross-region snapshots for near-current data — may be the right balance between cost and recovery capability. I want to think through what that architecture looks like and what the cost implications are before the control selection is finalized.
+
+---
+
+## What's Next
+
+Day 47 covers the tailoring process — applying scoping considerations to the High baseline to identify controls that can be scoped out as not applicable, and identifying where the baseline needs to be supplemented with additional controls based on the risk assessment findings. Tailoring is where the generic High baseline becomes the specific control set for OpenMRS at MyClinic.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53B – Control Baselines for Information Systems](https://csrc.nist.gov/publications/detail/sp/800-53b/final)
+- [NIST SP 800-53 Rev 5 – Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [FIPS 200 – Minimum Security Requirements](https://csrc.nist.gov/publications/detail/fips/200/final)
+- [NIST SP 800-37 Rev 2 – Task S-1 Control Selection](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [HHS 405(d) NIST 800-53 to HIPAA Mapping](https://405d.hhs.gov/)
+
+---
+
+*#GRC #ControlSelection #NISTRMF #SP800-53 #HighBaseline #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day46*
