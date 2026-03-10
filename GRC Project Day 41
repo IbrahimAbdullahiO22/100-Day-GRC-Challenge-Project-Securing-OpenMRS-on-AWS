@@ -1,112 +1,311 @@
-# 📅 Day 41 – Dividing Security Duties: AWS vs. Us (Requirements Allocation)  
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 41 – Requirements Allocation: Defining Who Is Responsible for What | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## 🎯 Clarity Beats Assumption in Cloud Security
+## The Question That Prevents the Most Expensive Mistakes
 
-Early in my cloud learning journey, I made a simple but costly assumption: “AWS is handling security.” I hadn’t yet learned the golden rule of cloud governance:
+There is a specific failure pattern in cloud security that appears in breach post-mortems with uncomfortable regularity: a security control that nobody implemented because both parties believed the other was responsible for it. The cloud provider assumed the customer had configured it. The customer assumed the provider had enabled it by default. The control existed in the architecture diagram and in the compliance documentation — but not in the actual system.
 
-> **Security is a shared responsibility.**
+Requirements allocation is the formal process that eliminates that ambiguity. NIST SP 800-37 Task P-17 asks organizations to explicitly assign each security requirement to a responsible party — the cloud provider as a common control, the system owner as a system-specific control, or both as a hybrid control — before moving into the formal categorization and control selection steps. The output is a documented allocation of responsibility that is specific enough to be auditable and clear enough to prevent "I thought they were handling it."
 
-And that one oversight? It caused a non-compliant backup policy to go unnoticed until an audit. It was a hard lesson — but one I now lead with.
-
-Today, as I build and lead secure systems like OpenMRS in AWS, I focus on one core task from NIST RMF Task P-17:  
-**Requirements Allocation** — clearly defining *who handles what* in cloud security.
+Today I worked through the complete requirements allocation for OpenMRS at MyClinic — taking the security requirements identified on Day 39 and the architecture picture from Day 40, and explicitly assigning each requirement to AWS, MyClinic, or both, with documented rationale for each allocation decision.
 
 ---
 
-## 🔐 AWS Shared Responsibility Model (In Simple Terms)
+## What I Worked On Today
 
-Here’s the line:
+Requirements allocation builds directly on the common control identification from Days 27 and 28. The difference is that common control identification asked "what can we inherit?" — a discovery exercise. Requirements allocation asks "for every security requirement this system must meet, who is responsible for meeting it?" — an accountability exercise.
 
-- **AWS secures the cloud**: physical infrastructure, global networking, foundational services  
-- **We secure what’s in the cloud**: our OS configs, app settings, access controls, logs, and data
+The allocation categories follow the NIST control type taxonomy established on Day 27:
 
-It’s not about trust — it’s about visibility and **intentional design**.
+**AWS-provided (inherited):** Requirements met entirely by AWS infrastructure controls. MyClinic inherits the control and documents the inheritance. MyClinic does not implement, test, or maintain these controls — but must document that they are relied upon and verify through AWS compliance certifications that they remain in place.
 
----
+**MyClinic-implemented (system-specific):** Requirements that MyClinic must implement, configure, and maintain entirely. AWS provides no coverage for these requirements — they are fully within MyClinic's responsibility.
 
-## 🧩 Example Breakdown: Who Owns What?
-
-Let’s take a real-world look at OpenMRS in our AWS cloud deployment.
-
-| **Security Requirement**                                      | **AWS Responsibility** | **Our Responsibility** |
-|---------------------------------------------------------------|-------------------------|--------------------------|
-| Physical data center security                                 | ✅                      | 🔲                       |
-| Isolate system in private network                             | 🔲                      | ✅ (VPC, subnets, SGs)   |
-| Harden operating system (EC2)                                 | 🔲                      | ✅                       |
-| Encrypt data at rest (RDS, S3)                                | ✅ (infra & KMS)        | ✅ (enable/configure)    |
-| Secure web traffic (TLS)                                      | ✅ (TLS support)        | ✅ (cert setup, HTTPS)   |
-| Schedule and verify backups                                   | ✅ (automation infra)   | ✅ (config & testing)    |
-| Patch management (EC2)                                        | 🔲                      | ✅                       |
-| Patch management (RDS)                                        | ✅                      | ✅ (enable auto-patch)   |
-| Monitor infrastructure (CloudWatch, GuardDuty)                | ✅                      | ✅ (custom alarms/logs)  |
-| Detect suspicious activity in OpenMRS                         | 🔲                      | ✅                       |
-| Provide audit documentation                                   | ✅ (SOC, ISO reports)   | ✅ (our SSP, evidence)   |
-
-The key isn’t just **knowing this list** — it’s **documenting** it. A clear responsibility matrix avoids gaps and finger-pointing when things go wrong.
+**Hybrid (shared):** Requirements where AWS provides the infrastructure capability and MyClinic must configure, enable, or extend that capability to meet the requirement. This is the most important category to document carefully — because hybrid requirements are where the "I thought they were handling it" failure most commonly occurs.
 
 ---
 
-## 🔍 Lessons from the Field
+## What Actually Clicked for Me
 
-One of the biggest GRC blind spots I see is when security controls are *assumed* to be covered by the provider.  
+The insight that clicked most clearly today is that the hybrid category is where the real work of requirements allocation lives — and it is also where organizations most commonly fall into the responsibility gap.
 
-🚨 Example: An S3 bucket was thought to be encrypted because “AWS encrypts stuff.” But encryption-at-rest wasn’t enabled. The team missed it — because they didn’t realize it was *their job* to flip the switch.
+For fully inherited controls — AWS physical security, hypervisor isolation — the responsibility picture is clear. AWS handles it. MyClinic documents the inheritance and moves on.
 
-This kind of oversight doesn’t just cause findings — it erodes **trust** in the system.
+For fully system-specific controls — OpenMRS application configuration, clinical audit log review, staff security awareness training — the responsibility picture is equally clear. MyClinic handles it. No ambiguity.
 
----
+The hybrid controls are where clarity requires explicit work. Consider encryption at rest for the RDS database. AWS provides the KMS key management infrastructure and the RDS encryption capability. But encryption is not enabled by default on every RDS instance — the customer must enable it at provisioning time and configure the key management policy. If nobody explicitly owns the decision to enable encryption and verify its configuration, it may not happen — and neither AWS nor MyClinic will necessarily notice the gap until an audit or incident reveals it.
 
-## ✍️ Leadership Insight: Proactive Clarification
-
-As a GRC leader, part of my role is **reducing ambiguity**.
-
-I create responsibility matrices with project teams early. I walk through security requirements one by one and ask:  
-**“Who owns this?”**  
-If the answer isn’t immediate, we flag it. We clarify it. We write it down. And then we test it.
-
-Good governance isn’t about guessing. It’s about clarity, consistency, and accountability.
+The requirements allocation exercise forces that question to be asked and answered for every hybrid requirement, not discovered later during an assessment.
 
 ---
 
-## ✏️ Hands-On Summary
-
-I took our core OpenMRS security needs and ran them through this lens. A few highlights:
-
-- Encryption? ✅ Shared — AWS handles the tech, I handle the config  
-- Patching? ✅ Mixed — AWS handles RDS backend, I handle EC2 OS  
-- Monitoring? ✅ Shared — AWS gives the tools, I set the thresholds  
-- Access control? ✅ Ours — configure IAM roles, limit privileges  
-- Incident response? ✅ Ours — if OpenMRS is breached, we lead the charge  
+## Full Requirements Allocation for OpenMRS at MyClinic
 
 ---
 
-## 💭 Reflection
+### Physical and Environmental Security
 
-Do I trust AWS more or less knowing this?
+**Requirement:** Protect physical infrastructure against unauthorized access, environmental hazards, and equipment failure.
 
-I trust them more — because they’re clear about what they handle.  
-But I *trust myself most* — because I’ve learned not to assume.  
-**Every control needs an owner.** Every owner needs to know their role.  
-And that’s the GRC mindset I bring to the table.
+**Allocation: AWS-Provided (Inherited)**
 
----
+AWS maintains comprehensive physical security across all data center facilities — perimeter controls, biometric access, surveillance, environmental monitoring, power redundancy, and fire suppression. These controls are validated through SOC 2 Type II, ISO 27001, and FedRAMP certifications available via AWS Artifact.
 
-## 🔮 Tomorrow's Mission: System Registration
+**MyClinic's responsibility:** Sign and maintain the AWS Business Associate Agreement. Review AWS compliance certifications annually through AWS Artifact. Document the inheritance in the System Security Plan.
 
-As we close out the Prepare phase of the NIST RMF, we’re going to formally register OpenMRS in the organization’s system inventory. It’s administrative, yes — but essential for traceability, accountability, and oversight. Because if no one knows your system exists… they definitely aren’t protecting it.
+**MyClinic's residual responsibility:** Physical security for clinic workstations, printers, and any on-premises infrastructure — those are not covered by AWS and remain MyClinic's system-specific responsibility.
 
 ---
 
-## 🔎 Search Terms for Further Exploration
+### Virtualization and Hypervisor Security
 
-- “AWS shared responsibility model”  
-- “Responsibility matrix FedRAMP”  
-- “Cloud compliance customer vs provider controls”  
-- “Security control allocation RMF P-17”  
+**Requirement:** Ensure isolation between customer environments and protection of the virtualization layer.
+
+**Allocation: AWS-Provided (Inherited)**
+
+AWS manages the hypervisor layer entirely. Customers cannot access or configure the hypervisor. Security of the EC2 virtualization infrastructure is AWS's responsibility and is covered by AWS compliance certifications.
+
+**MyClinic's responsibility:** Documentation of inheritance. No implementation action required.
 
 ---
 
-📌 #Day41 #CloudSecurity #AWS #GRCLeadership #OpenMRS #SharedResponsibility #100DaysOfGRC #IbrahimAbdullahi #RiskManagement #RMF
+### Operating System Security — EC2 Application Server
+
+**Requirement:** Harden the EC2 instance operating system; maintain patching; configure OS-level security controls.
+
+**Allocation: MyClinic-Implemented (System-Specific)**
+
+This is one of the clearest system-specific responsibilities in the AWS shared responsibility model. Once AWS delivers the EC2 instance with a base AMI, the operating system is entirely MyClinic's responsibility. AWS does not patch the Ubuntu OS on EC2 instances, does not configure security settings, and does not monitor OS-level activity.
+
+**MyClinic's implementation requirements:**
+- Apply CIS Benchmark for Ubuntu to harden the base OS configuration
+- Configure unattended-upgrades or equivalent automated patch management for security updates
+- Critical OS CVEs patched within 72 hours; high CVEs within 30 days
+- SSH access restricted to authorized administrators via key-based authentication; password authentication disabled
+- IMDSv2 enforced to prevent SSRF-based metadata service attacks
+- OS-level logging configured to ship to CloudWatch Logs
+
+**Accountability:** IT Administrator with ISSO oversight. This control cannot be inherited, delegated to AWS, or partially transferred.
+
+---
+
+### Database Engine Security — RDS MySQL
+
+**Requirement:** Maintain database engine security including engine patching, infrastructure availability, and storage security.
+
+**Allocation: Hybrid**
+
+This is a genuine hybrid requirement with clearly delineated responsibilities that must be documented explicitly.
+
+**AWS's responsibility:** Patching the RDS managed database engine when AWS releases engine updates. Maintaining the underlying RDS infrastructure — the physical servers, storage subsystem, and network fabric that the database runs on. Providing Multi-AZ replication capability for high availability.
+
+**MyClinic's responsibility:**
+- *Enable* automated minor version upgrades for RDS — this is a configuration option that must be explicitly enabled; AWS provides the capability but does not apply updates without customer enablement
+- *Configure* the maintenance window for when AWS applies engine updates — if not configured, AWS applies updates during default windows that may conflict with clinic operations
+- *Enable* RDS encryption at rest — AWS provides KMS-based encryption capability, but encryption must be enabled at instance creation time; it cannot be enabled on a running unencrypted instance without creating a new encrypted instance from a snapshot
+- *Configure* the RDS security group to allow connections only from the EC2 application server; AWS does not configure security groups
+- *Enable* RDS Enhanced Monitoring and Performance Insights for visibility into database activity
+- *Configure* automated backup retention period — the backup capability exists in AWS but the retention policy is a customer configuration
+
+**The critical documentation point:** If an auditor asks "is RDS encryption enabled?", the answer depends entirely on whether MyClinic configured it at provisioning time. AWS's responsibility for RDS does not include enabling encryption — that is the customer's switch to flip. This hybrid boundary is where the "I thought AWS was handling it" gap most commonly occurs for database encryption.
+
+---
+
+### Data Encryption at Rest — S3 Backup Bucket
+
+**Requirement:** Ensure backup data is encrypted at rest and protected against unauthorized access.
+
+**Allocation: Hybrid**
+
+**AWS's responsibility:** Providing S3 server-side encryption capability using AWS KMS. Maintaining the KMS infrastructure. Providing S3 Block Public Access settings as a configuration option.
+
+**MyClinic's responsibility:**
+- Enable server-side encryption with KMS (SSE-KMS) on the backup bucket — default encryption must be configured; AWS does not encrypt S3 objects by default unless configured
+- Enable S3 Block Public Access at the bucket level — this is a customer configuration; AWS provides the setting but does not enable it by default for all buckets
+- Configure bucket policy restricting access to authorized IAM roles only
+- Enable S3 Versioning to protect against accidental deletion
+- Configure S3 Object Lock for WORM protection on backup files
+- Enable S3 access logging to capture who accessed backup objects
+
+**The critical documentation point:** An S3 bucket exists in AWS without encryption until the customer enables it. Public access is not blocked until the customer configures it. Both of these are defaults-off settings that require explicit customer action — and both have been the root cause of significant healthcare data breaches when assumed rather than verified.
+
+---
+
+### Network Security — VPC, Security Groups, Routing
+
+**Requirement:** Isolate OpenMRS infrastructure from unauthorized network access; control traffic between components.
+
+**Allocation: MyClinic-Implemented (System-Specific)**
+
+AWS provides the VPC infrastructure, security group functionality, and routing capabilities. But the configuration of those capabilities — which subnets exist, what traffic the security groups permit, how routing is configured — is entirely MyClinic's responsibility.
+
+**MyClinic's implementation requirements:**
+- Application server in public subnet accepting only HTTPS (port 443) inbound; SSH (port 22) restricted to administrator IP range only
+- Database in private subnet with no internet gateway routing; security group allowing MySQL (port 3306) connections only from application server security group
+- NAT gateway for outbound internet access from private subnet resources; no inbound internet access to private subnet
+- VPC Flow Logs enabled for network traffic monitoring and forensic capability
+- Security group review included in quarterly monitoring activities per Day 30 strategy
+
+**AWS's responsibility:** Providing VPC, security group, and routing infrastructure that works as configured. AWS does not audit or correct customer security group configurations — an overly permissive security group that allows unrestricted inbound access is fully the customer's responsibility to prevent and detect.
+
+---
+
+### Encryption in Transit
+
+**Requirement:** Protect ePHI transmitted between users and OpenMRS; protect data transmitted between OpenMRS components.
+
+**Allocation: Hybrid**
+
+**AWS's responsibility:** Providing AWS Certificate Manager for SSL/TLS certificate provisioning and renewal. Providing TLS capability in AWS load balancers and API Gateway. Providing encrypted network channels between AWS services.
+
+**MyClinic's responsibility:**
+- Provision and configure SSL/TLS certificate via AWS Certificate Manager for the OpenMRS domain
+- Configure OpenMRS web server to enforce HTTPS; redirect HTTP to HTTPS
+- Configure TLS for all database connections between application server and RDS
+- Configure TLS for all API connections to external systems (laboratory system, email service)
+- Monitor certificate expiration — ACM automates renewal for certificates used with AWS services, but certificates used on EC2 instances require manual renewal attention
+- Verify TLS configuration meets minimum standard (TLS 1.2 minimum; TLS 1.3 preferred)
+
+---
+
+### Identity and Authentication
+
+**Requirement:** Ensure only authorized users can access OpenMRS with appropriate authentication strength; implement MFA.
+
+**Allocation: MyClinic-Implemented (System-Specific)**
+
+AWS provides IAM for AWS console and API access — that is a separate concern from OpenMRS application authentication. OpenMRS application authentication is entirely MyClinic's responsibility whether using native OpenMRS authentication or integration with an enterprise identity provider.
+
+**MyClinic's implementation requirements:**
+- Unique user accounts for every OpenMRS user; no shared credentials
+- MFA required for all accounts — implemented either through OpenMRS native MFA capability or through enterprise SSO integration
+- Password complexity policy enforced
+- Account lockout after defined failed login attempts
+- Session timeout configured for 30 minutes of inactivity
+- Quarterly access reviews of all accounts and role assignments
+- Account deprovisioning process: accounts disabled within 4 hours of termination notification
+
+**AWS's responsibility for related IAM controls:** AWS manages IAM for AWS console access. MFA for AWS IAM users is a customer configuration that MyClinic must enable — AWS does not enforce MFA on IAM accounts by default. This is another hybrid boundary that requires explicit customer action.
+
+---
+
+### Audit Logging and Monitoring
+
+**Requirement:** Maintain complete audit records of all access to ePHI; monitor for suspicious activity; enable forensic investigation capability.
+
+**Allocation: Hybrid — Three Layers**
+
+This requirement has three distinct layers with different allocation:
+
+**Layer 1 — AWS API activity (CloudTrail):** AWS provides CloudTrail capability. MyClinic must enable CloudTrail, configure it to log to a protected S3 bucket, and enable log file validation. CloudTrail is not enabled by default in all regions — customer enablement and configuration is required.
+
+**Layer 2 — Infrastructure threat detection (GuardDuty):** AWS provides GuardDuty capability and threat intelligence feeds. MyClinic must enable GuardDuty and configure alert routing. GuardDuty is not enabled by default — customer enablement required.
+
+**Layer 3 — Application audit logging (OpenMRS):** This layer is entirely MyClinic's responsibility. AWS has no visibility into who accessed which patient records in the OpenMRS application. Application-level audit logging is a system-specific control that OpenMRS must generate and MyClinic must collect, store, and review.
+
+**The critical documentation point:** CloudTrail and GuardDuty visibility into AWS API activity does not satisfy HIPAA's audit control requirement for ePHI access. A CloudTrail log that shows an EC2 instance running and an RDS instance receiving connections does not tell you which patient records were accessed by which users. Only application-level audit logging provides that — and that logging must be explicitly configured in OpenMRS and reviewed on the schedule established in the monitoring strategy.
+
+---
+
+### Backup and Recovery
+
+**Requirement:** Maintain encrypted backups of all patient data; verify backup integrity; enable recovery within defined RTO/RPO.
+
+**Allocation: Hybrid**
+
+**AWS's responsibility:** Providing automated RDS backup capability; providing S3 storage infrastructure with high durability; providing point-in-time recovery capability for RDS.
+
+**MyClinic's responsibility:**
+- Configure RDS automated backup retention period (90 days per policy)
+- Enable RDS point-in-time recovery
+- Configure backup export to S3 with encryption
+- Enable S3 Object Lock on backup bucket
+- Conduct quarterly restoration tests — AWS provides the capability but cannot test recovery on MyClinic's behalf
+- Document RTO (4 hours) and RPO (24 hours) and verify backup configuration supports those targets
+- Maintain downtime procedures for clinical operations during recovery period
+
+---
+
+### Incident Response
+
+**Requirement:** Detect, contain, investigate, and recover from security incidents affecting OpenMRS.
+
+**Allocation: MyClinic-Implemented (System-Specific)**
+
+AWS will provide support for incidents that involve AWS infrastructure — a DDoS attack that affects AWS services, a bug in an AWS service. But the incident response process for a breach of OpenMRS patient data, a ransomware infection on the EC2 instance, or insider misuse of clinical records is entirely MyClinic's responsibility.
+
+**MyClinic's implementation requirements:**
+- Documented incident response plan with specific OpenMRS runbooks
+- Defined incident classification criteria and escalation paths
+- HIPAA breach assessment process — determining whether a security incident constitutes a reportable breach
+- 60-day breach notification timeline from discovery to notification of affected individuals and HHS
+- Relationship with external incident response support (MSSP or IR retainer) if internal capability is limited
+- Tabletop exercise at least annually to test the IR plan
+
+---
+
+## Complete Requirements Allocation Summary
+
+| Security Requirement | AWS | MyClinic | Hybrid | Primary Risk Addressed |
+|---|---|---|---|---|
+| Physical / environmental security | ✅ | — | — | Foundation |
+| Hypervisor / virtualization security | ✅ | — | — | Foundation |
+| EC2 OS hardening and patching | — | ✅ | — | RS-002 |
+| RDS engine patching | — | — | ✅ | RS-002 |
+| RDS encryption at rest | — | — | ✅ | RS-003 |
+| S3 encryption and access control | — | — | ✅ | RS-003 |
+| VPC / security group configuration | — | ✅ | — | RS-001, RS-002 |
+| TLS / encryption in transit | — | — | ✅ | RS-002 |
+| OpenMRS authentication and MFA | — | ✅ | — | RS-001, RS-004, RS-005 |
+| AWS IAM MFA enforcement | — | ✅ | — | RS-001 |
+| CloudTrail — AWS API audit | — | — | ✅ | RS-004 |
+| GuardDuty — threat detection | — | — | ✅ | RS-001, RS-005 |
+| Application-level audit logging | — | ✅ | — | RS-004 |
+| Backup configuration and testing | — | — | ✅ | RS-001, RS-006 |
+| Incident response | — | ✅ | — | All RS |
+| Security awareness training | — | ✅ | — | RS-001, RS-005 |
+| Workstation endpoint security | — | ✅ | — | RS-001, RS-005 |
+
+---
+
+## A Real-World Example That Made This Click
+
+The **2019 Capital One breach** — which I have referenced multiple times in this project — is the canonical example of a requirements allocation failure in a cloud environment, and I want to revisit it one final time through today's specific lens.
+
+The Capital One breach was caused by a misconfigured Web Application Firewall — a customer-managed control in MyCapital One's AWS environment. The WAF was Capital One's responsibility to configure correctly, not AWS's. Post-breach, there was no ambiguity about who was responsible — Capital One paid an $80 million penalty, not AWS.
+
+But the breach investigation also revealed that an overprivileged IAM role — again, a customer-managed control — allowed the attacker who exploited the WAF misconfiguration to access far more data than a properly scoped role would have permitted. Two separate customer-managed controls failed: WAF configuration and IAM least privilege.
+
+Both failures were in the hybrid and customer-specific categories of the shared responsibility model. AWS provided the WAF capability and the IAM capability — and both were functioning as designed. The configuration of those capabilities was Capital One's responsibility.
+
+The Capital One case is the clearest possible illustration of why requirements allocation documentation matters. Not because it would have prevented the misconfiguration — documentation does not configure security controls. But because a clear requirements allocation matrix, reviewed regularly, creates the accountability structure that drives verification: "WAF configuration is our responsibility — has it been reviewed recently? IAM policies are our responsibility — when was the last least-privilege audit?" Those questions, asked regularly, are how misconfigurations get caught before they become breaches.
+
+---
+
+## What I Am Still Thinking About
+
+One question that came up in today's work: how does requirements allocation change when a third-party manages the OpenMRS deployment on MyClinic's behalf — for example, if MyClinic contracts with a managed IT services provider to deploy and maintain OpenMRS?
+
+In that scenario, some of the MyClinic-implemented controls in the table above would be delegated to the managed service provider. But HIPAA accountability remains with MyClinic as the covered entity — the managed service provider becomes a business associate, and the BAA and contractual requirements become the governance mechanism for the delegated controls.
+
+The requirements allocation table would need a third column — "Managed Service Provider" — and each delegated control would require contractual documentation of the MSP's responsibility, verification mechanisms, and the consequences of non-performance. Requirements allocation in a multi-party deployment is meaningfully more complex than the two-party AWS model I documented today, and it is a scenario that many small healthcare organizations actually live in.
+
+---
+
+## What's Next
+
+Day 42 closes out the Prepare step with formal system registration — recording OpenMRS in MyClinic's system inventory with the key attributes established over the past several weeks: system categorization, boundary definition, stakeholder assignments, and the authorization timeline. System registration is the administrative record that makes the security program traceable and auditable.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task P-17 Requirements Allocation](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- [AWS Customer Compliance Guide for HIPAA](https://d1.awsstatic.com/whitepapers/compliance/AWS_HIPAA_Compliance_Whitepaper.pdf)
+- [Capital One Breach – OCC Order](https://www.occ.gov/static/enforcement-actions/ea2020-056.pdf)
+
+---
+
+*#GRC #RequirementsAllocation #SharedResponsibility #AWS #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #CloudSecurity #Day41*
