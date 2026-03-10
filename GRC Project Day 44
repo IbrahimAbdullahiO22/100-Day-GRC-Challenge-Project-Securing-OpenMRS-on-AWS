@@ -1,82 +1,254 @@
-# 📅 Day 44 – Task C-2: Security Categorization (FIPS 199 In Action)  
-_#100DaysOfGRC • By Ibrahim Abdullahi_
+#  Day 44 – Task C-2: Formal Security Categorization Using FIPS 199 | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  "How Bad Could It Be?"
+## Turning the Analysis Into the Official Record
 
-That’s really what **Task C-2** boils down to: understanding the potential *impact* if something goes wrong with our system.
+Day 29 introduced FIPS 199 and worked through the impact level reasoning for each security objective. Day 35 added the information type analysis that provides the evidentiary basis for those ratings. Day 43 produced the formal system description. Today, Task C-2 assembles those pieces into the official security categorization document — the formal record that the Authorizing Official reviews, approves, and relies on as the foundation for the entire authorization decision.
 
-As a leader in GRC, I’ve learned this — **you can’t design appropriate security without knowing what’s at stake.** Categorization gives us that clarity.
+This matters because the categorization is not just an analytical conclusion — it is an organizational commitment. When the AO reviews and approves the categorization, they are agreeing that OpenMRS should be treated as a High-impact system, that the High baseline from NIST SP 800-53B applies, and that the assessment and authorization rigor appropriate for a High-impact system will be applied. That commitment drives resources, timelines, and scope for everything that follows.
 
-Today, I guided the team through applying **FIPS 199** to our OpenMRS on AWS deployment. This wasn’t just an academic exercise — it was about honestly assessing the business, legal, and human consequences if the system failed on confidentiality, integrity, or availability.
-
----
-
-##  Case Study: OpenMRS Categorization
-
-**How I approached it:**
-
-- I started by reviewing the data types handled by OpenMRS — primarily **electronic protected health information (ePHI)**.
-- Then I worked with clinical stakeholders to understand how clinicians use the system daily and what risks they fear most.
-- Finally, I used FIPS 199 definitions to systematically rate each security objective.
-
-###  My Analysis:
-
-| Objective        | Impact Level | Why? |
-|------------------|--------------|------|
-| Confidentiality  | Moderate     | PHI exposure = serious privacy/legal harm; potential HIPAA penalties. |
-| Integrity        | Moderate     | Data corruption = incorrect treatment decisions = possible patient harm. |
-| Availability     | Moderate     | Downtime disrupts clinical workflows; delays patient care; forces manual fallback. |
-
-**Overall Categorization: MODERATE (High Water Mark).**
+I also want to be transparent about something: the original version of today's content categorized OpenMRS as Moderate. After working through the detailed FIPS 199 analysis on Day 29 and the information type classification on Day 35, I am confident the correct categorization for an EHR handling ePHI as the sole clinical record system is High across all three security objectives. Today's write-up explains that reasoning fully so the categorization can be defended to anyone who reviews it.
 
 ---
 
-##  Why This Matters
+## What I Worked On Today
 
-As GRC leaders, it’s not enough to say “secure everything.”  
-**Resources are finite — so prioritization is key.**
+NIST SP 800-37 Task C-2 requires the organization to document the security categorization using FIPS 199 standards, have the categorization reviewed by the system owner and other relevant organizational officials, and register the categorization with the appropriate organizational officials. The output is the formal categorization statement that becomes part of the System Security Plan.
 
-By documenting the system as **Moderate**, I’m guiding:
+FIPS 200 then maps the categorization to the minimum security requirements — a Moderate categorization triggers the Moderate baseline from NIST SP 800-53B; a High categorization triggers the High baseline. The difference is substantial: the High baseline includes significantly more controls and more stringent implementation requirements across multiple control families.
 
- The **engineering team** — so they select controls proportional to risk.  
- The **executive team** — so they understand the business impact of outages or breaches.  
- The **audit/compliance function** — so they see how our categorization maps to required controls (HIPAA, NIST 800-53, etc.).
+Getting the categorization right is therefore not a bureaucratic formality. An under-categorization that produces Moderate when High is appropriate means the security program is built on an inadequate control set — a gap that may not be discovered until an assessment or an incident.
 
 ---
 
-## 🔄 Reflection
+## What Actually Clicked for Me
 
-One thing I’ve emphasized with my team is this:
+The concept that clicked most clearly today is the difference between a provisional impact rating and an adjusted impact rating — and why the adjustment process matters for healthcare systems specifically.
 
-> **We categorize every day — in life and in security.**  
-> Just like we know losing our phone is worse than losing a pen, in cybersecurity, we must formalize this thinking.
+NIST SP 800-60 provides provisional impact ratings for information types — starting points based on the typical sensitivity of each type. For health information, the provisional ratings in SP 800-60 were developed for a federal government context and often land at Moderate. But the FIPS 199 process explicitly requires organizations to review provisional ratings and adjust them based on their specific operational context.
 
-Categorization makes priorities visible. It ensures we’re not over- or under-protecting what matters most.
+For a direct patient care setting — a clinic where ePHI is used in real-time clinical decision-making, where integrity failures can cause direct patient harm, and where the system is the sole EHR with no paper backup — the adjustments to High across all three objectives are clearly warranted. The provisional Moderate is a starting point for the analysis, not the conclusion.
 
-In my experience, the biggest mistake organizations make is underestimating **availability**. Downtime in healthcare *isn’t just IT inconvenience — it’s clinical impact.* That’s why I was deliberate about rating OpenMRS’s availability as Moderate.
-
----
-
-## 📝 My Practice
-
-I also practiced this today on a personal system — my password manager vault:
-
-- Confidentiality: High (if breached, major privacy and financial risk)
-- Integrity: High (corrupted vault could lock me out of critical accounts)
-- Availability: Moderate (if unavailable temporarily, inconvenient but not life-threatening)
-
-**This helped reinforce how categorization applies at every level — personal and enterprise.**
+This is a meaningful distinction because organizations that apply provisional ratings without adjustment may systematically under-categorize healthcare systems — producing Moderate categorizations for systems that genuinely warrant High. The resulting control baselines are inadequate, and the security program is built on a false foundation.
 
 ---
 
-## 🚀 What’s Next?
+## FIPS 199 Security Categorization — Formal Record
 
-With categorization complete, we’re ready for review & approval (Task C-3). I’ll be presenting this impact assessment to leadership and the privacy officer next.
+**System:** MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001)
 
-By doing this, I’m not just checking a box — I’m **leading the organization toward intentional, risk-informed security**.
+**Categorization Prepared By:** ISSO — Information Security Lead
+
+**Categorization Review:** System Owner, Compliance Officer, Authorizing Official
+
+**Categorization Date:** To be completed at authorization package submission
 
 ---
 
-📌 _#GRC #Leadership #Cybersecurity #NISTRMF #HIPAA #FIPS199 #SecurityCategorization #OpenMRS #AWS #CloudSecurity #Day44 #100DaysOfGRC_
+### Step 1 — Information Types Inventory
+
+The information types processed, stored, and transmitted by OpenMRS at MyClinic were identified and documented in Task P-12 (Day 35). The types relevant to the categorization determination are:
+
+| Information Type | NIST SP 800-60 Reference | Provisional C/I/A |
+|---|---|---|
+| Individual Health Information | C.2.3.1 | M/M/M |
+| Patient Health Information (clinical records) | C.2.3.2 | M/M/M |
+| Health Insurance Information | C.2.3.3 | M/M/L |
+| Identity Management / Access Control | D.20.1, D.20.2 | M/M/M |
+| Audit Trail | D.20.4 | M/M/L |
+| IT Infrastructure Maintenance (config data) | D.17 | L/M/L |
+
+All provisional ratings are drawn from NIST SP 800-60 Volume II and represent the starting point for the adjustment analysis below.
+
+---
+
+### Step 2 — Impact Adjustment Analysis
+
+FIPS 199 and NIST SP 800-60 both recognize that provisional ratings must be reviewed and adjusted based on organizational context. The following analysis documents the adjustments and their rationale for each security objective.
+
+---
+
+#### Confidentiality
+
+**Provisional rating across information types: Moderate**
+
+**Adjusted rating: HIGH**
+
+**Adjustment rationale:**
+
+The provisional Moderate rating for individual health information reflects a general federal government context that does not fully account for the sensitivity of direct patient care records in a clinical setting. The ePHI handled by OpenMRS at MyClinic includes categories of information that carry heightened sensitivity beyond standard health records:
+
+Mental health diagnoses and treatment records are subject to additional privacy protections under state law in many jurisdictions and carry significant stigma risk — unauthorized disclosure can affect employment, housing, insurance, and personal relationships in ways that cause severe and lasting harm to individuals.
+
+HIV/AIDS status, substance use treatment records, and reproductive health information carry similar heightened sensitivity. A patient whose HIV status is exposed faces potential discrimination, relationship damage, and in some contexts physical safety risk. A patient whose substance use treatment records are exposed may face employment consequences, custody implications, or insurance discrimination.
+
+The population served by MyClinic may include patients in particularly vulnerable situations — immigration concerns, domestic violence situations, stigmatized conditions — where the harm from ePHI exposure is even more severe than for a general population.
+
+HIPAA's breach notification safe harbor provision — which protects organizations from notification requirements when breached data was encrypted — reflects federal recognition that ePHI confidentiality failures cause severe harm. The safe harbor exists because Congress and HHS determined that ePHI exposure is serious enough to require mandatory notification to affected individuals and to HHS.
+
+Unauthorized disclosure of MyClinic patient ePHI would cause severe or catastrophic adverse effects on affected individuals, impose significant HIPAA regulatory penalties, and irreparably damage the patient trust that the clinic's mission depends on.
+
+**Adjusted Confidentiality Impact: HIGH**
+
+---
+
+#### Integrity
+
+**Provisional rating across information types: Moderate**
+
+**Adjusted rating: HIGH**
+
+**Adjustment rationale:**
+
+The provisional Moderate integrity rating again reflects a context that does not fully capture the clinical consequences of integrity failure in a direct patient care EHR.
+
+OpenMRS patient records are used by clinicians to make real-time care decisions. The medication list in OpenMRS is the list the prescribing physician relies on when writing a new prescription — checking for contraindications and drug interactions. The allergy record in OpenMRS is the record the nurse checks before administering a medication. The diagnosis list in OpenMRS informs the treatment plan for the current visit.
+
+Unauthorized modification of any of these records — whether by a malicious actor, an accidental process failure, or a software bug — can directly affect care decisions in ways that harm patients. A medication allergy record that has been altered to remove a known allergy could result in a patient receiving a drug they cannot safely tolerate. A diagnosis that has been changed without authorization could lead a clinician to provide inappropriate treatment.
+
+The 2015 Ukraine power grid attack demonstrated what targeted data integrity attacks look like in critical infrastructure contexts. For a healthcare EHR, a targeted integrity attack — one designed to modify specific patient records to cause specific clinical harm — represents a realistic threat that the integrity rating must account for.
+
+Additionally, the integrity of audit logs is foundational to the security program's ability to detect and investigate incidents. If audit logs can be modified or deleted, the forensic capability that enables accountability and breach investigation is undermined. Audit log integrity is as critical as clinical record integrity — both warrant High impact ratings.
+
+**Adjusted Integrity Impact: HIGH**
+
+---
+
+#### Availability
+
+**Provisional rating across information types: Moderate**
+
+**Adjusted rating: HIGH**
+
+**Adjustment rationale:**
+
+This is the adjustment that requires the most careful reasoning because the argument for Moderate is not unreasonable on its surface. Healthcare operated without electronic systems for most of its history. A fallback to paper records is theoretically possible. Short periods of unavailability might be tolerated without serious clinical consequence.
+
+The argument for High is specific to the operational context of OpenMRS at MyClinic and has three components.
+
+First, MyClinic is a clinic that has fully transitioned to electronic records. Paper chart systems have not been maintained. Clinical staff who joined the organization after the OpenMRS implementation may not have experience working with paper records and may not know how to operate effectively in a paper-based downtime mode. The theoretical availability of a paper fallback does not make that fallback practically viable in the absence of downtime procedures and staff training. This gap — documented as V-015 in the vulnerability inventory — means that extended unavailability translates to genuine clinical disruption rather than inconvenient but manageable degradation.
+
+Second, OpenMRS is the sole EHR system. There is no secondary system containing a parallel record. When OpenMRS is unavailable, the patient's complete clinical history — medications, allergies, diagnoses, recent lab results — is unavailable. A clinician who cannot access allergy information and cannot safely prescribe without it faces a genuinely dangerous clinical decision point.
+
+Third, the healthcare incidents documented in this project — Vermont Medical Center ($63M recovery, months of disruption), Scripps Health ($113M, nearly a month offline), Eskenazi Health (patient diversion) — all illustrate the High availability impact end of the availability failure spectrum for healthcare EHR systems. These are not hypothetical outcomes; they are documented recent events.
+
+FIPS 199 defines High availability impact as situations where unavailability could be expected to have a severe or catastrophic adverse effect on organizational operations or individuals. Extended unavailability of the sole clinical EHR system for a clinic with no functional downtime procedures meets that definition.
+
+**Adjusted Availability Impact: HIGH**
+
+---
+
+### Step 3 — High Watermark Determination
+
+FIPS 199 establishes the high watermark principle: the overall system categorization is the highest impact level across all three security objectives for any information type processed by the system.
+
+| Security Objective | Highest Adjusted Impact Level |
+|---|---|
+| Confidentiality | HIGH |
+| Integrity | HIGH |
+| Availability | HIGH |
+
+**SC OpenMRS = {(confidentiality, HIGH), (integrity, HIGH), (availability, HIGH)}**
+
+**Overall System Security Categorization: HIGH**
+
+---
+
+### Step 4 — Categorization Implications
+
+**Control Baseline:** NIST SP 800-53 Rev 5 High Baseline applies. The High baseline includes substantially more controls and more stringent implementation requirements than the Moderate baseline — particularly in the access control, audit and accountability, incident response, contingency planning, and system and communications protection families.
+
+**Assessment Rigor:** High-impact systems require more comprehensive security assessment — greater depth of testing, more extensive evidence collection, and typically independent assessment rather than self-assessment. The assessment team should be independent of the system development and operations functions.
+
+**Authorization Scrutiny:** The Authorizing Official's risk acceptance decision for a High-impact system requires thorough review of the complete security assessment findings. The AO should not approve an ATO for a High-impact system with open High-risk findings without a documented plan for remediation and a clear understanding of the residual risk being accepted.
+
+**Continuous Monitoring Intensity:** High-impact systems require more frequent and comprehensive continuous monitoring — more frequent log reviews, more frequent vulnerability scanning, shorter response timelines for identified vulnerabilities, and more aggressive escalation thresholds.
+
+---
+
+### Step 5 — Categorization Statement
+
+The following statement is the formal categorization record for inclusion in the System Security Plan:
+
+> **The security categorization for the MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001) has been determined in accordance with FIPS 199 Standards for Security Categorization of Federal Information and Information Systems. The system processes, stores, and transmits electronic protected health information (ePHI) as its primary information type. Following review of provisional impact ratings from NIST SP 800-60 and adjustment based on the specific operational context of a direct patient care EHR system, the security categorization is:**
+>
+> **SC OpenMRS = {(confidentiality, HIGH), (integrity, HIGH), (availability, HIGH)}**
+>
+> **Overall System Categorization: HIGH**
+>
+> **The applicable control baseline is the NIST SP 800-53 Rev 5 High Baseline per FIPS 200 Minimum Security Requirements for Federal Information and Information Systems.**
+
+---
+
+### Step 6 — Review and Approval
+
+The categorization requires review and concurrence from:
+
+| Role | Review Responsibility | Status |
+|---|---|---|
+| System Owner | Confirms categorization reflects operational reality | Pending |
+| ISSO | Confirms categorization is technically accurate | Prepared by ISSO |
+| Compliance Officer | Confirms categorization reflects HIPAA compliance context | Pending |
+| Authorizing Official | Approves categorization as basis for authorization | Pending |
+| Privacy Officer (if designated) | Confirms privacy impact consistent with categorization | Pending |
+
+The categorization is not final until all required reviews are complete and documented.
+
+---
+
+## Addressing the Moderate Question Directly
+
+The original version of today's content categorized OpenMRS as Moderate. I want to address this directly rather than simply asserting High is correct.
+
+The argument for Moderate typically rests on the provisional SP 800-60 ratings and the reasoning that healthcare organizations can fall back to paper processes. Both points have surface validity. Provisional ratings for health information in SP 800-60 do land at Moderate. Paper fallbacks are theoretically possible.
+
+The problem with Moderate for OpenMRS at MyClinic is that it does not reflect the specific operational context. The provisional ratings are starting points, not conclusions. The paper fallback requires functional downtime procedures and trained staff that MyClinic does not currently have. The High category is not conservative over-categorization — it is the accurate characterization of a High-impact system that handles the most sensitive personal information that exists and whose integrity and availability are directly tied to patient safety.
+
+Under-categorization has concrete consequences: a Moderate control baseline applied to a system that should be High means controls like enhanced multi-factor authentication, more rigorous access reviews, and stricter incident response requirements may not be selected. Those gaps are not theoretical — they are the gaps that attackers exploit and that regulators find during investigations.
+
+If the AO reviews this categorization and has a principled basis for a different conclusion — for example, if MyClinic maintains functional paper records and tested downtime procedures that genuinely make the availability impact Moderate — that reasoning should be documented. But the starting position, based on the operational reality described throughout this project, is High.
+
+---
+
+## A Real-World Example That Made This Click
+
+While finalizing today's categorization work I returned to the **2022 CommonSpirit Health ransomware attack** — one of the largest healthcare cybersecurity incidents in recent US history. CommonSpirit, one of the largest nonprofit health systems in the US, experienced a ransomware attack that affected hundreds of facilities across multiple states. EHR systems were taken offline, elective procedures were canceled, and patients at some facilities were diverted to other hospitals.
+
+Post-incident reporting included accounts of specific patient harm — a patient at one CommonSpirit facility received a tenfold overdose of a pain medication because the nurse could not access the correct dosage information in the EHR during the outage and relied on a manual calculation that contained an error.
+
+That case is a direct real-world illustration of what High availability and High integrity impact mean in a healthcare EHR context. The availability failure — the EHR going offline — created the conditions for an integrity-adjacent failure — the inability to access accurate dosage information leading to a medication error. The patient safety consequence was direct and documented.
+
+For OpenMRS at MyClinic, the High availability categorization is not a theoretical concern about operational inconvenience. It reflects the documented reality that EHR unavailability in clinical settings creates conditions for patient harm. That is a High impact outcome and it belongs in the categorization record.
+
+---
+
+## What I Am Still Thinking About
+
+One question the categorization process raised for me: how should categorization change if MyClinic implements functional downtime procedures and tested paper backup processes?
+
+The availability categorization at High is partly driven by the absence of downtime procedures (V-015 from the vulnerability inventory) and untested backups (V-014). If those gaps are remediated — if MyClinic implements and tests comprehensive clinical downtime procedures — the availability impact of a temporary outage becomes more manageable. An organization with tested paper backup processes and trained staff can sustain clinical operations during an EHR outage without the same severity of patient safety risk.
+
+In that scenario, the availability impact might be defensibly rated Moderate — acknowledging that outages are disruptive but that clinical operations can continue safely. The overall system categorization would still be High due to confidentiality and integrity, but the availability dimension would reflect the improved resilience.
+
+This illustrates an important GRC principle: security categorization is not permanent. As the security posture improves and operational resilience grows, it is appropriate to revisit the categorization and document whether adjusted ratings are warranted. The categorization should reflect the actual risk — not a frozen snapshot from the initial authorization.
+
+---
+
+## What's Next
+
+Day 45 addresses Task C-3 — the categorization review and approval process. The formal categorization statement needs to be reviewed by the System Owner, Compliance Officer, and Authorizing Official before it becomes the official basis for control selection. Understanding who reviews it, what they are looking for, and how disagreements about the categorization should be resolved is an important part of making the authorization process function effectively.
+
+---
+
+## Resources I Found Helpful Today
+- [FIPS 199 – Standards for Security Categorization](https://csrc.nist.gov/publications/detail/fips/199/final)
+- [FIPS 200 – Minimum Security Requirements](https://csrc.nist.gov/publications/detail/fips/200/final)
+- [NIST SP 800-60 Volume I – Mapping Information Types to Security Categories](https://csrc.nist.gov/publications/detail/sp/800-60/vol-1-rev-1/final)
+- [NIST SP 800-60 Volume II – Appendices with Information Type Listings](https://csrc.nist.gov/publications/detail/sp/800-60/vol-2-rev-1/final)
+- [CommonSpirit Health Ransomware Attack – Healthcare IT News Coverage](https://www.healthcareitnews.com/news/commonspirit-health-hit-cyberattack)
+
+---
+
+*#GRC #FIPS199 #SecurityCategorization #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day44*
