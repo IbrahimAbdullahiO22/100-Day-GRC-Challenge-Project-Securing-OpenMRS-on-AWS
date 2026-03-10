@@ -1,87 +1,295 @@
-# 📅 Day 43 – Task C-1: System Description  
-_#100DaysOfGRC • By Ibrahim Abdullahi_
+#  Day 43 – Task C-1: Writing the System Description for OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  "We Can’t Protect What We Can’t Define."
+## The First Formal Artifact of the Authorization Package
 
-One of the most powerful lessons I’ve learned in GRC is this: **clarity precedes control**. Before you can manage risk, enforce compliance, or design security controls, you have to clearly define **what** you're securing.
+Day 42 closed out the Prepare step and Day 43 opens the Categorize step — the first of the six formal steps in the NIST RMF that produce the artifacts an Authorizing Official will review before making the risk acceptance decision. The Categorize step has two tasks: Task C-1 asks for a formal system description, and Task C-2 asks for the security categorization. Together they produce the foundational documentation that drives everything else in the authorization package.
 
-That’s why Task C-1 of the NIST RMF – **System Description** – matters so much. It’s not just a checkbox in the Categorize step. It’s where we set the tone for every decision that follows.
+Task C-1 might seem like repetition — I have been describing OpenMRS in various ways since Day 17. But the system description in the System Security Plan has a specific purpose and a specific audience that distinguishes it from the architecture work, the asset inventory, the mission documentation, and the registration record. The SSP system description is written for a reader who needs to understand the system well enough to evaluate whether the security controls are appropriate — an assessor, an Authorizing Official, or a future ISSO inheriting the program. It needs to be precise, complete, and self-contained.
 
-Today, I took a deep dive into the heart of OpenMRS, our cloud-hosted EHR system, and translated its operational reality into a clear, security-relevant profile.
-
----
-
-## 🩺 Case Study: OpenMRS on AWS
-
-Here’s how I’ve documented our system, in my own words:
-
-> **OpenMRS is an open-source Electronic Health Records system deployed on AWS to support clinical workflows at MyClinic.** It handles Protected Health Information (PHI) and supports authorized medical staff via a secure web interface.
-
-### 🔍 System Profile (As I See It)
-
-- **System Name**: MyClinic OpenMRS EHR
-- **Purpose**: To manage patient data and clinical operations securely
-- **Users**: Authorized healthcare staff (doctors, nurses, IT admins)
-- **Environment**: AWS Cloud (EC2, RDS, S3, Route 53, ACM, WAF)
-- **Data Sensitivity**: High – includes PHI governed by HIPAA
-- **Architecture**:
-  - Web Tier: EC2 + Apache Tomcat + OpenMRS App
-  - Data Tier: MySQL on Amazon RDS (multi-AZ enabled)
-  - Backup: Amazon S3 with encryption and lifecycle rules
-  - DNS/SSL: AWS Route 53 + ACM
-  - Network: VPC with private subnets, NAT gateway, security groups
-  - Security: AWS WAF + AWS Shield
-- **Authorization Boundary**: Everything in our AWS-hosted EHR deployment
-- **Compliance Context**: HIPAA, internal healthcare IT policies
-- **Key Roles**:
-  - **System Owner**: Dr. Alice Smith (Health IT)
-  - **System Admin**: Myself – Ibrahim Abdullahi (GRC Lead)
-
-This description lives in our **System Security Plan (SSP)** and will evolve with the system. But already, it’s enabled alignment across our security, compliance, and ops teams.
+Today I worked through producing the formal Task C-1 system description as it would appear in the System Security Plan for OpenMRS at MyClinic.
 
 ---
 
-## 🧩 Why This Matters
+## What I Worked On Today
 
-Describing a system isn’t just an administrative task. It’s a **leadership move**.
+NIST SP 800-18 — the guide for developing System Security Plans — provides specific guidance on what the system description section must include: system name, system categorization, system owner, operational status, system type, general description of function, information types, operational environment, system interconnections, and laws and regulations applicable to the system.
 
-When I clearly document system boundaries, components, and sensitivity, I’m enabling:
-
- Risk analysts to apply accurate categorization  
- Engineers to scope controls properly  
- Auditors to assess compliance with context  
- Executives to see the business impact clearly
-
-It’s how I make sure no one is guessing – **everyone knows what’s on the table**.
+The formal system description synthesizes work from across the entire Prepare step into a single reference section. Rather than producing another high-level overview, I focused today on writing the description at the level of precision that an assessor would actually need — specific enough to evaluate control applicability, complete enough to understand the full operational picture.
 
 ---
 
-## ✍️ My Practice Exercise
+## What Actually Clicked for Me
 
-As part of today’s hands-on, I practiced building system profiles for other environments I’ve worked with – even a personal lab setup. It reinforced a critical insight:
+The thing that clicked most clearly today is the difference between a system description written for *communication* and one written for *assessment*.
 
-> “If you can’t describe a system in one page, you probably can’t secure it.”
+A communication-oriented system description — the kind that appears in a project proposal or an executive briefing — focuses on what the system does and why it matters. It uses accessible language, avoids jargon, and leads with business value.
 
-So, I always start with:
-- What is it?
-- Who uses it?
-- Where does it live?
-- What data does it touch?
-- Who’s responsible?
+An assessment-oriented system description — the kind that belongs in a System Security Plan — focuses on what the system *is* at a technical and operational level in enough detail that a security assessor can determine whether the documented controls are appropriate and complete. It needs to answer: what components are in scope? What data flows through them? Who has access? How do external connections work? What is the operational environment?
 
-Simple. Actionable. Clear.
+Both types are legitimate and useful — but they serve different purposes and different audiences. The SSP system description I produced today is written for the assessor, not the executive briefing. That shift in audience changes what information is included and at what level of detail.
 
 ---
 
-## 💬 Final Reflection
-
-In my role, I'm committed to **making GRC approachable, effective, and embedded into how we build systems from Day 1**.  
-Task C-1 isn’t a side note. It’s how I lead by bringing visibility, clarity, and ownership into the conversation early.
-
-Now that the system is clearly described, I’m ready for the next step: **categorizing its risk impact** using FIPS 199. Let’s keep the momentum going.
+## OpenMRS System Security Plan — Task C-1 System Description
 
 ---
 
-📌 _#GRC #Leadership #Cybersecurity #NISTRMF #HIPAA #SystemDescription #OpenMRS #AWS #CloudSecurity #Day43 #100DaysOfGRC_
+### 1. System Identification
+
+**System Name:** MyClinic OpenMRS Electronic Health Record System
+
+**System Acronym/Identifier:** MCOPENMRS-001
+
+**System Version:** OpenMRS Platform 2.x with Reference Application; version number to be confirmed at time of assessment
+
+**Operational Status:** Operational — Active NIST RMF authorization process underway
+
+**System Type:** Major Application — processes, stores, and transmits Protected Health Information critical to the primary mission of the organization
+
+**Responsible Organization:** MyClinic Health Organization
+
+---
+
+### 2. System Owner and Key Personnel
+
+| Role | Name / Title | Responsibility |
+|---|---|---|
+| Authorizing Official | MyClinic Executive Director | Accepts organizational risk; approves ATO |
+| System Owner | Health IT Manager | Operational accountability for the system |
+| ISSO | Information Security Lead | Day-to-day security; maintains SSP |
+| Compliance Officer | MyClinic Compliance Officer | HIPAA compliance oversight |
+| Common Control Provider | Amazon Web Services | Infrastructure-level inherited controls |
+
+---
+
+### 3. System Function and Purpose
+
+OpenMRS is an open-source Electronic Health Record platform originally developed to support healthcare delivery in resource-constrained environments. At MyClinic, OpenMRS is the sole electronic health record system — the authoritative source of all patient health information.
+
+The system provides the following primary functions:
+
+**Patient registration and demographic management:** New patient registration, demographic data maintenance, patient search and identification, medical record number assignment and management.
+
+**Clinical encounter documentation:** Encounter creation and documentation for all patient visits, clinical observations, vital signs recording, assessment and plan documentation, referral management.
+
+**Medication management:** Medication prescribing and order management, known allergy recording and alerting, current medication list maintenance, medication history tracking.
+
+**Laboratory order and result management:** Laboratory test ordering, result receipt and storage via integration with the laboratory information system, result review and clinical follow-up documentation.
+
+**Care plan management:** Active problem list maintenance, care plan documentation, chronic disease management tracking, preventive care scheduling.
+
+**Clinical reporting:** Patient population reports, clinical quality metrics, mandatory public health reporting for notifiable conditions.
+
+**User and role management:** User account provisioning, role-based access control configuration, session management, administrative functions.
+
+The system serves as the operational core of MyClinic's clinical function. Clinicians access OpenMRS before, during, and after every patient encounter. Administrative staff use the system for patient registration, scheduling coordination, and operational reporting. The system is in active use during all clinic operating hours and is accessible to authorized remote users through the HTTPS interface when necessary for after-hours clinical review.
+
+---
+
+### 4. System Users
+
+| User Category | Access Level | Authentication | Approximate Count |
+|---|---|---|---|
+| Physicians | Clinical role — full patient record access within care relationship | Username/password + MFA | Per clinic medical staff roster |
+| Nurses and Clinical Staff | Clinical role — encounter documentation, medication management | Username/password + MFA | Per clinic nursing roster |
+| Administrative Staff | Administrative role — patient registration, scheduling, reporting | Username/password + MFA | Per admin staff roster |
+| IT Administrators | System administration — user account management, system configuration | Username/password + MFA; SSH key for infrastructure access | 1-2 individuals |
+| ISSO | Security administration — audit log access, security configuration | Username/password + MFA; AWS console access | 1 individual |
+| Laboratory System (automated) | API integration role — laboratory result submission only | Service account with API key | Automated; no human user |
+
+All human users access OpenMRS through the HTTPS web interface from clinic workstations. Remote access requires VPN connection to MyClinic's network prior to accessing the OpenMRS interface. No direct public access to administrative or API functions is permitted.
+
+---
+
+### 5. Operational Environment
+
+**Hosting:** Amazon Web Services — cloud-hosted deployment; no on-premises infrastructure components within the OpenMRS authorization boundary
+
+**AWS Region:** Primary region based on MyClinic's operational location — specified in the System Security Plan appendix
+
+**Production Environment Components:**
+
+*Application Tier:*
+- AWS EC2 instance running Ubuntu Linux with OpenMRS application server (Apache Tomcat)
+- Instance type scaled to patient volume and concurrent user requirements
+- Located in public subnet — accepts inbound HTTPS (port 443) only
+- SSH access (port 22) restricted to ISSO/IT Administrator source IP range; key-based authentication only
+
+*Database Tier:*
+- AWS RDS MySQL instance — stores all patient data and application state
+- Multi-AZ deployment enabled for automatic failover within region
+- Located in private subnet — no internet routing; accepts MySQL connections from application tier security group only
+- Encryption at rest enabled via AWS KMS (AES-256)
+- Automated backups enabled with 90-day retention; point-in-time recovery enabled
+
+*Backup Storage:*
+- AWS S3 bucket — encrypted nightly database backups and application configuration snapshots
+- Server-side encryption with AWS KMS (SSE-KMS)
+- S3 Block Public Access enabled at bucket level
+- S3 Versioning enabled; S3 Object Lock configured for WORM protection on backup files
+- IAM access restricted to authorized roles only
+
+*Network Architecture:*
+- AWS Virtual Private Cloud with public and private subnets
+- Internet gateway for public subnet; NAT gateway for outbound-only internet access from private subnet
+- VPC Flow Logs enabled
+- Security groups configured per least-privilege — each component allows only required ports from required sources
+- No direct internet access to database or backup storage
+
+*Security Services:*
+- AWS CloudTrail — API activity logging across all AWS services; logs shipped to protected S3 bucket with log file integrity validation
+- Amazon GuardDuty — continuous threat detection across EC2, RDS, S3, and IAM activity
+- AWS Config — continuous configuration compliance monitoring with alerting on defined rules
+- AWS Security Hub — centralized aggregation of GuardDuty, Config, and other security findings
+- AWS Certificate Manager — TLS certificate for OpenMRS domain; HTTPS enforced for all connections
+- Amazon CloudWatch Logs — application log collection and retention; basis for HIPAA audit trail
+- AWS WAF — Web Application Firewall with OWASP ruleset protecting the OpenMRS HTTPS endpoint
+
+*DNS and Traffic Management:*
+- AWS Route 53 — DNS management for OpenMRS domain
+- HTTPS enforced; HTTP connections redirect to HTTPS
+
+**Endpoint Environment (Within Authorization Boundary):**
+Clinic workstations and authorized laptops used to access OpenMRS via web browser. These endpoint devices are within the authorization boundary as documented in the boundary definition — they are the primary access point for ePHI and are within MyClinic's direct operational control. Endpoint requirements include: OS and browser patching, endpoint detection and response (EDR) software, full-disk encryption, screen lock policy, and VPN requirement for remote access.
+
+---
+
+### 6. Information Types and Data Flows
+
+**Information Types Handled (from Task P-12 analysis):**
+
+| Information Type | Sensitivity | Primary Location |
+|---|---|---|
+| Patient identity and demographics | High (PHI) | RDS database |
+| Clinical health records | High (PHI) | RDS database |
+| Laboratory and diagnostic results | High (PHI) | RDS database |
+| User account and access control data | Moderate-High | RDS database |
+| Application audit logs | High (integrity critical) | CloudWatch Logs; RDS |
+| Billing and financial information | High (PHI when combined) | RDS database |
+| System configuration data | Moderate-High (integrity critical) | EC2 filesystem; RDS |
+| Encrypted backup data | High | S3 |
+
+**Primary Data Flows:**
+
+*User to Application:*
+Clinical and administrative staff → HTTPS (TLS 1.2+) → AWS WAF → EC2 OpenMRS Application Server
+All user interaction with patient data flows through this path. Authentication occurs at the application layer.
+
+*Application to Database:*
+EC2 Application Server → MySQL over TLS → RDS Private Subnet
+All patient data reads and writes flow through this internal path. Connection restricted by security group to application server security group membership.
+
+*Application to Backup Storage:*
+EC2/RDS → Encrypted export → S3 Backup Bucket (private; KMS encrypted)
+Nightly automated backup process. No external access to backup data.
+
+*Laboratory Integration:*
+Laboratory Information System → REST API over HTTPS → EC2 OpenMRS Application Server
+Laboratory results transmitted from external laboratory provider. Authenticated via API key; TLS enforced. Governed by BAA and ISA.
+
+*Application to Logging:*
+EC2 OpenMRS Application → CloudWatch Logs Agent → CloudWatch Log Group
+Audit log events generated by OpenMRS application (patient record access, modifications, authentication events) shipped to CloudWatch in near-real-time.
+
+*AWS Service Logging:*
+All AWS API calls across account → CloudTrail → Protected S3 bucket (separate from backup bucket)
+
+---
+
+### 7. System Interconnections
+
+| Connected System | Connection Type | Data Exchanged | Governance | Direction |
+|---|---|---|---|---|
+| Laboratory Information System | REST API / HTTPS | Lab orders and results (ePHI) | BAA + Interconnection Security Agreement | Bidirectional |
+| Email Notification Service | SMTP / TLS | System notifications (may include ePHI) | BAA if ePHI in content | Outbound only |
+| AWS Compliance Services | Internal AWS | Compliance documentation; audit attestation | AWS Business Associate Agreement | N/A (provider relationship) |
+| OpenMRS Community Distribution | HTTPS | Software updates (no patient data) | Checksum verification; no BAA required | Inbound only |
+
+All interconnections are documented in Interconnection Security Agreements where required. No interconnection carries ePHI without a signed Business Associate Agreement.
+
+---
+
+### 8. Applicable Laws, Regulations, and Standards
+
+**Federal Regulations:**
+- HIPAA Security Rule (45 CFR Part 164, Subpart C) — Technical, Physical, and Administrative Safeguards
+- HIPAA Privacy Rule (45 CFR Part 164, Subpart E) — Minimum necessary, patient rights
+- HITECH Act — Breach notification; encryption safe harbor; enhanced civil penalties
+
+**State Regulations:**
+- Applicable state medical records privacy law for MyClinic's operating jurisdiction — to be confirmed and documented by Compliance Officer
+
+**Standards and Frameworks:**
+- NIST SP 800-53 Rev 5 — Security and Privacy Controls (High baseline)
+- NIST SP 800-37 Rev 2 — Risk Management Framework
+- NIST SP 800-30 Rev 1 — Risk Assessment methodology
+- NIST SP 800-88 Rev 1 — Media Sanitization
+- FIPS 199 — Security Categorization (overall: HIGH)
+- FIPS 200 — Minimum Security Requirements
+- CIS Benchmarks — OS hardening baseline for EC2 instance
+
+**Contractual Requirements:**
+- AWS Business Associate Agreement — required and in place
+- Laboratory provider BAA and ISA — required and in place
+- Email service BAA — required if notification content includes ePHI
+
+---
+
+### 9. Security Categorization Summary
+
+As established through the FIPS 199 analysis on Day 29 and the information type classification on Day 35:
+
+**Confidentiality: HIGH** — System processes ePHI including highly sensitive health categories (mental health, HIV status, reproductive health, substance use treatment). Unauthorized disclosure causes severe individual harm and significant regulatory exposure.
+
+**Integrity: HIGH** — System records are directly used in clinical care decisions. Tampering with medication records, allergy data, or diagnoses creates direct patient safety risk.
+
+**Availability: HIGH** — OpenMRS is the sole EHR system at MyClinic. Extended unavailability disrupts care delivery and creates patient safety risk in the absence of functional downtime procedures.
+
+**Overall Categorization: HIGH**
+
+**Applicable Control Baseline:** NIST SP 800-53 Rev 5 High Baseline
+
+---
+
+## A Real-World Example That Made This Click
+
+While working through the level of precision required for a formal system description today, I came across post-incident analysis from the **2015 Excellus BlueCross BlueShield breach** — which I covered briefly on Day 15, but want to revisit through the documentation lens.
+
+Excellus was breached in December 2013. The breach was not discovered until August 2015 — nearly 20 months later. During the HHS OCR investigation that followed, one of the findings concerned the adequacy of Excellus's documentation of its systems and data flows. The OCR investigation found gaps in Excellus's ability to demonstrate that it had conducted a thorough, accurate, and organization-wide risk analysis — in part because the system inventory and documentation were not sufficient to establish a complete picture of where ePHI resided and how it was protected.
+
+The settlement reached $5.1 million. Approximately 10 million individuals were affected.
+
+The Excellus case illustrates why Task C-1 is not administrative overhead. An accurate, maintained system description is part of the evidentiary foundation that demonstrates a reasonable and appropriate security program. When OCR investigates a breach and asks "did you know what systems you had and how they were protected?" — the system description in the SSP is part of the answer. An organization that cannot produce complete, accurate documentation of its systems has a harder time demonstrating that it implemented reasonable and appropriate safeguards, regardless of what controls were actually in place.
+
+---
+
+## What I Am Still Thinking About
+
+Working through the system description today, one detail stood out that I want to address more carefully: the version number field.
+
+I documented the OpenMRS version as "OpenMRS Platform 2.x with Reference Application — version number to be confirmed at time of assessment." In a real authorization package, the specific version number matters — it determines which CVEs apply to the running system and whether the assessment team can verify that the software is current and patched.
+
+For the SSP to be truly accurate, the version number needs to be pinned to the specific release in production. This creates a maintenance challenge: every time OpenMRS is updated, the SSP needs to be updated to reflect the new version. That seems like overhead, but it is exactly the kind of change management discipline that keeps the documentation accurate and the security program continuously reflecting the actual system state.
+
+The version management process — tracking what is running, confirming it is current, updating documentation when it changes — is a small but important operational discipline that I want to build explicitly into the change management process developed for Day 41's requirements allocation discussion.
+
+---
+
+## What's Next
+
+Day 44 completes the Categorize step with Task C-2 — the formal security categorization documentation. This takes the FIPS 199 analysis from Day 29, the information type impact ratings from Day 35, and the system description from today, and assembles them into the official categorization statement that the Authorizing Official will review as part of the authorization package. The categorization is the document that formally establishes the High baseline and initiates the control selection process.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-18 Rev 1 – Guide for Developing System Security Plans](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-37 Rev 2 – Task C-1 System Description](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [HHS OCR – Excellus BlueCross BlueShield Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/excellus/index.html)
+- [OpenMRS Technical Overview Documentation](https://wiki.openmrs.org/display/docs/Technical+Overview)
+
+---
+
+*#GRC #SystemDescription #NISTRMF #SSP #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day43*
