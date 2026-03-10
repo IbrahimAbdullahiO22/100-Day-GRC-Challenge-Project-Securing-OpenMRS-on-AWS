@@ -1,88 +1,272 @@
-# 📅 Day 48 – Task S-2: Control Tailoring | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+#  Day 48 – Task S-2: Documenting Tailoring Decisions in the System Security Plan | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Reflection: The Power of Smart Tailoring
+## From Decisions to Documentation
 
-One of the most valuable lessons I’ve embraced as a GRC leader is this:
+Day 47 worked through the tailoring analysis — scoping out non-applicable controls, identifying enhancements, and supplementing the High baseline with additional controls. Today's Task S-2 is about translating those decisions into the formal documentation that becomes part of the System Security Plan.
 
-> **Compliance is not about blindly checking every box — it’s about understanding context and applying controls that make sense for your environment.**
+The distinction between Day 47 and Day 48 is the distinction between analysis and record. The tailoring analysis is thinking work — evaluating each control against the system context and making reasoned decisions. The tailoring documentation is accountability work — recording those decisions in a format precise enough for an assessor to evaluate, an auditor to review, and a future ISSO to understand and maintain.
 
-That’s exactly what *tailoring* in RMF is all about. 
+NIST SP 800-37 Task S-2 specifically asks for the tailoring decisions to be documented in the SSP with sufficient detail to explain what was decided and why. "Control inherited from AWS" is not sufficient documentation. "PE-3 physical access control to server rooms is not applicable to MyClinic's implementation because OpenMRS is hosted on AWS EC2 instances in AWS-managed data centers. MyClinic has no physical access to or responsibility for the data center infrastructure. Physical access controls for the infrastructure layer are maintained by AWS and validated through SOC 2 Type II (available in AWS Artifact, current as of [date]). MyClinic retains responsibility for physical security of clinic workstations and the clinic facility, which is addressed under PE-3 as a system-specific hybrid control for the endpoint environment" — that is sufficient documentation.
 
-Today’s exercise really drove home for me that the NIST 800-53 Moderate baseline is an excellent starting point, but not everything fits perfectly when running an EHR like OpenMRS in AWS Cloud. Good tailoring ensures our System Security Plan (SSP) reflects both **reality** and **risk** — making it actionable and auditable.
-
----
-
-##  Teaching: What is Tailoring and Why Is It Critical?
-
-Here’s how I explain tailoring to my team:
-
-- You start with a **standard suit** (the baseline).
-- You tailor it to fit YOUR body (your system).
-- You hem, adjust, or add accessories — so it’s not only compliant, but practical and comfortable for daily use.
-
-Without tailoring, you risk two extremes:
-
-1️⃣ **Over-engineering**: Wasting resources implementing irrelevant controls (ex: worrying about physical guards for servers we don’t own).  
-2️⃣ **Under-protecting**: Missing subtle gaps (like forgetting to define session timeout values) because you assumed defaults would cover you.
+Today I work through how to write that level of documentation for the most important tailoring decisions in the OpenMRS SSP.
 
 ---
 
-##  Real-World Example: OpenMRS on AWS
+## What I Worked On Today
 
-Today, I walked through several tailoring examples for our OpenMRS EHR system:
-
-**AC-2: Account Management**  
-- OpenMRS user accounts (clinician logins) are created within the application, not at the AWS level.  
-- Tailoring Decision: “AWS IAM accounts are not used for OpenMRS app login. AC-2 applies to the OpenMRS internal user database. Accounts must be approved by Clinic IT Admin; privileged accounts reviewed every 90 days.”  
-- Result: The control is right-sized for our app’s reality — we’re not trying to apply AWS account policies to OpenMRS logins.
-
-**PE-3: Physical Access**  
-- AWS owns the data center — we can’t physically control it.  
-- Tailoring Decision: “Control inherited from AWS — physical protections documented in AWS SOC 2 and ISO 27001 attestations.”  
-- Result: Clarity for auditors — we’re not “skipping” this control; we’re appropriately inheriting it from AWS.
-
-**SC-10: Network Disconnect**  
-- Tailored: “Session disconnect after 15 minutes of user inactivity on OpenMRS web app — configured in Tomcat settings.”  
-- Here, I’m assigning a concrete value (15 mins) based on organizational policy.
+Task S-2 documentation has a specific structure for each tailoring decision: the control identifier and title, the tailoring action taken (scoped out, enhanced, supplemented, compensated), the rationale for the decision, the implementation description where applicable, and the residual risk where applicable. I worked through producing that documentation for each category of tailoring decisions from Day 47.
 
 ---
 
-##  Reflection: Why This Step Matters
+## What Actually Clicked for Me
 
-Tailoring is about **risk-aligned efficiency**.
+The concept that clicked most clearly today is that tailoring documentation serves multiple audiences simultaneously — and the documentation needs to be written with all of them in mind.
 
-Blindly applying every control as written wastes precious project time — and often doesn’t increase real security.
+The assessor reading the SSP needs enough detail to determine what to test. If the documentation says "session timeout is configured," the assessor needs to know: what value was configured, where it is configured, how it is enforced, and how to verify it. Vague documentation creates assessment uncertainty — the assessor either has to ask clarifying questions (slowing the assessment) or document a finding for insufficient detail (which is not the outcome anyone wants).
 
-Thoughtful tailoring ensures:
+The Authorizing Official reading the SSP needs to understand the security rationale without needing deep technical expertise. The AO needs to be able to answer: does this tailoring decision make sense? Does the organization's rationale hold up? Are the residual risks being documented honestly?
 
- Our controls are auditable and defensible  
- We avoid unnecessary complexity  
- We close gaps unique to *our* system (HIPAA overlays, cloud nuances, OpenMRS specifics)  
- Stakeholders (auditors, AOs) clearly see our rationale
+The future ISSO who inherits the program needs the documentation to be specific enough to maintain. A session timeout documented as "15 minutes — configured in Tomcat settings" is maintainable. A session timeout documented as "implemented per policy" leaves the next ISSO hunting for where the policy value came from and whether it was ever actually configured.
 
----
-
-##  What’s Next?
-
-With tailoring complete, I’m now ready to **assign ownership** and **implement controls**. That’s the next leadership moment: helping my team know which controls are “ours” vs “AWS’s” and driving accountability.
+Writing for all three audiences at once is harder than writing for one — but it is what makes SSP documentation actually useful rather than just present.
 
 ---
 
-##  Search Terms for Ongoing Mastery
-
-- NIST security control tailoring  
-- Inheriting AWS common controls  
-- Scoping cloud security controls  
-- NIST SP 800-53 tailoring worksheet  
-- Compensating vs inherited vs scoped controls
+## Task S-2 Tailoring Documentation — Formal Record
 
 ---
 
-##  Final Thought:
+### Section 1: Scoping Decisions — Controls Not Applicable
 
-Today really reinforced for me: **Tailoring is where GRC leadership shines**. Anyone can read a control catalog — but true leaders help teams apply the right controls the right way — with context, clarity, and purpose.
+---
 
-#Cybersecurity #GRC #NISTRMF #HIPAA #ControlTailoring #Leadership #Day48
+**Control: PE-2, PE-3, PE-6, PE-8, PE-12, PE-13, PE-14, PE-15 (Physical and Environmental Protection — Server Infrastructure)**
+
+**Tailoring Action:** Scoped out — control inherited from AWS common control provider
+
+**Rationale:** OpenMRS is hosted on AWS EC2, RDS, and S3 services in AWS-managed data centers. MyClinic does not own, operate, or have physical access to the data center facilities where the OpenMRS infrastructure resides. Physical access controls, environmental monitoring, power redundancy, fire suppression, and related physical safeguards for the server infrastructure are implemented and maintained by AWS as part of the AWS shared responsibility model.
+
+**Evidence of Inherited Control:** AWS SOC 2 Type II report (current version available through AWS Artifact); AWS ISO 27001 certification; AWS FedRAMP authorization package (where available). The AWS Business Associate Agreement establishes contractual obligations for physical security of infrastructure hosting ePHI. MyClinic reviews AWS compliance certifications annually.
+
+**Scope of Inheritance:** This scoping applies only to the server infrastructure hosted in AWS data centers — EC2 instances, RDS database servers, S3 storage infrastructure, and associated networking hardware. It does not apply to:
+- Clinic workstations and laptops used to access OpenMRS (these are within MyClinic's physical security responsibility)
+- Any on-premises network equipment at the clinic facility
+- Physical security of the clinic building and patient areas
+
+**Residual Risk:** MyClinic has no ability to directly audit AWS physical security controls. Assurance relies on third-party certifications and contractual commitments. Annual review of AWS compliance certifications by the ISSO is the monitoring mechanism for this inherited control category.
+
+**SSP Section Reference:** Section 8 — Common Controls; AWS Inherited Controls Table
+
+---
+
+**Control: MP-3 Media Marking, MP-4 Media Storage, MP-5 Media Transport (Cloud-Hosted Data)**
+
+**Tailoring Action:** Scoped out for cloud-hosted components; retained for physical media at clinic
+
+**Rationale:** MP-3, MP-4, and MP-5 address physical marking, storage, and transport of media containing sensitive information. For data stored in AWS RDS and S3, there is no physical media under MyClinic's control — the storage media is AWS-managed infrastructure. Physical media handling requirements are not applicable to cloud-hosted data at rest.
+
+For any physical media used at the clinic — workstation hard drives, any USB drives used for data transfer, printed records — MP-3, MP-4, and MP-5 remain applicable and are addressed in the endpoint security and physical security sections of the SSP.
+
+**Implementation for Physical Media:** MyClinic policy prohibits the use of removable media for ePHI transfer. If removable media use is required for a specific operational need, it must be encrypted and approved by the ISSO in advance. Physical media containing ePHI must be stored in locked cabinets when not in use.
+
+**Residual Risk:** The primary residual risk for this scoping decision is the endpoint media scenario — a workstation hard drive that contains cached ePHI from an OpenMRS session and is not properly sanitized before disposal. This risk is addressed by the MP-6 media sanitization control and the endpoint disposal procedures.
+
+---
+
+**Control: SA-3 through SA-8 (System Development Life Cycle Controls — External Development)**
+
+**Tailoring Action:** Partially scoped — applicable to MyClinic-controlled customization; not applicable to core OpenMRS development
+
+**Rationale:** SA controls for secure development life cycle address how software is developed. OpenMRS core application development is managed by the OpenMRS open-source community — MyClinic does not control the development process for the core application. SA-3 through SA-8 are not applicable to MyClinic's implementation for the core OpenMRS codebase.
+
+SA controls are applicable to any customizations, custom modules, or configurations developed by or for MyClinic — including clinic-specific OpenMRS modules or modifications. For those customizations, MyClinic applies the SA-11 supplement (developer security testing) documented in the enhancement section.
+
+**Residual Risk:** MyClinic's inability to control the OpenMRS development life cycle is a supply chain risk addressed by the SR-3 and SR-11 supplements (checksum verification, dependency scanning) rather than by SA controls.
+
+---
+
+### Section 2: Tailoring Documentation for Enhanced Controls
+
+---
+
+**Control: AC-2 Account Management (Enhanced)**
+
+**Baseline Requirement:** Account management for information system accounts — creation, modification, disabling, removal.
+
+**Enhancement Applied:** AC-2(1) Automated Account Management added. Account review frequency specified as 90 days for all accounts; immediate review triggered by role change or separation.
+
+**Tailoring Decision:** AC-2 applies to the OpenMRS application user accounts — the clinician, administrative, and IT accounts within the OpenMRS application. It does not apply to AWS IAM accounts (which are separately managed under IAM policy) or to Active Directory accounts at the operating system level (which are managed under MyClinic's enterprise identity management program if applicable).
+
+**Implementation Description:**
+- New OpenMRS accounts are created only with written authorization from the System Owner or designated account manager (Health IT Manager)
+- Account creation requests must specify the user's role, access level required, and business justification
+- Account provisioning is completed within one business day of approved request
+- Quarterly access reviews are conducted by the ISSO — each review produces a documented report of all active accounts, their roles, and whether continued access is justified
+- Account deactivation is triggered automatically by HR notification of employee separation; accounts are disabled within 4 hours of notification
+- Annual recertification of all accounts — each account holder's manager must actively confirm continued need for access
+- Privileged accounts (IT Administrator, ISSO) are subject to additional review: usage logs reviewed within 24 hours; quarterly justification review
+
+**Verification Method for Assessment:** Assessor should request: list of all active OpenMRS accounts with provisioning date and authorizing approval; records from the most recent quarterly access review; account deactivation records for the most recent five employee separations with timestamps; and privileged account usage log review records.
+
+---
+
+**Control: SC-10 Network Disconnect (Enhanced with Specific Value)**
+
+**Baseline Requirement:** Terminate the network connection associated with a communications session at the end of the session or after a defined period of inactivity.
+
+**Tailoring Decision:** Defined period of inactivity is set to 15 minutes for standard clinical and administrative user sessions. For IT Administrator and ISSO sessions conducting active maintenance, the timeout may be extended to 30 minutes with documented justification. The timeout value is configured in the OpenMRS application server (Apache Tomcat session management configuration) and enforced at the application layer.
+
+**Implementation Description:**
+- Tomcat session timeout configured to 900 seconds (15 minutes) in the web.xml configuration file
+- Upon session timeout, the user is redirected to the OpenMRS login page — the session is invalidated and cannot be resumed without re-authentication including MFA
+- Users are warned 2 minutes before session timeout with an option to extend the session if they are actively working
+- The timeout configuration is documented in the OpenMRS configuration management baseline and is subject to the CM-6 configuration settings control
+- Any change to the timeout value requires change management review and ISSO approval
+
+**Rationale for 15-Minute Value:** The 15-minute value balances clinical workflow requirements — clinicians often step away from workstations briefly during encounters — with the risk of unattended authenticated sessions. HIPAA guidance and healthcare security practice generally recommend 15 minutes as the standard for EHR session timeouts. Values longer than 15 minutes create meaningful unattended session risk in a clinic environment where workstations may be shared or accessible to patients.
+
+**Verification Method for Assessment:** Assessor should test session timeout behavior by authenticating to OpenMRS, leaving the session idle for 16 minutes, and verifying that the session has been terminated and re-authentication is required. Assessor should also review the Tomcat web.xml configuration file to verify the 900-second value is configured.
+
+---
+
+**Control: AU-2 Event Logging (Enhanced for HIPAA)**
+
+**Baseline Requirement:** Identify the types of events that the system is capable of logging in support of the audit function and coordinate the event logging function with other organizations requiring audit-related information.
+
+**Enhancement:** HIPAA §164.312(b) audit control standard requires the ability to record and examine activity in systems containing ePHI. This enhancement specifies the required audit events beyond the generic AU-2 baseline to satisfy the HIPAA requirement.
+
+**Required Audit Events for OpenMRS:**
+
+*Authentication Events:*
+- Successful user login: user identifier, timestamp, source IP address
+- Failed login attempt: user identifier attempted, timestamp, source IP address, failure reason
+- User logout: user identifier, timestamp
+- Session timeout: user identifier, timestamp
+
+*ePHI Access Events:*
+- Patient record view: user identifier, patient identifier, record type accessed, timestamp
+- Patient record creation: user identifier, patient identifier, data entered, timestamp
+- Patient record modification: user identifier, patient identifier, field modified, previous value, new value, timestamp
+- Patient record deletion (if permitted): user identifier, patient identifier, timestamp, authorization reference
+
+*Administrative Events:*
+- User account creation: account identifier, creating administrator, timestamp
+- User account modification: account identifier, modifying administrator, change made, timestamp
+- User account deactivation: account identifier, deactivating administrator, timestamp
+- Role assignment change: account identifier, previous role, new role, authorizing administrator, timestamp
+- Security configuration change: configuration element, previous value, new value, modifying administrator, timestamp
+
+*Security-Relevant Events:*
+- Privilege escalation attempts
+- Access to audit log records
+- Changes to audit logging configuration
+- Security group or IAM policy changes (via CloudTrail)
+
+**Audit Log Retention:** Application audit logs retained for minimum 6 years per HIPAA documentation retention requirements. CloudTrail logs retained for minimum 7 years (90 days in S3, remainder in S3 Glacier for cost management).
+
+**Verification Method for Assessment:** Assessor should request a sample of audit log records and verify that the required fields are present. Assessor should test by performing a series of defined actions (login, view a patient record, modify a record, logout) and verifying that each action generated an audit record with the required fields.
+
+---
+
+**Control: CP-9 Information System Backup (Enhanced)**
+
+**Baseline Requirement:** Conduct backups of user-level and system-level information; protect backup information.
+
+**Enhancement:** CP-9(1) Testing for Reliability and Integrity; CP-9(8) Cryptographic Protection using customer-managed KMS keys.
+
+**Implementation Description:**
+- Automated nightly backup of RDS database via AWS automated backups — retained for 90 days with point-in-time recovery enabled
+- Weekly full export of RDS data to S3 backup bucket — provides additional recovery point independent of RDS automated backup
+- S3 backup bucket encrypted with customer-managed KMS key (not AWS-managed default key) — MyClinic controls the key lifecycle
+- S3 Object Lock configured on backup bucket — WORM protection prevents deletion during retention period
+- Quarterly restoration test: ISSO and IT Administrator restore from the most recent S3 backup to a test RDS instance; verify data integrity by spot-checking a defined set of patient record fields; document results
+- RTO target: 4 hours from declaration of disaster to restored operational system
+- RPO target: 24 hours (maximum data loss acceptable)
+- Quarterly test results documented and retained; any restoration failure triggers immediate remediation and retest
+
+**Rationale for Customer-Managed KMS Keys:** Customer-managed keys provide MyClinic with audit visibility into key usage (every backup encryption and decryption operation is logged in CloudTrail), control over key rotation schedule, and the ability to revoke access to backup data if necessary. AWS-managed keys provide equivalent encryption strength but less granular control and visibility.
+
+**Verification Method for Assessment:** Assessor should review documentation of the most recent quarterly restoration test — including the test plan, execution record, data integrity verification results, and any findings. Assessor should also verify KMS key configuration shows customer-managed key with documented rotation policy.
+
+---
+
+### Section 3: Tailoring Documentation for Supplemented Controls
+
+---
+
+**Control Supplement: SR-3 Supply Chain Controls (Added)**
+
+**Rationale for Supplementation:** OpenMRS is an open-source Java application with a substantial dependency tree. The 2021 Log4Shell vulnerability demonstrated that critical vulnerabilities in widely-used Java libraries affect OpenMRS deployments. The High baseline does not include specific supply chain controls for open-source software dependency management. Given the OpenMRS-specific risk environment, this supplement is necessary.
+
+**Implementation Description:**
+- All OpenMRS releases are verified against official checksums published by the OpenMRS community before installation
+- ISSO subscribes to OpenMRS security advisories (openmrs.org/security) and reviews new advisories within 24 hours of publication
+- OWASP Dependency-Check scan run against the OpenMRS deployment directory before each version update — results reviewed by ISSO; any critical or high-severity findings block the update until remediation is confirmed by the OpenMRS community or a workaround is implemented
+- All third-party OpenMRS modules must be from the official OpenMRS module repository or have explicit ISSO approval; modules from unknown sources are not permitted
+- Module security review checklist completed before any new module installation: active maintenance status, last security audit, known CVEs, community trust level
+
+**Verification Method for Assessment:** Assessor should request OWASP Dependency-Check scan results from the most recent OpenMRS version update and evidence of checksum verification. Assessor should review the installed module list and verify each module appears on the approved module list.
+
+---
+
+## Tailoring Decision Summary Table — SSP Reference
+
+| Control ID | Control Title | Tailoring Action | Key Rationale |
+|---|---|---|---|
+| PE-2,3,6,8,12-15 | Physical security (server) | Scoped out — AWS inherited | No physical servers at MyClinic |
+| MP-3,4,5 | Physical media (cloud) | Scoped out for cloud; retained for endpoints | AWS manages cloud storage media |
+| SA-3 through SA-8 | Secure dev lifecycle (core app) | Scoped out for core OpenMRS | Community-developed; supply chain controls substitute |
+| AC-2(1) | Automated account management | Enhanced — added | Insider threat; automated deprovisioning |
+| SC-10 | Network disconnect | Enhanced — value specified (15 min) | Session security; clinical workflow balance |
+| AU-2, AU-12 | Event logging | Enhanced — HIPAA specificity | HIPAA audit control; patient-level access records |
+| CP-9(1), CP-9(8) | Backup testing; crypto protection | Enhanced | Recovery assurance; customer-controlled key management |
+| IA-2(6), IA-2(8) | MFA — privileged replay resistant | Enhanced | Administrative credential protection |
+| SR-3, SR-11 | Supply chain; component authenticity | Supplemented | Open-source dependency management |
+| SA-11 | Developer security testing | Supplemented | Custom module security review |
+| AP-1, AP-2, IP-1 | Privacy authority; individual access | Supplemented | HIPAA Privacy Rule alignment |
+
+---
+
+## A Real-World Example That Made This Click
+
+While finalizing today's documentation work I came across the **2018 Allscripts ransomware attack** — which I covered on Day 26 — but want to revisit specifically through the session management and contingency planning tailoring lens.
+
+Allscripts is an EHR vendor whose cloud services were disrupted by a ransomware attack that took systems offline for several days. Healthcare practices that depended on Allscripts for their EHR found themselves unable to access patient records. Many practices had no documented downtime procedures — the CP-2(1) enhancement I documented today — and clinical operations were severely disrupted.
+
+One specific detail that is relevant to today's tailoring documentation: some practices reported that staff had left OpenMRS and other EHR sessions authenticated on workstations when the ransomware attack propagated. Authenticated, unattended sessions that were not protected by session timeout allowed the malware to interact with the EHR through the authenticated browser session.
+
+The SC-10 tailoring decision — 15-minute session timeout, configured and tested — directly addresses this attack vector. The documentation specificity I required today — exact timeout value, configuration location, verification method — is what makes the difference between a control that is documented and a control that is implemented and verifiable. An assessor who tests the session timeout and finds it configured correctly has confirmed that the control is actually protecting against this scenario, not just that it is documented in the SSP.
+
+---
+
+## What I Am Still Thinking About
+
+One practical question that came up in documenting the AU-2 enhancement: how should OpenMRS audit logs handle the patient identifier field for privacy purposes?
+
+The HIPAA audit control requires the ability to determine who accessed which patient records. That requires the audit log to contain a patient identifier. But if audit logs are accessible to IT staff who would not otherwise have clinical access to patient records, the audit log itself becomes a disclosure of PHI — revealing that a specific patient identifier exists in the system and was accessed.
+
+The standard approach is to use the patient's internal system identifier (the medical record number or OpenMRS patient ID) rather than demographic information in the audit log. The internal identifier links back to the patient record for investigation purposes, but without the name or date of birth it is less directly sensitive than a fully identified record. IT staff who need to investigate an audit log event can look up the patient ID in the system under appropriate authorization.
+
+This is a nuance in the AU-2 documentation that I want to add to the SSP — specifying that the patient identifier field in audit logs uses the internal system MRN rather than demographic data, and that audit log access is itself subject to access controls.
+
+---
+
+## What's Next
+
+Day 49 maps the tailored control set to the HIPAA Security Rule requirements — producing the compliance crosswalk that demonstrates how each HIPAA administrative, physical, and technical safeguard is addressed by the selected controls. This crosswalk is one of the most operationally useful documents in the authorization package — it provides the direct line of sight between the NIST control framework and the regulatory requirements that MyClinic must satisfy.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-18 Rev 1 – Guide for Developing System Security Plans](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-53A Rev 5 – Assessing Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [NIST SP 800-37 Rev 2 – Task S-2 Control Tailoring Documentation](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [Allscripts Ransomware Attack – Healthcare IT News](https://www.healthcareitnews.com/news/allscripts-still-recovering-ransomware-attack)
+- [HIPAA Audit Controls Guidance – HHS](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #ControlTailoring #NISTRMF #SSP #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day48*
