@@ -1,100 +1,144 @@
-# 📅 Day 47 – Task S-1 (Part 2): Control Enhancements & Regulatory Overlays | 100 Days of GRC  
-_By Ibrahim Abdullahi_
+# Day 47 – Task S-1 (Part 2): Tailoring the High Baseline for OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Leadership Reflection: Why Tailoring Matters
+## From Generic to Specific
 
-As I continue maturing in GRC leadership, one concept becomes clearer every day: **security is not one-size-fits-all**. 
+Day 46 established the High baseline from NIST SP 800-53B as the starting point for OpenMRS control selection. That baseline is a carefully constructed set of controls representing professional consensus about what a High-impact system requires — but it is deliberately generic. It was designed to apply across federal information systems of all types, not specifically to a cloud-hosted open-source EHR deployed on AWS for a small healthcare clinic.
 
-Selecting a NIST 800-53 baseline was an essential step — but tailoring that baseline is where leadership and contextual thinking truly come in. Today’s work reminded me that a *good security program adapts to its environment, its data, and its regulatory realities*. That’s the mindset I bring to this phase.
+Tailoring is the process that transforms the generic High baseline into the specific control set for OpenMRS at MyClinic. NIST SP 800-37 describes tailoring as a combination of three activities: scoping (identifying controls that are not applicable to the system or can be satisfied through inheritance), compensating (substituting alternative controls where specific baseline controls cannot be implemented as stated), and supplementing (adding controls beyond the baseline where the risk assessment or regulatory requirements indicate they are needed).
 
----
-
-##  What I’ve Learned: Tailoring in Practice
-
-**Tailoring** = Adjusting the baseline so that our control set:
-
- Covers HIPAA-specific healthcare rules  
- Reflects AWS’s cloud-hosted model (no physical servers at the clinic)  
- Adds needed enhancements (ex: stronger access control)  
- Removes “not applicable” controls gracefully  
-
-**Enhancements** are like adding turbochargers to your security engine 🚀. **Overlays** (like HIPAA’s Security Rule) ensure that we meet ALL required legal/regulatory needs — not just what’s in the generic baseline.
+The tailoring decisions are not arbitrary — each one must be documented with a rationale that is defensible to an assessor and an Authorizing Official. "This control doesn't apply to us" is not an acceptable rationale. "This control is not applicable because the system does not process the type of information or perform the type of function that the control addresses, specifically because..." is the level of documentation required.
 
 ---
 
-##  Teaching Example: Applying This to OpenMRS on AWS
+## What I Worked On Today
 
-As I reviewed OpenMRS’ Moderate baseline today, here’s how I approached tailoring:
+I worked through the High baseline control families systematically, applying three questions to each control:
 
-### 1️⃣ Multi-Factor Authentication (MFA)  
-- **Baseline IA-2** required authentication, but I know healthcare breaches often start with compromised creds.  
-- **Enhancement**: Implement MFA for all privileged accounts and remote users — bringing this in line with HIPAA expectations and modern threat models.
+1. Is this control applicable to OpenMRS in its current deployment context?
+2. Does the baseline control need to be enhanced to address specific risks or regulatory requirements identified in the risk assessment and requirements analysis?
+3. Are there controls not in the High baseline that the risk assessment or regulatory requirements indicate are needed?
 
-### 2️⃣ Enhanced Audit Logging  
-- Baseline AU controls log events — but HIPAA requires deeper auditability (who accessed which PHI, when).  
-- **Enhancement**: Expand audit logging to include both successful and attempted access, abnormal queries, and alerting on suspicious activity.
-
-### 3️⃣ Encrypting PHI at Rest  
-- While Moderate baseline may treat this as optional, HIPAA strongly recommends encryption of PHI at rest.  
-- **Overlay**: Enforce SC-28 for RDS encryption + EC2 disk encryption. Why? Because unencrypted data at rest would be a huge HIPAA liability — and encryption gives us safe harbor in breach scenarios.
-
-### 4️⃣ Contingency Planning (CP)  
-- CP controls exist in baseline — but HIPAA requires “emergency mode” operations and detailed recovery plans.  
-- **Enhancement**: Add CP-4(1) testing of contingency plans at least annually, and CP-2(1) coordination with the clinic’s emergency procedures.
-
-### 5️⃣ AWS Physical Security Inheritance  
-- HIPAA requires physical access controls — but as OpenMRS runs in AWS, we **inherit** AWS’s proven controls (ISO 27001, SOC 2 Type II) under shared responsibility.  
-- **Overlay**: Include the BAA with AWS — legally required under HIPAA when a cloud provider hosts ePHI.
+The outputs are: a scoping decisions table documenting controls that are not applicable and why; an enhancements table documenting where baseline controls are being strengthened; and a supplementation table documenting controls added beyond the baseline.
 
 ---
 
-##  The Value of This Step
+## What Actually Clicked for Me
 
-Tailoring today helped me:
+The tailoring concept that clicked most clearly today is the difference between "not applicable" and "not implemented." These sound similar but have completely different implications.
 
- Ensure legal compliance (HIPAA) on top of NIST  
- Focus on real-world threats to PHI in OpenMRS  
- Drive alignment between AWS responsibilities vs. our own team’s duties  
- Document control enhancements transparently for auditors
+"Not applicable" means the control addresses a risk or scenario that genuinely does not exist for this system — and that claim needs to be documented and defensible. For OpenMRS hosted on AWS, Physical Environment (PE) controls for server room access are not applicable because OpenMRS has no physical servers — AWS's data center controls are inherited common controls. That is a legitimate scoping decision with a clear rationale.
 
-One insight I want to teach here is this:
+"Not implemented" means the control is applicable, the risk it addresses is real, but the organization has not implemented it. That is a finding — a gap that needs to be remediated or risk-accepted by the AO. The tailoring process cannot be used to convert implementation gaps into scoping decisions. An assessor reviewing the SSP will specifically look for cases where controls are documented as "not applicable" but should actually be documented as "not implemented."
 
-> **Tailoring is not about ignoring controls — it’s about RIGHT-SIZING them.**  
-> We enhance where needed. We justify “not applicable” controls responsibly. We add overlays when required.  
-
-This is how you lead a defensible GRC program.
+Understanding that distinction is critical for producing an honest security package rather than one that looks complete on paper while hiding real gaps.
 
 ---
 
-##  Reflection
+## Part 1 — Scoping: Controls Not Applicable to OpenMRS
 
-In my own leadership journey, this step reminded me of cooking: recipes give you the framework (the baseline), but a good chef tastes and adjusts. Likewise, a security leader doesn’t blindly apply a checklist — they **tailor it to fit the dish (system), audience (users), and setting (regulatory environment).**
+### Physical and Environmental Protection (PE) Family — Substantially Inherited
+
+The PE control family addresses physical security of the facilities where information systems operate — server room access controls, physical security monitoring, visitor access, environmental controls, emergency power. For OpenMRS on AWS, the vast majority of PE controls are not applicable to MyClinic's implementation because the physical infrastructure is managed by AWS.
+
+**PE-2 Physical Access Authorizations:** Not applicable to OpenMRS server infrastructure — MyClinic has no physical access to AWS data centers. *Inherited from AWS — documented in SSP with reference to AWS SOC 2 certification.*
+
+**PE-3 Physical Access Control:** Not applicable to OpenMRS server infrastructure for the same reason.
+
+**PE-6 Monitoring Physical Access:** Not applicable — AWS monitors physical access to its facilities.
+
+**PE-8 Visitor Access Records:** Not applicable — AWS maintains visitor records for its facilities.
+
+**PE-12 Emergency Lighting:** Not applicable — AWS data centers provide emergency lighting.
+
+**PE-13 Fire Protection:** Not applicable — AWS data centers implement fire protection.
+
+**PE-14 Environmental Controls:** Not applicable — AWS manages temperature and humidity controls.
+
+**PE-15 Water Damage Protection:** Not applicable — AWS data centers implement water damage protection.
+
+**PE-17 Alternate Work Site:** Applicable — remote access from authorized work sites requires VPN. *Not scoped out.*
+
+*Scoping documentation required in SSP:* "PE controls for physical server infrastructure are inherited from the AWS common control provider and are not applicable to MyClinic's implementation. AWS physical security controls are validated through SOC 2 Type II, ISO 27001, and FedRAMP certifications available through AWS Artifact. MyClinic retains responsibility for physical security of clinic workstations and the clinic facility. The AWS Business Associate Agreement governs the physical security obligations of the infrastructure provider."
+
+**Partial PE scoping — workstation exception:** PE controls for clinic workstations — physical access to workstations, screen lock, workstation use policies — are not inherited from AWS and remain applicable as system-specific controls. The scoping applies only to the server infrastructure components hosted in AWS data centers.
 
 ---
 
-## 📌 What’s Next?
+### Media Protection (MP) — Partially Scoped
 
-Now that our baseline is tailored with HIPAA overlays, I’m ready to lead my team into **implementation**:
+**MP-2 Media Access:** Applicable for workstations and any portable media used in the clinic environment.
 
-➡️ Define ownership per control  
-➡️ Work with IT/DevOps to implement technical controls  
-➡️ Document and track progress  
-➡️ Prepare for testing and future audits  
+**MP-3 Media Marking:** Partially scoped. Physical media marking requirements are not applicable for cloud-hosted data — there is no physical media to mark for the RDS database or S3 backups. Applicable for any physical media containing ePHI used at clinic workstations (USB drives, printed records, etc.).
 
-RMF is not just paperwork — it’s an active leadership discipline. Today’s lesson reinforced that.
+**MP-4 Media Storage:** Not applicable for cloud-hosted components — AWS manages physical storage media. Applicable for any physical media at the clinic.
 
----
+**MP-5 Media Transport:** Not applicable for cloud-hosted data transmission — addressed by SC-8 (transmission confidentiality). Applicable if physical media is ever used to transport ePHI.
 
-## 🔍 Key Search Terms
+**MP-6 Media Sanitization:** Applicable — specifically for decommissioning clinic workstations and any physical media. For cloud-hosted data, cryptographic erasure per NIST SP 800-88 applies when data is deleted and keys are destroyed.
 
-- NIST 800-53 control enhancements  
-- HIPAA to NIST mapping (SP 800-66, HHS crosswalk)  
-- Security control tailoring best practices  
-- FedRAMP overlays vs NIST baselines  
-- AWS NIST 800-53 compliance mappings
+*Scoping documentation:* "MP controls for physical media are scoped to clinic workstations and physical media used at the clinic facility. Cloud-hosted data in RDS and S3 is protected through encryption and IAM access controls; media sanitization for cloud data is implemented through cryptographic erasure consistent with NIST SP 800-88 recommendations for cloud environments."
 
 ---
 
-#Cybersecurity #GRC #NISTRMF #HIPAA #Tailoring #OpenMRS #Leadership #Day47
+### Program Management (PM) — Organizational Level
+
+PM controls address enterprise-level security program management — risk management strategy, enterprise architecture, information security resources, and similar organizational-level activities. For the OpenMRS system-level SSP, PM controls are assessed at the organizational level, not the system level.
+
+*Scoping documentation:* "PM controls are implemented at the MyClinic organizational level and are assessed as part of the enterprise security program review. System-level assessment does not include re-assessment of organizational PM controls."
+
+---
+
+## Part 2 — Enhancements: Strengthening the High Baseline for OpenMRS
+
+The High baseline provides strong foundational controls, but the risk assessment findings from Days 37-38 and the HIPAA regulatory requirements from Day 39 indicate several areas where the baseline needs to be strengthened.
+
+---
+
+### Enhancement 1: MFA for All Access — IA-2(2) Already in High Baseline; Adding IA-2(6) and IA-2(8)
+
+The High baseline already requires MFA for non-privileged users via IA-2(2). Two additional enhancements address specific OpenMRS risk scenarios:
+
+**IA-2(6) MFA for Network Access to Privileged Accounts — Separate Device:** For IT administrators and the ISSO accessing OpenMRS and AWS management functions, MFA should use a separate device (hardware token or authenticator app on a separate mobile device) rather than software-based MFA on the same workstation being used for administrative functions. This prevents a compromised administrative workstation from also compromising the MFA factor.
+
+*Rationale:* RS-001 (ransomware) attack chains that compromise administrative workstations can capture software-based MFA tokens. A separate device requirement adds meaningful resistance to this attack pattern.
+
+**IA-2(8) Network Access to Privileged Accounts — Replay Resistant:** Requires that authentication mechanisms for privileged access be replay-resistant — meaning captured authentication tokens cannot be reused by an attacker. Modern TOTP-based authenticator apps are inherently replay-resistant; SMS-based MFA is not. This enhancement effectively requires TOTP or hardware token MFA for administrative access, not SMS.
+
+*Rationale:* SMS-based MFA is vulnerable to SIM swapping attacks. Healthcare administrative credentials are high-value targets that warrant stronger authenticator requirements.
+
+---
+
+### Enhancement 2: Privileged Account Monitoring — AC-2(4) and AC-6(9)
+
+**AC-2(4) Automated Audit Actions:** The High baseline requires automated account management mechanisms. This enhancement adds the requirement that account management actions — provisioning, modification, deactivation — generate audit log entries automatically, enabling detection of unauthorized account changes.
+
+*Rationale:* RS-004 (insider threat) includes scenarios where an insider with account management access creates unauthorized accounts or modifies existing accounts to expand access. Automated audit generation for account management events ensures these actions are captured in the audit trail and reviewable.
+
+**AC-6(9) Log Use of Privileged Functions:** Already in the High baseline, but enhanced with a defined review frequency — privileged function usage logs should be reviewed within 24 hours of generation, not just included in the weekly log review cycle. Administrative actions in a High-impact system warrant near-real-time review.
+
+*Rationale:* Rapid detection of unauthorized privileged function use is critical for limiting the damage of compromised administrative credentials. The 24-hour review cycle connects to the monitoring escalation thresholds from Day 30.
+
+---
+
+### Enhancement 3: HIPAA Audit Control Supplement — AU-2, AU-12
+
+The High baseline AU-2 and AU-12 controls require comprehensive event logging, but HIPAA's audit control standard (§164.312(b)) requires specifically that the system record and examine activity in systems that contain or use ePHI. The HIPAA requirement is outcome-focused — it requires the ability to determine who accessed what ePHI and when — rather than specifying the exact technical mechanism.
+
+The tailoring enhancement documents that OpenMRS's AU controls must satisfy both NIST AU requirements and the HIPAA audit control standard. Specifically:
+
+The OpenMRS application audit log must capture: user identifier, timestamp with timezone, patient record identifier (not just the record type — the specific patient), action type, outcome, and source IP address for every access to patient data. This level of specificity goes beyond the generic AU-3 content requirements and is explicitly required by the HIPAA audit control standard to enable investigation of inappropriate access.
+
+*Rationale:* A HIPAA investigation into potential inappropriate access to a specific patient's records requires the ability to produce a complete access history for that patient — who accessed the record, when, and what they did. Generic system-level audit logs that capture "database queries occurred" without identifying the specific patient records accessed are insufficient for HIPAA audit control compliance.
+
+---
+
+### Enhancement 4: Contingency Planning — CP-2(1), CP-4(2), CP-9(8)
+
+**CP-2(1) Contingency Plan — Coordinate with Related Plans:** The High baseline CP-2 requires a contingency plan. This enhancement requires explicit coordination between the OpenMRS contingency plan and MyClinic's broader emergency operations plan — ensuring that clinical downtime procedures are integrated into the clinic's overall emergency response framework, not maintained as a separate IT document that clinical staff do not know exists.
+
+**CP-4(2) Contingency Plan Testing — Alternate Processing Site:** The High baseline CP-4 requires contingency plan testing. This enhancement requires that the testing specifically include the alternate processing site — verifying that OpenMRS can be restored in a secondary AWS region within the defined RTO. Annual tabletop exercise plus documented restoration test to alternate region.
+
+**CP-9(8) Information System Backup — Cryptographic Protection:** This enhancement requires that backup data be protected using cryptographic mechanisms — specifically, that the encryption of S3 backups uses AWS KMS with customer-managed keys rather than AWS-managed keys, providing MyClinic with control over key lifecycle. Customer-ma
