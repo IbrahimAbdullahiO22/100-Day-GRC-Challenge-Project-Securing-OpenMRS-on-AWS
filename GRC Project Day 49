@@ -1,151 +1,284 @@
-# 📅 Day 49: Task S-3 – Allocate Controls (System-Specific vs. Common)  
-_100 Days of GRC – by Ibrahim Abdullahi_  
+#  Day 49 – Task S-3: Allocating Controls Across System-Specific, Hybrid, and Common | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What We’re Doing Today:
+## Connecting Tailoring to Ownership
 
-In today’s post, I’m diving deep into an absolutely critical concept in cloud-based GRC work — **allocating controls** between system-specific and common.  
+Day 48 produced the formal tailoring documentation — scoping decisions, enhancements, and supplementations recorded at the level of precision that assessors and future ISSOs need. Today's Task S-3 takes the tailored control set and assigns each control to the right owner: AWS as the common control provider, MyClinic as the system-specific implementer, or both as a hybrid arrangement where each party handles a defined portion.
 
-This task ensures we define exactly **who is responsible** for which parts of security in our OpenMRS on AWS system. Without this clarity, it is dangerously easy for gaps or duplicate efforts to occur — which I’ve seen in real environments!
+This feels like it should be straightforward — AWS handles the cloud, MyClinic handles the application — but the allocation exercise is where that intuition gets stress-tested. The AWS Shared Responsibility Model defines the boundary in general terms. Task S-3 requires documenting that boundary at the individual control level, with enough specificity to eliminate ambiguity about who is responsible for what when an assessor asks for evidence.
 
----
-
-##  Why This Matters (Leadership Perspective):
-
-In large organizations or cloud deployments like AWS, security controls are distributed:  
-
- Some controls are **inherited** from the cloud provider (AWS), or from Corporate IT (common controls)  
- Others must be **implemented by the system owner** (OpenMRS team, app developers, security engineers)  
-
-A big part of maturing a GRC program is building this clarity. It directly supports:  
-
-- **Audit readiness**  
-- **Streamlined implementation**  
-- **Avoiding control overlap or ownership gaps**  
-- **Accountability** (who does what, and when)  
+The consequence of getting this wrong is concrete. If a control is allocated to AWS but AWS does not actually implement that control — or implements it in a way that does not satisfy the specific requirement — MyClinic has a gap. If a control is allocated to MyClinic but the implementation team assumed AWS was handling it, the control exists in the SSP but not in the system. Both scenarios produce findings in an assessment. Both scenarios are avoidable with clear allocation documentation.
 
 ---
 
-##  Core Concept: System-Specific vs. Common Controls
+## What I Worked On Today
 
-| Type of Control        | What It Means                           |
-|------------------------|-----------------------------------------|
-| **System-Specific**    | Implemented just for our OpenMRS system. Owned by the system team. Customized. |
-| **Common (Inherited)** | Provided by AWS or corporate. Inherited via contracts, attestations, policies. Applied org-wide. |
+NIST SP 800-37 Task S-3 requires that controls be allocated to the system or to common control providers and that the allocation be documented in the System Security Plan. The three allocation categories are:
 
-###  Why allocate?
+**System-Specific Controls** — implemented entirely by MyClinic for the OpenMRS system. MyClinic owns the implementation, collects the evidence, and is responsible for the control's effectiveness.
 
-If you do not explicitly allocate:  
+**Common Controls (Inherited)** — implemented by AWS and inherited by OpenMRS. AWS owns the implementation. MyClinic's responsibility is to verify that the common control is in place and adequate — through AWS compliance certifications, the AWS BAA, and periodic review of AWS compliance documentation.
 
- Controls can get missed  
- Two teams might redundantly implement the same thing  
- Audit evidence will be unclear  
- Allocation enables efficient, trusted GRC work.
+**Hybrid Controls** — partially implemented by AWS and partially by MyClinic. Both parties have defined, distinct responsibilities. The SSP must document both portions clearly — what AWS provides and what MyClinic adds.
+
+The hybrid category is the one that requires the most careful documentation. A hybrid control where one party's portion is not clearly defined is functionally an allocation gap.
 
 ---
 
-##  OpenMRS on AWS – Real Example
+## What Actually Clicked for Me
 
-Here’s how I’d personally approach this (showcasing my own knowledge):
+The insight that clarified Task S-3 for me is the distinction between *inheriting a control* and *relying on a vendor*.
 
-| Type of Control        | Control Example                                                | Reason & Ownership |
-|------------------------|---------------------------------------------------------------|--------------------|
-| **Common**             | PE family: Physical Access Control (PE-2, PE-3, etc.)          | Handled by AWS — we inherit via SOC 2, ISO 27001. AWS operates secure data centers — we verify via BAA and AWS compliance docs. |
-| **System-Specific**    | AC-2: User Account Management (OpenMRS user roles & auth)      | Our team configures OpenMRS roles, MFA, unique IDs, permissions — AWS does not manage OpenMRS users. |
-| **Common**             | MA-2: Controlled Maintenance of physical servers              | AWS owns and maintains physical hardware — inherited control. We focus only on app-level patches (system-specific). |
-| **System-Specific**    | SC-12: Cryptographic Key Management (for OpenMRS DB encryption) | Our team selects encryption settings, manages keys (even though AWS KMS helps) — responsibility remains with us for key mgmt. |
+When MyClinic inherits PE-3 Physical Access Control from AWS, that inheritance has a documented basis — the AWS SOC 2 Type II report validates that AWS's physical access controls meet the control requirement. The inheritance is auditable. An assessor can review the SOC 2 report, confirm the relevant control objective is covered, and satisfy the PE-3 evidence requirement through that review.
 
----
+When MyClinic relies on AWS for something without documenting the basis for that reliance — "AWS handles encryption, so we don't need to worry about SC-28" — that is not inheritance, it is assumption. AWS provides the encryption capability for RDS, but whether MyClinic has enabled it, configured it correctly, and is using customer-managed keys is entirely a MyClinic responsibility. SC-28 is a hybrid control: AWS provides the encryption infrastructure, MyClinic configures and enables it.
 
-##  How I Teach It to Others:
-
-**Common mistake**: “Oh, AWS handles security!”  
-**Correction**: No — **AWS handles OF the cloud**; **we handle IN the cloud**.
-
-AWS’s **Shared Responsibility Model** is key here:  
-
-| AWS Responsibilities             | Our Responsibilities in OpenMRS  |
-|----------------------------------|----------------------------------|
-| Data center physical security    | Application role & user controls |
-| Hypervisor & network infrastructure | Patching OpenMRS code, dependencies |
-| Managed service (RDS storage encryption, etc.) | How we configure access, manage PHI, implement policies |
+The line between these two cases — documented inheritance versus undocumented assumption — is exactly where audit findings come from. Task S-3 is the process of making every control's ownership explicit so that line is clear throughout the SSP.
 
 ---
 
-##  Practical Example from My Experience:
-
-In a recent cloud GRC project I led — allocating these controls early in the SSP phase saved *hundreds of staff-hours*.  
-
-- DevOps wasn’t duplicating controls already handled by AWS  
-- Auditors had clear mappings to AWS SOC 2 controls  
-- Our app team focused effort on true system-specific controls (user auth, encryption choices, app security logging)  
-
-Lesson: **Ownership clarity → audit success → real risk reduction**.
+## Complete Control Allocation Record for OpenMRS
 
 ---
 
-##  Hands-On (My Example):
+### Common Controls — Inherited from AWS
 
-**Common Control:**  
-`PE-3: Physical access control` — inherited from AWS via SOC 2. We obtain the SOC reports quarterly for evidence.
+These controls are fully satisfied by AWS's implementation. MyClinic's responsibility is limited to obtaining and reviewing evidence of implementation (SOC 2 reports, AWS compliance documentation) and maintaining that evidence as part of the authorization package.
 
-**System-Specific Control:**  
-`AC-2: Account management in OpenMRS` — implemented by our team:  
- Unique user IDs  
- Enforced MFA  
- Role-based permissions  
- Periodic review
+**Evidence requirement for all inherited controls:** Current AWS SOC 2 Type II report (available through AWS Artifact), reviewed annually by ISSO. Relevant control objectives noted in SSP for each inherited control family.
 
 ---
 
-##  Reflection (Leadership Take):
+**Physical and Environmental Protection (PE) — Substantially Inherited**
 
-Do I trust AWS to handle their common controls? Mostly — but we **verify**:  
+| Control | Allocation | AWS Implementation | MyClinic Responsibility |
+|---|---|---|---|
+| PE-2 Physical Access Authorizations | Common — AWS | AWS controls physical access to data center facilities through badge systems, biometrics, and security personnel | Review SOC 2 annually; note control objective coverage |
+| PE-3 Physical Access Control | Common — AWS | AWS implements layered physical access controls to server rooms; access logged and reviewed | Review SOC 2 annually |
+| PE-6 Monitoring Physical Access | Common — AWS | AWS monitors physical access via CCTV and security operations | Review SOC 2 annually |
+| PE-8 Visitor Access Records | Common — AWS | AWS maintains visitor access logs for data center facilities | Review SOC 2 annually |
+| PE-12 Emergency Lighting | Common — AWS | AWS data centers implement emergency lighting systems | Review SOC 2 annually |
+| PE-13 Fire Protection | Common — AWS | AWS implements fire detection and suppression systems | Review SOC 2 annually |
+| PE-14 Environmental Controls | Common — AWS | AWS maintains temperature and humidity controls | Review SOC 2 annually |
+| PE-15 Water Damage Protection | Common — AWS | AWS implements water damage protection | Review SOC 2 annually |
 
- Review AWS compliance reports (SOC 2 Type II, ISO 27001)  
- Conduct contract reviews (BAA with AWS)  
- Maintain our own mappings in the SSP and POA&M
-
-Never simply “assume.” In GRC leadership, **assumptions are risk**. I teach my teams to follow this rule:
-
-**“Inherit with evidence, not blind faith.”**
-
----
-
-## 📝 Summary:
-
-**Key takeaway from Day 49:**  
-
-A mature GRC program clearly defines:  
-
- What is system-specific (owned & implemented by us)  
- What is inherited/common (owned elsewhere — with documented verification)  
-
-For OpenMRS on AWS — this step means:  
-
-- We avoid duplicating effort  
-- We ensure nothing critical is missed  
-- We’re fully prepared for external audit and internal review  
-- Our risk owners (senior leadership) can trust that controls are in place and effective.
+*Important exception:* Physical security of clinic workstations, the clinic building, and clinic facility access is entirely MyClinic's responsibility. The PE inheritance applies only to the AWS-hosted server infrastructure. Workstation physical security is a system-specific control documented in the endpoint security section.
 
 ---
 
-##  Tomorrow’s Focus:
+**Maintenance (MA) — Physical Hardware Maintenance Inherited**
 
-We’ll now start documenting this control set into our **System Security Plan (SSP)** — a crucial step toward operationalizing the GRC program for OpenMRS on AWS.
+| Control | Allocation | AWS Implementation | MyClinic Responsibility |
+|---|---|---|---|
+| MA-2 Controlled Maintenance | Common — AWS (for infrastructure); System-Specific (for application) | AWS maintains physical servers, network hardware, and managed service infrastructure | MyClinic maintains OpenMRS application — patching, updates, configuration changes |
+| MA-4 Nonlocal Maintenance | Common — AWS | AWS performs remote maintenance of infrastructure components under controlled conditions | MyClinic performs remote maintenance of OpenMRS application under documented change management procedures |
+
+*Note on MA allocation:* The MA family illustrates why hybrid thinking is important. AWS handles physical hardware maintenance — MyClinic has no role in replacing a failed hard drive in an AWS data center. But application-level maintenance — OpenMRS version updates, dependency patching, configuration changes — is entirely MyClinic's responsibility. Both allocations need to be documented to prevent the assumption that AWS handles all maintenance.
 
 ---
 
-##  Suggested Search Terms:
+**Infrastructure-Level System and Services Acquisition (SA) — Inherited**
 
-- "Common controls vs system-specific controls"  
-- "AWS shared responsibility model examples"  
-- "Inherited controls cloud security"  
-- "SSP documenting inherited controls"  
+| Control | Allocation | AWS Implementation | MyClinic Responsibility |
+|---|---|---|---|
+| SA-4 Acquisition Process (infrastructure) | Common — AWS | AWS acquires and validates infrastructure components through supply chain security processes documented in FedRAMP authorization | Review FedRAMP package where available; rely on AWS SOC 2 for supply chain security of managed services |
 
+---
 
+### System-Specific Controls — Implemented by MyClinic
 
+These controls are fully MyClinic's responsibility. AWS provides no contribution to their implementation. Assessment evidence must come from MyClinic's implementation.
 
+---
 
+**Access Control (AC) — System-Specific for Application Layer**
 
+| Control | Implementation Owner | Implementation Description |
+|---|---|---|
+| AC-2 Account Management | MyClinic — ISSO and Health IT Manager | OpenMRS user accounts created with documented authorization; quarterly access review; 4-hour deactivation on separation; privileged account review |
+| AC-3 Access Enforcement | MyClinic — ISSO | Role-based access control configured in OpenMRS; clinical roles scoped to patient care function; administrative roles scoped to registration and scheduling |
+| AC-5 Separation of Duties | MyClinic — ISSO and Health IT Manager | No single user holds both clinical and administrative roles; IT administrators have no clinical record access; ISSO has audit access but not clinical access |
+| AC-6 Least Privilege | MyClinic — ISSO | Each role assigned minimum permissions required for function; privileged access restricted to IT administrators and ISSO; documentation of role permission sets maintained |
+| AC-11 Device Lock | MyClinic — IT Administrator | Screen lock after 10 minutes of inactivity on workstations; configured via group policy or equivalent; full authentication required to unlock |
+| AC-17 Remote Access | MyClinic — ISSO and IT Administrator | VPN required for all remote access to OpenMRS; VPN connections logged; MFA required for VPN authentication |
+| AC-22 Publicly Accessible Content | MyClinic — ISSO | No patient data or sensitive system information publicly accessible; OpenMRS login page is public-facing but no ePHI is displayed without authentication |
+
+---
+
+**Audit and Accountability (AU) — System-Specific for Application Audit Logs**
+
+| Control | Implementation Owner | Implementation Description |
+|---|---|---|
+| AU-2 Event Logging | MyClinic — IT Administrator and ISSO | OpenMRS application logging configured per Day 48 specification; application-level audit events (patient record access, modifications, authentication) logged to CloudWatch |
+| AU-3 Content of Audit Records | MyClinic — IT Administrator | Application audit records contain required fields: user identifier, timestamp, patient identifier, action type, outcome, source IP |
+| AU-5 Response to Audit Logging Process Failures | MyClinic — ISSO | Alert configured in CloudWatch for logging failures; ISSO notified within 15 minutes of audit logging interruption |
+| AU-8 Time Stamps | MyClinic — IT Administrator | System time synchronized with AWS NTP service; all audit records use UTC timestamp |
+| AU-11 Audit Record Retention | MyClinic — ISSO | Application audit logs retained 6 years per HIPAA documentation retention requirement; retention configured in CloudWatch log group settings |
+
+*Note on AU allocation — important distinction:* AWS CloudTrail captures all AWS API calls across the account — this is a hybrid control documented below. But the OpenMRS application audit log — who accessed which patient record — is entirely a system-specific control. CloudTrail does not record application-level access to patient data. The distinction between infrastructure audit logs (CloudTrail — hybrid) and application audit logs (CloudWatch application logging — system-specific) must be documented clearly in the SSP. Conflating them is one of the most common control coverage gaps in cloud-hosted healthcare systems.
+
+---
+
+**Identification and Authentication (IA) — System-Specific for Application**
+
+| Control | Implementation Owner | Implementation Description |
+|---|---|---|
+| IA-2 User Identification and Authentication | MyClinic — ISSO and IT Administrator | All OpenMRS users authenticated via username/password plus TOTP-based MFA; no shared accounts permitted |
+| IA-4 Identifier Management | MyClinic — ISSO | Unique user identifiers assigned to each individual; identifiers not reused after account deactivation; identifier assignment documented |
+| IA-5 Authenticator Management | MyClinic — ISSO | Password policy enforced: minimum 12 characters, complexity requirements, 90-day maximum age, 12-generation history; TOTP authenticator app required |
+| IA-8 Non-Organizational User Authentication | MyClinic — ISSO | Laboratory API integration uses dedicated service account with API key; key rotation on 90-day schedule; separate credentials per integration |
+
+---
+
+**Incident Response (IR) — System-Specific**
+
+| Control | Implementation Owner | Implementation Description |
+|---|---|---|
+| IR-1 Incident Response Policy | MyClinic — ISSO and Compliance Officer | Documented incident response policy and procedure; reviewed annually; HIPAA breach assessment workflow integrated |
+| IR-2 Incident Response Training | MyClinic — ISSO | Annual IR training for all system personnel with defined IR roles; training records documented |
+| IR-3 Incident Response Testing | MyClinic — ISSO | Annual tabletop exercise simulating a ransomware or breach scenario; results documented; plan updated based on findings |
+| IR-4 Incident Handling | MyClinic — ISSO | Incident response plan covers detection, analysis, containment, eradication, recovery, and post-incident review; automated alerting from GuardDuty and CloudWatch feeds notification workflow |
+| IR-5 Incident Monitoring | MyClinic — ISSO | Incident tracking in documented log; incidents categorized by severity; trends reviewed quarterly |
+| IR-6 Incident Reporting | MyClinic — ISSO and Compliance Officer | HIPAA breach assessment initiated within 24 hours of discovery; HHS notification within 60 days of determination; internal reporting to AO within 24 hours of confirmed incident |
+
+---
+
+**Contingency Planning (CP) — System-Specific**
+
+| Control | Implementation Owner | Implementation Description |
+|---|---|---|
+| CP-2 Contingency Plan | MyClinic — ISSO and Health IT Manager | Documented contingency plan covering clinical downtime procedures, IT recovery procedures, and communication protocols; coordinated with clinic emergency operations plan |
+| CP-3 Contingency Training | MyClinic — ISSO | Annual contingency training for clinical staff on downtime procedures; separate training for IT staff on technical recovery; records documented |
+| CP-4 Contingency Plan Testing | MyClinic — ISSO | Annual tabletop exercise; quarterly backup restoration test; first full clinical downtime exercise to be completed before ATO |
+| CP-9 Information System Backup | MyClinic — IT Administrator | Automated nightly RDS backup; weekly S3 export; customer-managed KMS encryption; WORM protection via S3 Object Lock; quarterly restoration test documented |
+| CP-10 Information System Recovery | MyClinic — IT Administrator | Recovery procedures documented with step-by-step instructions; RTO target 4 hours; RPO target 24 hours |
+
+---
+
+**Configuration Management (CM) — System-Specific**
+
+| Control | Implementation Owner | Implementation Description |
+|---|---|---|
+| CM-2 Baseline Configuration | MyClinic — IT Administrator | Documented baseline for EC2 instance (CIS Benchmark Ubuntu), OpenMRS application configuration, and security group configuration; baseline version-controlled |
+| CM-3 Configuration Change Control | MyClinic — ISSO | All configuration changes reviewed by ISSO before implementation; emergency changes documented after the fact within 24 hours; change log maintained |
+| CM-6 Configuration Settings | MyClinic — IT Administrator | Organization-defined configuration settings documented for all components; deviation from baseline requires ISSO approval and documentation |
+| CM-8 System Component Inventory | MyClinic — ISSO | Asset inventory maintained and reviewed quarterly; new components added to inventory before deployment |
+
+---
+
+### Hybrid Controls — Shared Responsibility
+
+These are the controls where AWS provides part of the implementation and MyClinic provides the rest. Both portions must be documented and both must be assessed. An assessor reviewing a hybrid control needs to understand both what was inherited and what was implemented by MyClinic.
+
+---
+
+**Encryption Controls — SC-28, SC-8**
+
+| Control | AWS Portion | MyClinic Portion |
+|---|---|---|
+| SC-28 Protection of Information at Rest | AWS provides RDS encryption capability (AES-256 via AWS KMS); AWS provides S3 server-side encryption capability | MyClinic must enable encryption on RDS instance (not enabled by default — must be configured at creation); MyClinic must configure SSE-KMS on S3 backup bucket; MyClinic must create and manage the customer-managed KMS key; MyClinic must enable EC2 EBS volume encryption |
+| SC-8 Transmission Confidentiality and Integrity | AWS provides TLS termination capability via Application Load Balancer and ACM; AWS manages the underlying TLS infrastructure | MyClinic must configure HTTPS enforcement — redirect HTTP to HTTPS; MyClinic must configure TLS 1.2 minimum in OpenMRS and Tomcat; MyClinic must obtain and maintain the TLS certificate via ACM |
+
+*Critical documentation note:* AWS providing encryption capability is fundamentally different from encryption being enabled. An assessor who reviews SC-28 by confirming that AWS offers RDS encryption has not confirmed that the OpenMRS RDS instance is encrypted. The assessment evidence for the MyClinic portion of SC-28 is: screenshot of RDS instance showing encryption enabled; confirmation of KMS key identifier; confirmation that key is customer-managed.
+
+---
+
+**Logging and Monitoring Controls — AU-6, SI-4**
+
+| Control | AWS Portion | MyClinic Portion |
+|---|---|---|
+| AU-6 Audit Review and Analysis | AWS provides CloudTrail for API-level logging; AWS provides CloudWatch for log aggregation and alerting capability; AWS provides GuardDuty for automated threat detection | MyClinic must configure CloudTrail to capture all regions and management events; MyClinic must create CloudWatch metric filters and alarms for security-relevant events; MyClinic must enable GuardDuty; MyClinic must configure Security Hub to aggregate findings; MyClinic must establish review process for GuardDuty findings and CloudWatch alerts |
+| SI-4 Information System Monitoring | AWS provides GuardDuty, CloudTrail, Config, VPC Flow Logs capability | MyClinic must enable all monitoring services; configure alert thresholds; establish response procedures; assign personnel responsible for daily finding review |
+
+*Documentation note:* The Day 28 Capital One breach case is directly relevant here. Capital One had GuardDuty alerts generated — the AWS portion was working. The gap was in the MyClinic-equivalent portion: the review and response process that should have acted on those alerts. Both portions of the hybrid control must be implemented for the control to be effective.
+
+---
+
+**Patch Management — SI-2**
+
+| Control | AWS Portion | MyClinic Portion |
+|---|---|---|
+| SI-2 Flaw Remediation | AWS automatically patches RDS managed service (OS-level patches applied by AWS; minor engine patches applied automatically if configured); AWS patches the underlying hypervisor and host infrastructure | MyClinic must patch the OpenMRS application when new releases address security vulnerabilities; MyClinic must patch the EC2 Ubuntu OS (not automatic — MyClinic must apply OS patches); MyClinic must patch Apache Tomcat; MyClinic must update OpenMRS dependencies when vulnerability patches are released |
+
+*Documentation note:* The automatic RDS patching from AWS covers the database engine. It does not cover the OpenMRS application running on EC2, the EC2 operating system, or Apache Tomcat. The SI-2 hybrid allocation makes this boundary explicit — an assessor looking for OS patch evidence should look at EC2 patch history, not just confirm that RDS is managed by AWS.
+
+---
+
+**Boundary Protection — SC-7**
+
+| Control | AWS Portion | MyClinic Portion |
+|---|---|---|
+| SC-7 Boundary Protection | AWS provides VPC with configurable security groups; AWS provides WAF capability; AWS provides Network ACL capability | MyClinic must configure security groups with least-privilege rules; MyClinic must configure and maintain WAF rules including OWASP ruleset; MyClinic must define Network ACL rules; MyClinic must configure VPC routing to restrict traffic flows |
+
+---
+
+## Complete Allocation Summary
+
+| Control Family | Allocation Type | Primary Responsibility |
+|---|---|---|
+| PE (Physical — server infrastructure) | Common — AWS | AWS |
+| PE (Physical — workstations/clinic) | System-Specific | MyClinic |
+| MA (Physical hardware maintenance) | Common — AWS | AWS |
+| MA (Application maintenance) | System-Specific | MyClinic |
+| AC (Application accounts and access) | System-Specific | MyClinic |
+| AU (Application audit logging) | System-Specific | MyClinic |
+| AU (AWS API logging — CloudTrail) | Hybrid | AWS capability + MyClinic configuration |
+| IA (Application authentication) | System-Specific | MyClinic |
+| IR (Incident response) | System-Specific | MyClinic |
+| CP (Contingency planning and testing) | System-Specific | MyClinic |
+| CM (Configuration management) | System-Specific | MyClinic |
+| SC-28 (Encryption at rest) | Hybrid | AWS capability + MyClinic must enable |
+| SC-8 (Encryption in transit) | Hybrid | AWS capability + MyClinic must configure |
+| SC-7 (Boundary protection) | Hybrid | AWS VPC + MyClinic security group/WAF config |
+| SI-2 (Patch management — managed services) | Hybrid | AWS patches RDS + MyClinic patches EC2/app |
+| SI-2 (Patch management — application) | System-Specific | MyClinic |
+| SI-4 (Monitoring) | Hybrid | AWS services enabled + MyClinic review/response |
+
+---
+
+## A Real-World Example That Made This Click
+
+While working through the hybrid encryption allocation today I returned to the **2019 Capital One breach** — covered on Day 33 from the asset inventory perspective — but today specifically through the hybrid control allocation failure lens.
+
+Capital One's breach involved a Server Side Request Forgery vulnerability that allowed an attacker to query the AWS EC2 instance metadata service and retrieve temporary IAM credentials. The attacker then used those credentials to access S3 buckets containing customer data.
+
+The relevant allocation detail: AWS provided all the security tools that could have detected and mitigated this breach — GuardDuty was available, WAF was available, IAM permission boundaries were available. These were all hybrid controls where AWS provided the capability and Capital One was responsible for the configuration and monitoring portions.
+
+The post-incident analysis found that Capital One had not configured WAF rules to block the specific type of SSRF request used in the attack, had not configured IAM permission boundaries that would have restricted the blast radius of compromised instance credentials, and had GuardDuty alerts that were not acted on promptly.
+
+Every one of those gaps was in the MyClinic-equivalent portion of a hybrid control. AWS provided the capability. The system-specific configuration and monitoring portions were not adequately implemented.
+
+The Task S-3 allocation documentation for hybrid controls — specifically the SC-7 WAF configuration and SI-4 monitoring review portions — directly addresses the pattern of failure that the Capital One breach illustrates. The point of documenting both portions of a hybrid control is to make the MyClinic-responsible portion visible and accountable, so it cannot be assumed away.
+
+---
+
+## What I Am Still Thinking About
+
+One allocation question I want to think through more carefully: how should the OpenMRS database-level audit logging be allocated?
+
+The application audit log — captured by the OpenMRS application and shipped to CloudWatch — is system-specific, as documented above. But AWS RDS also generates database-level logs — slow query logs, error logs, general query logs — that capture database activity at a lower level than the application audit log.
+
+These RDS logs are a hybrid: AWS provides the logging capability, MyClinic must enable them and configure retention. But they are also not the primary HIPAA audit control mechanism — they capture database queries, not the specific user or patient context that HIPAA requires. An RDS general query log might show that a SELECT statement ran against the patient table, but not which OpenMRS user executed it or which patient was accessed.
+
+The allocation documentation should be explicit: RDS database logs are a supplementary monitoring tool (hybrid — AWS capability plus MyClinic configuration), but they do not substitute for the application-level audit log (system-specific) as the HIPAA audit control evidence. Both serve different purposes and the SSP should document both without conflating them.
+
+---
+
+## What's Next
+
+Day 50 begins the implementation documentation phase — producing the HIPAA-to-NIST control crosswalk that maps each HIPAA Security Rule requirement to the specific controls in the tailored, allocated control set. This crosswalk serves both as a compliance demonstration for HIPAA purposes and as a reference document that helps the implementation team understand why each control exists — connecting the technical implementation back to the regulatory requirement it satisfies.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task S-3 Control Allocation](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- [AWS Artifact – Compliance Reports](https://aws.amazon.com/artifact/)
+- [NIST SP 800-53 Rev 5 – Common Control Identification](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [Capital One Data Breach – Senate PSI Report](https://www.hsgac.senate.gov/subcommittees/investigations/media/senate-investigations-subcommittee-releases-report-on-capital-one-data-breach)
+
+---
+
+*#GRC #ControlAllocation #NISTRMF #SharedResponsibility #AWS #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #Day49*
