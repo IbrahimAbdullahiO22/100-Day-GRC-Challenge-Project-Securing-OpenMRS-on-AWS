@@ -1,131 +1,307 @@
-# 📅 Day 55 – Security Beyond Tech: Policies, People, and Process Controls  
-_100 Days of GRC – OpenMRS-on-AWS Project_
+# Day 55 – Task I-1 (Part 2): Implementing Administrative and Operational Controls | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Securing the Human Side of the System
+## The Other Half of Implementation
 
-After diving deep into the technical trenches yesterday, today I took a step back and focused on what holds those firewalls and audit logs together: **people and process**.
+Day 54 verified and documented the technical control implementations — encryption, authentication, audit logging, network security, WAF. Today completes the Task I-1 implementation work by verifying and documenting the administrative and operational controls.
 
-In real-world governance, risk, and compliance (GRC), technical tools can only go so far. Without clearly defined **administrative controls** — policies, procedures, and user expectations — even the best tools become ineffective. Day 55 was about building **the human framework** that makes OpenMRS on AWS not only secure, but sustainable.
+The relationship between technical and administrative controls is not sequential — it is interdependent. The MFA technical control from Day 54 is only effective if the account provisioning procedure ensures MFA enrollment before account activation. The audit logging technical control only satisfies the HIPAA audit requirement if a defined process exists for reviewing those logs and responding to anomalies. The encryption technical control only maintains its integrity if the patch management procedure ensures that vulnerabilities in the encryption implementation are patched on schedule.
 
----
-
-##  Today’s Goals
-
-- Define **administrative controls** and understand their role in NIST RMF Task I-1  
-- Identify real-world administrative controls needed for OpenMRS on AWS  
-- Implement or draft at least one key administrative control  
-- Reflect on the synergy between people, process, and technology  
+Administrative controls are what give technical controls operational continuity. Without them, technical controls drift — configurations change, accounts accumulate, logs go unreviewed, patches fall behind. The implementation verification for administrative controls is therefore asking a different question than Day 54's technical verification. For technical controls, the question was: is it configured? For administrative controls, the question is: is it operating — and is there evidence that it has been operating consistently?
 
 ---
 
-##  What Are Administrative Controls?
+## What I Worked On Today
 
-Administrative (or procedural) controls are **written policies, defined procedures, and user-focused training**. They guide **how people use systems**, how access is managed, how incidents are handled, and how compliance is maintained.
+Task I-1 administrative control implementation verification has the same structure as the technical verification: confirm each control is implemented as documented in the SSP, capture the implementation evidence, identify discrepancies, and document them as SSP update items or POA&M entries.
 
-> If technical controls are the seatbelts and airbags, administrative controls are the **driver's license**, **traffic laws**, and **defensive driving training**. You need both.
+For administrative controls, implementation evidence is different from technical configuration screenshots. Evidence includes: approved policy documents with signatures and review dates, training completion records, procedure documents, review logs, test records, and similar operational documentation that demonstrates the control is being executed — not just that a document was written.
 
----
-
-##  Administrative Controls for OpenMRS on AWS
-
-Here are the core administrative controls I either implemented or planned for our OpenMRS system:
-
-### 📑 1. **Access Control Policy**
-
-A formal policy now guides who can access OpenMRS and AWS resources, under what conditions, and through what approval chain.
-
-**Example Excerpt:**
-- All OpenMRS accounts must be tied to an active clinician or admin role.  
-- Multi-factor authentication (MFA) is mandatory for all AWS and OpenMRS admin users.  
-- Shared credentials are strictly prohibited.  
-- Quarterly access reviews will be conducted to validate least privilege.
-
-This aligns both with HIPAA and NIST AC family controls.
+A written policy with no evidence of execution is not an implemented control. It is a planned control that needs to be operationalized before it can be assessed as implemented.
 
 ---
 
-### 📄 2. **User Provisioning & Deprovisioning Procedure**
+## What Actually Clicked for Me
 
-I created a lightweight user management procedure. It's not enough to set up IAM roles — we need to control **who gets access and when it's revoked**.
+The concept that clarified administrative control implementation for me today is the distinction between a *policy* and an *implemented control*.
 
-**Highlights:**
-- New accounts are requested via email/ticket from department leads.  
-- IT admin validates the request and logs it in the provisioning tracker.  
-- Offboarding is tied to HR exit checklists, and accounts must be disabled within 24 hours of separation.  
+A policy document describes what should happen. An implemented control is a policy document plus evidence that what should happen is actually happening. The gap between those two states is the gap between paper security and operational security.
 
-This prevents orphan accounts and aligns with GRC best practices.
+When I write a user provisioning procedure, I have produced a policy. When I can show provisioning request records, approval documentation, and account creation logs for the last ten accounts created — I have demonstrated an implemented control. When I can show that all ten accounts had MFA enrollment confirmed before access was activated — I have demonstrated that the technical and administrative controls are working together as intended.
 
----
-
-### 🎓 3. **Security Awareness Training Plan**
-
-Even the best defenses fail if users click the wrong link. I drafted a plan for lightweight but impactful security training.
-
-**Key Elements:**
-- All OpenMRS team members (devs, admins, clinicians) must complete an annual 30-minute security training.  
-- Topics include phishing, password hygiene, cloud security basics, and PHI handling under HIPAA.  
-- Training tracked via Google Form + shared roster.  
-
-> Simple training = big ROI. This supports NIST AT-2 control.
+This distinction is critical for NIST SP 800-53A assessment methodology. Assessors use three assessment methods: examine (review the document), interview (ask the responsible party about the process), and test (verify that the control produces the expected outcome). A policy document satisfies the examine method. Evidence of execution is needed to satisfy the interview and test methods. An administrative control that only has a document, with no execution evidence, will be assessed as partially implemented at best.
 
 ---
 
-###  4. **Incident Response (IR) Plan**
-
-No system is immune. I outlined a basic IR plan to ensure the OpenMRS team knows what to do *before* something goes wrong.
-
-**Top 3 IR Actions:**
-1. Detect: Set alerts for unauthorized logins, data exfiltration, or GuardDuty findings.  
-2. Contain: Isolate the EC2 instance, revoke IAM keys, disable user access.  
-3. Notify: Alert the security lead, leadership team, and escalate to AWS support.
-
-> Even a one-page IR checklist boosts readiness and builds confidence.
+## Administrative Control Implementation Verification
 
 ---
 
-###  5. **Backup & Restore Procedures**
-
-Backups mean nothing if they can't be restored. Today I documented how to verify that our OpenMRS backups are functional.
-
-**Policy Highlights:**
-- RDS snapshots taken nightly and retained for 30 days.  
-- Monthly restore drills performed on a test instance to validate data integrity.  
-- Restore procedures reviewed quarterly.  
-
-This hybrid of technical and administrative controls ensures **resilience**.
+### Awareness and Training (AT) — Implementation Evidence
 
 ---
 
-###  6. **Patch Management Standard**
+**AT-2: Security Awareness Training — Operational Status**
 
-Technical patching needs **human scheduling and documentation**. I drafted a policy aligned with CIS benchmarks.
+**SSP Description (from Day 51):** Annual training required before initial access and annually thereafter. Delivered via LMS. 80% passing score required. Completion tracked quarterly by ISSO. Non-compliance escalated with 10-business-day completion deadline.
 
-**Example:**
-- Critical OS patches must be applied within 14 days.  
-- OpenMRS app updates are tested in staging, then pushed to prod within 30 days.  
-- Patch logs stored in a shared team folder for visibility and auditability.
+**Implementation Verification:**
+
+*Policy document:* MyClinic Security Awareness and Training Policy — current version dated [date], approved by Executive Director, signature on file. Policy reviewed within the last 12 months. ✓
+
+*Training curriculum:* LMS training course [OpenMRS-Security-Awareness-Annual-v2] — content verified as covering all six required topic areas from the SSP description (phishing, MFA, HIPAA basics, physical security, incident reporting, social engineering). Last content review: [date]. ✓
+
+*Completion records:* LMS export pulled for all active OpenMRS users. Findings:
+
+| Status | Count | Notes |
+|---|---|---|
+| Complete — current | [N] | Training within last 12 months |
+| Complete — due for renewal within 30 days | [N] | Reminder sent |
+| Overdue — past annual renewal date | [N] | Escalation required |
+| Not completed — new hires within 5-day window | [N] | In progress |
+
+*Discrepancy:* [N] users found with overdue training — past their annual renewal date without completion. Per the SSP procedure, ISSO should have sent a 10-business-day completion deadline notice. Review of ISSO records found that the quarterly compliance pull had not been conducted in the most recently completed quarter — the overdue status was not detected on schedule.
+
+This is an AT-2 procedural gap: the quarterly compliance review process was not executed. The gap has two components — the immediate remediation (notify overdue users and suspend access if not completed within 10 business days) and the process gap (implement a calendar reminder to ensure quarterly compliance reviews happen consistently). Both components documented in POA&M. ISSO issued overdue notifications during today's verification.
+
+*Verification Evidence:* Approved policy document; LMS training content with topic coverage confirmation; LMS completion export with above status breakdown; ISSO notification records for overdue users; POA&M entry for quarterly review process gap.
 
 ---
 
-##  Reflection: Why Admin Controls Matter
+**AT-3: Role-Based Training — Operational Status**
 
-Writing policies and procedures revealed **gaps we hadn’t noticed**. Some controls were assumed but undocumented — others lacked ownership. The process reminded me that **governance is about clarity**: who’s doing what, when, and why.
+**SSP Description (from Day 51):** Annual role-based training for IT Administrator, ISSO, and clinical staff roles, covering role-specific security responsibilities.
 
-> “Our tech controls were strong, but now they’re **anchored in process**. Logging is good — having someone review logs weekly is better. IAM roles are good — having a deprovisioning policy is better.”
+**Implementation Verification:**
 
-These controls reduce risk, align with frameworks like NIST 800-53, and make our system **auditable and defendable**.
+*IT Administrator and ISSO role-based training:* LMS records and facilitated session sign-in sheets confirm completion for current personnel in these roles. Content verified. ✓
+
+*Clinical staff downtime training:* Cannot be fully implemented — dependent on completion of CP-2 clinical downtime procedures, which remain a POA&M item. Clinical staff have completed the general security awareness training (AT-2) but the specific downtime procedures component of AT-3 is pending CP-2 completion.
+
+Current status: draft downtime procedures reviewed with one clinical staff representative for feedback. Full training delivery pending finalized procedures. This remains a POA&M item with the same target date as CP-2.
+
+*Verification Evidence:* IT/ISSO training completion records; clinical training gap documented in POA&M with CP-2 dependency.
 
 ---
 
-##  Hands-On: Admin Control Implementation
+### Personnel Security (PS) — Implementation Evidence
 
-For this sprint, I wrote and committed a **Password Policy** for OpenMRS on AWS:
+---
 
-```text
-- Passwords must be 12+ characters with complexity  
-- MFA is mandatory for all AWS IAM and OpenMRS admin accounts  
-- Passwords must be rotated every 90 days  
-- Default passwords must be changed before first login  
-- Shared credentials are not allowed under any circumstance
+**PS-3: Personnel Screening — Operational Status**
+
+**SSP Description (from Day 51):** Background screening for all personnel before OpenMRS access is granted. Third-party screening vendor. HR confirms screening completion to ISSO.
+
+**Implementation Verification:**
+
+HR process review confirmed: all current OpenMRS users are employed staff who underwent background screening as part of the MyClinic onboarding process. HR maintains screening completion records in the HR information system. HR-to-ISSO confirmation process: HR sends a written confirmation to ISSO when a new hire has cleared screening and is approved for system access. ISSO does not create the OpenMRS account until the HR confirmation is received.
+
+Verification spot-check: pulled provisioning records for the five most recently created OpenMRS accounts. Confirmed that each has a corresponding HR clearance confirmation dated before the account creation date. ✓
+
+*Verification Evidence:* HR-to-ISSO confirmation letters for five most recent accounts; account creation dates confirming sequence (HR clearance before account creation).
+
+---
+
+**PS-4: Personnel Termination — Operational Status**
+
+**SSP Description (from Day 51):** Account deactivated within 4 hours of HR separation notification. ISSO reviews audit log for 90 days preceding separation.
+
+**Implementation Verification:**
+
+Separation records review — five most recent employee separations:
+
+| Separation | HR Notification Time | Account Deactivation Time | Time to Deactivation | 90-Day Audit Review |
+|---|---|---|---|---|
+| 1 | [date/time] | [date/time] | 2h 15m | Completed — no anomalies |
+| 2 | [date/time] | [date/time] | 3h 45m | Completed — no anomalies |
+| 3 | [date/time] | [date/time] | 1h 30m | Completed — one access event flagged, reviewed with supervisor, confirmed legitimate |
+| 4 | [date/time] | [date/time] | 4h 10m | Completed — no anomalies |
+| 5 | [date/time] | [date/time] | 2h 50m | Completed — no anomalies |
+
+*Discrepancy:* Separation 4 exceeded the 4-hour deactivation target by 10 minutes. Review of the record found that the HR notification was received during a period when the ISSO was in a meeting without phone access — the notification sat unread for approximately 90 minutes before the ISSO acted. The 4-hour target was met by minutes.
+
+This near-miss surfaces a process gap: the ISSO is the single point of failure for account deactivation. If the ISSO is unavailable (meeting, travel, illness), the 4-hour target may be missed. The SSP should document a backup — the IT Administrator as the designated secondary for account deactivation when the ISSO is unavailable. Adding this backup designation as a POA&M item.
+
+*Verification Evidence:* Separation records with timestamps; audit log review documentation for each separation; POA&M entry for backup designation gap.
+
+---
+
+### Configuration Management (CM) — Implementation Evidence
+
+---
+
+**CM-3: Configuration Change Control — Operational Status**
+
+**SSP Description (from Day 51):** All configuration changes follow documented change management process. Change log maintained. ISSO reviews monthly.
+
+**Implementation Verification:**
+
+Change log review — last 90 days: pulled the configuration change log from the MyClinic CM repository.
+
+Findings:
+- [N] standard changes documented — all have ISSO review confirmation within 24 hours ✓
+- [N] normal changes documented — all have advance ISSO approval with 3-business-day lead time ✓
+- [N] emergency changes documented — all have post-implementation documentation within 24 hours ✓
+
+Monthly change log review: ISSO maintains a monthly review record. Last three monthly reviews documented. ✓
+
+Cross-reference with CloudTrail: ISSO ran a spot-check CloudTrail query for security-relevant configuration changes in the last 90 days (security group modifications, IAM policy changes, S3 bucket policy changes, KMS key changes). All CloudTrail events for these action types correspond to entries in the change log. No undocumented changes found. ✓
+
+Day 54 discrepancy corrections are documented in the change log as security remediations — SSH restriction, WAF lifecycle rule, temporary password correction, CloudTrail tamper alerts. All four are present in the log. ✓
+
+*No discrepancies found.*
+
+*Verification Evidence:* Change log export for 90-day period; ISSO review records; CloudTrail cross-reference query results.
+
+---
+
+**CM-6: Security Configuration Settings — Baseline Documentation**
+
+**SSP Description (from Day 51):** Documented baseline for EC2 (CIS Benchmark Ubuntu), OpenMRS configuration, and security group configuration. Baseline version-controlled. Deviations require ISSO approval.
+
+**Implementation Verification:**
+
+CIS Benchmark baseline documentation: ISSO has documented the EC2 configuration baseline against CIS Ubuntu Linux Benchmark Level 1. Baseline document version-controlled in the CM repository. Deviations from CIS recommendations documented with rationale:
+
+| CIS Recommendation | Deviation | Rationale | ISSO Approved |
+|---|---|---|---|
+| Disable USB storage | Not applicable — cloud EC2 instance | No physical USB interface exists on EC2 | Yes |
+| Configure audit logging via auditd | Implemented via CloudWatch agent instead | CloudWatch provides equivalent logging with better integration | Yes |
+| Configure time synchronization | Implemented via AWS NTP (169.254.169.123) | AWS-provided NTP service is more reliable than external NTP in VPC | Yes |
+
+OpenMRS configuration baseline: documented in the CM repository, including authentication module settings, role definitions, and integration configurations. Current system configuration matches baseline. ✓
+
+Security group baseline: documented in the CM repository as the approved rule set. Day 54's SSH restriction correction updated the baseline to reflect the corrected configuration. ✓
+
+*Verification Evidence:* CIS baseline document with deviation table; OpenMRS configuration baseline; security group baseline with Day 54 update record.
+
+---
+
+### Incident Response (IR) — Operational Status
+
+---
+
+**IR-1: Incident Response Plan — Document Status**
+
+**SSP Description (from Day 51):** Documented IRP reviewed and approved annually. Stored in policy repository.
+
+**Implementation Verification:**
+
+IRP document: current version dated [date]. Annual review completed [date]. System Owner and Compliance Officer review signatures on file. Document stored in MyClinic policy repository — accessible to all personnel with IRP roles. ✓
+
+*Gap identified:* The IRP does not currently include a specific section for the HIPAA breach risk assessment workflow — the four-factor test that determines whether an incident involving ePHI constitutes a reportable breach under 45 CFR §164.402. The incident reporting procedure in the SSP (IR-6) references this workflow, but the IRP document itself does not include the four-factor test framework, the responsible party for conducting it, or the timeline requirements.
+
+This gap means that in the stress of an actual incident, the Compliance Officer responsible for the breach determination may not have a clear procedural reference in the IRP. Adding the HIPAA breach assessment workflow as a formal section of the IRP is a documentation improvement that reduces the risk of procedural error during an incident. Added as a POA&M item — target completion before authorization is finalized.
+
+*Verification Evidence:* IRP document with review date and approval signatures; POA&M entry for HIPAA breach workflow addition.
+
+---
+
+**IR-3: Incident Response Testing — Tabletop Exercise Record**
+
+**SSP Description (from Day 51):** Annual tabletop exercise with after-action report. Full technical simulation planned as POA&M item.
+
+**Implementation Verification:**
+
+Most recent tabletop exercise: conducted [date]. Scenario: ransomware attack on OpenMRS EC2 instance — simulating RS-001. Participants: ISSO, Health IT Manager, Compliance Officer, one clinical staff representative. Facilitated by ISSO.
+
+After-action report: produced and reviewed. Key findings from the tabletop:
+
+1. The clinical staff representative was not familiar with the manual patient registration process — confirmed the urgency of completing clinical downtime procedures (CP-2 POA&M item).
+2. The Compliance Officer was uncertain about the 60-day vs. 72-hour notification timeline distinction — HIPAA breach notification is 60 days from discovery; individual HIPAA incident notifications to leadership are 24 hours per the IRP. This confusion was resolved during the tabletop debrief and the IRP has been clarified.
+3. The process for declaring an incident formally — triggering the IR plan — was not well understood by non-security participants. Added a clear "declare incident" trigger step to the IRP as a result.
+
+IRP was updated following the tabletop to incorporate the three findings. Updated version reflects tabletop date and revision notes. ✓
+
+Full technical IR simulation remains a POA&M item. ✓
+
+*Verification Evidence:* Tabletop exercise scenario document; participant sign-in; after-action report; IRP revision record showing changes made from tabletop findings.
+
+---
+
+### Contingency Planning (CP) — Operational Status
+
+---
+
+**CP-9: Backup Restoration Test — Most Recent Results**
+
+**SSP Description (from Day 51):** Quarterly restoration test to test RDS instance. Data integrity spot-check. RTO target 4 hours. Results documented.
+
+**Implementation Verification:**
+
+Most recent restoration test: conducted [date]. Test procedure: restored most recent weekly S3 backup to test RDS instance [openmrs-test-restore-[date]]. Data integrity spot-check: verified [N] patient records, [N] user accounts, and system configuration tables against expected values from the backup timestamp.
+
+Results:
+- Restoration completed successfully ✓
+- Restoration time: 2 hours 47 minutes — within 4-hour RTO target ✓
+- Data integrity: all spot-checked records verified as accurate ✓
+- Test instance decommissioned after verification ✓
+
+*Note on backup retention discrepancy:* During the restoration test, the ISSO noted that the RDS automated backup retention had been set to 30 days in the test rather than the 90-day retention specified in the SSP. The 90-day retention is specified in the SSP and the CP-9 control implementation description. The discrepancy was confirmed — the production RDS instance automated backup retention was set to 35 days, not 90 days. This does not affect restore capability within the 35-day window but represents a retention gap relative to the SSP documentation.
+
+Two options: update the SSP to reflect 35-day retention if that is the operational decision, or update the RDS backup retention to 90 days to match the SSP. Given that a 90-day retention provides significantly more recovery flexibility for scenarios where data integrity issues are not immediately detected (such as a subtle data corruption that is only noticed weeks later), the recommendation is to update the RDS configuration to 90-day retention. Corrected during today's verification. Change log entry created.
+
+*Verification Evidence:* Restoration test log with timestamps and integrity verification results; RDS backup retention correction in change log.
+
+---
+
+## Administrative Control Implementation Summary
+
+| Control | Implementation Status | Evidence Available | POA&M Items |
+|---|---|---|---|
+| AT-2 Security awareness training | Implemented — gap in quarterly review execution | LMS completion records; policy document | Quarterly review process; overdue user remediation |
+| AT-3 Role-based training | Partially implemented — clinical downtime component pending | IT/ISSO records; clinical gap documented | Clinical downtime training (dependent on CP-2) |
+| PS-3 Personnel screening | Implemented | HR confirmation records; spot-check |  |
+| PS-4 Personnel termination | Implemented — single point of failure identified | Separation records with timestamps | Backup designee for account deactivation |
+| CM-3 Change control | Implemented | Change log; CloudTrail cross-reference |  |
+| CM-6 Configuration baseline | Implemented | CIS baseline document; OpenMRS baseline |  |
+| IR-1 Incident response plan | Implemented — HIPAA breach workflow gap | IRP document; review signatures | Add HIPAA breach workflow to IRP |
+| IR-3 IR testing | Partially implemented | Tabletop record; after-action report | Full technical simulation |
+| CP-9 Backup testing | Implemented — retention discrepancy corrected | Restoration test log; corrected RDS config |  |
+
+---
+
+## A Real-World Example That Made This Click
+
+The AT-2 quarterly compliance review gap found today — training completion not checked on schedule, resulting in overdue users going undetected — reminded me of the circumstances that contributed to the **2014 Community Health Systems breach**, which I covered on Day 40 from the network architecture perspective.
+
+Post-incident investigation of the CHS breach found that the organization had security policies and procedures in place — but their execution was inconsistent. The breach exploited a combination of technical vulnerabilities and gaps in the operational execution of security procedures, including monitoring processes that were not functioning as documented.
+
+The CHS case illustrates a pattern that appears repeatedly in healthcare breach post-incident analyses: organizations have good security documents, but the operational discipline to execute those documents consistently — the quarterly reviews, the monthly log checks, the annual training confirmations — breaks down. The security program exists on paper but not in practice.
+
+The AT-2 gap found today is a small-scale version of exactly this pattern. The quarterly compliance pull was not executed. Overdue training went undetected. The administrative control existed but was not operating. Discovering this gap through Task I-1 implementation verification — before the assessment, before a breach — is the intended outcome of honest implementation verification.
+
+Adding the calendar reminder for quarterly compliance review is a five-minute process improvement. But the discipline of verifying that the review happens and documenting that it happened is what separates a security program that operates from one that only documents.
+
+---
+
+## What I Am Still Thinking About
+
+The PS-4 single point of failure finding — ISSO as the only person who can deactivate accounts — is a process vulnerability I want to think through more carefully.
+
+The 4-hour deactivation target exists because compromised or departing employee credentials are a significant insider threat vector. If an employee with clinical record access is terminated for cause and their OpenMRS account is not deactivated promptly, the risk of unauthorized data access or disclosure during that window is real. Four hours is already a relatively long window — it exists because the ISSO may not always be immediately reachable.
+
+Adding the IT Administrator as a backup designee addresses the coverage gap during ISSO unavailability. But it also creates a new question: if the IT Administrator can deactivate accounts, the IT Administrator's own account deactivation in a separation scenario needs to be handled differently — not by the IT Administrator themselves, and not defaulting to the ISSO who may be coordinating other aspects of an involuntary separation. The AO or System Owner should be the escalation point for IT Administrator account deactivation.
+
+I want to document this in the IRP and the account management procedure: a matrix that shows who deactivates whose account under different separation scenarios. Clinical/admin staff → ISSO; ISSO → IT Administrator backup with ISSO escalation to AO; IT Administrator → ISSO with direct notification to System Owner and AO. This three-tier structure handles the most sensitive separation scenarios without creating a gap.
+
+---
+
+## What's Next
+
+Day 56 begins the Assess step — the fifth step of the NIST RMF — where an independent assessment team examines the implemented controls against the SSP documentation and determines whether they are working as intended. The assessment is the primary basis for the AO's authorization decision. Understanding what the assessors are looking for, how to prepare for an assessment, and what happens with assessment findings is the focus of the next phase.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task I-1 Implementing Security Controls](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-53A Rev 5 – Examine, Interview, and Test Assessment Methods](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS OCR – Community Health Systems Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/chs/index.html)
+- [NIST SP 800-18 Rev 1 – System Security Plan Maintenance](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-61 Rev 2 – Incident Handling Procedures](https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final)
+
+---
+
+*#GRC #AdministrativeControls #NISTRMF #SSP #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day55*
