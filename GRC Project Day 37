@@ -1,119 +1,301 @@
-# 📅 Day 37 – Risk Check-Up: Identifying Threats & Vulnerabilities in OpenMRS  
-_100 Days of GRC • By Ibrahim Abdullahi_
+#  Day 37 – Risk Assessment: Identifying Threats and Vulnerabilities in OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Diagnosing Risk Like a Pro
+## Returning to Risk Assessment — With More Context Than Before
 
-A few months ago, I sat in a small community clinic shadowing an IT technician. As a nurse struggled to log into OpenMRS, the admin casually shared passwords aloud over her shoulder. No MFA, no session timeout, and a default admin username still active.
+On Days 13 and 24 I worked through risk assessment concepts and built an enterprise risk register for MyClinic. Today's work goes deeper — moving from the enterprise-level risk picture to a structured, system-specific threat and vulnerability analysis for OpenMRS using NIST SP 800-30 as the guiding framework.
 
-It wasn’t malicious — it was a system grown out of necessity, not design.
+The difference between Day 13's introduction to risk assessment and today is context. At Day 13 I was learning the vocabulary — assets, threats, vulnerabilities, likelihood, impact. Now, after working through the full Prepare step of the RMF — boundary definition, information type classification, information lifecycle, asset inventory, stakeholder mapping — I have a much more detailed picture of what OpenMRS actually is, what data it holds, and where the meaningful risk pathways are. That context makes the threat and vulnerability analysis substantially more specific and useful.
 
-That memory stayed with me.
-
-Today, as part of our GRC journey, we stepped into one of the most critical responsibilities in cybersecurity leadership: **Risk Assessment** — the moment where we ask:  
-**"What could go wrong?"**  
-**"Where are we vulnerable?"**
+NIST SP 800-30 defines risk assessment as the process of identifying threats to an organization and its information systems, identifying vulnerabilities that could be exploited by those threats, determining the likelihood of exploitation, and analyzing the potential impact. Today focuses on the first two components — threat identification and vulnerability identification. The likelihood and impact analysis, and the resulting risk prioritization, comes in Day 38.
 
 ---
 
-##  Objectives for Today
+## What I Worked On Today
 
-- Define what a system risk assessment is  
-- List threats that could harm OpenMRS (external, internal, accidental)  
-- Identify vulnerabilities OpenMRS may have  
-- Distinguish threats from vulnerabilities with clarity  
-- Strengthen risk awareness in cloud-based healthcare systems  
+NIST SP 800-30 organizes threat sources into three categories: adversarial threats (individuals or groups with intent to cause harm), accidental threats (errors and omissions by internal actors without malicious intent), and environmental threats (natural events and infrastructure failures). Working through all three categories for OpenMRS produced a more complete threat picture than focusing only on external attackers.
+
+Vulnerability identification is the complementary analysis — for each threat source, what weaknesses in the system or its operational environment could enable that threat to cause harm? NIST SP 800-30 connects threat sources to threat events to vulnerabilities, producing a structured picture of how specific weaknesses could be exploited by specific actors to cause specific harms.
 
 ---
 
-##  What Is a Risk Assessment?
+## What Actually Clicked for Me
 
-Risk assessment is the **diagnostic exam** of cybersecurity. Like a doctor detecting early symptoms before they become life-threatening, GRC leaders identify threats (the causes of harm) and vulnerabilities (the weak spots where that harm can enter).  
+The distinction between a threat and a vulnerability clicked more clearly today than it did back on Day 13. A threat is external to the system — it is a potential cause of harm that exists regardless of whether the system has weaknesses. A vulnerability is a characteristic of the system that makes it susceptible to harm from a threat.
 
- **Threat = the danger**  
- **Vulnerability = the opening**  
- **Risk = when those two meet**
+The practical importance of this distinction is that you can only directly control vulnerabilities, not threats. Ransomware groups exist whether or not MyClinic does anything about it. What MyClinic can control is whether OpenMRS has the vulnerabilities that would allow a ransomware attack to succeed — unpatched software, inadequate backup protection, insufficient network segmentation. Threat identification tells you what you are defending against. Vulnerability identification tells you where your defenses are weak.
 
----
-
-##  Case Study: OpenMRS in AWS Cloud (MyClinic Scenario)
-
-###  External Threats
-- **Hackers** scanning internet-facing portals for SQL injection flaws  
-- **Ransomware** attempting to encrypt patient databases  
-- **Malware** infecting endpoints that access OpenMRS  
-
-###  Internal Threats
-- **Disgruntled staff** accessing records they shouldn’t  
-- **Well-meaning staff** misconfiguring access controls  
-- **Phishing victims** clicking malicious links  
-
-###  Environmental/Natural Threats
-- **Power outages** in local clinics (if using hybrid deployments)  
-- **Cloud service disruptions**  
-- **Data corruption** from system bugs or failed patches  
+Another thing that clicked is that the threat and vulnerability analysis is not a one-time exercise. The threat landscape changes — new vulnerability classes are discovered, new attack techniques emerge, new threat actors emerge. The vulnerability landscape changes too — new software versions introduce new weaknesses, configuration drift creates new exposure, staff turnover changes the insider threat picture. This analysis needs to be revisited periodically, which connects directly to the continuous monitoring strategy from Day 30.
 
 ---
 
-##  Vulnerabilities in the System
+## Threat Identification for OpenMRS at MyClinic
 
--  **Unpatched OpenMRS version** – known exploits remain open  
--  **Misconfigured AWS S3 backups** – publicly accessible!  
--  **Default credentials** still active on admin accounts  
--  **Lack of encryption** for data at rest or in motion  
--  **No staff security training** – high social engineering risk  
--  **No regular backups or integrity checks**  
--  **Improper session management** – risk of session hijacking  
+### Category 1 — Adversarial Threats
 
 ---
 
-##  My Leadership Approach
+**Threat: Ransomware Attack**
 
-Today, I didn’t just brainstorm — I assumed the mindset of a **CISO diagnosing a live system**. I drafted a two-column matrix:
+Ransomware is currently the dominant cybersecurity threat facing healthcare organizations. Ransomware groups specifically target healthcare because the operational dependency on electronic systems creates leverage — a clinic that cannot access patient records faces immediate clinical disruption, creating pressure to pay quickly. Healthcare organizations also tend to have less mature security programs than financial institutions, making them more accessible targets.
 
-| Threats                         | Vulnerabilities                            |
-|--------------------------------|--------------------------------------------|
-| External hackers               | Unpatched OpenMRS codebase                 |
-| Insider data misuse            | No role-based access control enforcement   |
-| Power outage                   | No regional data replication               |
-| Phishing campaign              | No staff awareness or reporting procedure  |
-| Malware/ransomware             | No endpoint protection on clinic systems   |
+The typical ransomware attack chain against a healthcare EHR system proceeds through several stages: initial access (usually phishing or exploitation of an internet-facing vulnerability), lateral movement through the network, privilege escalation to gain administrative access, and finally deployment of the ransomware payload — encrypting files and destroying backups to maximize pressure.
 
-Each pairing tells a story of **impact + opportunity**, and that’s where real risk lives.
+*Relevant to OpenMRS because:* The OpenMRS application server and RDS database are the operational core of MyClinic's clinical function. Encryption of either would render OpenMRS unavailable. If backup files in S3 are also compromised — either encrypted or deleted — recovery becomes extremely difficult.
+
+*Primary threat actor profile:* Criminal ransomware groups operating for financial gain. Healthcare sector targeting is deliberate and persistent.
 
 ---
 
-##  Reflection
+**Threat: External Attacker Exploiting Web Application Vulnerabilities**
 
-**The threat that keeps me up at night?** Insider misuse.
+OpenMRS is a web application with an internet-facing login interface. Common web application attack techniques — SQL injection, cross-site scripting, authentication bypass, insecure direct object reference — have historically affected EHR applications including OpenMRS. Automated vulnerability scanners continuously probe internet-facing applications for known weaknesses.
 
-Why? Because insiders have context. They don’t need to “hack” their way in — they already have the keys. Whether out of curiosity, negligence, or intent, an insider accessing or leaking PHI can undermine years of security work in seconds.
+The OpenMRS codebase has had documented vulnerabilities in the past. The OpenMRS community maintains a security advisory process, but the window between vulnerability disclosure and patch application — during which the system is exposed to exploitation — is a real risk period.
 
----
+*Relevant to OpenMRS because:* A successful web application exploit could enable an attacker to access patient records without credentials, bypass authentication, or gain a foothold in the application server for further exploitation.
 
-##  GRC Wisdom of the Day
-
-> **“You can’t patch human intent — but you can build controls that assume fallibility.”**
-
-We lead best not when we trust blindly, but when we design systems that *respect the reality of error*.
+*Primary threat actor profile:* Opportunistic attackers using automated scanning tools; targeted attackers who identify healthcare organizations as valuable targets for PHI theft.
 
 ---
 
-##  What’s Next?
+**Threat: Credential-Based Attack (Phishing, Credential Stuffing, Brute Force)**
 
-Tomorrow, we’ll take this list and analyze it. Not all threats are equal. Some are likely but minor; others are rare but catastrophic. We’ll map **likelihood vs. impact**, then prioritize mitigation.  
+The most common initial access technique in healthcare breaches is not software exploitation — it is credential compromise. Phishing emails that harvest usernames and passwords, credential stuffing attacks that test credentials stolen from other breaches against healthcare portals, and brute force attacks against accounts without account lockout policies all represent realistic and frequent threat vectors.
 
-It’s risk triage time. 
+Healthcare staff are high-value phishing targets because they have access to PHI, are often under time pressure that reduces careful evaluation of suspicious emails, and may have lower security awareness training than staff in more security-mature industries.
 
----
+*Relevant to OpenMRS because:* A compromised staff credential gives an attacker authenticated access to OpenMRS — with all the permissions of the compromised account. If that account belongs to a clinician with broad record access, the attacker can access and exfiltrate large volumes of ePHI while appearing to be a legitimate user.
 
-## 🔍 Search Topics  
-- “Threat modeling healthcare IT systems”  
-- “OpenMRS known vulnerabilities”  
-- “NIST SP 800-30 Risk Assessment Framework”  
-- “Common EHR system misconfigurations”
+*Primary threat actor profile:* Criminal groups seeking PHI for sale on dark web markets; state-sponsored actors seeking health information for intelligence purposes; opportunistic attackers.
 
 ---
 
-📌 #Day37 #RiskAssessment #GRCLeadership #OpenMRS #CyberRisk #HealthcareSecurity #NIST #ThreatModeling #IbrahimAbdullahi #100DaysOfGRC
+**Threat: Insider Threat — Malicious Insider**
+
+A current or former employee with legitimate or recently revoked access to OpenMRS who intentionally accesses, exfiltrates, or manipulates patient records. Motivations include financial gain (PHI sold on dark web markets, used for insurance fraud, or used for identity theft), personal grievance against a specific patient, or sabotage motivated by a dispute with the organization.
+
+Healthcare organizations are particularly susceptible to insider PHI access because clinical staff have broad legitimate access to patient records, the access is necessary for care delivery, and distinguishing legitimate from inappropriate access requires careful audit log analysis.
+
+*Relevant to OpenMRS because:* OpenMRS contains the complete ePHI dataset for all of MyClinic's patients. An insider with clinical-level access can access and export large numbers of patient records. The audit logging controls and access review processes are the primary defenses against this threat.
+
+*Primary threat actor profile:* Current clinical or administrative staff; recently terminated staff whose accounts were not promptly deactivated; contractors with system access.
+
+---
+
+**Threat: Supply Chain Attack — OpenMRS Software or Dependencies**
+
+A threat actor who compromises the OpenMRS software distribution process — injecting malicious code into a legitimate release — or who introduces vulnerabilities into a widely used Java library that OpenMRS depends on. The 2020 SolarWinds attack and the 2021 Log4Shell vulnerability demonstrated how devastating supply chain attacks against widely used software can be.
+
+OpenMRS is an open-source project with a distributed development community. While the community has security processes in place, the supply chain attack surface is real and is increasingly targeted by sophisticated threat actors.
+
+*Relevant to OpenMRS because:* MyClinic installs software updates from the OpenMRS distribution. A compromised update could introduce backdoors, data exfiltration capabilities, or other malicious functionality into the production system without any action by MyClinic beyond a routine update.
+
+*Primary threat actor profile:* State-sponsored actors with sophisticated capabilities; criminal groups targeting widely used software for scale.
+
+---
+
+### Category 2 — Accidental Threats
+
+---
+
+**Threat: Staff Error — Misconfiguration**
+
+IT administrators or the ISSO making configuration errors that inadvertently expose systems or data. Examples include: accidentally enabling public access on the S3 backup bucket during a configuration change, misconfiguring security group rules to be more permissive than intended, deleting an IAM policy that was providing necessary access restrictions, or disabling encryption on an RDS instance during maintenance.
+
+Configuration errors are responsible for a large proportion of cloud security incidents. The 2019 Capital One breach — in which a WAF misconfiguration enabled the SSRF attack — is the canonical example, but misconfiguration-driven breaches occur constantly at organizations of all sizes.
+
+*Relevant to OpenMRS because:* The AWS configuration for OpenMRS — security groups, IAM policies, S3 bucket settings, RDS configuration — is the technical implementation of the security architecture. A single misconfiguration in any of these components can create significant exposure.
+
+---
+
+**Threat: Staff Error — Accidental Data Disclosure**
+
+Clinical or administrative staff inadvertently disclosing patient information — sending a record to the wrong recipient via email, sharing a screen containing patient information during a video call, or discussing patient information in a setting where it can be overheard. These incidents are not malicious but are a frequent source of HIPAA breach reports.
+
+*Relevant to OpenMRS because:* Staff who access patient records through OpenMRS may export or share that information through channels that are not subject to the same controls as the OpenMRS system itself.
+
+---
+
+**Threat: Staff Error — Improper Disposal**
+
+Staff disposing of devices or storage media that contain cached OpenMRS session data, downloaded records, or other ePHI without proper sanitization. As discussed in the lifecycle work on Day 36, disposal errors are a consistent source of healthcare breaches.
+
+---
+
+**Threat: Software Error — Application Bug or Failed Patch**
+
+A software bug in OpenMRS or a dependency that corrupts patient records, causes data loss, or creates unexpected behavior. A failed patch that takes the system offline or introduces a regression affecting data integrity. These are not malicious events but can cause significant harm to data integrity and system availability.
+
+---
+
+### Category 3 — Environmental Threats
+
+---
+
+**Threat: AWS Service Disruption**
+
+An AWS service outage affecting the EC2 instance, RDS service, or S3 in the region hosting the OpenMRS deployment. AWS has experienced regional outages that have taken down services hosted in affected regions. While AWS designs for high availability, regional outages do occur and can affect single-region deployments.
+
+*Relevant to OpenMRS because:* The current deployment architecture places all OpenMRS components in a single AWS region. A regional outage would take down the entire system simultaneously.
+
+---
+
+**Threat: Data Corruption — Infrastructure Failure**
+
+Bit-level corruption of data stored in RDS or S3 due to hardware failure at the infrastructure level. While AWS provides strong durability guarantees for S3 and RDS, hardware failures that cause data corruption before replication are a small but non-zero risk for any storage system.
+
+---
+
+## Vulnerability Identification for OpenMRS at MyClinic
+
+Working through the asset inventory from Day 33 and the information lifecycle from Day 36, I identified the following vulnerabilities organized by asset category:
+
+---
+
+### Application Vulnerabilities
+
+**V-001: Outdated OpenMRS Version**
+Running an OpenMRS version that is no longer actively maintained or has known unpatched vulnerabilities. The OpenMRS community has documented security vulnerabilities in past versions — some involving authentication bypass, SQL injection, and insecure direct object reference. Organizations running outdated versions remain exposed to these known vulnerabilities.
+
+*Threat connection:* External attacker exploiting web application vulnerabilities; supply chain concerns for unsupported versions.
+
+**V-002: Unreviewed Third-Party Modules**
+Custom or third-party OpenMRS modules installed without security review may contain vulnerabilities not present in the core application. Modules execute within the OpenMRS application context and have access to all patient data.
+
+*Threat connection:* External attacker; supply chain attack.
+
+**V-003: Default or Weak Administrative Credentials**
+The OpenMRS application ships with default administrative credentials. If these are not changed at installation, or if administrative accounts use weak passwords, they are easily compromised through brute force or credential stuffing.
+
+*Threat connection:* Credential-based attack; insider threat.
+
+**V-004: Missing or Inadequate Session Management**
+OpenMRS session timeout not configured or set too long. Sessions left open on unattended workstations allow unauthorized access by anyone with physical access to the workstation.
+
+*Threat connection:* Insider threat; physical access scenarios.
+
+---
+
+### Infrastructure Vulnerabilities
+
+**V-005: Overly Permissive Security Groups**
+Security group rules more permissive than necessary — for example, allowing SSH access from any IP address rather than from a specific administrator IP range, or allowing the database to accept connections from sources other than the application server.
+
+*Threat connection:* External attacker; ransomware lateral movement.
+
+**V-006: Unencrypted Data at Rest**
+RDS encryption or S3 encryption not enabled. Patient data stored unencrypted is accessible to anyone who gains access to the underlying storage.
+
+*Threat connection:* External attacker gaining infrastructure access; insider threat with storage-level access.
+
+**V-007: Publicly Accessible S3 Backup Bucket**
+S3 bucket block public access settings not configured, or IAM policy too permissive. A publicly accessible backup bucket exposes the complete ePHI dataset.
+
+*Threat connection:* External attacker; automated scanning tools that discover misconfigured S3 buckets.
+
+**V-008: Inadequate IAM Configuration**
+Overly permissive IAM roles — for example, an EC2 instance role with broad S3 access rather than access scoped to the specific backup bucket. Enables privilege escalation if the EC2 instance is compromised.
+
+*Threat connection:* External attacker post-initial-access; insider threat with AWS console access.
+
+**V-009: Logging and Monitoring Gaps**
+CloudTrail not enabled, GuardDuty not active, or application audit logging incomplete. Reduces visibility into suspicious activity and delays detection of active attacks.
+
+*Threat connection:* All adversarial threat categories — monitoring gaps extend dwell time.
+
+---
+
+### Endpoint Vulnerabilities
+
+**V-010: Unmanaged or Inadequately Secured Workstations**
+Clinic workstations without EDR software, full-disk encryption, OS patching, or browser security policies. Workstations are the primary phishing target and the primary access point for clinical users.
+
+*Threat connection:* Phishing and credential-based attacks; malware and ransomware delivery.
+
+**V-011: No MFA for OpenMRS Access**
+Single-factor authentication for OpenMRS login. Compromised credentials provide immediate full access without a second factor to prevent exploitation.
+
+*Threat connection:* Credential-based attack; phishing.
+
+---
+
+### Operational Vulnerabilities
+
+**V-012: Inadequate Staff Security Training**
+Staff not trained to recognize phishing attempts, manage passwords securely, or follow secure data handling procedures. Human factors are the most common initial access vector in healthcare breaches.
+
+*Threat connection:* Phishing; accidental disclosure; insider threat through negligence.
+
+**V-013: No Formal Account Deprovisioning Process**
+Terminated staff accounts not promptly disabled. Former employees retaining access after departure is a consistent finding in insider threat cases.
+
+*Threat connection:* Insider threat — malicious former employee.
+
+**V-014: Backup Restoration Not Regularly Tested**
+Backups exist but have never been tested for successful restoration. In a ransomware scenario, untested backups may not be recoverable.
+
+*Threat connection:* Ransomware; environmental threats affecting data availability.
+
+**V-015: No Documented Downtime Procedures**
+Clinical staff have no documented procedures for continuing care delivery when OpenMRS is unavailable. Extended unavailability becomes a clinical safety issue if staff cannot function without the system.
+
+*Threat connection:* Ransomware; AWS service disruption; any availability threat.
+
+---
+
+## Threat-to-Vulnerability Mapping
+
+| Threat | Primary Vulnerabilities Exploited |
+|---|---|
+| Ransomware attack | V-005, V-010, V-011, V-012, V-014, V-015 |
+| Web application exploit | V-001, V-002, V-003, V-004 |
+| Credential-based attack | V-003, V-011, V-012 |
+| Malicious insider | V-004, V-009, V-013 |
+| Supply chain attack | V-001, V-002 |
+| Staff misconfiguration | V-005, V-006, V-007, V-008 |
+| Accidental disclosure | V-012, V-004 |
+| AWS service disruption | V-014, V-015 |
+
+---
+
+## A Real-World Example That Made This Click
+
+While researching today's topic I came across the **2021 Eskenazi Health breach** in Indianapolis — a ransomware attack that forced the hospital system to divert ambulances and cancel elective procedures. What made the Eskenazi case particularly instructive is the post-incident disclosure about the attack timeline.
+
+The attackers had been present in Eskenazi's network for approximately six weeks before the ransomware payload was deployed. During those six weeks they moved laterally, escalated privileges, identified backup systems, and positioned themselves to maximize the impact of the final attack — including compromising the backup infrastructure before triggering encryption to eliminate the recovery option.
+
+That six-week dwell time maps directly to the vulnerability categories I identified today. The initial access was through a phishing email — V-012. The lateral movement was enabled by inadequate network segmentation and overly permissive access controls — V-005, V-008. The backup compromise was possible because backup systems were accessible from the compromised environment — V-014. The monitoring gaps — V-009 — allowed the six-week presence to go undetected.
+
+The Eskenazi case is a useful reminder that ransomware attacks are not single events — they are multi-stage campaigns where each stage depends on specific vulnerabilities being present and undetected. Addressing any one of those vulnerabilities — better monitoring that detects lateral movement, network segmentation that limits where an attacker can go after initial access, backup isolation that prevents the attacker from compromising the recovery option — changes the outcome even if the initial access succeeds.
+
+---
+
+## What I Am Still Thinking About
+
+Something I want to think more carefully about is the supply chain threat for OpenMRS specifically. The Log4Shell vulnerability in late 2021 — a critical remote code execution vulnerability in the Log4j Java logging library — affected an enormous number of Java applications because Log4j was a nearly ubiquitous dependency. OpenMRS is a Java application, and OpenMRS deployments were affected by Log4Shell.
+
+What the Log4Shell incident illustrated is that the vulnerability surface of a complex application is not just the application code itself — it is the entire dependency tree. OpenMRS depends on dozens of Java libraries, each of which has its own vulnerability history. Tracking the vulnerability status of OpenMRS's full dependency tree, not just the core application version, is a meaningful and complex security challenge.
+
+I want to explore what a practical approach to dependency vulnerability tracking looks like for a small clinic IT team that is not running a dedicated application security program. Tools like OWASP Dependency-Check or GitHub Dependabot provide some automated capability, but the process of integrating that into the patch management workflow for OpenMRS is something worth developing concretely.
+
+---
+
+## What's Next
+
+Day 38 takes the threat and vulnerability inventory from today and applies the likelihood and impact analysis — building the risk prioritization picture that tells us which risks require the most urgent attention and highest investment. Not all of the fifteen vulnerabilities I identified today represent equal risk — some are highly likely to be exploited and would cause severe harm; others are lower probability or lower impact. The risk prioritization work translates the threat and vulnerability inventory into an actionable security agenda.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-30 Rev 1 – Guide for Conducting Risk Assessments](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [CISA Healthcare Cybersecurity Resources](https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience/critical-infrastructure-sectors/healthcare-and-public-health-sector)
+- [HHS 405(d) – Health Industry Cybersecurity Practices](https://405d.hhs.gov/)
+- [Eskenazi Health Breach Coverage – Healthcare IT News](https://www.healthcareitnews.com/news/eskenazi-health-hit-cyberattack)
+- [OWASP Top 10 for Web Applications](https://owasp.org/www-project-top-ten/)
+
+---
+
+*#GRC #RiskAssessment #ThreatModeling #NISTRMF #SP800-30 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day37*
