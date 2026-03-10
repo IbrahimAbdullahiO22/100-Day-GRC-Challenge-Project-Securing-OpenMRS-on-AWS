@@ -1,110 +1,305 @@
-# 📅 Day 50: Task S-4 (Part 1) — Document Control Implementation (Begin SSP)  
-_100 Days of GRC — by Ibrahim Abdullahi_
+# Day 50 – Task S-4 (Part 1): Documenting Control Implementation in the System Security Plan | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Milestone: Starting the System Security Plan (SSP)
+## Day 50: From Decisions to Documentation
 
-Today marks **Day 50** of my GRC journey — and a big step forward: we begin documenting how our security controls are implemented in the **System Security Plan (SSP)**.  
+Fifty days in. The Prepare step built the organizational foundation. The Categorize step produced the High categorization and the official categorization record. The Select step produced the tailored control set, the allocation decisions, and now — Task S-4 — the implementation documentation that turns all of that analysis into the System Security Plan.
 
-As a GRC leader, I teach my teams that the SSP is *not just paperwork* — it is the **authoritative playbook** that tells auditors, management, and ourselves exactly **how we are securing the system**. Without a well-documented SSP, you can’t claim to have a mature GRC posture.
+The SSP is the document that makes the authorization decision possible. When the Authorizing Official reviews the authorization package and decides whether to grant an Authorization to Operate, the SSP is the primary reference. It needs to answer, for every control in the tailored set: what is implemented, who implemented it, where it is implemented, how it works, and how it can be verified. Those are not rhetorical questions — they are the literal questions an assessor will work through during the security assessment.
 
----
-
-##  Today’s Learning Objectives:
-
- Understand the purpose and structure of the SSP  
- Learn how to write clear, specific descriptions of how technical controls are implemented  
- Draft a sample implementation for an OpenMRS on AWS technical control  
+Today I work through how to write SSP control implementation descriptions that actually serve those purposes — not just acknowledge that a control exists.
 
 ---
 
-##  What is an SSP?
+## What I Worked On Today
 
-The **System Security Plan (SSP)** is the “master file” for system security. It includes:  
+NIST SP 800-18 provides the framework for SSP content and structure. For each control, the SSP implementation description needs to address: the control requirement, the implementation status (implemented, partially implemented, planned, not applicable, inherited), and a description of how the control is implemented with enough specificity to support assessment.
 
-- The system boundary and architecture  
-- The list of applicable controls (from our tailored baseline)  
-- For each control: **how it is implemented**  
-- References to common/inherited controls (from AWS or corporate)  
-- The people responsible for maintaining each control  
+"Enough specificity to support assessment" is the operative phrase. An assessor who reads the SSP description needs to know what evidence to request and what to test. An implementation description that says "encryption is enabled" does not tell the assessor whether to look at RDS instance settings, KMS key configuration, or EBS volume settings — or all three. An implementation description that says "RDS encryption is enabled via AWS KMS using customer-managed key arn:aws:kms:[region]:[account]:key/[key-id]; EBS volumes are encrypted using the same customer-managed key; S3 backup bucket uses SSE-KMS with the same key; key rotation is configured for annual rotation; key usage is logged in CloudTrail log group [log-group-name]" tells the assessor exactly what to verify and where to find the evidence.
 
-In my view, the SSP = **“How we secure OpenMRS — in writing.”**
+The gap between those two descriptions is the gap between an SSP that enables assessment and one that creates work for everyone and produces unnecessary findings.
 
 ---
 
-##  How I Teach SSP Writing:
+## What Actually Clicked for Me
 
-Good SSP writing = clear, concrete answers to 4 questions:  
+The framing that clarified SSP writing for me today is that an SSP implementation description is simultaneously a claim and a roadmap to verify that claim.
 
-| Question | Example Answer |
-|---|---|
-| **Who** is responsible? | OpenMRS team, CloudOps team, DevSecOps, etc. |
-| **What** is done? | Encrypt DB with EBS encryption; use MFA for admin access |
-| **Where** is this applied? | EC2 instance hosting OpenMRS app; Cognito User Pool |
-| **How** is it implemented/configured? | TLS 1.2 enforced; AWS KMS-managed keys |
+When I write "RDS encryption is enabled," I am making a claim that the assessor will need to verify. If the description includes enough detail to guide the verification — which service, which setting, which key, where the logs are — the assessment proceeds efficiently and the control is demonstrated. If the description is vague, the assessor has to ask clarifying questions, request additional documentation, or mark the implementation status as unclear — none of which helps the authorization package.
 
----
+Writing with verification in mind changes the level of detail naturally. Instead of "MFA is enabled," the SSP author asks: "What would an assessor need to verify that MFA is enabled and functioning correctly?" The answer is: which MFA method, for which users, how it is configured, what happens when MFA fails, and how exceptions are handled. Each of those questions points to a detail that belongs in the implementation description.
 
-##  Example #1 — User Authentication (IA Family)
-
-**SSP Entry (example):**
-
-> _OpenMRS uses AWS Cognito as its Identity Provider (IdP). All user accounts are maintained in an AWS Cognito User Pool, enforcing a password policy of minimum 12 characters, requiring uppercase, lowercase, numeric, and special characters. Multi-Factor Authentication (MFA) is enabled for all administrative users. User sessions are authenticated with OAuth tokens issued by Cognito and validated by OpenMRS. Role-based access control (RBAC) within OpenMRS enforces least privilege, with roles defined for clinicians, nurses, and system administrators. Accounts are locked after 5 failed login attempts, with lockout events logged in AWS CloudWatch for monitoring and response._  
-
-**Leadership Insight:**  
- This kind of SSP writing shows exactly how *users are authenticated* and *how access is controlled* — not just vague “we secure our users” statements.
+This also makes the SSP a useful diagnostic tool for the security program. When writing the implementation description, if the answer to "where is this logged?" is "I'm not sure," or the answer to "how is this reviewed?" is "we haven't defined that process yet," the SSP writing has surfaced a gap — exactly as it should.
 
 ---
 
-## 📝 Example #2 — Data Encryption at Rest (SC Family)
+## SSP Control Implementation Descriptions — Technical Controls
 
-**SSP Entry (example):**
-
-> _All OpenMRS patient data is stored in a MySQL RDS instance with encryption at rest enabled (AES-256 via AWS RDS). The EC2 instances hosting the OpenMRS application also use encrypted EBS volumes for OS and data files. Encryption keys are managed via AWS KMS (Key Management Service), with automatic key rotation enabled. All backups (AWS Snapshots) are encrypted at rest. For data in transit, HTTPS (TLS 1.2 or higher) is enforced across all OpenMRS application endpoints._  
-
-**Leadership Insight:**  
- Notice how this explains **which AWS services are used**, **how keys are managed**, and the **scope of encryption** — this gives auditors and risk owners confidence.
+The following are the implementation descriptions for the technical control families. These are written at the level of specificity required for assessment, not as high-level summaries.
 
 ---
 
-##  Leadership Lessons I Teach on SSP:
-
- **Specificity is king** — no vague answers  
- **Tie every control to your system architecture** — where and how is it done?  
- **Document shared responsibility** — where AWS covers a control, cite it; where your team covers a control, be explicit  
- **SSP = living document** — update it when controls evolve (e.g. new MFA settings)  
+### Identification and Authentication (IA) — Application Layer
 
 ---
 
-##  My Hands-On Example for Today:
+**IA-2: Identification and Authentication (Organizational Users)**
 
-**Control:** SC-12 — Cryptographic Key Management  
+**Implementation Status:** Implemented
 
-**SSP Entry (drafted today):**
+**Implementation Description:**
 
-> _Encryption keys for OpenMRS database encryption and EC2 volume encryption are managed via AWS KMS. Keys are automatically rotated annually per AWS default settings. AWS IAM policies enforce least privilege access to KMS keys. Key use and administrative actions are logged in AWS CloudTrail and reviewed quarterly by the OpenMRS CloudOps team._  
+All OpenMRS users are authenticated through the OpenMRS application's built-in authentication mechanism. Each user is assigned a unique username that is their organizational email address — no shared accounts are permitted. Authentication requires both a password meeting the defined complexity requirements and a TOTP-based second factor using an authenticator application (Google Authenticator, Authy, or equivalent).
 
----
+The OpenMRS authentication configuration enforces: minimum password length of 12 characters; password complexity requiring uppercase, lowercase, numeric, and special characters; 90-day maximum password age; prohibition on reuse of the last 12 passwords; account lockout after 5 consecutive failed login attempts (lockout duration: 30 minutes before automatic unlock, or immediate unlock by ISSO upon verified user request).
 
-##  Reflection:
+MFA is enforced for all users without exception — clinical staff, administrative staff, IT administrators, and the ISSO. MFA enrollment is required before initial account activation. Users who lose access to their MFA device follow a documented recovery procedure requiring identity verification with the Health IT Manager before MFA is reset.
 
-While writing today’s SSP examples, I noticed that documenting **CloudTrail log review frequency** sometimes lacks clarity in practice — do we really review it quarterly? This is why writing an SSP is so valuable: it surfaces details that may need further process definition.  
+Authentication events — successful logins, failed login attempts, MFA failures, account lockouts — are logged to the OpenMRS application audit log and shipped to CloudWatch Logs group [openmrs-application-audit].
 
-**Lesson:** _Writing the SSP = risk-driven QA on your actual security operations._  
+**Note on AWS Cognito:** The original version of today's content described OpenMRS as using AWS Cognito as its identity provider. OpenMRS uses its own internal authentication system, not AWS Cognito, for application-level user authentication. AWS Cognito is not configured for OpenMRS user management in the current deployment. This implementation description reflects the actual OpenMRS authentication architecture.
 
----
-
-## 🚀 Tomorrow’s Focus (Teaser):
-
-We’ll continue our SSP work tomorrow, but shift focus to **administrative and procedural controls** — policies, training, audits — not just the tech side!  
+**Assessment Evidence:** ISSO should provide: OpenMRS authentication configuration settings; demonstration of MFA enforcement for a test account; CloudWatch log sample showing authentication event records; account lockout policy configuration screenshot; MFA recovery procedure document.
 
 ---
 
-## 🔍 Suggested Search Terms:
+**IA-4: Identifier Management**
 
-- “System Security Plan examples NIST”  
-- “Writing SSP control implementations”  
-- “How to document cloud security controls in SSP”  
-- “AWS NIST 800-53 SSP examples”  
+**Implementation Status:** Implemented
 
+**Implementation Description:**
+
+User identifiers in OpenMRS are organizational email addresses, assigned at account creation and never reused. When a user account is deactivated, the identifier (email address) is retained in the system as a deactivated account record to preserve audit trail continuity — it is not deleted and cannot be reassigned to a different individual. This ensures that historical audit records remain attributable to the correct individual even after their departure.
+
+Service account identifiers follow a naming convention of [service]-svc-[function] (e.g., labsystem-svc-result-import) to distinguish them from human user accounts. Service account identifiers are documented in the asset inventory and reviewed quarterly.
+
+**Assessment Evidence:** Account list showing identifier format and deactivated account retention; service account documentation; quarterly review records.
+
+---
+
+**IA-5: Authenticator Management**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Password management for OpenMRS accounts: minimum 12 characters; uppercase, lowercase, numeric, and special character requirements; 90-day maximum age with reminder notification at 75 days; 12-generation history preventing reuse; initial temporary password must be changed on first login; temporary passwords expire after 24 hours if not used.
+
+TOTP authenticator management: TOTP seeds are generated by OpenMRS at enrollment and displayed once as a QR code; the seed is stored in OpenMRS in hashed form and is not retrievable after initial setup; users must enroll a TOTP application before account activation is complete; TOTP backup codes are not provided (to avoid a secondary authentication bypass); MFA reset requires in-person identity verification with Health IT Manager.
+
+Service account API keys: generated with minimum 32 characters of cryptographic randomness; rotated every 90 days; previous key invalidated immediately upon rotation; key material stored in AWS Secrets Manager, not in configuration files or source code.
+
+**Assessment Evidence:** OpenMRS password policy configuration; Secrets Manager configuration for service account keys; sample of key rotation log showing 90-day rotation cadence.
+
+---
+
+### Access Control (AC) — Application Layer
+
+---
+
+**AC-2: Account Management**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Account lifecycle management for OpenMRS follows a documented procedure:
+
+*Account provisioning:* New account requests submitted to Health IT Manager via documented request form specifying user identity, role required, and business justification. Health IT Manager approves or rejects within one business day. ISSO creates the account in OpenMRS with the approved role. User receives activation email with temporary password and MFA enrollment instructions. Account is not considered active until MFA enrollment is confirmed.
+
+*Account modification:* Role changes require the same approval process as new account creation. Emergency role changes (e.g., covering for an absent clinician) require verbal Health IT Manager approval followed by written confirmation within 24 hours.
+
+*Account deactivation:* HR notifies ISSO of employee separations via a defined notification process. ISSO disables the account within 4 hours of notification. Account is disabled (not deleted) to preserve audit trail. ISSO confirms deactivation in writing to HR and Health IT Manager.
+
+*Account review:* Quarterly access review conducted by ISSO. ISSO produces a report of all active accounts with their roles and last login date. Health IT Manager reviews and certifies that each account is still needed and appropriately configured. Any accounts not recertified are deactivated within 5 business days.
+
+*Privileged accounts:* IT Administrator and ISSO accounts are reviewed monthly, not quarterly. Privileged account usage logs are reviewed within 24 hours of generation.
+
+**Assessment Evidence:** Account provisioning request forms for most recent three accounts; quarterly access review report and Health IT Manager certification; deactivation records for most recent five employee separations with timestamps; privileged account review records.
+
+---
+
+**AC-3: Access Enforcement (Role-Based Access Control)**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Access to OpenMRS functionality and patient data is enforced through OpenMRS's built-in role-based access control system. The following roles are configured:
+
+*Clinician role:* Access to patient registration, encounter documentation, medication management, care plan management, and clinical reporting for patients within the clinician's care relationship. Cannot access other clinicians' patient panels without explicit authorization. Cannot access system administration functions.
+
+*Nursing/Clinical Staff role:* Access to encounter documentation, vital signs, medication administration records, and assigned patient care functions. Scoped to the clinical unit assignment. Cannot modify prescriptions or diagnoses without co-authorization.
+
+*Administrative Staff role:* Access to patient registration, demographic management, scheduling, and administrative reporting. No access to clinical encounter documentation or medication records.
+
+*IT Administrator role:* Access to OpenMRS system administration functions — user account management, system configuration, module management. No access to clinical records or patient data. Cannot view patient-identifiable information in the normal course of IT administration.
+
+*ISSO role:* Access to audit log records and security configuration. Cannot access clinical records. Read-only access to system configuration for audit purposes.
+
+Role permission sets are documented in the SSP appendix and reviewed annually. Changes to role permission sets require ISSO approval and are documented in the configuration change log.
+
+**Assessment Evidence:** OpenMRS role configuration screenshots; role permission set documentation; sample of a clinical user account showing role assignment; demonstration that an administrative account cannot access clinical encounter data.
+
+---
+
+**AC-6: Least Privilege**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Least privilege is enforced at three layers:
+
+*Application layer (OpenMRS roles):* As documented in AC-3 — each role is scoped to the minimum access required for the assigned function. No role grants access beyond operational necessity.
+
+*AWS IAM layer:* AWS IAM policies follow least privilege — the EC2 instance profile has permissions only to write to CloudWatch Logs and read from the specific S3 bucket for configuration files; the backup service account has permissions only to write to the backup S3 bucket; the ISSO has read access to CloudTrail logs and Security Hub findings but cannot modify IAM policies. No IAM entity has AdministratorAccess.
+
+*Operating system layer:* The OpenMRS application runs as a dedicated service account (openmrs-svc) on the EC2 instance with no login shell and no sudo privileges. System administration tasks require a separate privileged account with SSH key authentication, logged separately.
+
+Quarterly review of IAM policies by ISSO to identify and remediate any privilege drift. AWS IAM Access Analyzer is enabled to identify resource policies that grant external access.
+
+**Assessment Evidence:** AWS IAM policy documentation for each IAM entity; IAM Access Analyzer findings from most recent review; EC2 instance profile permissions; OS service account configuration.
+
+---
+
+### System and Communications Protection (SC) — Technical Controls
+
+---
+
+**SC-8: Transmission Confidentiality and Integrity**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+All communications between users and the OpenMRS application are encrypted using TLS. The implementation has three components:
+
+*HTTPS enforcement:* The Apache Tomcat configuration on the EC2 instance is configured to accept connections on port 443 (HTTPS) only. HTTP connections on port 80 return a 301 redirect to the HTTPS equivalent URL. The security group for the EC2 instance permits inbound traffic on port 443 and port 80 (redirect only). No other ports accept inbound connections from the internet.
+
+*TLS configuration:* TLS 1.2 is the minimum protocol version; TLS 1.0 and 1.1 are disabled. The cipher suite is configured to use forward secrecy — ECDHE key exchange algorithms preferred. The TLS certificate is issued by AWS Certificate Manager for the OpenMRS domain; ACM manages certificate renewal automatically. Certificate expiration is monitored via CloudWatch and alerts the ISSO 30 days before expiration.
+
+*Internal communications:* The connection between the EC2 application server and the RDS MySQL database uses TLS encryption. The MySQL connection string in OpenMRS configuration specifies requireSSL=true; connections without TLS are rejected by the RDS parameter group configuration.
+
+**Assessment Evidence:** Tomcat configuration showing HTTPS enforcement and HTTP redirect; security group rules; TLS version and cipher suite configuration; ACM certificate status; RDS parameter group showing SSL enforcement.
+
+---
+
+**SC-28: Protection of Information at Rest**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Encryption at rest is implemented across all storage components containing ePHI:
+
+*RDS database encryption:* The OpenMRS RDS MySQL instance has encryption at rest enabled using AWS KMS with customer-managed key [key-alias/openmrs-rds-encryption]. Encryption was enabled at instance creation — it cannot be enabled on an existing unencrypted RDS instance without creating a new instance from an encrypted snapshot. All automated backups and snapshots inherit the encryption of the source instance.
+
+*EC2 EBS volume encryption:* The root EBS volume and any data volumes attached to the OpenMRS EC2 instance are encrypted using AWS KMS with customer-managed key [key-alias/openmrs-ec2-encryption]. EC2 account-level setting requires encryption for all new EBS volumes by default.
+
+*S3 backup bucket encryption:* The S3 bucket used for OpenMRS database backups is configured with server-side encryption using AWS KMS (SSE-KMS) with customer-managed key [key-alias/openmrs-s3-backup]. S3 bucket policy denies any PutObject requests that do not specify SSE-KMS encryption, preventing unencrypted uploads.
+
+*KMS key management:* All three customer-managed keys are configured with annual automatic rotation. Key policies restrict key usage to authorized IAM roles only. Key usage and administrative actions are logged in CloudTrail. The ISSO reviews KMS key usage logs quarterly and confirms no unauthorized key usage.
+
+**Assessment Evidence:** RDS instance console showing encryption enabled and KMS key identifier; EC2 console showing EBS volume encryption; S3 bucket encryption configuration and bucket policy; KMS key configuration showing customer-managed keys with rotation enabled; CloudTrail log sample showing key usage events.
+
+---
+
+### Audit and Accountability (AU) — Technical Controls
+
+---
+
+**AU-2 / AU-12: Event Logging**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Audit logging for OpenMRS operates at two distinct layers that serve different purposes:
+
+*Layer 1 — Application audit log (system-specific):*
+The OpenMRS application generates audit records for all ePHI access events. The OpenMRS audit log module is configured to record: user identifier, patient identifier (internal MRN — not demographic data), record type accessed, action performed (view/create/modify), outcome, timestamp (UTC), and source IP address. These records are the primary HIPAA audit control evidence — they answer "who accessed which patient record and when."
+
+Application audit logs are shipped via the CloudWatch Logs agent to CloudWatch log group [openmrs-application-audit] with a 6-year retention policy. The CloudWatch log group is configured with a resource policy preventing deletion of log events. IAM policies restrict who can read audit log contents to ISSO only — clinical and administrative staff cannot access audit logs.
+
+*Layer 2 — AWS infrastructure audit log (hybrid — CloudTrail):*
+AWS CloudTrail captures all AWS API calls across the account. CloudTrail is configured for all regions with management event logging enabled. CloudTrail logs are delivered to a dedicated S3 bucket [cloudtrail-logs-openmrs-[account-id]] separate from the backup bucket. Log file integrity validation is enabled — SHA-256 hash validation allows detection of any modification to log files after delivery. CloudTrail log S3 bucket has Block Public Access enabled and is not accessible to the EC2 instance role.
+
+These two layers are complementary and distinct. CloudTrail answers "who made what AWS API call and when." The application audit log answers "which OpenMRS user accessed which patient record and when." Both are required; neither substitutes for the other.
+
+**Assessment Evidence:** CloudWatch log group configuration showing application audit log retention and access policy; sample application audit log records showing required fields; CloudTrail configuration showing all-region logging and integrity validation; CloudTrail S3 bucket policy; demonstration that IAM policy restricts application audit log access to ISSO.
+
+---
+
+**AU-9: Protection of Audit Information**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Audit records are protected from unauthorized access, modification, and deletion through three mechanisms:
+
+*CloudWatch log group protection:* The application audit log group [openmrs-application-audit] has a resource-based policy that denies DeleteLogGroup and DeleteLogStream actions to all principals except the designated audit administrator role. IAM policies further restrict write access to the CloudWatch Logs agent running on the EC2 instance. ISSO has read access; no other role has access to audit log contents.
+
+*CloudTrail log integrity:* CloudTrail log file integrity validation generates a signed digest file every hour. If any log file is modified, deleted, or forged after delivery, the digest file validation fails. ISSO validates CloudTrail log integrity monthly using the AWS CLI validation command; results documented in the audit log review record.
+
+*S3 bucket protection for CloudTrail logs:* S3 Object Lock is enabled on the CloudTrail log bucket in compliance mode with a retention period equal to the required log retention period. This prevents deletion or modification of log files during the retention period even by the root account.
+
+Any attempt to delete or modify audit records generates a CloudWatch alert configured on the CloudTrail event for DeleteLogGroup, PutBucketPolicy on the log bucket, or changes to the CloudTrail configuration.
+
+**Assessment Evidence:** CloudWatch log group resource policy; CloudTrail integrity validation records from most recent monthly check; S3 Object Lock configuration on CloudTrail bucket; CloudWatch alarm configuration for audit tampering events.
+
+---
+
+## A Note on SSP as a Diagnostic Tool
+
+While drafting today's implementation descriptions, two gaps surfaced that I want to document explicitly:
+
+**Gap 1 — Application audit log review process:** The AU-2 implementation documents that application audit logs are collected and retained. The Day 30 monitoring strategy defined a weekly manual log review. But the AU-6(1) enhancement from Day 47 requires automated audit analysis for anomaly detection, not just weekly manual review. The SSP writing exercise surfaced that the automated CloudWatch metric filters for application audit log anomalies have not yet been fully specified — what constitutes an anomalous access pattern, at what threshold, triggering what alert. This is a planned enhancement that needs to be added to the Plan of Action and Milestones before authorization.
+
+**Gap 2 — TLS certificate monitoring:** The SC-8 implementation documents that the ISSO is alerted 30 days before certificate expiration. The CloudWatch alarm for this monitoring has not yet been configured. This is a straightforward configuration task but needs to be tracked to completion.
+
+Both of these gaps were discovered through SSP writing, not through a separate gap analysis exercise. This is exactly what NIST SP 800-18 means when it describes the SSP as a living document — writing it surfaces operational detail that needs to be addressed. I will add both items to the POA&M.
+
+---
+
+## A Real-World Example That Made This Click
+
+While working through the audit log implementation descriptions today I returned to the **2015 Anthem breach** — which I covered on Day 35 — specifically to look at it through the SSP documentation lens.
+
+Anthem's breach resulted in the exposure of nearly 79 million records. Post-incident investigation found that Anthem had not implemented robust database activity monitoring — the controls that would have generated audit records of the unusual database query patterns the attacker used to extract records. The attackers used a valid administrative credential to run queries that extracted large volumes of data over several weeks before discovery.
+
+The specific gap that today's work addresses: had Anthem's SSP required an implementation description for AU-2 at the specificity level I documented above — including "which events are logged," "where logs are stored," "how logs are protected," and "how anomalous patterns generate alerts" — the writing exercise would have surfaced the absence of database activity monitoring as a gap. The SSP would have either documented a planned control (adding it to the POA&M) or prompted implementation before the authorization was approved.
+
+The SSP is not just documentation of what was done. It is a forcing function for honest accounting of what has not been done. An SSP written to the specificity standard I am applying today would have made Anthem's monitoring gap visible — and visible gaps can be remediated.
+
+---
+
+## What I Am Still Thinking About
+
+One practical question that came up during the RDS encryption documentation: how should the SSP handle the fact that RDS encryption can only be enabled at instance creation?
+
+If an organization is documenting SC-28 for an existing unencrypted RDS instance, the implementation description cannot honestly say "encryption is enabled" — it would need to say "encryption is not currently enabled; implementation requires creating a new encrypted RDS instance from an encrypted snapshot." That is a POA&M item, not an implemented control.
+
+For MyClinic's OpenMRS deployment, the assumption throughout this project is that the RDS instance was created with encryption enabled from the beginning — which is the correct approach when standing up a new system. But for organizations doing remediation work on existing deployments, the SSP writing for SC-28 might surface that a re-architecture task is needed to implement the control. That is valuable to discover through documentation rather than through a breach.
+
+---
+
+## What's Next
+
+Day 51 continues the SSP documentation with administrative and operational controls — policies, training, contingency planning, and incident response procedures. The technical controls documented today are necessary but not sufficient. The administrative controls are what give the technical controls operational continuity — ensuring that the MFA requirement is enforced for new accounts, that the quarterly access review actually happens, and that when an incident occurs the response is consistent and documented.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-18 Rev 1 – Guide for Developing System Security Plans](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-53A Rev 5 – Assessment Procedures](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS OCR – Anthem Resolution Agreement and Corrective Action Plan](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/anthem/index.html)
+- [AWS KMS Customer Managed Keys Documentation](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk)
+- [AWS CloudTrail Log File Integrity Validation](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html)
+
+---
+
+*#GRC #SystemSecurityPlan #NISTRMF #SSP #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day50*
