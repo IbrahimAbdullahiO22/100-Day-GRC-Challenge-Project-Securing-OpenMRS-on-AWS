@@ -1,118 +1,395 @@
-# 📅 Day 51: Task S-4 (Part 2) — Documenting Administrative & Procedural Controls  
-_100 Days of GRC — by Ibrahim Abdullahi_  
+# Day 51 – Task S-4 (Part 2): Documenting Administrative and Operational Controls in the SSP | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Today’s Goals:
+## The Half of Security That Does Not Run on Servers
 
- Understand **which security controls** are implemented through policies & processes — not just technology  
- Learn to write **clear, plain-language SSP entries** for these controls  
- Draft an example **administrative control entry** for OpenMRS on AWS  
- Appreciate the **people + process** side of system security  
+Day 50 documented the technical controls — encryption, authentication, audit logging, boundary protection. Today covers the controls that live in people, processes, and policies rather than in configuration files and code.
 
----
+This half of the security program is harder to document well than the technical half, for a specific reason: technical controls either work or they do not. You can screenshot an RDS instance showing encryption enabled. You cannot screenshot a culture of security awareness, a consistently followed incident response process, or a genuinely functional change management review. Administrative controls require documentation that describes what should happen, evidence that it does happen, and records that demonstrate the frequency and quality of execution.
 
-##  Why Administrative Controls Matter
-
-In GRC leadership, one thing I always emphasize is:  
-
-> “Tech alone cannot secure a system — **people and processes** must work with the tech.”  
-
-That’s why today we’re documenting those “non-technical” controls in our **System Security Plan (SSP)** — policies, procedures, and human-driven activities that **govern the security posture** of our OpenMRS system on AWS.
+The SSP documentation challenge for administrative controls is therefore different from technical controls. For technical controls, the challenge is precision — documenting the exact configuration so an assessor knows what to verify. For administrative controls, the challenge is demonstrating operational reality — documenting not just what the procedure says but how the organization knows it is being followed.
 
 ---
 
-##  What Kinds of Controls Are We Talking About?
+## What I Worked On Today
 
-Examples include:  
-- **Security awareness training** for users (AT Family)  
-- **Audit log reviews**  
-- **Incident response plan & testing**  
-- **Personnel background screening**  
-- **Change management processes**  
-- **Account approval and removal procedures**  
-
-These controls typically reference **higher-level org policies**, **company handbooks**, or **procedural documents**, and describe **how they apply to our system**.
+Task S-4 documentation for administrative and operational controls covers the AT (Awareness and Training), IR (Incident Response), CP (Contingency Planning), CA (Assessment, Authorization, and Monitoring), PS (Personnel Security), and CM (Configuration Management procedural) families. Today I work through the implementation descriptions for the most significant administrative controls in each family, at the same level of specificity established in Day 50.
 
 ---
 
-##  Example #1 — Audit Log Review (AU-6)
+## What Actually Clicked for Me
 
-**SSP Entry (example):**
+The framing that clarified administrative control documentation today is the difference between a *policy reference* and an *implementation description*.
 
-> _Audit logs for OpenMRS application activities (user logins, data accesses) and AWS infrastructure events (CloudTrail logs) are aggregated into AWS CloudWatch Logs. The DevOps Engineer for the OpenMRS project reviews these logs weekly, using AWS CloudWatch Insights to filter for anomalies (such as failed login attempts, privilege escalations, or unusual patterns). Findings are recorded in a “Log Review Checklist” stored in Confluence. Any suspicious activity triggers escalation per the documented Incident Response Plan. The Project Manager ensures this review occurs on schedule._  
+A policy reference says: "Security awareness training is required per MyClinic Policy SEC-AT-001." That tells an assessor that a policy exists. It does not tell them who delivers the training, how completion is tracked, what happens when someone does not complete it on time, or whether the training content actually covers the threats relevant to OpenMRS.
 
----
+An implementation description says: who does what, when, how frequently, how compliance is verified, what happens when compliance fails, and where the evidence lives. The implementation description makes the assessor's job possible — they can request the specific evidence and verify that the control is operating as described.
 
-##  Example #2 — Security Awareness Training (AT-2)
-
-**SSP Entry (example):**
-
-> _All OpenMRS project team members (developers, DevOps, admins) must complete annual Security Awareness Training delivered via the organization’s LMS. The training covers phishing, data handling, cloud security best practices (AWS), and HIPAA/privacy awareness. New team members complete training within 30 days of onboarding. The Project Manager maintains a training completion roster and reviews compliance quarterly. This aligns with org Policy ABC-123._  
+When I write administrative control implementation descriptions with this standard in mind, two things happen. First, the descriptions become useful operational documents — the ISSO or any responsible party can read them and know exactly what they are supposed to do. Second, gaps become visible — if I cannot write "compliance is verified by [specific mechanism]" because there is no verification mechanism, that is a gap that belongs in the POA&M.
 
 ---
 
-##  Example #3 — Contingency Planning (CP Family)
-
-**SSP Entry (example):**
-
-> _Automated daily AWS RDS Snapshots back up the OpenMRS MySQL database with encrypted copies. EC2 AMIs are generated monthly. The DevOps Engineer maintains a documented “Restore from Snapshot” procedure tested biannually. Backup success/failure alerts are monitored in CloudWatch. These procedures are validated during DR tests with IT leadership._  
+## SSP Control Implementation Descriptions — Administrative and Operational Controls
 
 ---
 
-##  Leadership Lessons on Documenting Administrative Controls
-
- Be specific about:  
- **Who** performs the control  
- **What** is done (clearly define the process)  
- **When** it is done (timing/frequency)  
- **How** it links to org policy  
-
- **Reference parent policies** or SOPs — don’t copy the whole thing, just show the linkage  
-
- **Identify and close gaps** — if documenting reveals “we don’t actually do this yet,” that’s an opportunity for leadership to improve security maturity  
+### Awareness and Training (AT)
 
 ---
 
-##  My Hands-On Example Today:  
+**AT-1: Policy and Procedures**
 
-**Control:** AT-3 — Role-Based Training  
+**Implementation Status:** Implemented
 
-**SSP Entry (drafted today):**
+**Implementation Description:**
 
-> _OpenMRS team members in privileged roles (AWS Administrators, Database Administrators, DevOps) receive role-based security training annually. This covers AWS IAM best practices, AWS KMS key management, CloudTrail/CloudWatch monitoring, and OpenMRS RBAC management. Training modules are delivered via the LMS platform, tracked by HRIS. Completion is reviewed quarterly by the Project Manager._  
+MyClinic maintains a Security Awareness and Training Policy that establishes the requirement for security training for all personnel with access to OpenMRS and the underlying AWS environment. The policy is reviewed and updated annually by the ISSO and Compliance Officer, approved by the Executive Director, and communicated to all applicable personnel.
 
----
+The policy specifies: training completion requirements before initial system access is granted; annual recertification requirements; role-based supplemental training requirements for personnel in privileged roles; consequences for non-completion including access suspension.
 
-##  Reflection:
+**Policy Document Location:** MyClinic Security Policy repository [location specified in SSP appendix]; current version with approval signature on file.
 
-While documenting today, I noticed that our team **does not yet have a formal checklist for log review signoffs**. This surfaced as a gap.  
-
-**Next step as a leader:** I will propose adding a lightweight “Weekly Log Review Checklist” in Confluence, signed off digitally — this builds auditability and clarity for this control.  
+**Assessment Evidence:** Current approved policy document with review date and approval signature; distribution confirmation showing all applicable personnel received the policy.
 
 ---
 
-##  Why This Work Is Critical:
+**AT-2: Security Awareness Training**
 
-> “Policies and procedures are the connective tissue of a security program — without them, tech controls drift and decay.”  
+**Implementation Status:** Implemented
 
-As I mentor newer GRC analysts, I remind them: **a well-written SSP is not fiction — it reflects reality.** If we find gaps while writing, we fix the process, then document it.
+**Implementation Description:**
+
+All personnel with access to OpenMRS — clinical staff, administrative staff, IT administrators, and the ISSO — complete annual security awareness training before initial access is granted and annually thereafter. The training curriculum covers:
+
+- Phishing recognition and response — how to identify phishing emails targeting healthcare organizations; what to do when a suspicious email is received; reporting procedure
+- Password and MFA security — password hygiene; MFA enrollment and use; what to do if MFA device is lost or compromised
+- HIPAA Privacy and Security Rule basics — minimum necessary access; patient privacy rights; what constitutes a breach; breach reporting obligation
+- Physical security — clean desk policy; screen lock requirements; tailgating awareness; visitor protocols
+- Incident reporting — how to recognize a potential security incident; who to contact; initial containment steps a non-technical user should take
+- Social engineering awareness — phone-based social engineering targeting healthcare staff; pretexting scenarios common in healthcare
+
+Training is delivered via the MyClinic learning management system (LMS). Each module includes a knowledge check; a passing score of 80% or higher is required. Personnel who do not pass have one opportunity to retake before the ISSO is notified and access suspension is considered.
+
+New personnel complete training within 5 business days of hire and before OpenMRS access is granted. Existing personnel complete annual recertification by the anniversary of their initial training date.
+
+Completion tracking: the ISSO pulls a quarterly completion report from the LMS. Personnel with overdue training are notified by the ISSO with a 10-business-day completion deadline. Persistent non-completion is escalated to the Health IT Manager and the employee's supervisor.
+
+**Assessment Evidence:** LMS training completion report for all active OpenMRS users showing completion dates; training curriculum documentation; sample knowledge check with pass/fail records; escalation records for any non-compliance.
 
 ---
 
-##  Tomorrow’s Focus:
+**AT-3: Role-Based Training**
 
-Now that our SSP (technical + administrative controls) is drafted, it’s time to think about **continuous monitoring**:  
+**Implementation Status:** Implemented
 
-> How do we **keep this system secure**, month after month, even as the cloud environment evolves?  
+**Implementation Description:**
+
+Personnel in roles with elevated access or security-specific responsibilities receive supplemental role-based training annually, in addition to the general awareness training required under AT-2.
+
+*IT Administrator role-based training covers:*
+- AWS IAM policy design and least privilege principles
+- AWS KMS key management — key creation, rotation, access policy management
+- EC2 hardening per CIS Benchmark — understanding the baseline and how to verify it
+- CloudTrail and CloudWatch configuration and review
+- OpenMRS account management procedures — provisioning, deactivation, quarterly review
+- Change management procedures for the OpenMRS environment
+- Incident response procedures for technical escalations
+
+*ISSO role-based training covers:*
+- NIST RMF process and SSP maintenance
+- HIPAA Security Rule audit requirements and evidence collection
+- Security assessment preparation and coordination
+- Continuous monitoring execution and POA&M management
+- Privileged access review procedures
+- Breach determination and notification procedures
+
+*Clinical Staff role-based training covers:*
+- OpenMRS downtime procedures — how to operate in a paper-based mode during system unavailability; how to document and later reconcile paper records
+- Minimum necessary access principles applied to OpenMRS — accessing only records of patients under their care
+- Recognizing and reporting unauthorized access to patient records by other staff
+
+Role-based training is delivered via a combination of LMS modules and in-person or video-conference sessions facilitated by the ISSO. Completion is tracked in the LMS for module-based components and via sign-in records for facilitated sessions.
+
+**Assessment Evidence:** Role-based training curriculum for each role; LMS completion records for module components; sign-in records for facilitated sessions; current training calendar.
 
 ---
 
-##  Suggested Search Terms:
+**AT-4: Training Records**
 
-- “How to document security policies in SSP”  
-- “SSP examples for NIST 800-53 AT controls”  
-- “AWS audit log review procedures”  
-- “Continuous monitoring NIST RMF”  
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Training records for all personnel are maintained in the MyClinic LMS. Records include: personnel identifier, training module completed, completion date, assessment score, and pass/fail status. Records are retained for a minimum of 3 years — consistent with HIPAA documentation retention requirements for training records.
+
+ISSO maintains a separate tracking spreadsheet that maps each active OpenMRS user to their most recent training completion date, enabling rapid identification of personnel approaching or past their annual recertification deadline.
+
+**Assessment Evidence:** LMS records export showing all active users and training completion history; ISSO tracking spreadsheet; records for personnel who left the organization showing training records were retained.
 
 ---
+
+### Incident Response (IR) — Administrative Procedures
+
+---
+
+**IR-1: Incident Response Policy and Procedures**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+MyClinic maintains a documented Incident Response Plan (IRP) specific to the OpenMRS system and the broader MyClinic IT environment. The IRP is reviewed and updated annually by the ISSO, reviewed by the Compliance Officer for HIPAA alignment, and approved by the Executive Director. The IRP is stored in the MyClinic policy repository and is accessible to all personnel with incident response roles during a declared incident.
+
+The IRP is structured around the NIST SP 800-61 incident response lifecycle: Preparation, Detection and Analysis, Containment/Eradication/Recovery, and Post-Incident Activity.
+
+**Assessment Evidence:** Current IRP document with review date and approval signature; evidence of annual review (prior version with markup and current approved version).
+
+---
+
+**IR-2: Incident Response Training**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Annual incident response training is provided to all personnel with defined roles in the IRP. Training covers: how to recognize a potential incident, the initial notification procedure, role-specific actions during an incident, documentation requirements, and HIPAA breach determination procedure.
+
+Clinical staff training focuses on recognition and reporting — understanding what to do if they observe a potential incident (unauthorized system access, unexpected system behavior, lost or stolen device) and who to notify. IT staff training covers the technical response procedures. ISSO training covers breach determination, evidence preservation, escalation to the AO, and HHS notification procedures.
+
+Training is delivered annually via a combination of tabletop exercise (see IR-3) and supplemental LMS content. New personnel with IRP roles complete training within 30 days of role assignment.
+
+**Assessment Evidence:** Training materials; LMS completion records; tabletop exercise attendance records.
+
+---
+
+**IR-3: Incident Response Testing**
+
+**Implementation Status:** Partially Implemented — Annual tabletop exercise implemented; full technical response simulation planned for pre-authorization period
+
+**Implementation Description:**
+
+MyClinic conducts an annual tabletop exercise simulating a realistic incident scenario relevant to the OpenMRS threat environment. The tabletop is facilitated by the ISSO with participation from the Health IT Manager, Compliance Officer, and at least one representative clinical staff member. Scenarios are rotated annually to test different response capabilities — ransomware, PHI data exfiltration, insider misuse, and system unavailability are the primary scenario categories.
+
+The tabletop exercise evaluates: detection and initial notification, escalation to appropriate personnel, containment decision-making, HIPAA breach determination workflow, communication with the AO and organizational leadership, and post-incident documentation.
+
+Following each tabletop, the ISSO produces an after-action report documenting: scenario description, participant list, decisions made, gaps identified, and remediation actions assigned with owners and due dates. The IRP is updated based on after-action findings before the next annual review.
+
+*Current gap documented for POA&M:* A full technical incident response simulation — testing the actual tools and procedures used for containment and evidence collection — has not yet been conducted. This is a POA&M item scheduled for completion before the authorization package is finalized.
+
+**Assessment Evidence:** Most recent tabletop exercise scenario; participant list; after-action report; IRP update records showing changes made based on findings.
+
+---
+
+**IR-6: Incident Reporting**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+The incident reporting chain for OpenMRS security incidents follows two parallel tracks that must both be executed:
+
+*Internal reporting track:*
+Any personnel who identify a potential incident notify the ISSO immediately by phone (not email — phone ensures immediate receipt). ISSO performs initial triage within 2 hours of notification. ISSO notifies the Health IT Manager and Compliance Officer within 4 hours of initial notification for incidents assessed as Moderate or High severity. ISSO notifies the AO within 24 hours of confirmed incidents regardless of severity.
+
+*HIPAA breach reporting track:*
+The Compliance Officer initiates a formal HIPAA breach risk assessment within 24 hours of discovery of any incident that may have involved unauthorized access to or disclosure of ePHI. The risk assessment evaluates the four-factor test from 45 CFR §164.402: nature and extent of PHI involved, identity of unauthorized person, whether PHI was actually acquired or viewed, and extent to which risk has been mitigated. If the breach determination is positive, HHS notification is required within 60 calendar days of discovery. Affected individuals are notified without unreasonable delay and within 60 days.
+
+All incidents — regardless of breach determination outcome — are documented in the incident log maintained by the ISSO. The incident log includes: incident identifier, discovery date, discovery method, description, personnel notified, actions taken, breach determination outcome, and resolution date.
+
+**Assessment Evidence:** Incident log (redacted as necessary for sensitive incidents); most recent breach risk assessment (if applicable); HHS notification records (if applicable); internal notification records for most recent 3 incidents.
+
+---
+
+### Contingency Planning (CP) — Administrative Procedures
+
+---
+
+**CP-2: Contingency Plan**
+
+**Implementation Status:** Partially Implemented — Technical recovery procedures documented; clinical downtime procedures in development
+
+**Implementation Description:**
+
+MyClinic maintains a Contingency Plan for the OpenMRS system. The plan has two components that must both be functional for the contingency program to be complete:
+
+*Technical recovery procedures (implemented):*
+The technical recovery section of the contingency plan documents: the RTO target (4 hours), the RPO target (24 hours), the step-by-step procedure for restoring OpenMRS from the most recent S3 backup to a new RDS instance, the procedure for restoring the EC2 application server from a current AMI, the procedure for updating DNS configuration if the EC2 IP address changes during recovery, and verification steps to confirm the restored system is functional before clinical use resumes.
+
+The technical recovery procedures are written at the task level — specific enough for the IT Administrator to execute them under the stress of a real incident without needing to make judgment calls about the sequence of steps.
+
+*Clinical downtime procedures (partially implemented — POA&M item):*
+Clinical downtime procedures documenting how clinical staff operate during OpenMRS unavailability are in development. This is the gap identified as V-015 in the vulnerability inventory and referenced throughout the Categorize step analysis. The absence of functional, tested clinical downtime procedures was a factor in the High availability categorization.
+
+Current status: a draft downtime procedure has been produced that covers patient registration in paper mode and basic encounter documentation. The draft has not been reviewed by clinical staff, has not been tested in a downtime exercise, and does not cover medication management, laboratory result handling, or care plan management in downtime mode. The ISSO has committed to completing, reviewing, and testing clinical downtime procedures before the authorization package is finalized.
+
+**POA&M Reference:** CP-2 clinical downtime procedures — target completion date [specified in POA&M]; owner: Health IT Manager and ISSO jointly.
+
+**Assessment Evidence:** Contingency plan document (both sections); clinical downtime procedures (draft — assessor should note POA&M status); technical recovery procedures.
+
+---
+
+**CP-3: Contingency Training**
+
+**Implementation Status:** Partially Implemented
+
+**Implementation Description:**
+
+IT staff contingency training covering the technical recovery procedures is conducted annually. Training includes a walkthrough of the recovery procedure documentation and a discussion of the most recent backup restoration test results.
+
+Clinical staff contingency training on downtime procedures is planned but cannot be conducted until the clinical downtime procedures are complete and reviewed. This training is a POA&M item dependent on CP-2 clinical downtime procedure completion.
+
+**Assessment Evidence:** IT staff training records; clinical staff training plan (pending CP-2 completion).
+
+---
+
+**CP-4: Contingency Plan Testing**
+
+**Implementation Status:** Partially Implemented
+
+**Implementation Description:**
+
+*Quarterly backup restoration test (implemented):*
+The ISSO and IT Administrator conduct a restoration test each quarter. The test procedure: restore the most recent weekly S3 backup to a test RDS instance in the AWS account; verify that the test instance is accessible; spot-check a defined set of data fields against the expected values from the backup date; document the restoration time from initiation to verified completion; compare actual restoration time against the 4-hour RTO target; document any deviation and remediation action.
+
+Test results are documented in a restoration test log maintained by the ISSO. Any test that reveals a restoration failure or RTO miss triggers an immediate investigation and remediation before the next quarterly test.
+
+*Annual tabletop exercise (implemented):*
+The annual tabletop exercise (documented under IR-3) includes contingency scenarios in rotation. A dedicated contingency tabletop exercise simulating extended system unavailability is scheduled annually.
+
+*Full alternate processing site test (planned — POA&M item):*
+A full test of restoration to an alternate AWS region — the CP-4(2) enhancement requirement — has not yet been conducted. This is a POA&M item dependent on establishing the alternate region infrastructure documented in the CP-7 planning.
+
+**Assessment Evidence:** Restoration test log showing quarterly results; most recent restoration test report with actual restoration time; tabletop exercise records.
+
+---
+
+### Personnel Security (PS)
+
+---
+
+**PS-3: Personnel Screening**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+All personnel who will have access to OpenMRS or the underlying AWS environment undergo background screening before access is granted. Screening includes: identity verification, criminal background check, and employment history verification. For personnel in privileged roles (IT Administrator, ISSO), screening also includes credit check where permitted by applicable law.
+
+Screening is conducted by a third-party screening vendor contracted by MyClinic HR. Results are reviewed by HR and the hiring manager. Personnel with felony convictions related to fraud, theft, or computer crimes are not granted access to the OpenMRS system. Results of screening are retained in HR records — specific results are not shared with the ISSO, but HR confirms to the ISSO that screening was completed and access was approved.
+
+**Assessment Evidence:** HR confirmation letters for the most recent five personnel granted OpenMRS access; screening policy document; HR-ISSO communication process documentation.
+
+---
+
+**PS-4: Personnel Termination**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+Personnel termination procedures for OpenMRS access follow the account deactivation process documented in AC-2. HR notifies the ISSO of voluntary and involuntary separations via a defined notification workflow. ISSO disables the OpenMRS account within 4 hours of notification.
+
+For involuntary separations or separations where insider threat risk is elevated (e.g., termination for cause involving data policy violations), the ISSO may disable the account immediately upon receiving advance notification from HR before the separation meeting occurs — coordinated with HR and legal to avoid premature disclosure.
+
+Following account deactivation, the ISSO reviews the terminated employee's OpenMRS account access history from the audit log for the 90 days preceding separation, looking for unusual access patterns that might indicate data exfiltration or unauthorized disclosure. Results are documented and reviewed by the Compliance Officer.
+
+**Assessment Evidence:** Account deactivation records for most recent five separations with timestamp comparison to HR notification; audit log review records for separated employees.
+
+---
+
+### Configuration Management (CM) — Procedural Controls
+
+---
+
+**CM-3: Configuration Change Control**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+All changes to OpenMRS system configuration — application configuration, security group rules, IAM policies, OS configuration, RDS parameter settings — follow a documented change management process:
+
+*Standard changes* (pre-approved categories of low-risk changes such as OpenMRS version updates following the tested update procedure): documented in the change log before implementation; ISSO review within 24 hours; no advance approval required.
+
+*Normal changes* (all other changes): change request submitted to ISSO at least 3 business days before planned implementation; ISSO reviews for security impact; ISSO approves or returns for revision; implementation documented in change log with actual implementation date and outcome.
+
+*Emergency changes* (changes required immediately to address an active security incident or critical system failure): implemented without advance approval; documented in the change log within 24 hours of implementation; ISSO performs post-implementation security review within 48 hours.
+
+The change log is maintained in the MyClinic configuration management repository. The ISSO reviews the change log monthly and confirms that all changes followed the appropriate process. Any change found without documentation is treated as an unauthorized change and investigated.
+
+**Assessment Evidence:** Change log for the most recent 90 days; sample change requests showing ISSO review and approval; emergency change records with post-implementation review documentation.
+
+---
+
+**CM-4: Security Impact Analysis**
+
+**Implementation Status:** Implemented
+
+**Implementation Description:**
+
+All normal and emergency changes to the OpenMRS environment require a security impact analysis before implementation (or immediately after, for emergency changes). The ISSO evaluates: whether the change affects any security control implementation documented in the SSP; whether the change introduces new vulnerabilities or affects existing vulnerability mitigations; whether the change affects the audit trail or monitoring capability; whether the change affects user access or authentication; and whether the change requires SSP documentation updates.
+
+Changes that affect SSP control implementations trigger an SSP update within 30 days of implementation. Changes that introduce new risks are escalated to the System Owner and documented in the risk register.
+
+**Assessment Evidence:** Security impact analysis records for recent normal changes; SSP update records showing changes that required documentation updates.
+
+---
+
+## Documenting Gaps Honestly
+
+Three administrative control gaps surfaced during today's documentation that belong in the POA&M:
+
+**Gap 1 — Clinical downtime procedures (CP-2, CP-3):** Not complete. Draft exists. Target completion and test before authorization. Owner: Health IT Manager and ISSO jointly.
+
+**Gap 2 — IR-3 technical response simulation:** Annual tabletop implemented. Full technical simulation not yet conducted. Target: complete before authorization package finalized. Owner: ISSO.
+
+**Gap 3 — AT-3 role-based training — clinical downtime component:** Cannot be fully delivered until CP-2 clinical downtime procedures are complete. Dependent on Gap 1 resolution.
+
+These gaps do not prevent the authorization process from moving forward — they become POA&M items with documented remediation plans that the AO reviews as part of the authorization decision. An AO reviewing an honest SSP that documents gaps with remediation plans is in a better position than one reviewing an SSP that describes those controls as fully implemented when they are not.
+
+Honest SSP documentation with identified gaps and a credible remediation plan is a stronger authorization package than a document that claims full implementation of controls that do not actually exist.
+
+---
+
+## A Real-World Example That Made This Click
+
+While working through the personnel termination procedures today I came across the documented details of the **2013 Advocate Medical Group breach** — which resulted in a $5.55 million HIPAA settlement and affected nearly 4 million patients.
+
+One component of the Advocate breach involved the theft of laptop computers from an administrative office. Post-incident investigation revealed gaps in Advocate's workforce security procedures — specifically, the organization had not implemented adequate controls to ensure that workforce members understood their security responsibilities, and physical security procedures for portable devices and workstations were not consistently enforced.
+
+The connection to today's AT controls: HHS OCR's investigation found that training and awareness gaps contributed to the security failures that enabled the breach. Personnel who understood the physical security requirements — screen locks, device encryption, not leaving devices unattended — might have prevented the theft from resulting in a breach (the laptops were not encrypted, which eliminated the encryption safe harbor).
+
+The AT-2 implementation description I documented today — specifically the training content on physical security, clean desk policy, and screen lock requirements, with completion tracking and enforcement mechanisms — addresses exactly the category of workforce awareness failure that the Advocate breach illustrates. A training program that checks the compliance box but does not actually build awareness and behavior change is not an implemented control. The assessment evidence requirement — completion records, knowledge check scores, escalation for non-completion — is what demonstrates that the training is substantive, not perfunctory.
+
+---
+
+## What I Am Still Thinking About
+
+One challenge in administrative control documentation that I want to think through carefully: how should the SSP document controls that depend on individual judgment rather than defined procedures?
+
+The security impact analysis (CM-4) is an example. The process I documented requires the ISSO to evaluate whether a change affects any security control implementation. But "evaluate" is a judgment call — the quality of the assessment depends on the ISSO's knowledge and attention, not on a checklist.
+
+Some organizations address this by creating structured security impact analysis templates — a checklist of questions the reviewer must answer for each change. That converts the judgment call into a documented evaluation with an audit trail. The assessor can then review completed templates and evaluate whether the questions are the right questions, and whether the answers are plausible.
+
+I want to add a security impact analysis template to the CM documentation — not because the ISSO cannot make good judgment calls without one, but because the template creates consistent, reviewable evidence that the analysis happened and covered the right considerations. That is useful both for assessment and for continuity when the ISSO role changes.
+
+---
+
+## What's Next
+
+Day 52 closes the Select step by documenting the complete control implementation status table — a consolidated view of every control in the tailored set with its implementation status, owner, and evidence location. This table is the index that makes the SSP navigable — an assessor reviewing the authorization package uses it to plan the assessment, and the ISSO uses it to track the program's implementation completeness as authorization approaches.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-18 Rev 1 – Guide for Developing System Security Plans](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-61 Rev 2 – Computer Security Incident Handling Guide](https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final)
+- [HHS OCR – Advocate Medical Group Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/advocate/index.html)
+- [NIST SP 800-53A Rev 5 – Assessment Procedures for Administrative Controls](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS HIPAA Breach Notification Rule Guidance](https://www.hhs.gov/hipaa/for-professionals/breach-notification/index.html)
+
+---
+
+*#GRC #SystemSecurityPlan #AdministrativeControls #NISTRMF #HIPAA #OpenMRS #HealthcareSecurity #100DaysOfGRC #AWS #Day51*
