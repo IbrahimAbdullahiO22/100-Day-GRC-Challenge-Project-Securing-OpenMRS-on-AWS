@@ -1,141 +1,277 @@
-# Day 60 – Task A-3 (Part 2): Perform Control Assessments (Process & Documentation)
-
-Welcome to **Day 60** of my GRC journey! 
-
-Yesterday, I assessed the *technical controls* of our OpenMRS-on-AWS deployment. Today, I’m shifting focus to **non-technical controls** — specifically the policies, procedures, and human factors that support the system's security posture.
-
-This is the second half of **Task A-3** in the NIST Risk Management Framework (RMF). It’s time to examine documentation and interview stakeholders to ensure **what’s written on paper is truly being practiced**.
+# 📅 Day 60 – Task A-3 (Part 2): Non-Technical Control Assessments — Examine and Interview | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Today’s Goals
+## The Human and Process Side of Assessment
 
-- **Understand** non-technical assessments (policy, procedure, training, etc.)  
-- **Apply** the `Examine` and `Interview` methods from NIST SP 800-53A  
-- **Validate** process controls for OpenMRS on AWS  
-- **Collect evidence** to support each assessed control
+Day 59 covered the technical assessment activities — AWS infrastructure review, application testing, and configuration analysis. Four findings emerged: two Moderate, two Low. Today completes the Task A-3 assessment work with the non-technical methods: document examination and stakeholder interviews.
 
----
+This distinction matters more than it might initially appear. Technical testing determines whether controls are *configured*. Examination and interviews determine whether controls are *operating* — whether the configured technical controls are supported by the human and process infrastructure that gives them continuity and meaning.
 
-##  What Are Non-Technical Assessments?
+A session timeout configured at 15 minutes is a technical fact. Whether clinical staff are trained on why the timeout exists, whether they understand the downtime procedure when the session times out mid-encounter, and whether they know how to report an incident they observe — these are operational realities that only examination and interviews can surface.
 
-Security is not just about servers and firewalls — it’s about **people, policies, and process**.
-
-In NIST terms:
-
-- **Examine** = Read and verify documented procedures, plans, logs  
-- **Interview** = Speak to key personnel to confirm understanding and implementation  
-
-Together, these give a full view of whether a control is real, relevant, and reliable.
+NIST SP 800-53A is explicit that all three assessment methods — examine, interview, and test — are required for a thorough assessment of High-impact systems. An assessment that only tests technical controls misses the process and human layer where many of the most consequential security gaps actually live.
 
 ---
 
-##  Example: What I Reviewed for OpenMRS
+## What I Worked On Today
 
-### 1. Policy & Procedure Documents (Examine)
-
-I reviewed:
-
-- **Access Control Policy** – defines least privilege, MFA requirements  
-- **Incident Response Plan** – includes roles, communication steps, escalation paths  
-- **Backup & Recovery SOP** – outlines daily backups to S3 and monthly restore drills  
-- **Security Awareness Training Logs** – tracked completion across user roles  
-
-What I looked for:
-
-| Control | Artifact | What I Verified |
-|--------|----------|-----------------|
-| AC-1 | Access Control Policy | Existence, version control, and references to AWS IAM |
-| IR-4 | Incident Response Plan | Clear chain-of-command and incident types |
-| CP-9 | Backup Policy | Snapshot logs, retention policy |
-| AT-4 | Training Records | Completion certificates for all OpenMRS users |
+Days 4 and 5 of the assessment schedule are dedicated to interviews. Days 1 through 3 included document review that has been ongoing in parallel with the technical testing. Today I work through the examination findings from the document review and the interview findings from the stakeholder conversations — connecting the evidence back to the control assessments and identifying any non-technical findings that did not emerge from the technical review.
 
 ---
 
-###  2. Interviews With Stakeholders (Interview)
+## What Actually Clicked for Me
 
-I conducted simulated interviews with:
+The concept that clarified non-technical assessment today is the difference between *compliance* and *capability*.
 
-- **System Admin** – to verify user provisioning and deactivation procedures  
-- **Cloud Engineer** – to explain how backup automation is implemented  
-- **HR/Training Coordinator** – to confirm onboarding includes HIPAA/security training  
+Compliance means the control exists — the policy is written, the procedure is documented, the training record shows completion. Capability means the control works — the personnel responsible for executing the control understand their role, can describe the procedure accurately, and have evidence that they have executed it.
 
-> *Example Interview Question:*  
-> “Walk me through how you disabled a user account after someone left the organization.”  
->  
-> *Expected Answer:*  
-> “We disable the account in OpenMRS, remove the IAM role in AWS, and log it in our offboarding checklist.”
+An assessor who only examines documents for compliance can conclude that an organization has a documented incident response plan, a training program, and an access review procedure. An assessor who also interviews stakeholders may discover that key personnel cannot accurately describe the incident escalation threshold, that the access review is executed by a single person with no backup who has no documentation of how the review is conducted, or that the training content does not reflect the actual threats the system faces.
+
+None of those gaps would appear in a document-only examination. All of them are genuine security program vulnerabilities. Interviews are the method that bridges the gap between documentation and operational reality.
 
 ---
 
-## 🔍 Gathering Evidence of Control Implementation
+## Document Examination Findings
 
-Here’s the kind of **evidence** I collected to confirm process implementation:
-
-| Control | Evidence Type | Description |
-|--------|----------------|-------------|
-| AC-2 | User audit log | Showed last account review (with timestamps) |
-| CP-10 | Backup Logs | S3 snapshots taken daily via AWS Backup |
-| IR-8 | Drill Report | Tabletop exercise summary, conducted quarterly |
-| AT-4 | Training Records | Excel export of completed training sessions, with dates and signatures |
-
-> ✳️ **Pro tip:** Screenshots, export files, and meeting minutes are excellent evidence sources.
+The assessor reviewed the evidence package prepared for the assessment — organized by control family as referenced in the SSP. The examination covered all documents referenced in the SSP implementation descriptions.
 
 ---
 
-##  10-Minute Hands-On Exercise
+### Access Control Policy (AC-1) — Document Examination
 
-###  Step 1: Select a Security Document
+**Documents reviewed:** MyClinic Security Access Control Policy (current version); provisioning request form template; account deactivation checklist; quarterly access review template.
 
-I chose the `Incident Response Plan` for OpenMRS on AWS.
+**Examination findings:**
 
-###  Step 2: Match to Real-World Practice
+The Access Control Policy is current, approved, and appropriately detailed. It references HIPAA minimum necessary requirements, the MFA requirement, the shared account prohibition, and the quarterly review schedule. Approval signature present. Version control history shows two prior versions with review dates. ✓
 
-The plan says:  
-> “All incidents must be escalated within 30 minutes of detection.”
+Account provisioning request forms reviewed for the five most recently created accounts — all five have written Health IT Manager approval documented before account creation. ✓
 
-I checked our ticketing system and confirmed:  
-- We had a documented incident last month  
-- The timestamp showed the incident was escalated within 15 minutes  
-- An after-action review was conducted
+Quarterly access review records — two most recent quarters reviewed. Both show completed Health IT Manager certification. However, the review template asks only "Is continued access needed? Yes/No" without asking the reviewer to confirm that the role assignment remains appropriate. A user whose job function changed but whose OpenMRS role was not updated would pass this review if the reviewer answers "Yes" to continued access without considering whether the current role still matches the current job function.
 
- **Control verified**
+**Finding A-5 (Low):** Quarterly access review template does not explicitly require reviewers to confirm that the role assignment (not just the account) remains appropriate for the user's current job function. The review confirms account continuation but not role accuracy. This is a process design gap rather than an implementation failure — the reviews have been conducted on schedule, but the review scope is narrower than optimal.
+
+*SSP comparison:* The SSP documents that the quarterly review confirms accounts are still needed and appropriately configured. The template does not explicitly prompt the reviewer to evaluate role appropriateness — the "appropriately configured" requirement is not operationalized in the review template.
 
 ---
 
-###  Step 3: Write 3 Interview Questions
+### Incident Response Plan (IR-1, IR-2, IR-3) — Document Examination
 
-1. *“How do you know when an incident is severe enough to escalate?”*  
-2. *“Have you participated in an incident drill this quarter? What did you learn?”*  
-3. *“Can you describe the last time a backup was restored?”*
+**Documents reviewed:** MyClinic Incident Response Plan (current version); tabletop exercise scenario, participant list, and after-action report; IRP version history.
 
-These help test both knowledge and actual adherence to the process.
+**Examination findings:**
 
----
+The IRP document is current, approved by the Executive Director, and covers the NIST SP 800-61 incident lifecycle. Three tabletop-driven improvements are documented in the version history — confirming the plan is a living document that evolves from testing. ✓
 
-##  Reflection
+After-action report from the most recent tabletop reviewed. Finding from the tabletop: the clinical staff representative was not familiar with the manual patient registration process. This is documented in the after-action report as an action item — but the action item is "complete clinical downtime procedures (CP-2)" rather than "conduct interim training on manual registration." The gap between the identified finding and the action item is meaningful — the downtime procedure document is not yet complete, but some basic manual registration guidance could be provided to clinical staff immediately without waiting for the full procedure.
 
-> “It’s one thing to have a beautiful policy. It’s another to *live it*.”
+**Observation (not a finding):** The tabletop after-action tracking could be strengthened by adding target dates and responsible parties to each action item. Two of the three action items in the most recent after-action report list the action without a named owner or target date. This reduces accountability for follow-through.
 
-Through these interviews and reviews, I identified small gaps — like outdated backup procedures and one missing training log. It was a reminder that **policy without practice introduces risk**.
+The IRP does not include the HIPAA breach determination workflow as a separate section — this is the POA&M item [POA&M-IR1-01] identified in Day 51. The assessor confirms the POA&M accurately characterizes this gap. ✓ (POA&M item confirmed accurate — not a new finding.)
 
 ---
 
-##  Search Terms for Further Exploration
+### Security Awareness Training Records (AT-2, AT-4) — Document Examination
 
-- `NIST SP 800-53A examine interview test`  
-- `Security documentation audit checklist`  
-- `Evidence for security control implementation`  
-- `Policy vs practice compliance gap`  
-- `IT security assessment interviews best practices`
+**Documents reviewed:** LMS training completion export; training curriculum outline; training knowledge check passing score records.
+
+**Examination findings:**
+
+Training completion export reviewed for all active OpenMRS users. Current completion status matches the ISSO's Task I-2 documentation — [N] current, [N] overdue users in the 10-business-day remediation window. ✓
+
+Training curriculum reviewed. Content covers all six required topic areas documented in the SSP. Knowledge check passing scores (80% minimum) are recorded in the LMS for all completions. ✓
+
+**Finding A-6 (Low):** The training curriculum does not include a module specifically addressing the OpenMRS downtime scenario — what clinical staff should do if they cannot access OpenMRS during a shift. The general security awareness training covers incident reporting and system outage notification, but does not provide the specific guidance that clinical staff need to operate safely during an EHR outage. This gap connects directly to CP-2 (clinical downtime procedures) — the downtime training cannot be fully delivered until the procedures are complete, but the absence of even basic downtime guidance in the current training curriculum is a gap that could be partially addressed now.
+
+*Note:* This finding overlaps with POA&M-CP3-01 (clinical staff downtime training pending CP-2). The assessor is confirming and strengthening the characterization of that POA&M item rather than creating a duplicative finding — the POA&M item should be updated to note that interim basic downtime guidance should be added to the current training curriculum while the full procedure is being developed.
 
 ---
 
-## Tomorrow’s Focus
+### Contingency Plan (CP-2, CP-4) — Document Examination
 
-**Day 61** will walk through creating a **Security Assessment Report (SAR)**. We’ll tie together everything learned so far — from evidence collection to risk ratings — and prepare to brief stakeholders for authorization decisions.
+**Documents reviewed:** MyClinic OpenMRS Contingency Plan (technical recovery section; clinical downtime procedures draft); quarterly restoration test records.
+
+**Examination findings:**
+
+Technical recovery procedures reviewed. Step-by-step instructions are clear and specific. The procedure includes a verification checklist confirming that the restored system is functional before clinical use resumes. The most recent quarterly restoration test record shows completion within the 4-hour RTO with data integrity verified. ✓
+
+Clinical downtime procedures draft reviewed. The draft covers patient registration in paper mode and basic encounter documentation. It does not address: medication management during downtime, laboratory result handling for results that arrive during downtime, or care plan continuity for patients with complex chronic conditions. The draft has been reviewed with one clinical staff member for feedback but has not been formally reviewed by the clinical leadership team.
+
+The assessor's assessment of the CP-2 POA&M characterization: the POA&M describes clinical downtime procedures as "partially implemented — draft exists, not tested." The assessor finds this characterization accurate. The draft scope is more limited than described in the POA&M — "draft exists" implies a substantially complete draft awaiting testing; the actual draft covers two of approximately five functional areas. The assessor will note in the SAR that the CP-2 POA&M item may require a revised target date and expanded scope description.
 
 ---
 
-_Stay disciplined. Lead with clarity. Validate what matters._
+### Patch Management Records (SI-2, CM-3) — Document Examination
 
+**Documents reviewed:** Change log for the past 90 days; patch management compliance report from Patch Manager; OpenMRS advisory subscription records.
+
+**Examination findings:**
+
+Patch Manager compliance report reviewed. EC2 Ubuntu OS shows current patch status — last patch applied [date]. No missing critical or high patches. ✓
+
+OpenMRS advisory subscription records: ISSO email folder contains OpenMRS security advisories received in the past 12 months. Three advisories received; all three reviewed within 24 hours per the monitoring procedure; one required action (CVE addressed in an OpenMRS update — applied within the 2-week High severity timeline). ✓
+
+Change log reviewed against CloudTrail — all security-relevant configuration changes have corresponding change log entries. ✓
+
+**No findings from patch management examination.**
+
+---
+
+## Stakeholder Interviews
+
+---
+
+### Interview 1: ISSO — Technical Controls and Monitoring
+
+**Interview focus:** Verify ISSO's understanding of and operational responsibility for technical controls; probe the monitoring process; assess incident response readiness.
+
+**Key interview exchanges:**
+
+*Assessor: "Walk me through what you do when a GuardDuty HIGH finding comes in at 11pm on a Friday."*
+
+ISSO: "The Security Hub SNS notification goes to my personal phone via SMS — I configured it that way specifically because I don't want to miss HIGH findings outside business hours. I triage on my phone — if it looks like active credential compromise or exfiltration, I start the incident response process immediately. If it looks like a known pattern that we've seen before, I document my initial assessment and investigate fully first thing Monday morning. Either way, I document the finding and my disposition in the monitoring log before I go back to sleep."
+
+*Assessor assessment:* This response demonstrates operational ownership and a clear mental model for after-hours triage. The distinction between immediate response and documented-and-defer is appropriate. No concern.
+
+*Assessor: "The quarterly IAM review — describe how you conduct it."*
+
+ISSO: "I pull the IAM console export for all entities — users, roles, policies — and compare it against the documented IAM inventory in the SSP appendix. I look for anything that's in the console but not in the inventory, and anything in the inventory that I can't find in the console. Then I check the permissions for each entity against the documented least-privilege specification. If I find something unexpected, I flag it for IT Administrator review."
+
+*Assessor: "During your most recent review, did you examine service accounts?"*
+
+ISSO: "I reviewed all the IAM entities I knew about. I'll be honest — the finding you identified [A-3, undocumented service account] was not in my inventory. That account was created by the IT Administrator for a monitoring integration about six months ago and wasn't added to the inventory. That's a process gap — the account creation wasn't flagged to me via the change management process, so it never made it into the inventory."
+
+*Assessor assessment:* This response is candid and accurate. It identifies the root cause of Finding A-3 — the account was created via a process that bypassed the change management notification to the ISSO. This is actionable: the change management process needs to explicitly require ISSO notification for any new IAM entity creation, not just security-group or encryption changes.
+
+**Finding A-7 (Moderate):** IAM entity creation is not explicitly listed as a required ISSO-notification change management trigger. The IT Administrator created a service account without ISSO awareness, which prevented the account from being included in the IAM inventory and quarterly review. The change management procedure (CM-3) addresses security group modifications, IAM policy changes, and configuration changes — but does not explicitly enumerate IAM entity creation (new users, roles, service accounts) as a category requiring ISSO notification.
+
+*Note:* Finding A-7 is related to but distinct from Finding A-3. A-3 is the configuration gap (service account with console access and no MFA). A-7 is the process gap that allowed A-3 to occur and remain undetected through a quarterly review.
+
+---
+
+### Interview 2: IT Administrator — Infrastructure Operations
+
+**Interview focus:** Verify technical implementation knowledge; probe patching and change management practices; assess understanding of backup and recovery procedures.
+
+**Key interview exchanges:**
+
+*Assessor: "If I asked you to restore OpenMRS from backup right now — not a drill, an actual incident — walk me through what you would do."*
+
+IT Administrator: "First I'd confirm with the ISSO that we're declaring an incident and activating the contingency plan. Then I'd follow the recovery procedure document — it's in the shared drive at [location]. Step one is verifying the most recent S3 backup is intact and getting the S3 URI. Step two is creating a new RDS instance from the most recent weekly export — I'd use the restore-from-s3 procedure in the doc. Step three is updating the OpenMRS database connection string to point to the new RDS instance. Step four is the verification checklist — spot check specific records, confirm authentication works, confirm audit logging is active before we notify the clinicians the system is available."
+
+*Assessor assessment:* This response demonstrates genuine familiarity with the recovery procedure — the IT Administrator cited the specific steps and their sequence from memory, with appropriate acknowledgment of the procedure document as the authoritative reference. This is exactly the combination of practiced knowledge and deference to documentation that indicates a well-internalized procedure.
+
+*Assessor: "The service account created for the monitoring integration — tell me about that."*
+
+IT Administrator: "I created it about six months ago for [tool name]. I gave it console access because I wasn't sure if the tool needed it. Looking back, it probably didn't — it uses API keys for the actual integration. I should have flagged it to the ISSO. I didn't think about it as a security-relevant change at the time because it was just a new account, not a policy change."
+
+*Assessor assessment:* This response confirms the root cause identified in Finding A-7 — the IT Administrator did not recognize new IAM entity creation as a security-relevant change requiring ISSO notification. This is a training and procedure gap, not a willful omission. The remediation is both a process update (add IAM entity creation to the CM-3 ISSO notification list) and a brief refresher conversation with the IT Administrator about what constitutes a security-relevant change.
+
+---
+
+### Interview 3: Health IT Manager — Access Management and System Ownership
+
+**Interview focus:** Verify System Owner's understanding of access management responsibilities; assess awareness of the system's risk profile.
+
+**Key interview exchanges:**
+
+*Assessor: "You certify the quarterly access reviews. Walk me through how you evaluate whether an account should be recertified."*
+
+Health IT Manager: "I look at whether the person is still employed and whether their role in the organization still needs OpenMRS access. If they're still a clinician, yes. If they've moved to a purely administrative role, I'd discuss with them and the ISSO whether the clinical access level is still appropriate."
+
+*Assessor: "Does your review process consider whether the specific role assignment — Clinician versus Nursing Staff versus Administrative — is still accurate for each user?"*
+
+Health IT Manager: "I look at whether they need access. I don't always look at whether the role type is exactly right. That's a good point — I should probably be checking that the role matches what they're actually doing now."
+
+*Assessor assessment:* This response confirms the gap identified in Finding A-5. The Health IT Manager's mental model of the access review focuses on account continuation (do they still need access?) rather than role accuracy (does the role still match their function?). This is not negligence — it is the natural way a non-security-specialist thinks about access. The remediation is updating the review template to explicitly prompt role accuracy review, not retraining the Health IT Manager.
+
+---
+
+### Interview 4: Compliance Officer — HIPAA Alignment
+
+**Interview focus:** Verify Compliance Officer's understanding of HIPAA security requirements; probe breach determination process; assess training oversight.
+
+**Key interview exchanges:**
+
+*Assessor: "Walk me through how you would determine whether a security incident involving patient data is a reportable breach under HIPAA."*
+
+Compliance Officer: "I work through the four-factor test — what was the nature and extent of the information involved, who was the unauthorized person, whether the information was actually acquired or just potentially accessible, and whether the risk has been mitigated. If all four factors suggest low probability of compromise, we document our reasoning and it's not a reportable breach. If we can't make that case, it's reportable — we notify affected individuals and HHS within 60 days."
+
+*Assessor assessment:* The Compliance Officer accurately described the four-factor test and the notification timeline. This demonstrates genuine familiarity with the HIPAA breach notification rule, not just awareness that the rule exists. The IRP gap (no formal HIPAA breach workflow section) is a documentation gap, not a knowledge gap — the Compliance Officer knows the process; it is just not written into the IRP as a formal checklist. This context should be reflected in the SAR finding characterization for POA&M-IR1-01.
+
+*Assessor: "The quarterly training compliance review — what happens if a user doesn't complete training on time?"*
+
+Compliance Officer: "The ISSO is supposed to send a reminder and give them 10 days. If they don't comply, access is suspended. In practice I know there's been a gap recently — the quarterly pull wasn't done on schedule and some users fell through. The ISSO is addressing that now."
+
+*Assessor assessment:* The Compliance Officer is aware of the AT-2 gap and its current remediation status. This demonstrates the organization's internal transparency about its compliance posture — a positive indicator that gaps are not being concealed.
+
+---
+
+## Non-Technical Assessment Findings Summary
+
+| Finding ID | Control | Severity | Source | Description |
+|---|---|---|---|---|
+| A-5 | AC-2 | Low | Examination + Interview | Quarterly review template does not prompt role accuracy — only account continuation |
+| A-6 | AT-2 | Low | Examination | Training curriculum has no downtime scenario content — gap in clinical preparedness |
+| A-7 | CM-3 | Moderate | Interview | IAM entity creation not listed as ISSO-notification change trigger — enabled A-3 to occur undetected |
+
+One new Moderate finding (A-7) and two Low findings (A-5, A-6) from the non-technical assessment. Combined with the four technical findings from Day 59, the complete assessment findings are:
+
+| Finding | Control | Severity |
+|---|---|---|
+| A-1 | AC-6 / IAM PassRole | Moderate |
+| A-2 | SC-28 / KMS documentation | Low |
+| A-3 | IA-2 / Undocumented service account | Moderate |
+| A-4 | AU-3 / Previous value logging | Low |
+| A-5 | AC-2 / Review template scope | Low |
+| A-6 | AT-2 / Downtime training gap | Low |
+| A-7 | CM-3 / IAM creation change trigger | Moderate |
+
+Three Moderate findings, four Low findings. No High findings. The absence of High findings reflects the thoroughness of the Task I-1 implementation verification and Task I-2 documentation — controls that were misconfigured were corrected before the assessment, so the assessment found process and documentation gaps rather than fundamental control failures.
+
+---
+
+## A Real-World Example That Made This Click
+
+The Health IT Manager's access review interview — specifically the focus on "do they still need access?" rather than "is the role still appropriate?" — reminded me of the circumstances surrounding one of the most common patterns in healthcare insider threat incidents.
+
+The **2018 Michigan Medicine** insider breach involved a former employee who retained access to patient records after transitioning to a different role within the organization. The access review process confirmed that the individual was still employed and still needed some system access — but did not verify that the clinical record access level was still appropriate for the new role.
+
+This is precisely the gap that Finding A-5 identifies. An access review that confirms employment and general system need but does not evaluate role accuracy will consistently miss the scenario where a user's job function no longer justifies their current access level. The fix — updating the review template to explicitly prompt role accuracy evaluation — is simple. The risk it addresses — clinical record access retained by users who no longer need it — is real.
+
+The interview method was essential for surfacing this finding. The document examination showed that reviews were being conducted on schedule with Health IT Manager certification. Only the interview revealed that the certification was based on a narrower evaluation than the SSP intended.
+
+---
+
+## What I Am Still Thinking About
+
+The interview with the IT Administrator raised a question I want to think through before the preliminary findings meeting: how should the SAR characterize Finding A-7 in relation to Finding A-3?
+
+Finding A-3 is the undocumented service account — a technical configuration gap. Finding A-7 is the process gap that allowed the service account to be created without ISSO awareness. They are related findings with the same root cause, but they are distinct — one is a current security exposure, the other is a systemic process gap that will produce future exposures if not corrected.
+
+My instinct is that the SAR should present both findings but connect them explicitly — noting that A-7 is the root cause that enabled A-3 and that remediating only A-3 without remediating A-7 leaves the organization exposed to the same pattern recurring. The remediation recommendation should address both: correct the service account configuration (A-3) and update the change management procedure to require ISSO notification for IAM entity creation (A-7).
+
+This kind of root cause linking is what distinguishes a useful SAR from a list of disconnected findings. An AO reading a SAR that presents seven separate findings has a harder time understanding the security picture than one that groups related findings, identifies root causes, and presents a coherent remediation narrative.
+
+I want to discuss with the lead assessor whether the SAR format should include a root cause section that groups related findings — this would make the SAR more useful for the AO's authorization decision and more actionable for the remediation work.
+
+---
+
+## What's Next
+
+Day 61 covers Task A-4 — producing the Security Assessment Report. The SAR assembles all findings from the technical and non-technical assessments into the formal document that the AO will use as the primary input to the authorization decision. Structuring the SAR effectively — executive summary, control-by-control findings, severity ratings with root cause analysis, and remediation recommendations — is the focus of tomorrow's work.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53A Rev 5 – Examine and Interview Assessment Methods](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [NIST SP 800-37 Rev 2 – Task A-3 Assessment Execution](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [HHS OCR HIPAA Audit Protocol – Administrative Safeguards](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html)
+- [NIST SP 800-61 Rev 2 – Incident Handling Interview Guidance](https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final)
+- [Michigan Medicine Data Breach – University of Michigan Health System](https://www.uofmhealth.org/news/archive/201807/privacy-breach)
+
+---
+
+*#GRC #SecurityAssessment #NISTRMF #ExamineInterview #SP800-53A #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day60*
