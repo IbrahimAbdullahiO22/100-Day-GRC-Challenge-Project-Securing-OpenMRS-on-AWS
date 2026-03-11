@@ -1,109 +1,287 @@
-#  Day 56 – Document, Document, Document: Updating the System Security Plan (SSP)
-_100 Days of GRC – OpenMRS-on-AWS Project_
+# Day 56 – Task I-2: Updating the SSP to Reflect As-Implemented Reality | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  From Planning to Reality: Closing the Loop
+## Closing the Gap Between Documentation and Reality
 
-As we reach Day 56, I’ve learned that building security isn’t just about deploying firewalls and enforcing MFA. True governance requires that we **document what we’ve done**, why we did it, and how it fits into the broader security picture. That’s the heart of **NIST RMF Task I-2** — making sure the System Security Plan (SSP) reflects reality.
+Days 54 and 55 completed the Task I-1 implementation verification — working through every technical and administrative control, confirming configurations match SSP documentation, correcting discrepancies, and documenting gaps in the POA&M. Task I-2 takes the output of that verification work and closes the loop: updating the SSP to reflect the as-implemented state of the system.
 
-Today wasn’t about spinning up a new AWS service — it was about translating architecture, policies, and implementations into **clear, usable documentation**. This is how we operationalize trust, compliance, and resilience.
+The distinction between the SSP as written during the Select step and the SSP as updated during Task I-2 is the distinction between planned implementation and verified implementation. The Select-step SSP documented what controls would be implemented and how. The Task I-2 SSP documents what controls have been implemented, with specific evidence references, implementation dates, verification dates, and any adjustments made during implementation that differ from the original plan.
 
----
-
-##  Today’s Goals
-
-- Reinforce why **updating the SSP** is a vital phase of implementation  
-- Understand what to capture in “as-implemented” control statements  
-- Practice updating a control based on recent changes in our OpenMRS-on-AWS deployment  
-- Embrace the SSP as a **living document**, not static paperwork  
+This matters for the assessment team in a very practical way. An assessor reviewing an SSP that says "MFA is enforced for all users" and an SSP that says "MFA is enforced for all users via TOTP authenticator app; enforcement verified [date]; all [N] active accounts confirmed enrolled as of [date]; verification evidence in assessment package Section 4.2" have fundamentally different starting points for their work. The first SSP tells the assessor what to look for. The second SSP tells the assessor what to look for and where the evidence is. That difference affects the efficiency and outcome of the entire assessment.
 
 ---
 
-##  Why Documentation Matters
+## What I Worked On Today
 
-Security is a moving target. If we don’t record our actual implementation — from AWS WAF configurations to IAM policies — we risk falling out of compliance or losing operational clarity. 
+Task I-2 requires that the SSP be updated to reflect the results of control implementation — specifically that implementation descriptions be updated to reflect actual implementation details, that evidence references be added, and that any deviations from the planned implementation be documented with their rationale.
 
-> Imagine an assessor reading your SSP. Will they see the truth of your system or a past version?  
-> Imagine a new team member onboarding. Can they trace how encryption is applied across RDS, S3, and EC2?
-
-Good documentation ensures **continuity, auditability, and accountability**.
+I also worked on two structural elements that make the SSP maintainable over time: a version control approach and a discrepancy log that captures what changed between the Select-step SSP and the as-implemented SSP.
 
 ---
 
-##  What I Updated in My SSP Today
+## What Actually Clicked for Me
 
-###  SC-13: Data Encryption (At Rest)
+The insight that clarified Task I-2 is that SSP updating is not just adding dates to existing entries — it is a substantive quality improvement to the documentation.
 
-**As-Implemented Statement:**
+During the Select step, implementation descriptions were written prospectively — describing what would be implemented. Some of those descriptions were necessarily general because the specific configuration details were not yet finalized. During Task I-2, those general descriptions are replaced with specific, verifiable statements that include the exact configuration, the verification date, the evidence reference, and the responsible party who verified it.
 
-We have implemented AES-256 encryption for the OpenMRS database hosted on Amazon RDS. Backup snapshots are also encrypted using the same AWS KMS-managed key. EC2 instances running OpenMRS use encrypted EBS volumes. S3 buckets (used for patient file storage and logs) have server-side encryption (SSE-KMS) enforced by default. This setup was completed and verified as of **July 10, 2025**.
+The difference between "RDS encryption is enabled using AWS KMS" (prospective) and "RDS instance [openmrs-prod-db] encryption is enabled using customer-managed KMS key arn:aws:kms:[region]:[account-id]:key/[key-id] (alias: openmrs-rds-encryption); annual rotation enabled; verified [date] by IT Administrator; evidence: RDS console screenshot in assessment package Section 5.1" (as-implemented) is the difference between a description that enables the assessor to know what to verify and one that enables them to go directly to the evidence.
 
-This clearly communicates the scope of data protection and technology choices — not just intent.
-
----
-
-###  AC-2: Account Management
-
-**As-Implemented Statement:**
-
-OpenMRS user accounts are provisioned by the system admin upon written approval from clinical leadership. Each user has a unique ID; MFA is enforced for admin users via Google Authenticator. AWS IAM roles are assigned based on least privilege, and IAM password policies require 12-character complexity and 90-day rotation. The last quarterly access review was conducted on **August 15, 2025**, with 2 dormant accounts revoked. Deprovisioning is executed within 24 hours of staff termination.
-
-This kind of detail shows **governance maturity** — it’s operational, time-stamped, and auditable.
+Writing at that level of specificity also disciplines the documenter — it forces confrontation with the actual implementation state rather than relying on the assumption that what was planned is what was deployed.
 
 ---
 
-###  IR-4: Incident Response Plan
+## SSP Version Control Approach
 
-**As-Implemented Statement:**
+Before working through the as-implemented updates, I established a version control structure for the SSP. Without version control, the SSP becomes a document where the current state cannot be distinguished from prior states — and where changes cannot be traced to the decisions and events that caused them.
 
-We maintain an incident response plan that includes detection (via AWS GuardDuty and CloudTrail), containment (isolating EC2, revoking IAM credentials), and notification (internal IT team, AWS support, and compliance officers). The plan is tested quarterly. The most recent tabletop exercise was held on **September 1, 2025**, and led to a refinement of our escalation chain.
+**SSP versioning convention:**
 
-Documentation like this not only prepares for assessments — it builds real-world readiness.
+Major version (v1.0, v2.0): Changes to scope, categorization, or major control decisions — events that require AO review and re-approval of the affected sections.
 
----
+Minor version (v1.1, v1.2): Implementation updates, evidence additions, and POA&M status changes that do not alter the security posture commitments — these are reviewed by the ISSO and noted in the revision log, but do not require a full AO re-review.
 
-##  Lessons Learned While Updating
+Patch version (v1.1.1): Typographical corrections, formatting changes, evidence reference updates — no substantive content changes.
 
-- I noticed a few things hadn’t been logged during implementation. For example, I had forgotten to document the **CloudTrail log validation** feature — fixing that now strengthens our audit trail.  
-- Realizing I had no formal version tracking for changes made to the SSP. Going forward, I’ll adopt a **changelog approach** to track what was modified and when.  
-- This work will significantly streamline the **Assess phase** when external reviewers ask, “Show me how you implemented that control.” The answers are now at my fingertips.
+**SSP Revision Log format:**
 
-> A well-documented SSP tells a story — not just of controls, but of **intentional design**, **risk-informed choices**, and **continuous improvement**.
+| Version | Date | Author | Change Summary | AO Review Required |
+|---|---|---|---|---|
+| v1.0 | [date] | ISSO | Initial SSP — Select step documentation | Yes — completed [date] |
+| v1.1 | [date] | ISSO | Task I-1/I-2 as-implemented updates; 4 discrepancy corrections; POA&M additions | No — implementation updates only |
+| v1.1.1 | [date] | ISSO | CloudTrail evidence reference added; AT-2 gap documented | No |
 
----
-
-## 🧪 Hands-On Control Documentation Sprint
-
-Today I committed to writing **as-built updates** for three controls: data encryption (SC-13), account management (AC-2), and incident response (IR-4). Each update included:
-
-- Actual AWS services used (e.g., RDS, S3, IAM, CloudTrail)
-- Dates of implementation and verification
-- Roles and responsibilities
-- Any known gaps or future improvements (e.g., expanding MFA coverage)
-
-This process helps future team members, assessors, and myself understand the **current state** of security without needing to reverse-engineer decisions.
+The revision log is maintained as the first section of the SSP, so any reader can immediately identify the current version and understand what has changed.
 
 ---
 
-##  Reflection: The Power of Real-Time Documentation
+## As-Implemented Updates — Control by Control
 
-Keeping the SSP updated isn’t just compliance — it’s **self-respect** for your security operations. It shows your organization (or project) is **intentional**, not reactive. And frankly, it’s less painful to document incrementally than all at once before an audit.
-
-> “Our system is now not only protected — it’s also **explainable**.”
+The following are the Task I-2 updates for the controls where the Select-step documentation required supplementation based on the Task I-1 verification work. Controls with no discrepancy and no additional implementation detail are noted as verified without change.
 
 ---
 
-##  Tomorrow’s Preview: Assess Phase Begins
+### SC-28: Protection of Information at Rest — As-Implemented Update
 
-With an updated SSP, we’re ready to take the next step: **Assessment**. On Day 57, I’ll explore how to select the right assessor, what makes them qualified, and how to ensure independence and objectivity. Just like you wouldn’t want a biased judge, you don’t want a biased security assessor. Let’s get ready to enter the “show me” phase of RMF.
+**Select-step description:** RDS encrypted via AWS KMS customer-managed key; EBS encrypted; S3 backup bucket SSE-KMS; bucket policy denies unencrypted uploads.
+
+**As-implemented update:**
+
+All SC-28 implementation elements verified as of [Task I-1 verification date]. No discrepancies from SSP documentation found.
+
+Specific implementation details confirmed:
+
+*RDS:* Instance ID [openmrs-prod-db]. Storage encryption: Enabled. KMS Key ARN: arn:aws:kms:[region]:[account-id]:key/[key-id-1]. Key alias: openmrs-rds-encryption. Customer-managed key with annual rotation enabled. Encryption was set at instance creation and applies to all automated backups and snapshots. Verified [date] by IT Administrator.
+
+*EC2 EBS:* Volume ID [vol-xxxxxxxxxx] (root). Encrypted: Yes. KMS Key ARN: arn:aws:kms:[region]:[account-id]:key/[key-id-2]. Key alias: openmrs-ec2-encryption. Account-level default encryption setting: Enabled (confirmed in EC2 console). Verified [date] by IT Administrator.
+
+*S3 backup bucket:* Bucket name: [openmrs-backups-[account-id]]. Default encryption: SSE-KMS. KMS Key ARN: arn:aws:kms:[region]:[account-id]:key/[key-id-3]. Key alias: openmrs-s3-backup. Block Public Access: All four settings enabled. Object Lock: Enabled, Compliance mode, [N]-day retention. Bucket policy: includes s3:x-amz-server-side-encryption condition denying uploads without SSE-KMS. Verified [date] by ISSO.
+
+*KMS key management:* All three customer-managed keys: Status — Enabled. Annual rotation: Enabled. Key usage logged in CloudTrail under kms.amazonaws.com event source. Key policies restrict usage to authorized IAM roles only. Quarterly key usage review: ISSO reviews CloudTrail KMS events quarterly. Most recent review: [date]; no unauthorized usage detected.
+
+**Evidence references:** Assessment package Section 5.1 — RDS encryption screenshot; Section 5.2 — EBS volume list; Section 5.3 — S3 bucket configuration and bucket policy; Section 5.4 — KMS key configuration with rotation status.
+
+**Implementation status:** Implemented. No open items.
 
 ---
 
-## 🔗 Further Reading
+### SC-7: Boundary Protection — As-Implemented Update (Including Day 54 Discrepancy Correction)
 
-- `System Security Plan (SSP) examples NIST`
-- `FedRAMP SSP templates for cloud systems`
-- `As-built control documentation best practices`
-- `Changelog strategies for SSP version control`
-- `RMF I-2 task guidance for documentation maintenance`
+**Select-step description:** EC2 security group accepts HTTPS (443) only from internet; SSH restricted to ISSO/IT Admin source IP range.
+
+**As-implemented update:**
+
+*Discrepancy corrected during Task I-1 [date]:* SSH on port 22 was found open to 0.0.0.0/0 (unrestricted) rather than the ISSO/IT Administrator source IP range as documented in the SSP. This misconfiguration was introduced during initial deployment and had not been corrected before today's verification. The security group rule was updated to restrict SSH to [ISSO source IP/32, IT Administrator source IP/32] on [date]. Change log reference: CM-CHG-[number].
+
+*Current verified configuration:*
+
+EC2 Security Group [sg-openmrs-app] — current inbound rules:
+- Port 443 (HTTPS) — source: 0.0.0.0/0 — permits all HTTPS access to OpenMRS
+- Port 22 (SSH) — source: [ISSO IP/32], [IT Admin IP/32] — restricted to named administrators only
+- All other inbound: denied (implicit deny)
+
+EC2 Security Group [sg-openmrs-app] — current outbound rules:
+- Port 3306 (MySQL) — destination: sg-openmrs-rds — application to database
+- Port 443 (HTTPS) — destination: 0.0.0.0/0 — software updates and AWS service endpoints
+- Port 587 (SMTP/TLS) — destination: [email service] — outbound notifications
+- All other outbound: denied
+
+RDS Security Group [sg-openmrs-rds] — inbound:
+- Port 3306 (MySQL) — source: sg-openmrs-app only
+- All other inbound: denied
+
+AWS Config rule restricted-ssh: COMPLIANT as of [correction date]. Prior to correction: NON_COMPLIANT. Config compliance history shows the NON_COMPLIANT state, the remediation date, and the return to COMPLIANT — providing a full audit trail of the discrepancy and its resolution.
+
+**Evidence references:** Assessment package Section 6.1 — security group configuration export (current); Section 6.2 — Config compliance history showing NON_COMPLIANT finding and resolution; Section 6.3 — change log entry CM-CHG-[number].
+
+**Implementation status:** Implemented. Discrepancy corrected [date].
+
+---
+
+### IA-5: Authenticator Management — As-Implemented Update (Including Day 54 Discrepancy Correction)
+
+**Select-step description:** Temporary passwords expire after 24 hours.
+
+**As-implemented update:**
+
+*Discrepancy corrected during Task I-1 [date]:* Temporary password expiration was configured as 48 hours, not 24 hours as documented. Corrected to 24 hours on [date]. Change log reference: CM-CHG-[number].
+
+*Current verified password policy configuration:*
+- Minimum length: 12 characters ✓
+- Uppercase required: Yes ✓
+- Lowercase required: Yes ✓
+- Numeric required: Yes ✓
+- Special character required: Yes ✓
+- Maximum age: 90 days ✓
+- History: 12 generations ✓
+- Lockout: 5 attempts, 30-minute lockout ✓
+- Temporary password expiration: 24 hours ✓ (corrected [date])
+
+**Evidence references:** Assessment package Section 7.1 — OpenMRS password policy configuration screenshot (current, post-correction); Section 7.2 — change log entry CM-CHG-[number].
+
+**Implementation status:** Implemented. Discrepancy corrected [date].
+
+---
+
+### AU-9: Protection of Audit Information — As-Implemented Update (POA&M Item Closed)
+
+**Select-step description:** CloudTrail log file integrity validation enabled. S3 Object Lock on CloudTrail log bucket. CloudWatch alert for audit configuration changes.
+
+**As-implemented update:**
+
+*POA&M item closed during Task I-1 [date]:* CloudWatch Events rules for CloudTrail tamper detection were documented in the SSP but not yet configured at the time of the Select step. This was documented as a POA&M item in Day 50. Configured during Task I-1 verification on [date]. POA&M item [POA&M-AU9-01] closed.
+
+*Current verified configuration:*
+
+CloudTrail: Trail [openmrs-cloudtrail-all-regions]. Log file validation: Enabled. Multi-region: Yes. Management events: All. S3 data events for backup bucket: Enabled. Log delivery bucket: [cloudtrail-logs-openmrs-[account-id]]. S3 Object Lock: Enabled, Compliance mode. Log file integrity validation records: monthly validation runs completed by ISSO using AWS CLI cloudtrail validate-logs command. Most recent validation: [date]; result: all files valid. Validation record maintained in the ISSO's monitoring log.
+
+CloudWatch Events rules for tamper detection — configured [date]:
+- Rule 1: source=cloudtrail.amazonaws.com; events=DeleteTrail, StopLogging, UpdateTrail → SNS notification to ISSO [HIGH severity]
+- Rule 2: source=logs.amazonaws.com; events=DeleteLogGroup, DeleteLogStream for [openmrs-application-audit] → SNS notification to ISSO [HIGH severity]
+- Rule 3: source=s3.amazonaws.com; events=PutBucketPolicy, DeleteBucketPolicy for [cloudtrail-logs-openmrs-[account-id]] → SNS notification to ISSO [HIGH severity]
+
+All three rules tested on [date] by ISSO using a test event — all three generated the expected SNS notifications within 60 seconds. Test records documented in monitoring log.
+
+**Evidence references:** Assessment package Section 8.1 — CloudTrail console showing log file validation and multi-region configuration; Section 8.2 — S3 Object Lock configuration; Section 8.3 — CloudWatch Events rules configuration; Section 8.4 — SNS notification test records; Section 8.5 — most recent monthly CloudTrail validation log.
+
+**Implementation status:** Implemented. POA&M item [POA&M-AU9-01] closed [date].
+
+---
+
+### CP-9: Backup and Restoration — As-Implemented Update (Including Retention Correction)
+
+**Select-step description:** Automated nightly RDS backup, 90-day retention. Weekly S3 export. Quarterly restoration test. RTO 4 hours, RPO 24 hours.
+
+**As-implemented update:**
+
+*Discrepancy corrected during Task I-1 [date]:* RDS automated backup retention was configured as 35 days, not 90 days as documented. Corrected to 90 days on [date]. Change log reference: CM-CHG-[number].
+
+*Current verified configuration:*
+
+RDS automated backup: Enabled. Retention: 90 days ✓ (corrected [date]). Point-in-time recovery: Enabled. Backup window: [time window]. Most recent automated backup: [date]; status: Completed.
+
+S3 weekly export: Export job configured via EventBridge schedule. Most recent export: [date]; status: Completed. Export verified in S3 bucket [openmrs-backups] with correct SSE-KMS encryption. Object Lock retention applied.
+
+Quarterly restoration test — most recent:
+- Test date: [date]
+- Restoration source: Weekly S3 export from [date]
+- Target: Test RDS instance [openmrs-restore-test-[date]]
+- Restoration completion time: 2 hours 47 minutes
+- RTO target: 4 hours — MET ✓
+- Data integrity verification: [N] patient records, [N] user accounts, configuration tables — all verified accurate ✓
+- Test instance decommissioned: [date]
+- Test record: Monitoring log entry [date]
+
+Next quarterly restoration test due: [date].
+
+**Evidence references:** Assessment package Section 9.1 — RDS backup configuration showing 90-day retention (post-correction); Section 9.2 — S3 export job configuration; Section 9.3 — most recent restoration test log; Section 9.4 — change log entry CM-CHG-[number].
+
+**Implementation status:** Implemented. Retention discrepancy corrected [date].
+
+---
+
+### AT-2: Security Awareness Training — As-Implemented Update (Including Gap Documentation)
+
+**Select-step description:** Annual training, LMS completion tracked quarterly, non-compliance escalated.
+
+**As-implemented update:**
+
+*Gap identified during Task I-1 [date]:* Quarterly LMS compliance review was not executed for the most recently completed quarter. [N] users were found with overdue training status that was not detected on schedule. ISSO issued overdue notifications on [date] — 10-business-day completion deadline communicated. Calendar reminder implemented for quarterly review. POA&M item [POA&M-AT2-01] created for process improvement.
+
+*Current training completion status (as of [Task I-1 verification date]):*
+- Complete and current: [N] users
+- Notified — overdue, deadline [date]: [N] users
+- New hire — in progress (within 5-day window): [N] users
+
+*Most recent completed quarterly review:* [prior quarter date] — all users confirmed current at that time.
+
+*Process improvement implemented:* Calendar recurring quarterly reminder added to ISSO calendar for first business day of each quarter. LMS compliance pull and review is now a calendar-blocked ISSO task, not a discretionary activity.
+
+**Evidence references:** Assessment package Section 10.1 — LMS completion export [date]; Section 10.2 — ISSO overdue notification records; Section 10.3 — calendar reminder setup confirmation; POA&M item [POA&M-AT2-01].
+
+**Implementation status:** Partially implemented — quarterly review process gap corrected; [N] overdue users in remediation period; POA&M tracking.
+
+---
+
+## POA&M Status Update — As of Task I-2 Completion
+
+| POA&M Item | Control | Description | Status | Target Date |
+|---|---|---|---|---|
+| POA&M-CP2-01 | CP-2 | Clinical downtime procedures — draft exists, not tested | Open | [date] |
+| POA&M-CP3-01 | CP-3 | Clinical staff downtime training — pending CP-2 | Open — dependent | [date] |
+| POA&M-CP4-01 | CP-4 | Alternate processing site test | Open | [date] |
+| POA&M-IR3-01 | IR-3 | Full technical IR simulation | Open | [date] |
+| POA&M-AU6-01 | AU-6 | Patient-record-level CloudWatch anomaly queries | Open | [date] |
+| POA&M-IR1-01 | IR-1 | Add HIPAA breach workflow to IRP | Open | [date] |
+| POA&M-PS4-01 | PS-4 | Document backup designee for account deactivation | Open | [date] |
+| POA&M-AT2-01 | AT-2 | Quarterly review process — calendar reminder implemented | Open — monitoring | [date] |
+| POA&M-AU9-01 | AU-9 | CloudTrail tamper detection alerts | **Closed** [date] | — |
+
+One POA&M item closed during the Task I-1/I-2 work. Eight items remain open. All eight have documented owners, target dates, and compensating controls in place during the remediation period. The AO will review these at authorization and determine whether the residual risk from open items is acceptable for authorization.
+
+---
+
+## A Real-World Example That Made This Click
+
+While working through the version control structure for the SSP today, I came across the circumstances of the **2020 Blackbaud breach** — which I covered on Day 34 from the vendor governance perspective — but want to revisit specifically through the documentation currency lens.
+
+Blackbaud is a cloud software provider that serves many nonprofits and healthcare organizations. The 2020 ransomware attack that compromised Blackbaud's systems affected hundreds of their customers, many of whom were covered entities or business associates under HIPAA. Post-incident analysis revealed that many of the affected organizations had documentation of their data sharing arrangements with Blackbaud — BAAs, ISAs — but those documents had not been reviewed or updated to reflect the actual data being shared. Organizations had grown their use of Blackbaud services over time, and the ePHI scope in the current arrangement was broader than what the original documentation recorded.
+
+The gap between documentation and reality — the same gap that Task I-2 closes for the SSP — meant that when the breach occurred, affected organizations did not have an accurate picture of what data was at risk. Breach notification scope assessments were complicated by the fact that current data inventories did not match the original documentation.
+
+SSP documentation currency is the same discipline applied to the security control picture. If the SSP documents 35-day backup retention when 90-day was specified, and an incident occurs requiring recovery of data from 45 days ago — the SSP suggests a recovery capability that does not exist. If the SSP documents SSH restricted to named administrators when the actual configuration permits unrestricted SSH, an assessor reviewing only the SSP would not know to test the SSH configuration.
+
+Documentation currency is not bureaucratic overhead. It is the difference between an accurate security picture and a false one. Task I-2 is the discipline of ensuring the SSP reflects the system that actually exists.
+
+---
+
+## What I Am Still Thinking About
+
+One open question from today's documentation work: how frequently should the SSP be reviewed for currency between formal Task I-2 exercises?
+
+The RMF process envisions a formal SSP update at implementation (Task I-2) and continuous monitoring that feeds POA&M updates on an ongoing basis. But configuration changes happen continuously — every change management record potentially represents a change to the implemented state of a control. If the SSP is only formally updated at Task I-2 during initial implementation, it may drift significantly from the actual configuration over the life of the authorization.
+
+The continuous monitoring strategy from Day 52 requires monthly change log review. I want to add a monthly SSP currency check to that review — the ISSO reviews the past month's change log and identifies any changes that require SSP updates. Minor version updates to the SSP happen monthly rather than only at formal re-authorization events. This keeps the SSP accurate without requiring a full re-documentation exercise at each annual assessment.
+
+This monthly currency check connects the change management process (CM-3) directly to the SSP maintenance process — every change that affects a control implementation description triggers a corresponding SSP update. The connection between those two processes is what prevents the documentation-reality gap from accumulating between assessments.
+
+---
+
+## What's Next
+
+Day 57 begins the Assess step — the fifth step of the NIST RMF. The assessment is where the security controls are independently tested and evaluated against the SSP documentation. Understanding how to select an assessor, what independence requirements apply, how to prepare the assessment package, and what the assessor is looking for in each control family sets the foundation for a successful assessment. The as-implemented SSP produced through Tasks I-1 and I-2 is the primary document the assessment team will work from.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task I-2 SSP Update](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-18 Rev 1 – SSP Maintenance and Version Control](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [NIST SP 800-53A Rev 5 – Assessment Evidence Requirements](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS OCR – Blackbaud Breach and BAA Obligations Guidance](https://www.hhs.gov/hipaa/for-professionals/breach-notification/index.html)
+- [FedRAMP SSP Template — Version Control Best Practices](https://www.fedramp.gov/documents-templates/)
+
+---
+
+*#GRC #SSPUpdate #NISTRMF #DocumentationMatters #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day56*
