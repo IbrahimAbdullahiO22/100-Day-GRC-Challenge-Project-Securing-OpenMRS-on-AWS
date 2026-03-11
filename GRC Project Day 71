@@ -1,114 +1,221 @@
-#  Day 71: Task M-3 – Ongoing Risk Response  
-**“Find it, fix it.”** That’s the mindset I’ve built throughout this GRC journey — and Day 71 is where that principle shines.  
-
-Yesterday, I focused on detecting risks through **monitoring and assessments**. Today’s milestone, **Task M-3: Ongoing Risk Response**, is about what happens *next*: how we take action to reduce, mitigate, or formally accept the risks we discover.
+# Day 71 – Task M-3: Ongoing Risk Response | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What I’m Learning
+## Assessment Findings Require Responses
 
-In the world of risk management, identifying a vulnerability is only **step one**. The real value comes from **closing the loop** — taking appropriate action that prevents a small issue from snowballing into a major incident.
+Day 70 built out the M-2 ongoing assessment program — the vulnerability scanning schedule, the quarterly access recertification with the updated role-accuracy template, the backup restoration verification checklist, and the quarterly CloudTrail pattern analysis. Each of those assessments produces findings. Task M-3 is what the organization does with those findings.
 
-Risk response is not a one-time thing. It’s an ongoing discipline — a cycle of:
+The relationship between M-2 and M-3 is the relationship between diagnosis and treatment. M-2 identifies what is wrong. M-3 determines what to do about it — and then ensures that response is executed, tracked, and verified. Without M-3, M-2 is an expensive exercise in documentation with no security value. With M-3, M-2 findings drive continuous improvement in the security posture rather than accumulating as unaddressed observations.
 
-1. **Discovering risk**
-2. **Analyzing impact**
-3. **Choosing a response**
-4. **Tracking it to closure**
-
-Whether it’s a misconfigured AWS S3 bucket or a new OpenMRS vulnerability, it’s my job to **make risk response routine** and ensure nothing falls through the cracks.
+Task M-3 is not a new concept at this point in the project. The POA&M has been the primary ongoing risk response tool since Day 50. What the Monitor step adds is the operational cadence — M-3 is the routine process of evaluating findings from the continuous monitoring program, determining the appropriate response for each, and ensuring nothing falls through the cracks between assessment activities.
 
 ---
 
-##  OpenMRS on AWS: What Ongoing Risk Response Looks Like
+## What I Worked On Today
 
-Let’s say we’re managing the **OpenMRS health records system in AWS**. Here’s how we handle new risk discoveries:
+NIST SP 800-37 Task M-3 requires ongoing risk response to findings from the continuous monitoring program — specifically, determining the appropriate response to each finding identified through M-1 and M-2 activities, updating the POA&M accordingly, and notifying the AO when findings cross the material risk threshold defined in the authorization conditions.
 
-###  1. Analyze & Prioritize
-
-- **Example**: A Nessus scan flags a **critical SQL injection** vulnerability in the OpenMRS login portal.
-- **Action**: Triage the finding. Is it exploitable? What data is at risk? What’s the CVSS score?
-- **Output**: Categorize it as **High Risk**, which triggers immediate attention.
+Today I work through the M-3 risk response process for a realistic set of findings from the OpenMRS monitoring program in the first quarter following authorization — the types of findings that a well-monitored system actually produces, and the response decisions each one requires.
 
 ---
 
-###  2. Mitigate or Accept
+## What Actually Clicked for Me
 
-- **Mitigation Path**:  
-  - Apply available patch  
-  - Block affected endpoints temporarily  
-  - Implement a WAF rule to stop malicious input  
-  - Conduct a quick test to validate the patch  
-- **Acceptance Path (only for low risks)**:  
-  - Document in risk register  
-  - Include business rationale and interim controls  
-  - Monitor closely for escalation
+The concept that clarified Task M-3 today is understanding the difference between a finding response and a finding disposition.
+
+A response is what you do immediately when a finding is identified: investigate the finding, determine its severity and exploitability, take containment or mitigation action if warranted. A disposition is the formal recorded decision about how the finding is being handled: remediated (closed), tracked in POA&M (open with plan), or accepted (acknowledged and formally accepted by the AO).
+
+Both are necessary. A response without a disposition means the finding was addressed but not recorded — which is invisible to the AO, invisible to auditors, and invisible to a future ISSO who needs to understand the organization's risk history. A disposition without a genuine response is documentation theater — the finding is recorded as "mitigated" but the actual security exposure was never addressed.
+
+The M-3 cycle connects response and disposition explicitly: every finding from M-1 or M-2 gets both. The ISSO takes action (response) and records the outcome in the monitoring log, POA&M, or risk register (disposition). The disposition is what creates the accountability trail that makes continuous monitoring meaningful rather than performative.
 
 ---
 
-###  3. Track in POA&M Until Resolved
+## M-3 Risk Response — First Quarter Post-Authorization Findings
 
-- **Tool**: Plan of Action and Milestones (POA&M)  
-- **Log Entry**:  
-  - Vulnerability ID  
-  - Risk Level  
-  - Assigned Owner  
-  - Remediation Steps  
-  - Target Date for Completion  
-- **Example**:  
-
+The following documents the findings from the first quarter of OpenMRS continuous monitoring operations and the M-3 response and disposition for each.
 
 ---
 
-##  Real-World Scenario: S3 Misconfiguration
+### Finding M-001: Monthly Vulnerability Scan — High Finding in Tomcat
 
-Let’s say AWS Config flags that an **S3 bucket storing OpenMRS backups** became publicly accessible.
+**Source:** AWS Inspector monthly scan, Week 6 post-authorization
 
-**Steps I’d take as a GRC Lead:**
+**Finding:** Inspector flagged CVE-[number] in Apache Tomcat [version] — a deserialization vulnerability rated CVSS 7.8 (High) affecting the version of Tomcat bundled with the OpenMRS deployment. The vulnerability allows remote code execution if an attacker can reach the Tomcat admin interface.
 
-- **Investigate**: Use CloudTrail to check who made the change and why  
-- **Remediate**: Restrict bucket access immediately, apply SCP or IAM policy enforcement  
-- **Mitigate**: Enable automated bucket policies and enable logging  
-- **Document**: Add the incident to POA&M and follow up with training for IAM role users  
+**Immediate Response (Day of finding):**
 
-This is **continuous improvement** in action — not just fixing an issue, but preventing it from happening again.
+Step 1 — Exploitability assessment: The ISSO reviewed the CVE details. The vulnerability requires access to the Tomcat manager application. OpenMRS's production deployment has the Tomcat manager application disabled — it was disabled during the initial hardening in Day 54 as part of CM-7 least functionality. The attack surface is significantly reduced.
 
----
+Step 2 — Confirm Tomcat manager status: IT Administrator confirmed that the Tomcat manager application is disabled in the production configuration. AWS WAF rules block any requests to /manager/ paths. GuardDuty has not detected any attempts to reach the manager application in the past 30 days. CloudTrail shows no unauthorized access to the EC2 instance.
 
-##  Today’s Goal
+Step 3 — Determine patch timeline: Tomcat update from [current version] to [patched version] requires testing in the test environment to confirm OpenMRS compatibility — Tomcat upgrades occasionally introduce compatibility issues with OpenMRS modules. IT Administrator scheduled test environment update for the following week, production update for the week after. Total remediation window: 14 days.
 
-Master the art of **turning findings into fixes**. Continuous monitoring is only effective when it triggers fast, intelligent, and trackable risk responses.
+**Disposition:** POA&M entry created — M-001. Severity: High (CVSS 7.8). Compensating control: Tomcat manager disabled; WAF blocking manager paths; no exploitation evidence. 14-day remediation timeline. Owner: IT Administrator. No AO notification required per classification table (High vulnerability with compensating controls and patch within SLA does not require AO notification unless the 30-day High patch SLA will be missed).
 
-Ongoing risk response is where **cybersecurity meets accountability** — and where trust in the system is built.
+**Resolution (Day 14):** IT Administrator updated Tomcat in test environment — OpenMRS compatibility confirmed. Production update applied during scheduled maintenance window. Inspector re-scan confirmed patched version. POA&M item M-001 closed. Monitoring log entry: [date] — CVE remediated, Inspector confirmed COMPLIANT, POA&M item closed.
 
----
-
-##  Reflection
-
-If I found a **critical vulnerability** today in OpenMRS:
-
-1. I’d **prioritize triage** using CVSS scoring and exploitability context  
-2. **Notify stakeholders**: AO, DevSecOps, system owner  
-3. **Assign the issue** in our POA&M and track response  
-4. Apply the **mitigation** or containment measures immediately  
-5. **Schedule a reassessment** after patching to confirm it’s resolved  
-6. Document the outcome and **update the SSP** if any control changed  
-
-This response is driven by a strong **risk-aware culture** and well-documented response procedures.
+**SSP update required?** No — the Tomcat version change is a routine patch, not a control implementation change. Change log entry sufficient.
 
 ---
 
-##  Search Terms to Explore
+### Finding M-002: Config Rule NON_COMPLIANT — IAM Password Policy Drift
 
-- `Risk mitigation lifecycle in cloud systems`  
-- `POA&M process NIST RMF`  
-- `Vulnerability management framework (FedRAMP, HIPAA, NIST 800-53)`  
-- `Remediation SLAs for cybersecurity findings`  
+**Source:** AWS Config weekly review, Week 9 post-authorization
+
+**Finding:** Config rule `iam-password-policy` showing NON_COMPLIANT. The IAM password policy minimum length was found set to 8 characters rather than the 12-character minimum documented in the SSP.
+
+**Immediate Response:**
+
+Step 1 — Identify cause: CloudTrail reviewed for IAM password policy change events. Found: IT Administrator updated the IAM password policy [date] to accommodate a temporary service integration that required shorter password generation. The change was made without a CM-3 change ticket and without ISSO notification.
+
+Step 2 — Assess current exposure: The reduced minimum length (8 vs. 12 characters) applies to IAM user accounts. The service integration that prompted the change uses access keys, not password-based IAM login. The password policy change was operationally unnecessary — the service integration did not require it.
+
+Step 3 — Immediate remediation: ISSO corrected the IAM password policy minimum length to 12 characters on the same day as the finding. Config rule returned to COMPLIANT.
+
+**Disposition:** The finding is remediated. However, this finding revealed a change management compliance gap — the IT Administrator made a security-relevant IAM policy change without a CM-3 ticket or ISSO notification. This is the same category of process gap that produced Finding A-7 during the formal assessment (IAM entity creation without ISSO notification). The CM-3 procedure was updated post-assessment to include IAM entity creation; the current finding reveals that IAM policy modifications may also be occurring without consistent adherence to the ISSO notification requirement.
+
+Monitoring log entry: [date] — Config NON_COMPLIANT finding for iam-password-policy. Root cause: unauthorized password policy change on [date]. Immediate remediation applied. IT Administrator briefed. CM-3 refresher discussion conducted.
+
+**POA&M entry required?** No — the finding was immediately remediated. However, the pattern (two instances of IT Administrator making security-relevant changes without ISSO notification within 90 days of authorization) warrants a monitoring flag: if a third instance occurs, it becomes a formal finding requiring escalation to the Health IT Manager rather than an ISSO-IT Administrator correction.
+
+**AO notification required?** No — the change was unauthorized but immediately corrected with no exploitation and no data exposure.
+
+**SSP update required?** No — the control is restored to its documented state.
 
 ---
 
-##  Coming Up Next: Task M-4
+### Finding M-003: Backup Restoration Test — RTO Near-Miss
 
-In **Day 72**, I’ll move on to **Task M-4: Security Status Reporting**. It’s not just about fixing things — it’s also about communicating **how secure we are**, so stakeholders can make smart decisions with visibility and confidence.
+**Source:** Quarterly backup restoration test, Week 11 post-authorization
 
-Let’s keep building secure, auditable, and resilient systems together.
+**Finding:** Quarterly restoration test completed successfully — all data integrity verification checks passed. However, restoration completion time was 3 hours 47 minutes, compared to 2 hours 47 minutes in the prior test (Day 55). The RTO target is 4 hours. The test passed, but the margin has narrowed by one hour in one quarter.
+
+**Response:**
+
+Step 1 — Analyze cause: IT Administrator reviewed the restoration process timing. Identified two factors: (1) the OpenMRS database has grown by approximately 15% in one quarter as the system moves into full clinical operation; (2) the weekly S3 export job that creates the restoration source has been running successfully but the restoration procedure assumes a specific export format that changed slightly when the S3 export job was updated in Week 7.
+
+Step 2 — Evaluate trend: At the current growth rate, the database will be approximately 60% larger at the next quarterly test than it was at authorization. If restoration time scales linearly with data volume, the RTO could be exceeded within two quarters.
+
+Step 3 — Corrective action: IT Administrator updated the restoration procedure to reflect the current S3 export format. Estimated the restoration time improvement from the format fix: approximately 20-25 minutes. The data volume growth requires a more substantive response — either optimizing the restoration procedure (more parallelism in the RDS restoration, pre-staging the backup before the maintenance window begins) or revising the RTO target if clinical operations can tolerate a longer recovery window.
+
+**Disposition:** Monitoring log entry: [date] — Quarterly restoration test passed. RTO: 3:47 — within target but trending toward limit. Procedure updated for S3 export format. RTO trend review scheduled for discussion with Health IT Manager and ISSO at 45-day CP-2 condition check-in with AO. POA&M entry created — M-003. Low severity. Owner: IT Administrator. Target: Restoration procedure optimization or RTO revision within 60 days.
+
+**AO notification required?** Not immediately — the RTO target was met. The trend warrants mention in the quarterly POA&M report to the AO so the AO is aware before a future test misses the target.
+
+---
+
+### Finding M-004: Quarterly Access Review — Role Assignment Discrepancy
+
+**Source:** Quarterly access recertification, Week 12 post-authorization
+
+**Finding:** The updated access review template (POA&M Item 010 remediation) prompted the Health IT Manager to evaluate role accuracy, not just account continuation. Using the new template, the Health IT Manager identified one user — a clinical staff member who transitioned from a full clinician role to a clinic administrative coordinator role — whose OpenMRS role remained set to Clinician with full encounter documentation access. The user had been in the administrative role for approximately six weeks before the access review identified the discrepancy.
+
+**Response:**
+
+Step 1 — Assess exposure: The ISSO reviewed the OpenMRS application audit log for the user's activity during the six-week period with incorrect role assignment. The audit log showed seven login sessions, all accessing administrative functions — no access to clinical encounter records during this period. The misconfigured role existed but was not exploited.
+
+Step 2 — Immediate correction: IT Administrator updated the user's OpenMRS role from Clinician to Administrative Staff. Health IT Manager certified the updated assignment. Change documented in access review record.
+
+Step 3 — Root cause review: The role assignment was not updated at the time of the job function change because there was no formal HR-to-ISSO notification process for internal role changes. Terminations trigger ISSO notification (PS-4 process). But internal transfers between departments did not — creating a gap in the access management lifecycle.
+
+**Disposition:** Finding closed — role corrected, no exploitation. However, the root cause (no ISSO notification for internal role changes) requires a process update. The CM-3 change management procedure covers system-level changes; the HR/organizational change process needs to be updated to notify the ISSO of internal role changes that affect required system access levels.
+
+POA&M entry created — M-004. Low severity. Owner: Health IT Manager + ISSO. Remediation: Update HR/onboarding and role-change process to include ISSO notification for any job function change that may affect system access requirements. Target: 45 days.
+
+This finding is also a validation of the A-5 remediation value. The prior access review template would not have caught this — the Health IT Manager would have confirmed "this person still works here and needs OpenMRS access" without catching that the access level no longer matched the job function.
+
+**SSP update required?** Yes — AC-2 implementation description should note that ISSO notification is required for internal role changes affecting system access, not just employee terminations.
+
+---
+
+### Finding M-005: Monthly Threat Intelligence Review — Healthcare Ransomware Surge
+
+**Source:** HHS HC3 threat briefing, Week 10 post-authorization
+
+**Finding:** HC3 briefing documented a significant increase in ransomware activity targeting healthcare organizations under 200 employees using cloud-hosted EHR systems. The threat actor group identified in the briefing has used spear-phishing campaigns targeting clinical staff to obtain credentials, followed by EHR access and data exfiltration before encrypting systems for ransom.
+
+**Response:**
+
+Step 1 — Assess relevance: MyClinic matches the profile of targeted organizations (under 200 employees, cloud-hosted EHR, ePHI). The threat vector (spear-phishing for credentials) is directly relevant to OpenMRS MFA enforcement and the security awareness training program.
+
+Step 2 — Evaluate current control effectiveness against this specific threat:
+- MFA enforcement: All OpenMRS users are required to use TOTP MFA. Credential theft via phishing alone cannot produce unauthorized access to OpenMRS. ✓
+- Security awareness training: Training covers phishing recognition. However, the most recent completion data shows [N] users are in the 10-day overdue remediation window from the AT-2 gap. Those users are specifically not current on phishing awareness training.
+- GuardDuty: Configured to detect unusual authentication patterns that could indicate compromised credentials. ✓
+- Email filtering: Not in scope for this assessment — the ISSO does not have visibility into the clinic's email security posture. This is a gap.
+
+Step 3 — Response actions:
+- ISSO communicated the HC3 briefing to the Health IT Manager and Compliance Officer with specific emphasis on the phishing credential theft vector.
+- Health IT Manager issued a brief staff reminder (not a formal training requirement — that would trigger AT-4 documentation requirements) about phishing awareness and the importance of MFA device security.
+- ISSO added email security posture to the next quarterly threat review agenda — if MyClinic's email is not protected by anti-phishing controls (DMARC, SPF, DKIM, email security gateway), this is a gap that should be evaluated.
+
+**Disposition:** No POA&M entry required — the current controls are appropriate for the identified threat. The email security gap is noted for the next quarterly threat review. Monitoring log entry: [date] — HC3 briefing reviewed. Current controls adequate for MFA enforcement against credential theft. Email security posture evaluation scheduled for next quarterly review.
+
+**AO notification required?** No — no control gap or material risk change. AO will be aware through the quarterly POA&M report which will mention the HC3 briefing and the control effectiveness evaluation.
+
+---
+
+## The POA&M Update From M-3 Activities
+
+After the first quarter of M-3 operations, two new POA&M items were added:
+
+| New Item | Control | Severity | Source | Target |
+|---|---|---|---|---|
+| M-003 — Restoration procedure optimization | CP-9 | Low | Quarterly restoration test RTO trend | 60 days |
+| M-004 — HR role-change ISSO notification | AC-2, PS-4 | Low | Quarterly access review | 45 days |
+
+And one M-3 process observation for monitoring (not a formal POA&M item but documented for pattern tracking): two instances of IT Administrator making security-relevant changes without CM-3 compliance within 90 days of authorization. Third instance escalates to Health IT Manager.
+
+The existing ten POA&M items continue on their timelines. The quarterly POA&M report to the AO will document the two new items alongside the existing items' progress.
+
+---
+
+## A Real-World Example That Made This Click
+
+Finding M-004 — the internal role change creating a six-week window of over-privileged access that the prior access review template would have missed — directly connects to the pattern that OCR has repeatedly found in HIPAA enforcement actions: organizations with access control policies that address hiring and termination but fail to address the access implications of internal role changes.
+
+The **2018 Fresenius Medical Care settlement with OCR ($3.5 million)** involved multiple breach incidents. One of the contributing factors OCR identified was insufficient workforce access management — specifically, that access controls were not consistently updated when workforce members changed roles. The investigation found that some access privileges persisted after role changes in ways that exceeded the minimum necessary standard.
+
+The M-004 finding at MyClinic is a small-scale version of the same gap — access level not updated when job function changed. The difference is that MyClinic caught it in six weeks through a quarterly access review, before any exploitation occurred. Fresenius's failures were not caught through internal monitoring — they were surfaced through breach investigations.
+
+This is exactly the compounding value of effective continuous monitoring: it catches the gaps that otherwise only surface when something goes wrong. Finding M-004 is a positive outcome — the monitoring worked. The process improvement (ISSO notification for internal role changes) makes the monitoring even more effective going forward.
+
+---
+
+## What I Am Still Thinking About
+
+The IT Administrator's two change management compliance lapses in 90 days — the unauthorized password policy change (M-002) and the service integration account creation that triggered Finding A-3 during the assessment — represent a pattern worth thinking about carefully.
+
+Both incidents involved the IT Administrator making changes that seemed operationally routine at the time. Neither was malicious. Both bypassed the ISSO notification requirement that the CM-3 procedure specifies. Both were caught through monitoring rather than through the change management process.
+
+The question is whether this is a training problem, a process design problem, or a culture problem.
+
+Training problem: The IT Administrator does not know which changes require ISSO notification. Solution: clearer procedure documentation and targeted refresher training.
+
+Process design problem: The CM-3 procedure requires active ISSO notification — the IT Administrator must remember to notify the ISSO. The EventBridge automated notification for IAM entity creation is a better design because it does not rely on the IT Administrator's memory. Expanding automated notification to cover IAM policy changes (using EventBridge rules for `iam:UpdateAccountPasswordPolicy`, `iam:PutUserPolicy`, etc.) would catch the M-002 class of changes automatically.
+
+Culture problem: The IT Administrator does not view security change management as part of their operational workflow — it is perceived as a compliance overhead rather than a genuine security control. Solution: shared understanding of why the ISSO needs to know about changes (not to block operations but to maintain the authorization's validity).
+
+My instinct is that all three elements are present and the right response is all three: update the procedure documentation for clarity, expand the EventBridge automated notification coverage, and have a genuine conversation with the IT Administrator about why change management matters for the authorization. The automated notification is the most resilient solution — it removes the human memory dependency. But it does not address the underlying culture element, which is what produces the next category of change that automated notification does not cover.
+
+---
+
+## What's Next
+
+Day 72 covers Task M-4 — security status reporting. The ongoing monitoring activities and M-3 risk responses produce information that the AO needs to maintain their authorization decision with confidence. Security status reporting is how that information flows from the ISSO to the AO in a structured, actionable format — not ad-hoc notifications of individual findings, but a regular consolidated picture of the system's security posture.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task M-3 Ongoing Risk Response](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-30 Rev 1 – Risk Response Options](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [HHS HC3 – Health Sector Cybersecurity Coordination Center Advisories](https://www.hhs.gov/about/agencies/asa/ocio/hc3/index.html)
+- [HHS OCR – Fresenius Medical Care Settlement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/fresenius/index.html)
+- [NIST SP 800-61 Rev 2 – Incident Response and Risk Response Integration](https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final)
+
+---
+
+*#GRC #OngoingRiskResponse #ContinuousMonitoring #NISTRMF #TaskM3 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day71*
