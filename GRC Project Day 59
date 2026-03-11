@@ -1,156 +1,304 @@
-# Day 59 – Task A-3 (Part 1): Perform Control Assessments (Technical)
-
-Welcome to **Day 59** of my GRC learning journey! Today, I’m diving into the *Assess* phase of the NIST Risk Management Framework (RMF) with a focus on **technical control assessments**. Using the OpenMRS-on-AWS case study, I’ll demonstrate how to verify that our security controls are truly working—not just assumed to be.
-
----
-
-##  Today’s Goals
-
-- **Identify** technical assessment techniques like vulnerability scanning, password policy enforcement, and encryption validation.  
-- **Leverage** AWS-native tools such as **AWS Config** and **AWS Trusted Advisor**.  
-- **Apply** hands-on control testing to the OpenMRS system hosted on AWS.
+#  Day 59 – Task A-3 (Part 1): Executing Technical Control Assessments | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What Are Technical Control Assessments?
+## From Plan to Execution
 
-Technical assessments are *hands-on validations*—we don’t just “say” a control is in place; we *test* it.
+Day 58 produced the Security Assessment Plan — the formal roadmap defining what will be tested, how, by whom, and in what sequence. Today the assessment begins. Task A-3 is the execution phase: the assessor works through the procedures defined in the SAP, collects evidence, executes tests, documents findings, and builds the foundation of the Security Assessment Report.
 
-According to [NIST SP 800-53A](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final), assessors rely on three methods:
-- **Examine**: review artifacts or configs  
-- **Interview**: talk to staff  
-- **Test**: execute hands-on security checks  
+Today covers the technical control assessment work — the infrastructure review, the AWS configuration analysis, and the application-level testing that together determine whether the technical controls documented in the SSP are implemented as described and operating as intended.
 
-Today we focus on **Test** — confirming controls work through active evaluation.
+I want to be transparent about an important context note before describing the assessment findings. The original version of today's content described findings — an unpatched Log4j library, a backup S3 bucket without encryption, port 22 open to 0.0.0.0/0 — as if they were discovered during the assessment. These were actually discrepancies found and corrected during the Task I-1 implementation verification in Days 54 and 55. In a properly sequenced RMF process, the assessor should not encounter those specific discrepancies because they were resolved before the assessment began and documented in the as-implemented SSP.
 
----
-
-##  Our Architecture – OpenMRS on AWS
-
-We’re operating OpenMRS in a cloud-hosted stack using:
-- **EC2** instances for the app servers  
-- **Amazon RDS** for the backend database  
-- **S3 buckets** for logs/backups  
-- **AWS WAF**, **IAM**, and **Security Groups** for layered security  
-
-Each of these components must pass technical scrutiny.
+Today's write-up describes the assessment execution as it would actually unfold for a system that completed Task I-1 and I-2 thoroughly — where most controls are implemented as documented, some genuine assessment findings exist despite the implementation work, and the documentation provides the assessor a clear roadmap to evidence. This is the realistic picture of what a well-prepared assessment looks like.
 
 ---
 
-##  Key Assessment Techniques
+## What I Worked On Today
 
-###  Vulnerability Scanning
-
-Using tools like **Amazon Inspector**, **OWASP ZAP**, or **Nessus**, we:
-- Scan EC2 and RDS for known CVEs
-- Detect misconfigurations or unpatched software
-- Validate controls such as CM-2 (Baseline Configuration) and SI-2 (Flaw Remediation)
-
-> _Example: A scan revealed an outdated OpenMRS module and an unpatched Log4j library. That flagged a remediation requirement under control SI-2._
+Task A-3 assessment execution follows the SAP procedures. The assessor works through each control family using the examine-interview-test methodology. Today covers the technical assessment activities: Days 6 and 7 of the assessment schedule (AWS infrastructure review) and Days 7 and 8 (application testing in the test environment). I am documenting the assessment from the ISSO's perspective — what the assessor is doing, what they are finding, and how the ISSO is supporting the process.
 
 ---
 
-###  Password Policy Testing
+## What Actually Clicked for Me
 
-We validated strong authentication under AC-2 and IA-5:
-- Attempted to create weak passwords via IAM and OpenMRS app
-- Confirmed complexity, lockout, and expiration settings
-- Ensured policies align with organizational baselines
+The insight that clarified assessment execution today is understanding the difference between a finding and an observation — and why that distinction matters for how the SAR is structured.
 
-> _Tested password "OpenMRS123!" was accepted in one test case—indicating a control gap._
+A finding is a control that is not implemented as documented in the SSP, is not operating as intended, or is absent entirely. A finding represents a gap that requires remediation or risk acceptance. Findings are categorized by severity and drive POA&M entries or authorization conditions.
 
----
+An observation is something the assessor notices that does not constitute a control failure but that they believe the organization should consider — a configuration that is technically compliant but represents a suboptimal approach, a process that works but has unnecessary complexity, a risk the documentation does not explicitly address. Observations are included in the SAR but do not drive formal remediation requirements.
 
-### Encryption and Network Configuration
-
-Under SC-12, SC-13, and SC-28:
-- Verified **RDS encryption** at rest  
-- Checked **S3 bucket policies** for default SSE-S3 or SSE-KMS encryption  
-- Confirmed **TLS/HTTPS** enforced across endpoints  
-- Reviewed **Security Groups** for least-privilege access
-
-> _One EC2 instance had port 22 open to 0.0.0.0/0 — a red flag for misconfiguration under SC-7._
+The distinction matters because conflating observations with findings inflates the apparent severity of the assessment and may cause the AO to focus on minor issues rather than genuine gaps. A well-structured SAR separates findings from observations clearly, categorizes findings by severity accurately, and helps the AO understand the actual risk picture rather than a list of everything the assessor noticed.
 
 ---
 
-## AWS Security Tools
+## Assessment Execution — AWS Infrastructure Review (Days 6-7)
 
-### AWS Config
-
-- Validates that resources stay in secure state  
-- Example rule: “Ensure all EBS volumes are encrypted”  
-- Helps maintain continuous compliance
-
-### AWS Trusted Advisor
-
-- Flags:
-  - Open ports
-  - Over-permissive S3 buckets
-  - Root users lacking MFA
-- Even the free tier provides valuable insights
+The assessor accesses the AWS console using the provisioned read-only IAM role. All assessor activity is logged in CloudTrail — the ISSO can review what the assessor accessed and when. No production resources are modified.
 
 ---
 
-##  Optional Penetration Testing
+### IAM Configuration Review — AC-6, IA-2(6), AC-2(1)
 
-In alignment with [AWS Penetration Testing Policy](https://aws.amazon.com/security/penetration-testing/), we simulated:
+**Assessor activities:** Reviews IAM users, roles, policies, and groups. Exports IAM policy documents for each IAM entity associated with the OpenMRS deployment. Reviews IAM Access Analyzer findings.
 
-- **SQL injection attempts** on OpenMRS forms  
-- **Cross-site scripting** (XSS)  
-- **WAF evasion techniques**  
+**Evidence reviewed:**
+- IAM policy for EC2 instance profile: read access to S3 configuration bucket; write access to CloudWatch Logs. No other permissions. Assessor notes: appropriately scoped.
+- IAM policy for backup service role: write access to S3 backup bucket only. Assessor notes: appropriately scoped.
+- IAM policy for ISSO: read access to CloudTrail logs, Security Hub, GuardDuty findings, Config rules. No IAM administrative permissions. Assessor notes: appropriately scoped.
+- IAM policy for IT Administrator: permissions to manage EC2, RDS, S3 configuration, IAM user management for non-privileged accounts. Assessor reviews for overly broad statements.
 
-> _Penetration testing validated the effectiveness of AWS WAF and OpenMRS input validation routines._
+**Finding A-1 (Moderate):** IAM policy for IT Administrator includes `iam:PassRole` permission without a condition restricting which roles can be passed. The `iam:PassRole` permission allows the IT Administrator to attach IAM roles to EC2 instances — including roles with broader permissions than the IT Administrator's own policy would normally permit. This is a known privilege escalation pathway in AWS environments. The permission should be restricted with a condition specifying which roles can be passed.
 
----
+*Assessment classification:* This is a genuine finding — not a critical vulnerability in the current configuration, but a privilege escalation risk that should be addressed. Categorized as Moderate: the risk is real but exploitation requires specific circumstances and the IT Administrator is a trusted, background-screened role.
 
-##  Evidence Collection for RMF
+*SSP comparison:* The SSP documents AC-6 least privilege for IAM with quarterly IAM review. The quarterly review did not catch the PassRole scope issue — this is an example of a review process that was executing but not sufficiently deep. The finding is both a technical configuration gap and a process gap in the quarterly review.
 
-All findings, screenshots, logs, and reports were documented to support Task A-3 and future POA&Ms (Plan of Actions and Milestones). Controls assessed included:
-
-| Control ID | Control Name             | Status       | Method   | Tool Used        |
-|------------|--------------------------|--------------|----------|------------------|
-| AC-2       | Account Management       | Partial Pass | Test     | AWS Console      |
-| SC-12/13   | Cryptographic Protection | Pass         | Examine  | AWS Config       |
-| CM-2       | Configuration Management | Fail         | Test     | Amazon Inspector |
+**IAM Access Analyzer:** No external access findings — confirming that no IAM policies permit cross-account access to the OpenMRS AWS environment from untrusted external accounts. Assessor notes this as a positive finding.
 
 ---
 
-##  Reflection
+### Security Group and Network Configuration Review — SC-7, SC-7(5)
 
-This technical assessment session was a reminder that **security is not static**. Tools like Trusted Advisor and Config help automate checks, but it’s the **hands-on testing** that uncovers real exposure.
+**Assessor activities:** Reviews security group inbound and outbound rules for all OpenMRS components. Reviews VPC Flow Logs configuration. Reviews network ACL settings.
 
-> _Most eye-opening moment: discovering the lack of encryption on our backup S3 bucket. That’s getting patched today._
+**Evidence reviewed:**
+- EC2 security group: port 443 open to 0.0.0.0/0; port 22 restricted to [ISSO IP/32, IT Admin IP/32]. Assessor notes: matches SSP documentation. Corrected discrepancy from Task I-1 verified as resolved.
+- RDS security group: port 3306 from EC2 security group only. Assessor notes: correctly configured.
+- VPC Flow Logs: enabled. Assessor reviews a sample of flow log entries to confirm logging is producing records. Entries present for the expected traffic patterns.
 
----
+**Observation (not a finding):** The assessor notes that the SSH restriction on port 22 uses static source IP addresses. If the ISSO or IT Administrator connects from a different location — travel, working from a different site — they would be unable to SSH to the instance without modifying the security group. The assessor recommends documenting the procedure for emergency SSH access changes in the change management process, to ensure that any temporary IP additions are authorized and logged as change management events rather than ad-hoc changes.
 
-##  Hands-On Exercise
-
-If you want to try this too:
-
-1. **Run AWS Trusted Advisor**  
-   _Check for open ports, MFA on root, public S3 buckets._
-
-2. **Inspect Password Policy**  
-   _Reject weak passwords. Enforce complexity and rotation._
-
-3. **Verify Encryption**  
-   _Check that S3, EBS, and RDS are encrypted by default._
+*Assessment classification:* Observation — not a finding. The current configuration is correctly implemented. The observation is a process resilience suggestion.
 
 ---
 
-##  Search Terms for Further Exploration
+### Encryption at Rest Review — SC-28
 
-- `AWS Config compliance checks security`  
-- `AWS Trusted Advisor security best practices`  
-- `NIST SP 800-53A technical control testing`  
-- `Vulnerability scanning AWS EC2 OpenMRS`  
-- `AWS penetration testing policy`
+**Assessor activities:** Reviews RDS instance encryption configuration, EBS volume encryption, S3 bucket configuration, KMS key policies.
+
+**Evidence reviewed:**
+- RDS instance [openmrs-prod-db]: Storage encryption — Enabled. KMS Key — [customer-managed key ARN]. Matches SSP documentation. ✓
+- EC2 EBS volumes: Encrypted — Yes. KMS Key — [customer-managed key ARN]. Matches SSP documentation. ✓
+- S3 backup bucket: Default encryption — SSE-KMS. Block Public Access — all enabled. Object Lock — Compliance mode. Bucket policy — SSE-KMS condition present. Matches SSP documentation. ✓
+- KMS keys: all three customer-managed keys show Enabled status, annual rotation configured, key policies reviewed.
+
+**KMS key policy finding — A-2 (Low):** The KMS key policy for the RDS encryption key includes a condition permitting the root account (`arn:aws:iam::[account-id]:root`) to perform all KMS actions. This is the default AWS KMS key policy behavior — the root account condition is added by default to prevent the key from being permanently inaccessible if all other authorized principals are removed. However, the SSP documentation does not acknowledge this root account condition, creating a discrepancy between the documented key policy and the actual key policy.
+
+*Assessment classification:* Low finding — the root account access condition is an AWS default and does not represent a practical security risk in a well-governed account (the root account should not be in regular use; this is separately controlled by the MFA-on-root-account requirement). However, the SSP documentation should be updated to acknowledge the root account condition and note that root account usage is monitored via CloudTrail alerts. The finding is a documentation accuracy issue more than a security control gap.
 
 ---
 
-Stay tuned for **Day 60**, where we’ll shift from tech to talk — focusing on interviews, documentation reviews, and the human element in control assessments.
+### CloudTrail and Audit Configuration Review — AU-9, AU-6
 
-> Security isn’t just about firewalls and encryption. It’s also about how people use and protect systems every day.
+**Assessor activities:** Reviews CloudTrail configuration, log integrity validation, S3 log bucket protection, CloudWatch Events rules for tamper detection.
+
+**Evidence reviewed:**
+- CloudTrail [openmrs-cloudtrail-all-regions]: Multi-region — Yes. Log file validation — Enabled. Management events — All. S3 data events for backup bucket — Enabled. Matches SSP documentation. ✓
+- CloudTrail log S3 bucket: Object Lock — Compliance mode. Assessor verifies retention period matches organization's documented retention requirement. ✓
+- CloudWatch Events rules for tamper detection: three rules present (DeleteTrail, StopLogging, UpdateTrail; DeleteLogGroup; S3 bucket policy changes). SNS notification targets verified as active. ✓
+- Most recent monthly CloudTrail integrity validation: documented in ISSO monitoring log as completed [date], result: all files valid. ✓
+
+**No findings.** Assessor notes this as a well-documented and effectively implemented control set.
 
 ---
 
+### GuardDuty and Security Hub Review — SI-4, AU-6(1)
+
+**Assessor activities:** Reviews GuardDuty configuration, finding history, and Security Hub aggregation. Verifies that monitoring is active and that findings are being reviewed.
+
+**Evidence reviewed:**
+- GuardDuty: Enabled. Detector ID present. Data sources: CloudTrail management events, VPC Flow Logs, DNS logs — all enabled. S3 data events — enabled for the OpenMRS account. ✓
+- Security Hub: Enabled. GuardDuty, Inspector, Config finding providers integrated. Most recent findings reviewed with ISSO.
+- ISSO monitoring log: daily authentication anomaly review entries present for the past 30 days. Weekly CloudTrail review entries present for the past 8 weeks. ✓
+- GuardDuty finding history: three findings in the past 90 days — all three documented in the ISSO monitoring log with disposition (two confirmed false positives with rationale, one escalated and resolved as a configuration error by IT Administrator). ✓
+
+**No findings.** Assessor notes the monitoring log discipline as a positive practice that demonstrates the monitoring program is operating rather than just configured.
+
+---
+
+### AWS Config Compliance Review — CM-6, SC-7
+
+**Assessor activities:** Reviews AWS Config rule compliance status for all rules defined in the monitoring strategy.
+
+**Evidence reviewed:**
+
+| Config Rule | Status | Notes |
+|---|---|---|
+| s3-bucket-public-access-prohibited | COMPLIANT | ✓ |
+| rds-storage-encrypted | COMPLIANT | ✓ |
+| restricted-ssh | COMPLIANT | ✓ (corrected in Task I-1) |
+| cloud-trail-enabled | COMPLIANT | ✓ |
+| iam-password-policy | COMPLIANT | ✓ |
+| mfa-enabled-for-iam-console-access | NON_COMPLIANT | Finding — see below |
+| ec2-ebs-encryption-by-default | COMPLIANT | ✓ |
+
+**Finding A-3 (Moderate):** AWS Config rule `mfa-enabled-for-iam-console-access` shows NON_COMPLIANT for one IAM user. Review reveals a service account created for a monitoring integration tool that was provisioned with console access and no MFA. Service accounts should not have console access — they should use IAM access keys for programmatic access only. This service account was not documented in the SSP's IAM entity inventory and was not identified during the quarterly IAM review.
+
+*Assessment classification:* Moderate finding. The service account with console access and no MFA represents both a configuration gap (console access should be disabled for service accounts) and a documentation gap (the account was not in the documented IAM inventory). If this account's credentials were compromised, an attacker would have console access to the AWS environment without an MFA requirement. Remediation: disable console access for the service account; add the account to the IAM inventory; review the quarterly IAM review process to ensure service accounts are included.
+
+---
+
+## Assessment Execution — Application Testing (Days 7-8)
+
+The assessor accesses the OpenMRS test environment — a production-equivalent instance with synthetic test data. All application testing is conducted in this environment, not the production system.
+
+---
+
+### MFA Enforcement Test — IA-2(2)
+
+**Test procedure:** Attempt to authenticate to the OpenMRS test environment using only username and password, without providing the TOTP second factor.
+
+**Test execution:** Assessor authenticates with test account username and password. OpenMRS presents the TOTP challenge screen. Assessor attempts to bypass by:
+1. Submitting an empty TOTP field — system rejects with "Authentication code required" error ✓
+2. Attempting to navigate directly to the OpenMRS dashboard URL without completing authentication — system redirects to login page ✓
+3. Attempting to use a session token from a previous test session that has been manually expired — system rejects with "Session expired" ✓
+
+**Result:** MFA enforcement is effective. Three bypass attempts all properly rejected. Finding: none.
+
+---
+
+### Role-Based Access Control Test — AC-3
+
+**Test procedure:** Using test accounts for each defined role, attempt to access system functions outside the role's defined scope.
+
+**Test execution:**
+
+*Administrative Staff test account:*
+- Navigate to patient encounter record → Access denied with "You do not have privileges to view encounters" ✓
+- Navigate to medication list → Access denied ✓
+- Navigate to user administration → Access denied ✓
+
+*IT Administrator test account:*
+- Navigate to patient record search → Search function not available in IT Administrator role view ✓
+- Attempt to view encounter documentation via direct URL → Access denied ✓
+- User administration functions → Available as expected ✓
+
+*Clinician test account:*
+- Patient encounters within test patient panel → Accessible as expected ✓
+- Attempt to access another test clinician's patient panel → Access denied ✓
+- User administration → Access denied ✓
+
+**Result:** Role-based access control is operating as documented. All cross-role access attempts properly rejected. Finding: none.
+
+---
+
+### Session Timeout Test — SC-10
+
+**Test procedure:** Authenticate to OpenMRS test environment; leave session idle for 16 minutes; attempt to access a patient record.
+
+**Test execution:** Assessor authenticates with test clinical account. Waits 16 minutes without interaction. Navigates to patient record. OpenMRS presents login page — session has been terminated. Assessor confirms that the session was terminated and that no patient data was accessible after the timeout.
+
+**Verification of 2-minute warning:** Assessor authenticates again; at the 13-minute mark, a session timeout warning dialog appears offering to extend the session. Session extension confirmed working. After 15 minutes without extension, session terminates. ✓
+
+**Result:** Session timeout implemented as documented. Finding: none.
+
+---
+
+### Audit Log Generation Test — AU-2, AU-12
+
+**Test procedure:** Perform a defined set of test actions in the OpenMRS test environment; verify that all actions generated audit log entries with all required fields.
+
+**Test execution:**
+
+Test sequence performed by assessor:
+1. Login with test clinical account
+2. View test patient record [TEST-PATIENT-001]
+3. Modify a test encounter observation
+4. Logout
+
+CloudWatch log group review: ISSO provides assessor access to the test environment CloudWatch log group. Assessor searches for entries from the test account during the test window.
+
+**Audit log entries found and reviewed:**
+
+| Action | User | Patient ID | Timestamp | Source IP | Outcome | All fields present? |
+|---|---|---|---|---|---|---|
+| Login | test-clinician@myclinic.org | N/A | [timestamp UTC] | [assessor IP] | SUCCESS | ✓ |
+| VIEW_PATIENT | test-clinician@myclinic.org | TEST-PATIENT-001 | [timestamp UTC] | [assessor IP] | SUCCESS | ✓ |
+| MODIFY_OBSERVATION | test-clinician@myclinic.org | TEST-PATIENT-001 | [timestamp UTC] | [assessor IP] | SUCCESS | ✓ |
+| Logout | test-clinician@myclinic.org | N/A | [timestamp UTC] | [assessor IP] | SUCCESS | ✓ |
+
+All four events captured with all required fields. Patient identifier uses MRN format (not demographic data). ✓
+
+**Finding A-4 (Low):** The audit log entry for MODIFY_OBSERVATION records that a modification occurred but does not record the previous value — only that the field was changed and to what value. The SSP documentation for AU-3 specifies that modification records should include the previous value to enable detection of unauthorized data changes. The current logging captures that a change happened but not the before-state that would be needed to investigate a potential data integrity tampering incident.
+
+*Assessment classification:* Low finding. The current logging supports access accountability (who accessed what) but not full change accountability (what was the value before the change). For HIPAA audit control purposes, the current logging is likely sufficient — HIPAA requires the ability to determine who accessed records, which is captured. However, the SSP documentation specifies a higher standard that the current implementation does not meet. Remediation: update OpenMRS audit logging configuration to capture previous values for modification events, or update SSP to accurately reflect current logging capability and accept the reduced logging scope.
+
+---
+
+### Encryption in Transit Test — SC-8
+
+**Test procedure:** Analyze the TLS configuration of the OpenMRS domain using an SSL/TLS analysis tool; verify HTTPS enforcement; verify MySQL connection requires TLS.
+
+**Test execution:**
+
+TLS analysis of [openmrs-domain]: Protocol support — TLS 1.2, TLS 1.3 supported; TLS 1.0, 1.1 not supported. ✓ Cipher suites — ECDHE key exchange present; no weak ciphers (RC4, DES, 3DES) listed. ✓ Certificate — valid, not expired, issued by ACM, domain matches. ✓ HSTS header — present. ✓
+
+HTTP-to-HTTPS redirect test: accessing http://[openmrs-domain] returns a 301 redirect to https://[openmrs-domain]. ✓
+
+RDS TLS enforcement: ISSO provides the RDS parameter group configuration showing rds.force_ssl=1. Assessor verifies via AWS console. ✓
+
+**Result:** Encryption in transit implemented as documented. Finding: none.
+
+---
+
+## Assessment Findings Summary — Technical Review
+
+| Finding ID | Control | Severity | Description |
+|---|---|---|---|
+| A-1 | AC-6 / IAM | Moderate | iam:PassRole without role restriction — privilege escalation pathway |
+| A-2 | SC-28 / KMS | Low | Root account KMS condition not documented in SSP — documentation accuracy |
+| A-3 | IA-2 / IAM | Moderate | Undocumented service account with console access and no MFA |
+| A-4 | AU-3 | Low | Modification audit logs do not capture previous values as specified in SSP |
+
+Two Moderate findings, two Low findings. No High findings from the technical assessment. The SSP's documentation specificity meant the assessor could efficiently identify the four gaps against a clear documented baseline — demonstrating the value of thorough Task I-2 documentation.
+
+---
+
+## A Real-World Example That Made This Click
+
+While reviewing Finding A-3 today — the undocumented service account with console access and no MFA — I thought about the **2019 Capital One breach** from a slightly different angle than previous discussions.
+
+The Capital One attacker exploited a Server Side Request Forgery vulnerability to retrieve temporary IAM credentials from the EC2 instance metadata service. Those credentials belonged to a role attached to the instance that had broader S3 access than it needed.
+
+But a related vulnerability pattern — undocumented IAM entities with excessive permissions — is precisely what Finding A-3 represents. A service account not in the documented IAM inventory is a blind spot in the quarterly review process. If that account's access keys are compromised, the ISSO's quarterly review would not flag it as an account requiring scrutiny because it is not in the known-accounts list.
+
+The quarterly IAM review is only as good as the completeness of the IAM inventory it is reviewing against. Finding A-3 reveals that the inventory maintained for the quarterly review missed a service account — meaning the review process has been executing correctly against an incomplete scope. This is an example of a control (quarterly review) that appeared to be operating per the SSP, but a deeper assessment revealed that the scope of what was being reviewed was narrower than intended.
+
+This is exactly why independent assessment finds things that internal reviews miss — not because the internal reviews were careless, but because assessors approach the system without the assumptions the internal team has built up. The internal team knew what accounts they had created; the assessor started from the AWS IAM console and found everything that exists, regardless of what anyone thought was there.
+
+---
+
+## What I Am Still Thinking About
+
+Finding A-4 — the modification audit logs not capturing previous values — raises a question I want to think through carefully before the SAR is finalized.
+
+The HIPAA audit control standard (§164.312(b)) requires the ability to record and examine activity in systems that contain ePHI. The current audit logging captures who accessed which records and what actions they performed. It does not capture the before-state of modified records.
+
+For the purpose of HIPAA audit control compliance, the current logging is likely sufficient — it enables investigation of unauthorized access, supports identification of who accessed records during a specific time period, and provides the accountability trail that HIPAA requires.
+
+The SSP's specification of previous value logging goes beyond HIPAA's minimum requirement — it was included as a best practice for data integrity investigation. The finding is therefore a gap between the SSP specification and the implementation, but not necessarily a HIPAA compliance gap.
+
+The remediation options are: implement previous value logging in OpenMRS (the technically complete solution), or update the SSP to reflect the current logging capability and document why the current implementation satisfies HIPAA's audit control requirements without previous value capture. Both are defensible; the choice depends on the operational cost of implementing previous value logging versus the risk acceptance for data integrity investigation capability.
+
+I want to discuss this with the Compliance Officer and ISSO before the SAR is finalized, to ensure the finding disposition reflects a considered organizational decision rather than defaulting to the technically complete solution when a documented risk acceptance may be equally defensible.
+
+---
+
+## What's Next
+
+Day 60 covers the non-technical assessment activities — document examination, interviews with system personnel, and the administrative control assessment. The examine and interview methods produce a different kind of evidence than the test method but are equally important for the overall assessment picture. Some of the most significant security program gaps surface not through technical testing but through interviews that reveal the difference between documented procedures and what people actually do.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53A Rev 5 – Assessment Procedures and Methods](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [NIST SP 800-115 – Technical Guide to Information Security Testing](https://csrc.nist.gov/publications/detail/sp/800-115/final)
+- [AWS IAM PassRole Security Implications](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html)
+- [OWASP ZAP – Web Application Security Testing](https://www.zaproxy.org/)
+- [HHS OCR HIPAA Audit Protocol – Technical Safeguards](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html)
+
+---
+
+*#GRC #SecurityAssessment #NISTRMF #TechnicalTesting #SP800-53A #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day59*
