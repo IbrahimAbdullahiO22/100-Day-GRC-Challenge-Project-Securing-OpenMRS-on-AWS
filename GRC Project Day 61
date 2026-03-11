@@ -1,148 +1,321 @@
-# Day 61: Task A-4 – Security Assessment Report (SAR)
-
-Welcome to **Day 61** of my 100-Day GRC journey!  
-Today marks a significant milestone — turning all the technical and procedural assessments I’ve performed into an official **Security Assessment Report (SAR)** for our OpenMRS-on-AWS case study.
-
-This document represents the culmination of weeks of planning, control selection, and testing — now organized into a report that communicates system risk posture to decision-makers.
+#  Day 61 – Task A-4: Producing the Security Assessment Report | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Today’s Learning Objectives
+## From Assessment to Report
 
-- **Understand the SAR’s Purpose**  
-  Grasp the critical role this document plays in the RMF process and how it informs the Authorizing Official (AO).
+Days 59 and 60 completed the Task A-3 assessment execution — seven findings across technical and non-technical controls, three Moderate and four Low, with no High findings. Today, Task A-4 assembles those findings into the Security Assessment Report (SAR): the formal document that the Authorizing Official will use as the primary input to the authorization decision.
 
-- **Know the SAR’s Structure**  
-  Learn to document which controls are satisfied, which are deficient, and how to evaluate and communicate the associated risks.
+The SAR is not a summary of what was tested. It is a structured risk communication document — it tells the AO what the assessor found, how serious each finding is, what the evidence is, and what the AO needs to know to make a defensible risk acceptance decision. Writing it well requires a different skill than conducting the assessment. An assessor who can identify a privilege escalation pathway in an IAM policy still needs to translate that finding into language and structure that enables an AO who may not be deeply technical to understand the risk and make an informed decision.
 
-- **Apply to Real-World Example**  
-  Showcase mock findings from our OpenMRS AWS implementation to demonstrate effective SAR documentation techniques.
+That translation — from technical finding to risk-informed recommendation — is the core challenge of SAR production.
 
 ---
 
-##  What Is a Security Assessment Report?
+## What I Worked On Today
 
-A **Security Assessment Report (SAR)** is the formal output of the **RMF Task A-4**. It summarizes:
-- What was assessed,
-- Which controls passed,
-- What deficiencies were discovered,
-- How serious those risks are,
-- And recommendations for remediation.
+Task A-4 requires the assessor to prepare the SAR based on the assessment results, have the system owner review for factual accuracy, and deliver the final report to the AO. Today I work through the SAR structure for the OpenMRS assessment — the executive summary, the system and assessment overview sections, the complete findings documentation for all seven findings, the overall risk posture summary, and the assessor's authorization recommendation.
 
-The SAR provides **evidence-based findings** for leadership to make a risk-informed authorization decision.
+A note on continuity: the original version of today's content described findings (unencrypted RDS snapshots, weak passwords) that were corrected during Task I-1 implementation verification in Days 54-55. The SAR I am producing today reflects the actual assessment findings from Days 59 and 60 — seven findings that emerged despite the thorough implementation work, because the assessment found the gaps the implementation work left behind. This is the realistic picture.
 
 ---
 
-##  What Goes Into a SAR?
+## What Actually Clicked for Me
 
-A standard SAR includes:
+The concept that clarified SAR production today is the distinction between the SAR and the POA&M, and why they serve different audiences.
 
-###  System Overview  
-Brief description of the system:  
-> *“OpenMRS is a cloud-hosted electronic medical record system deployed on AWS for Clinic XYZ. It consists of EC2 instances, RDS databases, S3 backups, and is protected via AWS IAM, WAF, and security groups.”*
+The SAR is the assessor's document — an independent, evidence-based statement of what was found and how serious it is. The assessor's job in the SAR is to give the AO an accurate, objective picture of the system's security posture. The assessor does not soften findings to make the system owner look good, and does not inflate findings to demonstrate their own rigor. Findings are characterized as they are.
 
-###  Assessment Scope and Method  
-We assessed selected NIST SP 800-53 Rev. 5 controls using **Examine, Interview, and Test** methods across both technical and non-technical domains. Tools used include:
-- Amazon Inspector
-- AWS Trusted Advisor
-- Document review
-- Staff interviews
+The POA&M is the system owner's document — a commitment to remediate identified gaps within defined timelines. The POA&M responds to the SAR but is owned by the system owner, not the assessor. The AO uses both: the SAR to understand the current state, and the POA&M to understand the planned remediation path and whether the residual risk during that remediation period is acceptable.
 
-###  Summary of Results  
-
-| Control Status  | Count |
-|-----------------|-------|
-| Satisfied       | 90    |
-| Deficient       | 10    |
-| High Risk       | 1     |
-| Moderate Risk   | 4     |
-| Low Risk        | 5     |
-
-###  Detailed Findings  
-Each control with a deficiency is documented with:
-- Control ID and Name
-- Description of the issue
-- Associated evidence
-- Risk level
-- Recommendation (optional in SAR, expanded later in POA&M)
+Understanding this audience distinction changed how I thought about SAR writing. Every section of the SAR is written for the AO, not for the ISSO or IT Administrator. Technical findings need enough technical specificity that a technically competent reader can verify and remediate them — but they also need clear risk characterization so a non-technical AO can understand why the finding matters.
 
 ---
 
-##  Example Findings from OpenMRS on AWS
-
-###  Finding #1  
-**Control:** SC-13: Cryptographic Protection  
-**Status:** Deficient  
-**Description:** Automated RDS database snapshots were not encrypted by default.  
-**Risk:** Moderate  
-**Evidence:** AWS Console inspection revealed unencrypted snapshots for production RDS instances.  
-**Recommendation:** Enable encryption for automated RDS snapshots and enforce snapshot encryption policies moving forward.
+## Security Assessment Report — OpenMRS at MyClinic
 
 ---
 
-###  Finding #2  
-**Control:** IA-5: Authenticator Management  
-**Status:** Deficient  
-**Description:** Weak password policy was enforced by default in both OpenMRS and AWS IAM.  
-**Risk:** High  
-**Evidence:** Test users were able to set passwords like `Password123!` without rejection. IAM policy only required 6 characters.  
-**Recommendation:** Update IAM and OpenMRS password policies to enforce complexity, 12+ character minimum, and MFA for admin roles.
+### Section 1: Executive Summary
+
+**System:** MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001)
+
+**Assessment Period:** [Assessment start date] through [Assessment end date]
+
+**Assessor:** [External firm name], Lead Assessor [name]
+
+**Assessment Basis:** NIST SP 800-53 Rev 5 High Baseline, tailored per SSP v1.1 dated [date]
+
+**Impact Level:** HIGH
+
+**Overall Risk Posture:** MODERATE
+
+The MyClinic OpenMRS system demonstrates a well-documented and substantially implemented security control program. The assessment found no High-severity findings — no control failures that would represent an immediate, significant threat to the confidentiality, integrity, or availability of patient data requiring remediation before authorization can be considered.
+
+The assessment identified seven findings: three Moderate severity and four Low severity. The three Moderate findings represent process and configuration gaps that increase risk exposure but do not represent active security failures in the current operational environment. The four Low findings are primarily documentation accuracy issues and process design gaps that should be addressed but do not represent current security exposures.
+
+Eight POA&M items carried into the assessment from prior internal review work were examined. One was confirmed closed (AU-9 CloudTrail tamper detection, closed during Task I-1). Seven remain open. The assessor's characterization of POA&M-CP2-01 (clinical downtime procedures) has been updated to reflect that the draft is more limited in scope than the current POA&M entry implies — this item's target date and scope description should be revised.
+
+**Assessor Authorization Recommendation:** The assessment results support authorization with conditions. The absence of High findings means the system's core security controls are operating effectively. The three Moderate findings (IAM PassRole privilege escalation pathway, undocumented service account with console access and no MFA, and IAM entity creation not listed as a change management notification trigger) collectively represent a pattern of IAM governance gaps that the AO should require remediation timelines for before or concurrent with authorization. The clinical downtime procedures gap (CP-2) remains the most significant operational risk for a High-impact clinical system and warrants an explicit authorization condition with a near-term target date.
 
 ---
 
-###  Example Satisfied Control  
-**Control:** AC-2: Account Management  
-**Status:** Satisfied  
-**Evidence:** All active accounts were reviewed quarterly and removed if unused. Access permissions were appropriately scoped per least privilege via IAM roles and OpenMRS user roles.
+### Section 2: System and Assessment Overview
+
+**System Description:** MyClinic OpenMRS is a cloud-hosted electronic health record system deployed on Amazon Web Services supporting clinical operations for MyClinic. The system processes, stores, and transmits electronic protected health information (ePHI) including clinical encounter documentation, medication records, laboratory results, and patient demographic data. The system serves clinical staff, administrative staff, and the ISSO and IT Administrator who operate and maintain the system.
+
+**Authorization Boundary:** The authorization boundary encompasses the EC2 application server, RDS database instance, S3 backup storage, and the AWS account configuration (IAM, CloudTrail, GuardDuty, Config, Security Hub, KMS) supporting the OpenMRS deployment. AWS physical infrastructure controls are addressed through inheritance of AWS SOC 2 certification.
+
+**Security Categorization:** SC OpenMRS = {(confidentiality, HIGH), (integrity, HIGH), (availability, HIGH)} — Overall: HIGH. The High categorization reflects the ePHI content of the system, the use of OpenMRS for real-time clinical decision support, and the absence of a tested paper-based downtime procedure.
+
+**Assessment Scope:** Full High baseline assessment per SAP dated [date]. All control families in the tailored High baseline were assessed. Scoped-out controls (PE family, core OpenMRS development SA controls, physical media controls) were verified as appropriately documented in the SSP.
+
+**Assessment Methods:** NIST SP 800-53A examine, interview, and test methods applied throughout. Technical testing conducted in the production AWS environment (read-only) and OpenMRS test environment (application-level testing with synthetic data). Interviews conducted with ISSO, IT Administrator, Health IT Manager, and Compliance Officer.
+
+**Assessment Limitations:** The following assessment activities were not fully executable within the assessment scope and timeline:
+- Full penetration testing of the OpenMRS application (out of scope per SAP rules of engagement — discovery only)
+- Assessment of Laboratory Information System security controls (out of boundary — addressed via BAA and ISA review)
+- Validation of alternate processing site failover (CP-7 — the alternate site arrangement exists but failover testing has not been conducted; this is an open POA&M item)
 
 ---
 
-##  Risk Ratings – What Do They Mean?
-
-| Risk Level | Description |
-|------------|-------------|
-| **High**   | Immediate remediation required; could lead to significant compromise. |
-| **Moderate** | Important to resolve; exploitable with some effort. |
-| **Low**    | Minor issue; mostly administrative or unlikely threat vector. |
-
-Risk levels are based on a combination of **likelihood** and **impact**, following our organization's risk matrix.
+### Section 3: Assessment Findings — Complete Documentation
 
 ---
 
-##  Hands-On Exercise: Write a Mini SAR Entry
+#### Finding A-1: IAM PassRole Permission Without Role Restriction
 
-Here’s a practical entry I wrote as part of today’s task:
+**Control:** AC-6 (Least Privilege), AC-6(1) (Authorize Access to Security Functions)
 
-> **Control:** AU-6 (Audit Log Review)  
-> **Status:** Deficient  
-> **Description:** While CloudTrail logging was enabled, the team lacked a routine review process.  
-> **Risk:** Moderate  
-> **Recommendation:** Implement a scheduled weekly log review and set up AWS CloudWatch alarms for anomalies.
+**Severity:** Moderate
 
----
+**Finding Status:** New finding — not previously documented in POA&M
 
-##  Reflection: What I Learned
+**Description:** The IAM policy for the IT Administrator user includes the `iam:PassRole` permission without a condition statement restricting which roles can be passed. The `iam:PassRole` permission allows an IAM principal to attach an IAM role to an AWS service or resource. Without a condition restricting which roles can be passed, the IT Administrator could potentially attach a role with broader permissions than the IT Administrator's own policy permits — for example, attaching an administrative IAM role to an EC2 instance and then using that instance's role to perform actions the IT Administrator's user policy does not authorize. This is a documented privilege escalation pathway in AWS environments.
 
-Writing an SAR forces clarity and accountability. It’s one thing to assess controls — it’s another to explain them in a way that leadership understands and acts on. I found it especially challenging to **balance technical precision with executive clarity**.
+**Evidence:** IAM policy document for IT Administrator user, reviewed [date]; IAM policy simulator verification [date].
 
-For instance, it’s easy to say “RDS wasn’t encrypted,” but much harder to explain why that’s a **moderate risk** and what the implications could be for patient data.
+**Likelihood:** Low. The IT Administrator is a trusted, background-screened individual with no history of policy violations. Exploitation requires intentional abuse or compromise of the IT Administrator's credentials.
 
-This exercise reminded me that **GRC work lives in the details** — but decision-makers live in the summary. We must serve both.
+**Impact:** High. If exploited, the privilege escalation pathway could allow actions equivalent to administrative-level AWS access, including the ability to modify or disable security controls.
 
----
+**Risk (Likelihood × Impact):** Moderate.
 
-##  Search Terms for Further Exploration
+**Current Compensating Control:** CloudTrail logs all IAM PassRole events; ISSO reviews CloudTrail weekly. Any unauthorized PassRole usage would appear in audit logs within one week.
 
-- “Security Assessment Report example NIST”
-- “Documenting security control findings”
-- “NIST SP 800-53A examine interview test”
-- “Risk assessment matrix cyber vulnerabilities”
-- “SAR vs POA&M reporting RMF”
+**Remediation Recommendation:** Add a condition to the IT Administrator's iam:PassRole permission statement restricting which roles can be passed. The condition should specify only the roles legitimately needed by the IT Administrator for operational purposes (e.g., passing the EC2 instance profile role or the backup service role). Roles with elevated permissions should be explicitly excluded. Remediation is a targeted IAM policy edit — estimated effort: 2 hours.
+
+**POA&M Required:** Yes. Target completion: 30 days from authorization.
 
 ---
 
-## 📅 Coming Up: Day 62 – Plan of Action & Milestones (POA&M)
+#### Finding A-2: KMS Root Account Condition Not Documented in SSP
 
-Now that we've reported the gaps, the next step is to **act on them**. On Day 62, I’ll share how we build a Plan of Action and Milestones to remediate issues found during the assessment and prepare the system for Authorization to Operate (ATO). Stay tuned!
+**Control:** SC-28 (Protection of Information at Rest), documentation accuracy
+
+**Severity:** Low
+
+**Finding Status:** New finding — documentation accuracy gap
+
+**Description:** All three customer-managed KMS keys used for OpenMRS encryption include the default AWS root account condition in the key policy — permitting the AWS account root user to perform all KMS actions on the key. This is standard AWS KMS default behavior included to prevent permanent key inaccessibility if all other key administrators are removed. However, the SSP documentation for SC-28 and the KMS key policy descriptions do not acknowledge this condition. An assessor or auditor reviewing only the SSP would have an incomplete picture of who has key access.
+
+**Evidence:** KMS key policy documents reviewed [date]; SSP SC-28 implementation description compared.
+
+**Risk:** Low. The root account condition is a safety mechanism, not an access grant to any active user. Root account usage is separately controlled (MFA required, CloudTrail alert on root login) and root account use for KMS operations would be detected within 24 hours via the CloudTrail alert chain.
+
+**Remediation Recommendation:** Update SSP SC-28 implementation description to acknowledge the root account KMS condition, note that root account usage is separately monitored, and document the policy rationale (preventing permanent key inaccessibility). No KMS configuration change is required — this is a documentation update only.
+
+**POA&M Required:** No. Addressable as a minor SSP version update (v1.1.1) before the SAR is finalized.
 
 ---
+
+#### Finding A-3: Undocumented Service Account with Console Access and No MFA
+
+**Control:** IA-2 (Identification and Authentication), IA-2(1) (MFA for Privileged Accounts)
+
+**Severity:** Moderate
+
+**Finding Status:** New finding — not previously documented
+
+**Description:** An IAM user account created for a monitoring integration tool was found during the AWS Config compliance review with console access enabled and no MFA enrollment. The account was not included in the documented IAM entity inventory and was therefore not subject to the quarterly IAM review. Service accounts should use IAM access keys for programmatic access only; console access for service accounts is unnecessary and expands the attack surface. The absence of MFA on a console-enabled account means that credential compromise of this account would provide unauthenticated console access to the AWS environment.
+
+**Evidence:** AWS Config rule `mfa-enabled-for-iam-console-access` NON_COMPLIANT finding [date]; IAM console entity list compared against SSP IAM inventory [date]; IT Administrator interview confirming account creation circumstances [date].
+
+**Likelihood:** Low to Moderate. The account's access keys are used by a monitoring tool that may or may not be exposed to external networks. If the tool is internet-accessible and the keys are compromised, the console access without MFA becomes directly exploitable.
+
+**Impact:** High. Console access to the AWS environment would allow an attacker to view all configuration, access CloudTrail logs, potentially modify security controls, and work toward privilege escalation.
+
+**Risk:** Moderate.
+
+**Current Compensating Control:** CloudTrail logs all console login events; GuardDuty monitors for unusual API activity; ISSO weekly CloudTrail review would detect unauthorized console access within one week.
+
+**Remediation Recommendation:** Disable console access for the service account immediately (disable password, remove from console groups). Verify that the monitoring tool functions correctly using access keys only (it should). Add the service account to the IAM entity inventory. Add the account to the quarterly IAM review scope. See also Finding A-7 for the root cause process gap.
+
+**POA&M Required:** Yes. Target completion: 15 days from authorization (expedited given active exposure).
+
+---
+
+#### Finding A-4: Modification Audit Logs Do Not Capture Previous Values
+
+**Control:** AU-3 (Content of Audit Records)
+
+**Severity:** Low
+
+**Finding Status:** New finding — implementation versus SSP specification gap
+
+**Description:** OpenMRS application audit log entries for record modification events capture the action type (MODIFY), the user, the patient identifier, the timestamp, and the new value of the modified field — but do not capture the previous value. The SSP AU-3 implementation description specifies that modification records will include the previous value to support data integrity investigation. The current logging implementation does not meet this specification.
+
+**Evidence:** Audit log test in test environment [date]; test modification of encounter observation; CloudWatch log entry reviewed; SSP AU-3 implementation description compared.
+
+**Risk:** Low. The current logging fully supports access accountability (who accessed what record) and satisfies HIPAA audit control requirements (§164.312(b)). The gap is between the SSP's specified logging standard and the current implementation — not between HIPAA requirements and current implementation.
+
+**Remediation Options:** (1) Configure OpenMRS audit logging to capture previous values for modification events (technically complete solution); or (2) Update SSP AU-3 implementation description to reflect current logging capability and document why the current implementation satisfies HIPAA's audit control requirements without previous value capture (risk acceptance). Both options are defensible. The choice depends on the operational cost of implementing previous value logging.
+
+**POA&M Required:** Yes, pending remediation option selection. If option 2 is chosen, a minor SSP update is required rather than a POA&M item.
+
+---
+
+#### Finding A-5: Quarterly Access Review Template Does Not Prompt Role Accuracy Evaluation
+
+**Control:** AC-2 (Account Management), AC-2(4) (Automated Audit Actions)
+
+**Severity:** Low
+
+**Finding Status:** New finding — process design gap
+
+**Description:** The quarterly access review template asks reviewers to certify that continued access is needed (Yes/No) but does not explicitly prompt reviewers to evaluate whether the specific role assignment (Clinician, Nursing Staff, Administrative Staff) remains appropriate for the user's current job function. An access review that confirms account continuation without evaluating role accuracy will miss the scenario where a user's job function has changed but their access level has not been updated accordingly.
+
+**Evidence:** Quarterly access review template reviewed [date]; Health IT Manager interview [date] confirming that reviews focus on account continuation rather than role accuracy; two most recent quarterly review records examined.
+
+**Risk:** Low. The access review process is operating and accounts are being reviewed on schedule. The gap is the depth of the review rather than the absence of review.
+
+**Remediation Recommendation:** Update the quarterly access review template to add a second certification question: "Is the user's current role assignment (specify: Clinician / Nursing Staff / Administrative Staff / IT Administrator / ISSO) still appropriate for their current job function?" This is a template update — estimated effort: 1 hour.
+
+**POA&M Required:** No. Addressable as a process improvement implemented before the next quarterly review cycle.
+
+---
+
+#### Finding A-6: Security Awareness Training Has No Downtime Scenario Content
+
+**Control:** AT-2 (Security Awareness Training), CP-3 (Contingency Training)
+
+**Severity:** Low
+
+**Finding Status:** Strengthens existing POA&M items CP-3-01 and CP-2-01
+
+**Description:** The current security awareness training curriculum covers all six required content areas documented in the SSP but does not include any content specifically addressing what clinical staff should do if they cannot access OpenMRS during a shift — how to document patient encounters in downtime mode, how to report the outage, and when to seek additional guidance. The tabletop exercise after-action report identified that clinical staff lack familiarity with manual procedures, and the action item was to complete the clinical downtime procedures document. However, basic awareness guidance could be provided to clinical staff now, independent of the completion of the full downtime procedures document.
+
+**Evidence:** Training curriculum outline reviewed [date]; AT-4 training records reviewed [date]; tabletop after-action report reviewed [date] showing clinical staff unfamiliarity with manual registration.
+
+**Risk:** Low. The technical controls (availability monitoring, backup restoration) are implemented. The gap is in clinical staff preparedness to operate during a downtime event — which affects patient care continuity more than security posture directly.
+
+**Remediation Recommendation:** Add a basic downtime awareness module to the current training curriculum covering: how to recognize and report an EHR system outage; the expectation to use paper-based documentation during downtime; and who to contact for guidance. This basic module should not wait for the full CP-2 clinical downtime procedures document — a 10-minute awareness segment can be developed independently within 30 days.
+
+**POA&M Required:** Update to existing POA&M-CP3-01 — add interim training development as a near-term milestone separate from the full downtime procedures completion.
+
+---
+
+#### Finding A-7: IAM Entity Creation Not Listed as ISSO-Notification Change Management Trigger
+
+**Control:** CM-3 (Configuration Change Control)
+
+**Severity:** Moderate
+
+**Finding Status:** New finding — root cause of Finding A-3
+
+**Description:** The change management procedure (CM-3) lists security-relevant change categories requiring ISSO notification — including security group modifications, IAM policy changes, and encryption configuration changes. The procedure does not explicitly list the creation of new IAM entities (users, roles, service accounts) as a required notification category. This omission allowed the creation of the service account identified in Finding A-3 to proceed without ISSO awareness, preventing the account from being included in the IAM inventory and quarterly review scope.
+
+Findings A-3 and A-7 share the same root cause. Remediating A-3 (correcting the service account configuration) without remediating A-7 (updating the change management trigger list) leaves the organization exposed to the same pattern recurring — a future IAM entity created without ISSO notification would again miss the quarterly review process.
+
+**Evidence:** CM-3 procedure document reviewed [date]; IT Administrator interview [date] confirming IAM entity creation was not recognized as a security-relevant change requiring ISSO notification; A-3 finding circumstances.
+
+**Risk:** Moderate. The systemic process gap elevates risk beyond the individual instance of Finding A-3 — it represents a category of blind spots in the IAM governance program.
+
+**Remediation Recommendation:** Add IAM entity creation (new IAM users, roles, groups, and service accounts) to the CM-3 ISSO notification trigger list. Brief the IT Administrator on the updated procedure. Consider implementing an automated notification: AWS EventBridge rule triggering an SNS notification to the ISSO on `iam:CreateUser`, `iam:CreateRole`, and `iam:CreateGroup` API calls — providing automated notification that supplements the procedural requirement.
+
+**POA&M Required:** Yes. Target completion: 30 days from authorization.
+
+---
+
+### Section 4: POA&M Status Review
+
+The assessor reviewed all eight open POA&M items carried into the assessment. Findings:
+
+| POA&M Item | Assessor Status Assessment | Notes |
+|---|---|---|
+| POA&M-CP2-01 (Clinical downtime procedures) | Open — scope revision required | Draft is more limited than POA&M implies; target date and scope should be updated |
+| POA&M-CP3-01 (Clinical downtime training) | Open — interim milestone added | Finding A-6 recommends interim basic awareness module independent of full procedure |
+| POA&M-CP4-01 (Alternate site test) | Open — confirmed accurate | No alternate site test has been conducted |
+| POA&M-IR3-01 (Technical IR simulation) | Open — confirmed accurate | No technical simulation has been conducted |
+| POA&M-AU6-01 (Patient-record-level CloudWatch queries) | Open — confirmed accurate | Queries not yet fully specified |
+| POA&M-IR1-01 (HIPAA breach workflow in IRP) | Open — partially mitigated | Compliance Officer demonstrated accurate knowledge of four-factor test in interview; gap is documentation, not knowledge |
+| POA&M-PS4-01 (Backup designee for account deactivation) | Open — confirmed accurate | IT Admin backup role not formally designated |
+| POA&M-AT2-01 (Quarterly review calendar process) | Open — remediation in progress | Calendar reminder implemented; overdue users in 10-day remediation window |
+| POA&M-AU9-01 (CloudTrail tamper detection) | **Closed** — confirmed | Rules verified operational during technical assessment |
+
+---
+
+### Section 5: Overall Risk Posture and Authorization Recommendation
+
+**Controls Satisfied:** All High baseline controls not captured in findings above are implemented as documented and operating as intended. The core security architecture — encryption at rest and in transit, network boundary protection, MFA enforcement, audit logging and monitoring — is functioning effectively.
+
+**Risk Summary:**
+
+| Severity | Count | Authorization Impact |
+|---|---|---|
+| High | 0 | None — no immediate remediation required before authorization |
+| Moderate | 3 | Authorization conditions recommended |
+| Low | 4 | POA&M or process improvement — no authorization barrier |
+
+**Authorization Recommendation:** The assessor recommends **Conditional Authorization**. The system's core security controls are implemented and effective, supporting authorization to operate. The three Moderate findings represent IAM governance gaps — an IAM PassRole privilege escalation pathway (A-1), an undocumented service account with console access and no MFA (A-3), and the process gap that enabled A-3 to go undetected (A-7). These findings are related and collectively represent a pattern in the IAM governance program that should be addressed.
+
+The AO should consider establishing authorization conditions requiring:
+1. Remediation of Finding A-3 (service account console access disabled) within 15 days of authorization
+2. Remediation of Findings A-1 and A-7 (IAM PassRole restriction and CM-3 IAM creation trigger) within 30 days of authorization
+3. Revised CP-2 target date and scope description within 30 days of authorization reflecting the limited scope of the current draft
+
+The Low findings do not constitute authorization barriers. They should be tracked in the POA&M and addressed through normal operations.
+
+---
+
+## A Real-World Example That Made This Click
+
+While drafting the authorization recommendation section today — specifically the framing of conditional authorization versus unconditional authorization — I thought about the **2015 Office of Personnel Management (OPM) breach** and what the authorization record revealed.
+
+Post-breach investigation found that several OPM systems involved in the breach were operating on expired Authorizations to Operate — systems that had either never received a formal ATO or had not completed re-authorization after their previous ATO expired. Congressional testimony and the OIG reports documented that the authorization process had been treated as a checkbox rather than a living risk management activity.
+
+The contrast with what an AO's conditional authorization represents is instructive. A conditional authorization with specific, tracked remediation requirements — remediate Finding A-3 within 15 days, verify and report back — is a risk acceptance with accountability built in. The AO is not saying "this system is perfect." The AO is saying "this system's residual risk is acceptable for operation, provided these specific gaps are closed within these specific timelines, and I will verify they are."
+
+That accountability structure — authorization as an ongoing risk management commitment, not a one-time approval — is what prevents the drift that characterized the OPM authorization situation. The SAR and the conditions it generates are the mechanism that keeps the AO engaged with the system's actual security posture throughout the authorization period, not just at the moment of initial approval.
+
+---
+
+## What I Am Still Thinking About
+
+One structural question from today's SAR production: how should the SAR handle the relationship between Findings A-3 and A-7?
+
+I presented them as separate findings with a documented connection — which I think is correct. Each finding is independently remediable, has independent evidence, and requires independent remediation action. But the root cause linking is important for the AO to understand — without A-7's remediation, A-3's remediation is incomplete from a systemic perspective.
+
+Some SAR formats group related findings under a single finding with multiple components. Others present them separately with cross-references. The separate-with-cross-reference approach I used here feels right for this case — it gives the AO clear visibility into both the technical gap and the process gap, and makes clear that both require remediation. A grouped finding might obscure the fact that these are two distinct remediation actions requiring two distinct implementation steps.
+
+I want to add a "Finding Relationships" table to the SAR — a simple map that shows which findings share root causes, which POA&M items are affected by which findings, and which findings are likely to recur if only symptomatic remediation is applied. For seven findings this is manageable; for a larger assessment with twenty-plus findings, this kind of relationship mapping is essential for helping the AO and ISSO understand the security picture as a connected whole rather than an unrelated list.
+
+---
+
+## What's Next
+
+Day 62 covers the POA&M update following the SAR — integrating the assessment findings into the plan of action and milestones, updating existing items, and adding new ones. The POA&M is the system owner's formal commitment to remediate the gaps the SAR identified, with specific owners, timelines, and compensating controls documented for each item.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task A-4 Security Assessment Report](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-53A Rev 5 – Assessment Results Documentation](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [FedRAMP Security Assessment Report Template](https://www.fedramp.gov/documents-templates/)
+- [OPM Data Breach OIG Report – Authorization Program Findings](https://www.opm.gov/our-inspector-general/reports/2016/flash-audit-alert-management-of-opm-information-systems-security-program-4a-ci-00-16-048.pdf)
+- [NIST SP 800-30 Rev 1 – Risk Assessment Methodology for Finding Severity](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+
+---
+
+*#GRC #SecurityAssessmentReport #NISTRMF #SAR #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day61*
