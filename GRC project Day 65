@@ -1,112 +1,188 @@
-# Day 65: Task R-2 – Risk Analysis by the Authorizing Official (AO)
-
-Welcome to **Day 65** of my 100 Days of GRC learning journey. Today, I took on the perspective of the **Authorizing Official (AO)** and practiced the critical skill of **risk analysis**. After assembling the authorization package for our OpenMRS-on-AWS project, it’s time to determine whether the system’s residual risk is acceptable enough to move forward with an Authorization to Operate (ATO).
-
----
-
-##  What I Learned Today
-
-In the RMF **Task R-2**, the AO evaluates the **residual risk** associated with operating the system. This isn't a retest of the system, but rather a senior-level judgment based on the following documents:
-
--  **System Security Plan (SSP)**
--  **Security Assessment Report (SAR)**
--  **Plan of Action & Milestones (POA&M)**
--  **Executive Summary**
-
-As an AO, the primary question I must answer is:
-
-> "Can we live with the current level of risk, based on what we know?"
+# Day 65 – Task R-2: The AO's Risk Determination | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Key Concepts & Insights
+## The Authorization Decision
 
-###  The AO’s Role
+Day 64 produced the complete authorization package — SSP v1.1.3, post-remediation SAR, POA&M v2.0, executive summary, and a navigation guide mapping the AO's likely questions to specific package sections. The package was submitted to MyClinic's Authorizing Official: the Executive Director.
 
-- The AO uses the package to **make a formal risk determination**, not just for technical compliance but for **business and mission impact**.
-- Input may be gathered from stakeholders like the **CISO**, **Privacy Officer**, or **Risk Executive**, especially if enterprise or privacy-level risks are involved.
+Task R-2 is the AO's task, not the ISSO's. The AO receives the package, reviews it, asks questions, and makes a formal risk determination. Today I am documenting the R-2 process from both sides — what the AO is evaluating and how the ISSO supports that evaluation — because understanding the AO's perspective is essential for every piece of work that preceded this moment. Everything in the SSP, the SAR, and the POA&M was ultimately written to enable this decision.
 
-###  Residual Risk Analysis
-
-Residual risk is what **remains after all controls have been applied**. The AO must weigh:
-- Severity of remaining vulnerabilities (e.g., moderate or low)
-- The presence of active mitigation plans in the POA&M
-- The system's importance to the organization
-- The organization's **risk tolerance thresholds**
+I want to be direct about why this matters for how I think about GRC work: the authorization decision is not the finish line. It is a formal accountability checkpoint where a senior leader — not a security technician — accepts responsibility for the residual risk of operating a system. The ISSO's job through all of the preceding steps has been to give the AO the information needed to make that acceptance genuinely informed rather than administratively convenient. Today's write-up reflects what that looks like in practice.
 
 ---
 
-##  Case Study: OpenMRS on AWS
+## What I Worked On Today
 
-Let’s say our AO is **Dr. Tran**, the CTO of the healthcare NGO implementing OpenMRS. Here's how she might approach this task:
+NIST SP 800-37 Task R-2 requires the AO to review the authorization package, determine the risk to organizational operations and assets from operating the system, and make a risk determination. The AO may consult with other stakeholders — the Risk Executive, Privacy Officer, Legal Counsel — before reaching a determination. The AO's determination is documented in a formal risk determination statement that becomes part of the authorization record.
 
-1. **Review the Executive Summary**: Confirms no high-risk issues remain.
-2. **Dive into the SAR**: Validates that remaining findings (like lack of MFA on admin accounts) are well-documented and medium-risk.
-3. **Check the POA&M**: Confirms mitigation plans are in place for all open items, with acceptable timelines.
-
-Dr. Tran might reach out to the system security team for clarifications. For example:
-
-> _"You plan to enable MFA in 45 days – what safeguards are in place until then?"_
-
-We explain:
-- Admin access is currently IP-restricted.
-- MFA setup is already in testing phase.
-
-This dialogue ensures that **mitigation plans are realistic and active**, building trust in the process.
+Today I work through the AO review process for the MyClinic OpenMRS authorization — the questions the AO asks, the ISSO's responses, the additional consultation the AO undertakes, and the formal risk determination the AO reaches.
 
 ---
 
-##  Sample Risk Determination Statement
+## What Actually Clicked for Me
 
-> "The OpenMRS system presents a **moderate residual risk** to the organization’s operations and assets. All high-severity vulnerabilities have been remediated. Mitigation plans for moderate findings are documented in the POA&M and scheduled within 60 days."
+The insight that clarified Task R-2 today is understanding what "risk acceptance" actually means — and what it does not mean.
 
-This formal determination sets the stage for the next step: **risk response**.
+Risk acceptance is not the AO saying "this system is secure." It is the AO saying: "I have reviewed the evidence of this system's security posture, I understand the residual risks that remain, and I accept organizational responsibility for operating this system with those residual risks in place, subject to the remediation commitments in the POA&M."
 
----
+That distinction is important for several reasons. First, it means the AO's authorization is only as meaningful as the quality of the evidence they reviewed — which is why the SAR, SSP, and POA&M need to be honest documents, not optimistic ones. An AO who accepts risk based on a SAR that minimized findings has not genuinely accepted the actual risk; they have accepted a sanitized version of it. Second, it means the AO has an ongoing responsibility — not just at the moment of authorization, but throughout the authorization period — to stay informed about the system's security posture through the continuous monitoring program and POA&M status reports. Third, it means that if the system's risk profile changes materially — a new significant vulnerability, a breach, a major architecture change — the AO needs to be notified and the authorization may need to be revisited.
 
-##  Hands-On Exercise
-
-###  Pretending to be an AO
-
-Here are the three questions I would ask if I were an AO reviewing a web-based system:
-
-1. **What’s the worst-case scenario if this system is breached?**
-2. **Are there any open high-severity findings?**
-3. **Do mitigation efforts in the POA&M align with organizational risk policy and deadlines?**
-
-And here’s how I’d want them answered:
-- No high-risk vulnerabilities remain.
-- All moderate risks have mitigation milestones within 30–60 days.
-- Interim safeguards (like IP whitelisting, logging, alerts) are in place.
+Authorization is not a one-time event. It is a relationship between the AO and the system's risk posture that persists throughout the system's operational life.
 
 ---
 
-##  Reflection
+## The AO's Review Process — OpenMRS Authorization
 
-Switching into the AO mindset was a powerful learning experience.
+MyClinic's Authorizing Official is the Executive Director. The Executive Director has clinical and administrative responsibilities that extend far beyond the OpenMRS authorization. They are not a security technician. They understand organizational risk management, patient safety obligations, regulatory consequences, and resource constraints — and they will evaluate the authorization package through all of those lenses, not just a cybersecurity lens.
 
-As a builder or engineer, I tend to focus on **fixing problems** and **building functionality**.
-
-But as an AO, the lens is different: I now think in terms of **organizational impact, mission alignment**, and **risk tolerance**.
-
-This shift reminded me that **GRC professionals must bridge both perspectives**: technical precision and executive reasoning.
+The ISSO's communication with the AO during the R-2 review needs to meet the AO where they are: translating technical findings and security control language into organizational risk and business impact terms.
 
 ---
 
-##  What’s Next?
+### AO Review Session — Day 1: Executive Summary and SAR Review
 
-Tomorrow in **Day 66**, I’ll continue with **Task R-3 – Risk Response**. Now that Dr. Tran has made her determination, the next step is deciding: **accept, mitigate further, transfer, or reject** the risk. It’s time to turn insights into action. 💼
+The Executive Director read the executive summary and SAR findings summary before the first meeting with the ISSO. The meeting opened with three questions:
+
+**AO Question 1:** "The executive summary says three Moderate findings were resolved before submission. What were they, in plain terms?"
+
+*ISSO response:* "The first was that our IT Administrator's cloud account had a permission that could theoretically be used to grant themselves broader access than intended — a privilege escalation pathway. We fixed it by restricting exactly which functions that permission applies to. The second was an undocumented account — our IT Administrator created a monitoring tool account without telling me, and it ended up with broader access than it needed, including the ability to log into the AWS console without a second authentication factor. We disabled that console access and set up an automatic notification so I get alerted any time a new account is created in the future. The third was the underlying process gap that caused the second problem — our change management procedure didn't require notifying me when new accounts were created. Updated and fixed."
+
+*AO observation:* "So the IT Administrator created an account without security team awareness. Is that a personnel issue?"
+
+*ISSO response:* "Not in a disciplinary sense — it wasn't malicious, and the IT Administrator was fully cooperative when the finding came up in the assessment. It was a process design gap: the procedure didn't clearly enumerate all the change types that require my notification. We updated the procedure, briefed the IT Administrator, and implemented an automated alert as a backstop. The finding and its root cause are both closed."
+
+*AO note:* Satisfied with explanation. No personnel concern.
 
 ---
 
-##  Search Terms for Continued Learning
+**AO Question 2:** "The POA&M has one Moderate item — the clinical downtime procedures. Walk me through the patient safety implications."
 
-- “Authorizing Official risk determination”
-- “residual risk acceptance criteria”
-- “NIST RMF R-2 task guidance”
-- “Executive risk tolerance framework”
+*ISSO response:* "This is the item I want to make sure you understand clearly, because it's the most significant open risk from a patient care perspective. Our technical recovery capability is solid — if the system goes down, we can restore it from backup within four hours, and we've demonstrated that in quarterly restoration tests. The gap is what happens to patients during those four hours. We don't have fully documented and tested procedures for how clinical staff should operate — documenting encounters on paper, managing medications, handling lab results — when the EHR is unavailable. A draft exists, but it covers two of five functional areas and hasn't been reviewed by clinical leadership."
+
+*AO:* "What's the 90-day plan?"
+
+*ISSO:* "Milestone 1 is a clinical leadership review meeting in the first 15 days to scope all five functional areas and assign ownership. Milestones 2 and 3 are completing the draft and getting formal clinical leadership approval. Milestone 4 is a tabletop walkthrough with clinical staff. The 90-day target is achievable but requires the Health IT Manager's active engagement with clinical leadership — this is not something the ISSO can drive alone."
+
+*AO:* "I'll set a 45-day check-in to review progress on Milestone 2. I want the clinical leadership review scheduled within two weeks of today."
+
+*ISSO note:* AO engagement on CP-2 is exactly what this item needs — it requires organizational authority to convene clinical leadership, not just ISSO initiative. The AO's direct involvement transforms this from a security team to-do item into an organizational priority.
 
 ---
 
-📅 _Logged on: July 10, 2025_  
-🛡️ _#100DaysOfGRC #NISTRMF #OpenMRS #RiskManagement #CybersecurityLeadership_
+**AO Question 3:** "The SAR was done by an external firm. Are they independent, and do I need to worry about the quality of their work?"
+
+*ISSO response:* "Independence is documented in their engagement letter — no prior work with MyClinic, no involvement in our OpenMRS implementation. Their lead assessor holds CISA and CISSP certifications with documented healthcare security assessment experience. The assessment included actual technical testing in both the AWS console and the OpenMRS test environment — it was not just a document review. And the assessor found seven findings despite the thorough implementation work we had done, which I think validates that they were genuinely looking rather than confirming what we told them."
+
+*AO:* "Fair enough."
+
+---
+
+### AO Consultation — Privacy Officer
+
+The AO consulted the Privacy Officer before reaching a final determination. The Privacy Officer reviewed the SAR findings and POA&M with specific attention to ePHI exposure risks.
+
+**Privacy Officer assessment:**
+
+"The SAR confirmed that ePHI encryption at rest and in transit is implemented and verified — I'm satisfied that the data protection controls are in place. My specific concern is the clinical downtime procedures gap. During a downtime event, clinical staff operating on paper may create temporary records that are not subject to the same access controls as the EHR. Paper-based temporary records need a documented protocol for how they are handled — who can access them, how they are stored during the downtime period, and how they are reconciled into the EHR when the system is restored. This should be added to the CP-2 scope."
+
+*ISSO note:* The Privacy Officer raised a valid scope expansion for POA&M Item 001. Paper record handling during downtime is a PHI control gap that is distinct from the clinical operational procedure gap. Added to CP-2 milestone scope as a sixth functional area: paper record handling, access controls, and post-recovery reconciliation protocol.
+
+---
+
+### AO Consultation — Health IT Manager (System Owner)
+
+**System Owner input:**
+
+"I'm satisfied with the technical security posture — the encryption, the access controls, the monitoring are all working as designed. I want to be transparent about the CP-2 timeline: 90 days is achievable for the documentation, but clinical leadership engagement has historically been difficult to schedule. The AO's direct involvement in requiring the clinical leadership review within two weeks is the most important factor in keeping the timeline on track. I recommend the AO be briefed directly at the 45-day check-in rather than through the ISSO — that level of escalation path will keep the clinical leadership accountable."
+
+*AO note:* Agreed. 45-day check-in will be a direct briefing from the Health IT Manager, not an ISSO email report.
+
+---
+
+### AO Risk Determination Statement
+
+After reviewing the complete authorization package, consulting the Privacy Officer and System Owner, and conducting a direct review session with the ISSO, the Authorizing Official reached the following determination:
+
+---
+
+**RISK DETERMINATION STATEMENT**
+**System:** MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001)
+**Authorizing Official:** Executive Director, MyClinic
+**Date:** [authorization date]
+
+**Risk Determination:** The residual risk of operating the MyClinic OpenMRS Electronic Health Record System is **LOW TO MODERATE** and is acceptable for authorization to operate, subject to the conditions and commitments described below.
+
+**Basis for Determination:**
+
+The system's core security controls — encryption of ePHI at rest and in transit, multi-factor authentication, network boundary protection, audit logging and monitoring, and incident response capability — are implemented, verified by independent assessment, and operating as intended. The independent assessment identified no High-severity findings and three Moderate findings, all of which were remediated before this authorization package was submitted.
+
+The residual risk is concentrated in one area: clinical operational preparedness for EHR downtime events. The technical recovery capability (backup, restoration, RTO of 4 hours demonstrated) is in place. The gap is in documented and tested procedures for clinical staff to operate safely during the recovery window. This gap has patient care implications that elevate its significance beyond a standard compliance finding for a High-impact clinical system.
+
+The ten open POA&M items are acknowledged. Nine are Low severity with appropriate compensating controls. POA&M Item 001 (clinical downtime procedures) is Moderate severity and is the primary basis for the conditions below.
+
+**Authorization Decision:** AUTHORIZATION TO OPERATE — CONDITIONAL
+
+**Conditions:**
+
+*Condition 1 — Clinical Downtime Procedures (CP-2):*
+The clinical downtime procedures must be completed, reviewed by clinical leadership, and tested with clinical staff within 90 days of this authorization date. Progress will be reviewed directly by the Authorizing Official at a 45-day check-in. Clinical leadership review must be scheduled within 14 days of this authorization date.
+
+*Condition 2 — Paper Record Handling Protocol:*
+The CP-2 scope must include a paper record handling protocol covering: PHI access controls during downtime, paper record storage, and post-recovery reconciliation into the EHR. This was identified by the Privacy Officer as a PHI control gap during the R-2 consultation.
+
+*Condition 3 — POA&M Quarterly Reporting:*
+The ISSO will provide a POA&M status report to the Authorizing Official quarterly, beginning [date + 90 days]. The report will document all items closed, all items with revised target dates (with rationale), and any new items added through the continuous monitoring program.
+
+*Condition 4 — AO Notification for Material Risk Changes:*
+The ISSO will notify the Authorizing Official immediately if: a security incident affects patient data, a new High-severity vulnerability is identified, or any change to the system boundary, data types, or threat environment materially alters the system's risk profile. Any of these events may trigger an interim authorization review.
+
+**Authorization Period:** Three years from authorization date, subject to the conditions above and ongoing continuous monitoring. Annual review of the continuous monitoring program output and POA&M status will inform whether early re-authorization is warranted.
+
+**Authorizing Official Signature:** _______________________ Date: _______
+
+---
+
+## A Real-World Example That Made This Click
+
+The AO's question about the clinical downtime procedures and the Privacy Officer's expansion of that scope — to include paper record handling and post-recovery reconciliation — reminded me of the circumstances of the **2017 Nuance Communications ransomware attack**, which disrupted clinical documentation systems for several major health systems for weeks.
+
+Nuance provides transcription and clinical documentation services. The NotPetya ransomware that hit Nuance in June 2017 took their systems offline for over a month. Health systems that relied on Nuance for clinical documentation found themselves needing to document encounters through alternative means — and the organizations with tested downtime documentation procedures adapted significantly faster than those without them.
+
+But one of the less-discussed aspects of that incident was the paper-to-electronic reconciliation challenge after systems were restored. Weeks of paper-based encounter documentation needed to be entered into EHRs. The reconciliation process was labor-intensive, error-prone, and — in some cases — incomplete. Entries made during the downtime period on paper that were not fully reconciled into the EHR created gaps in the longitudinal patient record.
+
+The Privacy Officer's addition to the CP-2 scope — specifically the post-recovery reconciliation protocol — addresses exactly this risk. It is not enough to know how to document on paper during downtime; there needs to be a structured process for getting that documentation accurately back into the system when it is restored. The Nuance incident demonstrates that for extended downtime events, the reconciliation process is where data integrity risk accumulates, not just during the downtime period itself.
+
+---
+
+## What I Am Still Thinking About
+
+The conditional authorization with a 90-day CP-2 deadline — and the AO's decision to take a direct role in the 45-day check-in — raises a structural question I want to think through: what happens at day 91 if the CP-2 target is missed?
+
+The authorization decision does not automatically expire if a POA&M target date is missed. But a missed target date on the Moderate-severity condition is a material risk change that should trigger the Condition 4 AO notification. The AO should be informed that the condition has not been met, the reason for the delay, and the revised timeline.
+
+The AO then has options: accept the revised timeline and continue the authorization, impose a new deadline with explicit escalation consequences, require additional compensating controls during the extended remediation period, or in an extreme case, suspend authorization until the condition is met.
+
+For MyClinic, the most likely scenario if the 90-day deadline is missed is a revised timeline with additional compensating controls — not suspension, given that the technical recovery capability is in place and clinical staff are aware of the gap even without formal procedures. But the AO should make that determination explicitly rather than allowing the deadline to pass without acknowledgment. An unacknowledged missed POA&M deadline is exactly how authorization conditions become meaningless paperwork.
+
+I want to add a note to the continuous monitoring strategy — if any POA&M condition deadline is approaching within 30 days with the item still open, the ISSO generates an early warning to the AO. Proactive notification of a likely deadline miss is better than a post-deadline acknowledgment.
+
+---
+
+## What's Next
+
+Day 66 covers Task R-3 — the AO's risk response, which is the formal documentation of the authorization decision and communication of that decision to the system owner and other relevant stakeholders. The authorization to operate is a formal record that includes the risk determination statement, the authorization decision, the conditions, the authorization period, and the AO's signature. It is the document that officially permits the system to operate.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task R-2 Risk Determination](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-30 Rev 1 – Risk Determination Methodology](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [HHS OCR – HIPAA Risk Analysis and Risk Management Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/final-guidance-risk-analysis/index.html)
+- [Nuance Communications NotPetya Attack — Healthcare Impact Analysis](https://healthitsecurity.com/news/notpetya-cyberattack-impacted-nuance-communications-clinical-documentation)
+- [FedRAMP Authorization Decision Documentation Requirements](https://www.fedramp.gov/documents-templates/)
+
+---
+
+*#GRC #RiskDetermination #NISTRMF #TaskR2 #AuthorizingOfficial #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day65*
