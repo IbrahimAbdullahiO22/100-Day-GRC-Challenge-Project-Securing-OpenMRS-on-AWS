@@ -1,105 +1,360 @@
-# Day 63: Task A-6 – Prepare POA&M (Plan of Action & Milestones)
-
-Welcome to **Day 63** of my GRC journey. Today, I dove deep into one of the most critical components of the RMF process: the **Plan of Action and Milestones (POA&M)**. After conducting control assessments and documenting findings in the Security Assessment Report (SAR), the POA&M becomes our action blueprint. It's where strategy meets execution.
-
----
-
-##  What I Learned
-
-###  What is a POA&M?
-A **Plan of Action and Milestones** is a living document that:
-
-- Tracks **unresolved security weaknesses**.
-- Lays out **remediation steps**, **responsible parties**, and **target dates**.
-- Provides the Authorizing Official (AO) with confidence that issues are acknowledged and being addressed.
-
-> Think of it as a formal, auditable to-do list for risk mitigation. It brings visibility, accountability, and structure to remediation.
+#  Day 63 – Task A-6: Preparing the Post-Assessment POA&M | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Key Components of a POA&M
+## From Remediation to Formal Commitment
 
-| Field                     | Description                                                                 |
-|--------------------------|-----------------------------------------------------------------------------|
-| **POA&M ID**             | Unique identifier for tracking the finding                                  |
-| **Weakness**             | Brief summary of the issue                                                  |
-| **Control Reference**    | NIST 800-53 control or requirement associated with the issue                |
-| **Description**          | Detailed explanation of the vulnerability or deficiency                     |
-| **Risk Level**           | High / Moderate / Low                                                       |
-| **Point of Contact**     | Individual or team responsible for remediation                              |
-| **Planned Actions**      | Milestones outlining the fix strategy                                       |
-| **Target Completion Date** | Deadline for final resolution                                               |
-| **Status**               | Open, In Progress, Completed, Delayed, etc.                                |
-| **Comments**             | Any notes on progress, dependencies, or delays                             |
+Day 62 completed the pre-authorization remediation work — all three Moderate findings resolved before the authorization package was submitted, two Low findings resolved as documentation updates, and four Low findings appropriately deferred. The Security Assessment Report now reflects post-remediation status. Task A-6 produces the formal POA&M that will accompany the authorization package: a structured, evidence-backed commitment from the system owner to the AO about how and when the remaining open items will be addressed.
+
+The POA&M is not new to this project — we have been maintaining a running POA&M since Day 50, when the first gaps surfaced during SSP writing. What Task A-6 requires is a formal consolidation and update: incorporating the assessment findings that were deferred to the POA&M, updating existing items based on the assessor's status review, adding the CP-2 scope revision the assessor recommended, and producing a single coherent document that the AO can use as an input to the authorization decision.
+
+One thing I want to be direct about before getting into the entries: the original content for today described POA&M items for a default admin account with a weak password and unencrypted RDS snapshots. Those specific findings were corrected before Day 59's assessment even began — during Task I-1 implementation verification in Days 54 and 55. The POA&M I am producing today reflects the actual open items from this project's full arc, not hypothetical findings that were already resolved.
 
 ---
 
-##  Sample POA&M Entries from My OpenMRS Case Study
+## What I Worked On Today
 
-###  **POA&M ID: 63-1**
+Task A-6 requires the system owner and ISSO to prepare the POA&M for inclusion in the authorization package. The POA&M documents every open weakness with sufficient detail for the AO to understand: what the gap is, why it is not yet resolved, what the plan is to resolve it, who owns the plan, what the timeline is, and what compensating controls are in place while the gap remains open.
 
-- **Weakness:** Default admin account in OpenMRS not disabled (potential brute-force target)
-- **Control Reference:** AC-2 (Account Management) / IA-5 (Authenticator Management)
-- **Description:** The default admin account ("admin") was found active with a weak password.
-- **Risk Level:** High
-- **Point of Contact:** John Doe, Lead DevOps Engineer
-- **Planned Actions:**
-  - Milestone 1: Change default password to a complex one ✅ (Completed 07/06/2025)
-  - Milestone 2: Create a new admin account & disable the default account (Target: 04/27/2025)
-  - Milestone 3: Update documentation/scripts to remove default account dependencies (Target: 05/04/2025)
-- **Target Completion Date:** 05/04/2025
-- **Status:** In Progress
-- **Comments:** Waiting on vendor confirmation to fully remove the account. All other steps completed.
+Today I work through each open item — the four assessment findings deferred to POA&M and the seven existing POA&M items — and produce complete, well-structured entries for each.
 
 ---
 
-###  **POA&M ID: 63-2**
+## What Actually Clicked for Me
 
-- **Weakness:** Missing encryption on OpenMRS database backups (RDS snapshots)
-- **Control Reference:** SC-12 (Cryptographic Key Establishment)
-- **Risk Level:** Moderate
-- **Point of Contact:** Jane Smith, Cloud Architect
-- **Planned Actions:**
-  - Enable encryption for existing and future RDS snapshots
-  - Implement policy for default encryption of all AWS backups
-- **Target Completion Date:** 05/15/2025
-- **Status:** Open
-- **Comments:** Requires snapshot replacement and validation. Scheduled for next maintenance window.
+The insight that clarified POA&M writing today is the concept of the compensating control — and why it is not optional documentation.
+
+When the AO reviews a POA&M, they are not just asking "what gaps exist?" They are asking "what is the risk exposure during the period while this gap remains open?" The compensating control section of each POA&M entry answers that question. It tells the AO: we have identified this gap, we have a plan to close it, and in the meantime, here is what is in place to reduce the risk while the remediation is in progress.
+
+Without compensating controls documentation, the AO is being asked to authorize a system with acknowledged gaps and no information about what is protecting against those gaps in the interim. That is a much harder authorization decision. With compensating controls documented, the AO can evaluate whether the residual risk during the remediation period is acceptable given the specific protections in place.
+
+Writing the compensating control descriptions forced me to think carefully about each gap — not just "what will we fix?" but "what is actually protecting the system right now, while this gap exists?" That is a more rigorous and more honest risk picture than a POA&M that is purely a remediation schedule.
 
 ---
 
-##  Why POA&M Matters
+## POA&M — OpenMRS at MyClinic, Post-Assessment Version
 
-- **Shows ownership:** Everyone knows who’s responsible for what.
-- **Enables prioritization:** Focuses remediation efforts based on risk level.
-- **Drives accountability:** Regular updates force transparency and momentum.
-- **Supports ATO:** The AO relies on the POA&M as a key decision-making tool.
-
-> "What gets measured, gets managed." The POA&M ensures lingering security issues don't fall through the cracks.
-
----
-
-##  Hands-On Reflection
-Today I drafted a mini POA&M for two OpenMRS findings. This forced me to:
-- Evaluate real risk levels
-- Set achievable target dates
-- Break remediation into clear milestones
-
-I now understand that maintaining an accurate and living POA&M is not just good practice — it's essential for continuous monitoring and compliance.
+**Document version:** 2.0 (post-assessment update)
+**Date:** [authorization package date]
+**System:** MyClinic OpenMRS EHR (MCOPENMRS-001)
+**ISSO:** Information Security Lead
+**System Owner:** Health IT Manager
 
 ---
 
-##  Related Search Terms
-- "POA&M template FISMA"
-- "NIST POA&M management best practices"
-- "FedRAMP POA&M guidance"
-- "Tracking remediation actions POAM"
-- "Plan of Action and Milestones example report"
+### POA&M Item 001: Clinical Downtime Procedures — CP-2
+
+**Control Reference:** CP-2 (Contingency Plan), CP-3 (Contingency Training)
+
+**Weakness Summary:** Clinical downtime procedures for operating OpenMRS during an EHR outage are not complete, reviewed, or tested. A draft document exists but covers only two of approximately five functional areas (patient registration and basic encounter documentation). Medication management, laboratory result handling, and complex care plan continuity during downtime are not addressed. The draft has not been reviewed by clinical leadership.
+
+**Source:** Identified during Day 51 SSP administrative control implementation; confirmed and scope-updated by assessor in SAR (POA&M-CP2-01 scope description requires revision).
+
+**Risk Level:** Moderate (for a High-impact system where the EHR is used for real-time clinical decision support and no tested paper-based backup procedure exists, the availability of clinical downtime procedures is a patient safety issue, not just a compliance issue).
+
+**Point of Contact:** Health IT Manager (primary), ISSO (secondary)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Clinical leadership review of existing draft; identify all functional areas requiring procedures | [date + 15 days] | Open |
+| 2 | Complete draft for all five functional areas (registration, encounter documentation, medication management, lab result handling, care plan continuity) | [date + 45 days] | Open |
+| 3 | Clinical leadership formal review and approval | [date + 60 days] | Open |
+| 4 | Clinical staff tabletop walkthrough of complete procedures | [date + 75 days] | Open |
+| 5 | Procedures formally incorporated into contingency plan; CP-2 POA&M item closed | [date + 90 days] | Open |
+
+**Compensating Control:** Technical recovery procedures are fully implemented and tested (4-hour RTO demonstrated in quarterly restoration test). The IT Administrator can restore the OpenMRS system from backup within the documented RTO. The gap is in clinical operational procedures during the downtime period — the technical recovery capability is in place, but clinical staff preparedness for the interval between outage and recovery is not fully addressed.
+
+**AO Notes:** This is the highest-priority open POA&M item for a High-impact clinical system. The assessor noted that the scope of the existing draft is more limited than the prior POA&M entry implied. The 90-day target represents an aggressive but achievable timeline given the clinical leadership engagement required.
 
 ---
 
-Stay tuned for **Day 64**, where we move into the **Authorize** phase and learn how to turn all of this work into a green light for production!
+### POA&M Item 002: Clinical Downtime Training — CP-3
+
+**Control Reference:** CP-3 (Contingency Training), AT-3 (Role-Based Training)
+
+**Weakness Summary:** Clinical staff have not received formal training on downtime procedures because the downtime procedures (POA&M Item 001) are not complete. Additionally, the current security awareness training curriculum has no module covering basic downtime awareness — what clinical staff should do if they cannot access OpenMRS during a shift, even at a basic level.
+
+**Source:** Identified during Day 51 SSP administrative control implementation; SAR Finding A-6 identified that interim basic downtime awareness content could be provided independently of the full procedure completion.
+
+**Risk Level:** Low (with the interim milestone added; assessment Finding A-6 strengthens the characterization of this gap).
+
+**Point of Contact:** ISSO (interim awareness module), Health IT Manager (full role-based training)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Develop basic downtime awareness module (10-15 minutes): recognize and report outage, expectation of paper documentation, who to contact | [date + 30 days] | Open |
+| 2 | Add interim awareness module to all-staff training curriculum; assign to active users | [date + 35 days] | Open |
+| 3 | Develop full role-based downtime training based on completed CP-2 procedures | [date + 100 days — dependent on POA&M 001 Milestone 3] | Open — dependent |
+| 4 | Deliver full downtime training to clinical staff; record completion | [date + 110 days] | Open — dependent |
+
+**Compensating Control:** ISSO briefed all active users on the availability of IT support during system outages at the most recent quarterly all-staff communication. Verbal awareness exists even without formal training documentation.
 
 ---
 
-#GRC #RMF #NIST80053 #CybersecurityLeadership #POAM #OpenMRS #Day63
+### POA&M Item 003: Alternate Processing Site Test — CP-4
+
+**Control Reference:** CP-4 (Contingency Plan Testing), CP-7 (Alternate Processing Site)
+
+**Weakness Summary:** An alternate processing site arrangement exists (documented AWS alternate region configuration) but failover to the alternate site has not been tested. Quarterly restoration tests verify data recovery capability but test restoration to the primary region, not failover to the alternate region. The RMF High baseline requires testing that demonstrates the alternate processing capability is actually functional.
+
+**Source:** Identified during Day 51; confirmed accurate by assessor.
+
+**Risk Level:** Low (primary region recovery is tested and functional; alternate site gap is a redundancy assurance gap, not a primary recovery gap).
+
+**Point of Contact:** IT Administrator (technical test), ISSO (documentation and coordination)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Document alternate site failover procedure as a testable procedure (specific steps, verification criteria) | [date + 30 days] | Open |
+| 2 | Schedule alternate site failover test in a maintenance window | [date + 45 days] | Open |
+| 3 | Execute alternate site failover test; document results including failover time and data integrity verification | [date + 60 days] | Open |
+| 4 | POA&M item closed; results incorporated into contingency plan | [date + 75 days] | Open |
+
+**Compensating Control:** Primary region backup and restoration is tested quarterly and functional. If the primary region becomes unavailable, patient care can continue on paper downtime procedures (per CP-2 completion timeline) while alternate site restoration is executed. RTO for alternate site restoration is estimated at 6-8 hours based on untested assumptions — the test will confirm or revise this estimate.
+
+---
+
+### POA&M Item 004: Full Technical Incident Response Simulation — IR-3
+
+**Control Reference:** IR-3 (Incident Response Testing), IR-3(2) (Coordination with Related Plans)
+
+**Weakness Summary:** The IR-3 tabletop exercise was conducted and produced valuable findings incorporated into the IRP. The High baseline requires testing that includes technical simulation — not just tabletop discussion but actual execution of containment and eradication procedures in a test environment. No technical simulation has been conducted.
+
+**Source:** Identified during Day 51; confirmed accurate by assessor.
+
+**Risk Level:** Low (tabletop testing is complete; the gap is the more rigorous technical simulation level of testing).
+
+**Point of Contact:** ISSO (exercise design and execution), IT Administrator (technical components)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Design technical simulation scenario (e.g., simulated compromised EC2 instance requiring isolation, IAM credential revocation, and system restoration) | [date + 30 days] | Open |
+| 2 | Execute technical simulation in a test environment — practice isolation procedures, credential revocation, log preservation, and escalation notifications | [date + 60 days] | Open |
+| 3 | After-action review; document findings; update IRP as needed | [date + 75 days] | Open |
+| 4 | POA&M item closed | [date + 90 days] | Open |
+
+**Compensating Control:** Tabletop testing has been completed with documented after-action improvements incorporated into the IRP. GuardDuty and Security Hub provide automated detection and alerting. Runbook documentation for common incident scenarios is maintained in the ISSO's operational documentation.
+
+---
+
+### POA&M Item 005: Patient-Record-Level CloudWatch Anomaly Queries — AU-6
+
+**Control Reference:** AU-6 (Audit Log Review, Analysis, and Reporting), AU-6(1) (Automated Process Integration)
+
+**Weakness Summary:** CloudWatch log metric filters and alarms are configured for authentication anomalies (failed login spikes) and application errors. However, patient-record-level anomaly detection — queries that would alert on unusual access patterns such as a single user accessing an atypically large number of patient records in a short window — has not been fully specified or implemented. This type of insider threat detection is particularly relevant for a healthcare EHR.
+
+**Source:** Identified during Day 52 continuous monitoring strategy work; confirmed accurate by assessor.
+
+**Risk Level:** Low (standard authentication and application monitoring is in place; the gap is a more sophisticated insider threat detection capability layer).
+
+**Point of Contact:** ISSO (query design), IT Administrator (CloudWatch implementation)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Define anomaly detection criteria: what constitutes an unusual patient record access pattern for MyClinic's clinical environment (e.g., >50 distinct patient records accessed by a single user in a 4-hour window) | [date + 30 days] | Open |
+| 2 | Implement CloudWatch Logs Insights queries and metric filters for the defined criteria | [date + 45 days] | Open |
+| 3 | Configure SNS alarms for threshold breaches; test with synthetic access pattern | [date + 60 days] | Open |
+| 4 | POA&M item closed; anomaly detection criteria documented in continuous monitoring strategy | [date + 75 days] | Open |
+
+**Compensating Control:** All patient record accesses are logged in the OpenMRS application audit log with user identifier, patient MRN, action type, and timestamp. Manual review of access patterns is possible on demand for specific investigation needs. ISSO's weekly CloudTrail review would surface any large-scale anomalous access events visible at the infrastructure level.
+
+---
+
+### POA&M Item 006: HIPAA Breach Determination Workflow in IRP — IR-1
+
+**Control Reference:** IR-1 (Incident Response Policy and Procedures), IR-6 (Incident Reporting)
+
+**Weakness Summary:** The Incident Response Plan does not include a formal HIPAA breach determination workflow — a checklist that walks the ISSO and Compliance Officer through the four-factor test to determine whether a security incident involving ePHI constitutes a reportable breach under HIPAA. The assessor's interview with the Compliance Officer confirmed that the knowledge exists; the gap is documentation rather than capability.
+
+**Source:** Identified during Day 51; assessor interview confirmed the gap is documentation, not knowledge.
+
+**Risk Level:** Low (Compliance Officer demonstrated accurate understanding of four-factor test in interview; the undocumented process is unlikely to be executed incorrectly given this knowledge, but the documentation gap means a future Compliance Officer or ISSO relying on the IRP alone would not find the workflow).
+
+**Point of Contact:** Compliance Officer (content), ISSO (IRP update)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Compliance Officer drafts HIPAA breach determination checklist (four-factor test, risk assessment documentation template, notification timeline decision tree) | [date + 20 days] | Open |
+| 2 | ISSO incorporates checklist into IRP as Appendix B; IRP version updated | [date + 30 days] | Open |
+| 3 | Health IT Manager and Executive Director review and approve updated IRP | [date + 45 days] | Open |
+
+**Compensating Control:** Compliance Officer has demonstrated accurate working knowledge of the HIPAA breach determination process. Any incident involving ePHI will involve the Compliance Officer in the response process per the current IRP.
+
+---
+
+### POA&M Item 007: Backup Designee for Account Deactivation — PS-4
+
+**Control Reference:** PS-4 (Personnel Termination), AC-2 (Account Management)
+
+**Weakness Summary:** The account deactivation procedure requires the ISSO to deactivate all accounts within 4 hours of receiving a termination notification. No formally designated backup for this function exists. If the ISSO is unavailable at the time of a termination notification — travel, illness, personal emergency — the 4-hour target may be missed with no documented escalation path.
+
+**Source:** Identified during Day 55 administrative control verification; near-miss on 4-hour target for one termination.
+
+**Risk Level:** Low (the 4-hour target was achieved in all documented cases; the gap is the absence of a formal backup designation rather than an active failure).
+
+**Point of Contact:** ISSO (procedure update), IT Administrator (backup role)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Document three-tier deactivation matrix: ISSO primary; IT Administrator backup (with ISSO notification); Health IT Manager tertiary escalation (with AO notification if reached) | [date + 15 days] | Open |
+| 2 | IT Administrator briefed on backup deactivation procedure; access to account deactivation functions verified | [date + 20 days] | Open |
+| 3 | Procedure incorporated into PS-4 implementation documentation; SSP updated | [date + 30 days] | Open |
+
+**Compensating Control:** ISSO has always been reachable within the 4-hour window to date. ISSO carries a mobile device with SMS notification for HR termination alerts outside business hours.
+
+---
+
+### POA&M Item 008: Quarterly Training Compliance Review Process — AT-2
+
+**Control Reference:** AT-2 (Security Awareness Training), AT-4 (Training Records)
+
+**Weakness Summary:** The quarterly LMS compliance review was not executed on schedule for one quarter, resulting in overdue training users going undetected for an extended period. A calendar recurring reminder was implemented during Task I-1 remediation. The [N] users identified as overdue during the Task I-1 review completed training within the 10-business-day remediation window (verified during assessment).
+
+**Source:** Identified during Day 55; AT-2 gap confirmed by assessor; overdue user remediation confirmed complete.
+
+**Risk Level:** Low (process improvement item; the overdue users have completed training; the calendar reminder is in place).
+
+**Point of Contact:** ISSO
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Execute first post-reminder quarterly review on schedule; confirm all users current | [next quarterly review date] | Open — monitoring |
+| 2 | If first review executes on schedule with no overdue users, POA&M item closed | [next quarterly review date + 5 business days] | Open — monitoring |
+
+**Compensating Control:** Calendar reminder implemented. All active users are currently training-current as of [date]. LMS completion records are auditable.
+
+---
+
+### POA&M Item 009: Modification Audit Log Previous Value Capture — AU-3
+
+**Control Reference:** AU-3 (Content of Audit Records)
+
+**Weakness Summary:** OpenMRS application audit log entries for record modification events do not capture the previous value of modified fields — only the new value. The SSP AU-3 implementation description specified previous value capture as part of the modification record. The current implementation satisfies HIPAA audit control requirements (§164.312(b)) but does not meet the SSP's specified standard.
+
+**Source:** SAR Finding A-4 (new finding from assessment).
+
+**Risk Level:** Low (HIPAA compliance gap: none; SSP specification gap: yes).
+
+**Remediation Options Under Evaluation:**
+- Option A: Configure OpenMRS audit logging to capture previous values (technically complete)
+- Option B: Update SSP AU-3 implementation description to reflect current capability as HIPAA-sufficient (risk acceptance with documented rationale)
+
+**Point of Contact:** ISSO (decision coordination), Compliance Officer (HIPAA sufficiency review), IT Administrator (Option A technical feasibility assessment)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Compliance Officer confirms HIPAA sufficiency of current logging (or identifies HIPAA gap); IT Administrator assesses Option A implementation effort | [date + 20 days] | Open |
+| 2 | ISSO and Health IT Manager select remediation option based on assessment | [date + 30 days] | Open |
+| 3 | Selected option implemented (configuration change or SSP update) | [date + 60 days] | Open |
+
+**Compensating Control:** Current logging provides full access accountability — who accessed which patient record, when, from where, and with what outcome. This satisfies HIPAA's audit control requirements for investigation and accountability purposes.
+
+---
+
+### POA&M Item 010: Access Review Template Role Accuracy Prompt — AC-2
+
+**Control Reference:** AC-2 (Account Management), AC-2(4) (Automated Audit Actions)
+
+**Weakness Summary:** The quarterly access review template prompts reviewers to certify whether continued access is needed but does not explicitly prompt evaluation of whether the specific role assignment (Clinician, Nursing Staff, Administrative Staff) remains appropriate for the user's current job function. SAR Finding A-5 identified this process design gap.
+
+**Source:** SAR Finding A-5 (new finding from assessment).
+
+**Risk Level:** Low (access reviews are occurring on schedule; the gap is the depth of evaluation, not the absence of review).
+
+**Point of Contact:** ISSO (template update)
+
+**Planned Milestones:**
+
+| Milestone | Description | Target Date | Status |
+|---|---|---|---|
+| 1 | Update quarterly access review template to add role accuracy certification question | [date + 15 days] | Open |
+| 2 | Brief Health IT Manager on updated template and role accuracy evaluation expectation | [date + 20 days] | Open |
+| 3 | First quarterly review using updated template completed; POA&M item closed | [next quarterly review date] | Open |
+
+**Compensating Control:** ISSO reviews the complete user list independently of the Health IT Manager certification — any role assignment that appears inconsistent with the user's job title would be flagged for follow-up.
+
+---
+
+## POA&M Summary Table
+
+| Item | Control | Severity | Owner | Target | Status |
+|---|---|---|---|---|---|
+| 001 | CP-2 | Moderate | Health IT Manager | 90 days | Open |
+| 002 | CP-3 / AT-3 | Low | ISSO / HIT Mgr | 110 days | Open |
+| 003 | CP-4 / CP-7 | Low | IT Admin | 75 days | Open |
+| 004 | IR-3 | Low | ISSO | 90 days | Open |
+| 005 | AU-6 | Low | ISSO | 75 days | Open |
+| 006 | IR-1 | Low | Compliance Officer | 45 days | Open |
+| 007 | PS-4 | Low | ISSO | 30 days | Open |
+| 008 | AT-2 | Low | ISSO | Next QR cycle | Open — monitoring |
+| 009 | AU-3 | Low | ISSO | 60 days | Open |
+| 010 | AC-2 | Low | ISSO | Next QR cycle | Open |
+
+**Closed items since last version:**
+- POA&M-AU9-01: CloudTrail tamper detection alerts — Closed during Task I-1 [date]
+- Findings A-1, A-3, A-7: All resolved pre-authorization during Task A-5
+
+**Open Moderate items:** 1 (CP-2 clinical downtime procedures)
+**Open Low items:** 9
+
+---
+
+## A Real-World Example That Made This Click
+
+While writing the compensating control documentation for POA&M Item 001 (clinical downtime procedures) today, I found myself thinking carefully about how to articulate the residual risk during the remediation period — and the right real-world example came from the **2017 WannaCry ransomware attack on the UK National Health Service**.
+
+The WannaCry attack affected approximately a third of NHS England trusts, causing widespread EHR outages. In trusts where clinical downtime procedures were documented and regularly drilled, clinical staff reverted to paper-based workflows within minutes — patients continued to be seen, medications were managed from physical records, and the operational impact, while significant, was manageable. In trusts without tested downtime procedures, clinical staff were uncertain how to proceed without the EHR — some appointments were cancelled, some clinical decisions were delayed, and the disruption was substantially greater.
+
+The NHS WannaCry experience illustrates exactly why POA&M Item 001 carries a Moderate risk rating rather than Low, even though the technical recovery capability is in place. Technical recovery addresses the time to restore the EHR. Clinical downtime procedures address what happens to patients during that recovery window. For a system categorized as High for availability specifically because it is used for real-time clinical decision support, the 90-minute to 4-hour window between an outage and recovery is clinically significant — and untrained clinical staff in that window is a patient safety gap, not just a compliance gap.
+
+That is why Item 001 is the highest-priority open POA&M item and why the 90-day target is described as aggressive but important, not flexible.
+
+---
+
+## What I Am Still Thinking About
+
+One structural question from today's POA&M work: what is the right review cadence for the AO to stay informed about POA&M status during the authorization period?
+
+NIST SP 800-137 (Continuous Monitoring) provides guidance that POA&M items should be reviewed regularly — monthly or quarterly depending on severity — and that the AO should be notified when items are closed, when target dates are revised, or when new items are added. For MyClinic, a quarterly POA&M status report to the AO feels right — short enough to maintain accountability, infrequent enough not to create administrative burden that overshadows the actual remediation work.
+
+The quarterly POA&M status report should include: items closed since the last report (with evidence references), items revised (with rationale for any target date changes), and any new items added through the continuous monitoring process. It should be a one-page summary with the full POA&M attached as a reference — not a lengthy narrative that buries the key status information in prose.
+
+I want to add a standing quarterly POA&M review to the continuous monitoring calendar — the same calendar that tracks quarterly restoration tests, access reviews, and vulnerability scans. Making POA&M reporting a calendar-driven process rather than a discretionary activity is the same discipline that fixed the AT-2 quarterly training review gap. Process regularity is what closes the gap between policy and practice.
+
+---
+
+## What's Next
+
+Day 64 enters the Authorize step — the sixth step of the NIST RMF. The authorization package — SSP, SAR, POA&M — is submitted to the AO, who reviews the documentation, evaluates the residual risk, and makes the authorization decision. Understanding what the AO is looking for, how the authorization decision is structured, and what Authorization to Operate actually means is the focus of Day 64.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task A-6 and POA&M Requirements](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [OMB Memorandum M-02-01 – POA&M Guidance](https://www.whitehouse.gov/sites/whitehouse.gov/files/omb/memoranda/2001/m01-24.pdf)
+- [FedRAMP POA&M Template and Guidance](https://www.fedramp.gov/documents-templates/)
+- [NHS WannaCry Attack — National Audit Office Report](https://www.nao.org.uk/reports/investigation-wannacry-cyber-attack-and-the-nhs/)
+- [NIST SP 800-137 – Information Security Continuous Monitoring](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+
+---
+
+*#GRC #POAandM #NISTRMF #TaskA6 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day63*
