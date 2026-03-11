@@ -1,161 +1,410 @@
-# Day 58 – Plan the Attack (Plan the Assessment, That Is!)
-
-Welcome to Day 58 of my 100 Days of GRC journey. After building and documenting controls for OpenMRS on AWS, it’s time to step into the **Assess** phase of the NIST RMF. Today’s focus is **Task A-2: Develop the Assessment Plan** — the roadmap that guides how our security controls will be evaluated.
-
----
-
-##  Objectives for the Day
-
-- Understand the purpose and importance of an Assessment Plan.
-- Learn what goes into the plan: scope, schedule, roles, methods, and boundaries.
-- Apply NIST SP 800-53A methods — **Examine**, **Interview**, **Test** — in designing my approach.
-- Draft a sample plan tailored to my OpenMRS on AWS deployment.
+#  Day 58 – Task A-2: Developing the Security Assessment Plan | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## � What Is an Assessment Plan?
+## From Assessor Selection to Assessment Planning
 
-An **Assessment Plan** is a formal document that outlines **what will be tested, how it will be tested, who will test it, and when**. It removes guesswork and ensures transparency and alignment between the assessor and system owner.
+Day 57 selected the assessor — an external healthcare-focused security assessment firm with AWS competency and NIST 800-53A assessment methodology experience. Task A-2 produces the Security Assessment Plan (SAP): the formal document that defines what will be assessed, how each control will be evaluated, what evidence will be collected, what the rules of engagement are, and what the assessment team will deliver.
 
-The purpose isn’t just formality — it sets the tone for the engagement, protects the system from unintentional disruptions, and ensures the assessor’s efforts focus on **what matters most**.
+The SAP is not a formality — it is a contract between the assessor and the system owner that sets expectations, prevents misunderstandings, and protects both parties. A well-developed SAP enables the assessor to conduct a focused, efficient evaluation. A poorly developed SAP produces an assessment that is either too shallow (misses important controls) or too broad (spends time on controls that do not warrant deep investigation), and creates disputes at the end when the deliverables do not match expectations.
 
----
-
-## � What Goes Into a Solid Assessment Plan?
-
-### 🔍 Scope
-
-> Defines what’s in and out of bounds.
-
-- In-Scope: OpenMRS web application, AWS infrastructure (EC2, RDS, S3), IAM roles, backups, encryption.
-- Out-of-Scope: Physical facility controls, local clinic LAN devices.
+For OpenMRS at MyClinic, the SAP needs to be calibrated to a High-impact system assessment — comprehensive enough to give the AO confidence that the authorization decision is based on a thorough evaluation, but scoped to the actual system boundary and control set without unnecessary scope creep.
 
 ---
 
-###  Assessment Team & Roles
+## What I Worked On Today
 
-| Name         | Role                          |
-|--------------|-------------------------------|
-| Jane Doe     | Lead Assessor (External SME)  |
-| Bob Smith    | System Owner (Clinic IT Lead) |
-| Alice Wang   | AWS Engineer (Support)        |
+NIST SP 800-37 Task A-2 requires the assessor to develop the security assessment plan based on the SSP and the assessment objectives. The SAP is reviewed and approved by the system owner and AO before assessment activities begin. Today I work through each component of the SAP for the OpenMRS assessment — scope, objectives, team and roles, schedule, assessment procedures for key control families, rules of engagement, and reporting requirements.
 
 ---
 
-###  Schedule and Logistics
+## What Actually Clicked for Me
 
-| Date       | Activity                                      |
-|------------|-----------------------------------------------|
-| Oct 5      | Assessor off-site document review             |
-| Oct 8      | Interviews (OpenMRS Admin, Clinic Physician)  |
-| Oct 9      | Technical testing of AWS setup (staging only) |
-| Oct 12     | Preliminary results and findings discussion   |
+The insight that clarified SAP development today is understanding the relationship between the SAP and NIST SP 800-53A.
 
-**Logistics Notes:**
+SP 800-53A is the companion document to SP 800-53 that defines the assessment procedures for each control. For every control in SP 800-53, SP 800-53A defines: the assessment objectives (what the assessor is trying to determine), and the assessment methods and objects (examine what documents, interview which roles, test what system behaviors).
 
-- Read-only IAM credentials provisioned for Jane.
-- Non-production OpenMRS staging account for safe testing.
-- Interviews scheduled outside clinic busy hours.
+The SAP does not rewrite SP 800-53A — it applies SP 800-53A to the specific OpenMRS system. For each control, the SAP specifies: which SP 800-53A assessment objects apply to this system (e.g., the OpenMRS authentication configuration, not a generic authentication system), which interview subjects are relevant (the ISSO and IT Administrator, not a generic "system administrator"), and what specific test scenarios are appropriate for this deployment (test TOTP MFA enforcement in the OpenMRS test environment, not generic MFA testing).
+
+This tailoring is what makes the SAP useful rather than a boilerplate document. An assessor working from SP 800-53A without a tailored SAP would need to figure out the OpenMRS-specific assessment objects themselves — increasing assessment time and creating risk that important system-specific behaviors are missed. A well-developed SAP transfers that system knowledge from the ISSO to the assessor before testing begins.
 
 ---
 
-###  Assessment Methods by Control
-
-Below are selected examples using the **Examine / Interview / Test** methods from NIST 800-53A:
-
-#### **AC-2 – Account Management**
-
-- **Examine**: Review OpenMRS user list, AWS IAM users/roles, audit logs.
-- **Interview**: Ask Bob how onboarding/offboarding happens.
-- **Test**: Try logging in with a disabled OpenMRS account (test user).
-
-#### **CM-2 – Configuration Baseline**
-
-- **Examine**: Check baseline docs, compare with actual patch levels.
-- **Interview**: Speak with Alice about patch tracking and documentation.
-- **Test**: Validate installed packages on EC2 (read-only commands).
-
-#### **SI-2 – Malware Defense**
-
-- **Examine**: Review deployment of AWS Inspector or antivirus software.
-- **Interview**: Ask about update frequency and scan cadence.
-- **Test**: Drop EICAR test file in a secure environment to verify detection.
+## Security Assessment Plan — OpenMRS at MyClinic
 
 ---
 
-### ⚖ Rules of Engagement
+### Section 1: Assessment Overview
 
-- **No testing on production** unless explicitly approved.
-- **No exploitation** of vulnerabilities — only discovery and reporting.
-- **Read-only scans only**, staged in test environment.
-- All activities are **pre-coordinated** — no surprise testing.
+**System Name:** MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001)
 
----
+**Assessment Type:** Initial Authorization Assessment — formal NIST SP 800-53A assessment supporting ATO decision
 
-###  Reporting & Sign-Off
+**Impact Level:** HIGH
 
-- Assessor will deliver report by **Oct 15**.
-- Report includes: Executive summary, control-by-control findings, risk ratings, and actionable remediation guidance.
-- Plan to be signed by system owner and reviewed by governance lead or CISO.
+**Assessment Basis:** NIST SP 800-53 Rev 5 High Baseline, tailored per SSP version 1.1 dated [date]
 
----
+**SSP Reference:** MyClinic OpenMRS SSP v1.1 [date] — provided to assessor as primary assessment reference
 
-##  Hands-On Exercise – My Planning Snapshot
+**Assessment Authority:** Authorizing Official — MyClinic Executive Director
 
-###  Controls I Want Assessed
+**System Owner:** Health IT Manager
 
-- **User Access & Permissions** – AC-2
-- **Data Encryption (At Rest & In Transit)** – SC-12 / SC-13
-- **Audit Logging & Monitoring** – AU-2 / AU-6
-- **Backup & Recovery** – CP-9 / CP-10
-- **Web App Security (OWASP Alignment)** – SI-10
+**ISSO:** Information Security Lead
 
-###  Methods
+**Assessment Organization:** [External firm name] — Lead Assessor [name], credentials [CISA, CISSP, AWS Security Specialty]
 
-| Control                      | Methods                      |
-|-----------------------------|------------------------------|
-| User Access & Permissions   | Examine, Interview, Test     |
-| Data Encryption             | Examine                      |
-| Audit Logging               | Examine, Interview           |
-| Backup & Recovery           | Interview, Examine           |
-| Web App Security            | Test (Staging Only), Examine |
-
-###  Logistics Prep
-
-- Provision test user accounts.
-- Ensure CloudTrail logs and backup configs are accessible.
-- Schedule 30-minute Q&A with OpenMRS users and AWS engineer.
-
-###� Mini Timeline
-
-- **Day 1**: Kickoff, interviews, documentation review.
-- **Day 2**: Technical testing on AWS and OpenMRS (in staging).
-- **Day 3**: Debrief and review preliminary report.
+**Independence Basis:** External firm; no prior engagement with MyClinic; no involvement in OpenMRS design, implementation, or documentation. Independence documented in assessor engagement letter.
 
 ---
 
-##  Reflection
+### Section 2: Assessment Scope
 
-Writing the plan made me feel more **in control** of the process. Instead of worrying about “what the assessor might look for,” I now feel prepared and organized. This planning step showed me the **value of structure in security governance**. I especially appreciated aligning my control tests with the **Examine/Interview/Test** framework — it adds rigor and clarity.
+**In-Scope Systems and Components:**
 
-I also realized the value of **rules of engagement**. It protects both the system and the assessor. Just like a good contract, boundaries create confidence.
+| Component | Description | Assessment Approach |
+|---|---|---|
+| EC2 instance [openmrs-prod] | OpenMRS application server; Ubuntu Linux; Apache Tomcat | Infrastructure review in production (read-only) + application testing in test environment |
+| RDS instance [openmrs-prod-db] | MySQL database; primary patient data store | Configuration review in production (read-only); no direct database query access |
+| S3 bucket [openmrs-backups] | Encrypted backup storage | Configuration and policy review in production (read-only) |
+| AWS account configuration | IAM policies, CloudTrail, GuardDuty, Config, Security Hub, KMS | Configuration review in production (read-only) |
+| OpenMRS application (test instance) | Production-equivalent configuration; synthetic test data | Application-level control testing |
+| Clinic workstations (sample) | Two representative workstations for endpoint control verification | Physical inspection and configuration review |
+| Administrative procedures | Policies, training records, IR plan, change log, monitoring records | Document review and interviews |
+
+**Out-of-Scope:**
+
+- AWS physical data center infrastructure (assessed via AWS SOC 2 certification review — common inherited controls)
+- Clinic facility physical security beyond workstation area (assessed separately under physical security program)
+- Laboratory Information System infrastructure (external — assessed via BAA and ISA review only)
+- OpenMRS community source code development processes (out of MyClinic's control)
+- Network infrastructure between clinic and internet (ISP-managed — out of MyClinic's control)
+
+**Boundary Justification:** Scope matches the authorization boundary as defined in SSP Section 4 and the boundary diagram. Components outside the boundary are addressed through inheritance documentation and interconnection agreements rather than direct assessment.
 
 ---
 
-## 🔭 What’s Next?
+### Section 3: Assessment Objectives
 
-Tomorrow is Day 59 — **Assessment Execution**. I’ll walk through how we actually carry out this plan, from interviews to evidence collection, and what it’s like to experience a real control assessment.
+The assessment has three objectives, aligned with NIST SP 800-53A:
 
----
+**Objective 1 — Determine control implementation:** For each control in the tailored High baseline, determine whether the control is implemented as described in the SSP. This is primarily answered through examine and interview methods.
 
-##  Search Terms for More Insight
+**Objective 2 — Determine control effectiveness:** For key controls, determine whether the implemented control is operating as intended and producing the desired security outcome. This is primarily answered through test methods — actually verifying that the control works, not just that it is configured.
 
-- `Security Assessment Plan template NIST 800-53A`
-- `NIST Examine Interview Test examples`
-- `Penetration testing rules of engagement`
-- `FedRAMP SAP format`
-- `AWS security audit checklist`
+**Objective 3 — Identify gaps and residual risk:** Identify any controls that are not implemented as documented, are implemented but not effective, or are implemented and effective but leave residual risk that the AO should be aware of. This informs the Security Assessment Report findings and recommendations.
 
 ---
 
-> **Key Takeaway**: Planning an assessment isn’t just red tape — it’s leadership. It demonstrates ownership, maturity, and confidence in your system and processes.
+### Section 4: Assessment Team and Roles
+
+| Name | Organization | Role | Responsibilities |
+|---|---|---|---|
+| [Lead Assessor] | [External firm] | Lead Assessor | Assessment direction; technical testing; SAR production |
+| [Associate Assessor] | [External firm] | Associate Assessor | Document review; interview support; evidence collection |
+| ISSO | MyClinic | System POC | Assessor liaison; evidence provision; clarification responses |
+| IT Administrator | MyClinic | Technical POC | Technical interview; system access support; test environment |
+| Health IT Manager | MyClinic | System Owner | System Owner interview; administrative control verification |
+| Compliance Officer | MyClinic | Compliance POC | HIPAA compliance interview; policy documentation |
+
+**ISSO role clarification:** The ISSO is the assessor's primary point of contact but is not a member of the assessment team. The ISSO answers factual questions about the system and provides access to evidence. The ISSO does not review draft findings before the assessment is complete — only factual accuracy of the final SAR is reviewed before issuance (to correct mischaracterizations of system components, not to change findings).
+
+---
+
+### Section 5: Assessment Schedule
+
+**Total assessment duration:** 10 business days
+
+| Day | Activities | Location/Method |
+|---|---|---|
+| Day 1 — Kickoff | SAP review and confirmation; system overview briefing by ISSO; evidence package review begins | Remote kickoff meeting; assessor begins off-site document review |
+| Days 1-3 — Document Review | Review SSP, POA&M, policies, training records, incident response plan, change log, monitoring records, most recent vulnerability scan results, restoration test records | Off-site; assessor reviews evidence package |
+| Day 4 — Interviews | ISSO: technical control implementation; IT Administrator: infrastructure configuration and patch management | Remote video conference |
+| Day 5 — Interviews | Health IT Manager: account management and access review; Compliance Officer: HIPAA alignment and training | Remote video conference |
+| Days 6-7 — AWS Infrastructure Testing | Assessor uses read-only IAM role to review AWS configuration: IAM policies, security groups, CloudTrail, GuardDuty, Config rules, KMS key configuration, S3 bucket policies, WAF rules | Remote; assessor accesses AWS console via provisioned read-only role |
+| Days 7-8 — Application Testing | Assessor tests OpenMRS application controls in test environment: authentication, MFA enforcement, session timeout, access control by role, audit log generation | Remote; assessor accesses test OpenMRS instance |
+| Day 9 — Endpoint Review | Assessor reviews sample clinic workstations for endpoint controls: patch status, screen lock, EDR software, full-disk encryption | On-site at clinic; coordinated with clinic operations schedule |
+| Day 10 — Preliminary Findings | Assessor presents preliminary findings to ISSO and System Owner; factual accuracy review; any system access clarifications | Remote debrief meeting |
+| Day 14 (4 business days after) | Draft SAR delivered to ISSO for factual accuracy review | Document delivery |
+| Day 17 | ISSO returns factual accuracy comments | Document return |
+| Day 20 | Final SAR delivered to System Owner and AO | Document delivery |
+
+**Schedule constraints:**
+- Application testing must occur during non-clinic-hours (evenings or weekends) to avoid any performance impact on the test environment that shares infrastructure with the clinic network
+- On-site endpoint review must be scheduled with at least 5 business days advance notice to the clinic operations team
+- No testing activities during the last week of any calendar month (clinic billing cycle)
+
+---
+
+### Section 6: Assessment Procedures — Selected Controls
+
+The following details the assessment procedure for each major control family in the OpenMRS tailored High baseline. Procedures follow SP 800-53A examine-interview-test methodology.
+
+---
+
+#### Access Control (AC) Family
+
+**AC-2: Account Management**
+
+*Assessment Objective:* Determine whether OpenMRS user accounts are managed through a defined, authorized process covering provisioning, modification, review, and deactivation.
+
+*Examine:*
+- Current active OpenMRS user account list with usernames, roles, and provisioning dates
+- Account provisioning request forms for the five most recently created accounts — verify written authorization from Health IT Manager present for each
+- Quarterly access review records — most recent two quarters; verify Health IT Manager certification signature
+- Account deactivation records for the five most recently separated employees — verify timestamps of HR notification and account deactivation; confirm 4-hour target was met
+- Account deactivation records for the most recent quarterly review — verify accounts not recertified were deactivated within 5 business days
+
+*Interview:*
+- ISSO: describe the account provisioning process from request to activation; what triggers an account deactivation outside of the quarterly review cycle?
+- Health IT Manager: how are access review certifications conducted? what criteria are used to recertify an account?
+
+*Test:*
+- Attempt to authenticate to the OpenMRS test environment using a test account that has been disabled — verify that authentication fails
+- Attempt to authenticate to the OpenMRS test environment using a test account with an expired password — verify that the user is prompted to change the password rather than permitted to proceed
+- Verify that the test account created for assessor testing was created via the documented provisioning process (assessor verifies their own account's provisioning record)
+
+---
+
+**AC-3: Access Enforcement (Role-Based Access Control)**
+
+*Assessment Objective:* Determine whether OpenMRS role-based access control enforces least privilege — users can access only the system functions appropriate to their role.
+
+*Examine:*
+- Role permission set documentation — review the defined permissions for each role (Clinician, Nursing/Clinical Staff, Administrative Staff, IT Administrator, ISSO)
+- Sample accounts for each role type — verify role assignment matches job function
+
+*Interview:*
+- ISSO: how are role permissions defined? who approves changes to role permission sets?
+
+*Test:*
+- Using the Administrative Staff test account in the test environment: attempt to access a clinical encounter record — verify access is denied
+- Using the Clinician test account: attempt to access OpenMRS user administration functions — verify access is denied
+- Using the IT Administrator test account: attempt to view patient record content — verify access is denied (IT Administrator role should have no clinical data access)
+
+---
+
+#### Identification and Authentication (IA) Family
+
+**IA-2: MFA Enforcement**
+
+*Assessment Objective:* Determine whether multi-factor authentication is enforced for all OpenMRS users without exception.
+
+*Examine:*
+- OpenMRS authentication module configuration — verify requires2fa=true
+- Active account list with MFA enrollment status — verify all active accounts show enrolled status
+
+*Interview:*
+- ISSO: what happens if a user loses their MFA device? describe the recovery process and the controls around it
+
+*Test:*
+- Using a test account in the test environment: attempt to complete authentication using only username and password (without the TOTP second factor) — verify that authentication does not complete; verify the TOTP challenge is presented and cannot be bypassed
+- Attempt to access the test OpenMRS instance using a test account that has not completed MFA enrollment — verify that an enrollment redirect is presented rather than a login prompt
+
+---
+
+**IA-5: Password Policy**
+
+*Assessment Objective:* Determine whether the password policy is configured and enforced as documented.
+
+*Examine:*
+- OpenMRS password policy configuration screenshot — verify all policy values match SSP documentation (12-character minimum, complexity, 90-day maximum age, 12-generation history, 24-hour temporary password expiration, 5-attempt lockout)
+
+*Test:*
+- Attempt to set a password on a test account that does not meet complexity requirements (7 characters, no special character) — verify the system rejects the password with an appropriate error message
+- Attempt to reuse a recent password on a test account — verify the system rejects the reused password
+
+---
+
+#### Audit and Accountability (AU) Family
+
+**AU-2 / AU-12: Event Logging**
+
+*Assessment Objective:* Determine whether OpenMRS application audit logging captures all required events with all required fields per the SSP and HIPAA audit control requirements.
+
+*Examine:*
+- CloudWatch log group [openmrs-application-audit] — review sample log entries; verify presence of all required fields: user identifier, patient identifier (MRN format), action type, outcome, timestamp with timezone, source IP
+- Log group retention policy — verify 6-year retention configured
+- Log group resource policy — verify DeleteLogGroup and DeleteLogStream denied to unauthorized principals
+
+*Interview:*
+- IT Administrator: how is the audit log agent configured? what happens if the log agent stops running?
+
+*Test:*
+- In the test environment: authenticate with a test clinical user account; access a specific test patient record; modify a test encounter record; log out. Then review the CloudWatch log group for the resulting audit entries — verify all four events (login, record view, record modification, logout) are captured with all required fields
+- Attempt to access a test patient record using the IT Administrator test account — verify the access is blocked and the attempt is logged
+
+---
+
+**AU-9: Audit Log Protection**
+
+*Assessment Objective:* Determine whether audit records are protected from unauthorized modification or deletion.
+
+*Examine:*
+- CloudTrail log file integrity validation configuration — verify enabled
+- Most recent monthly CloudTrail validation run record — verify all files validated as unmodified
+- S3 Object Lock configuration on CloudTrail log bucket — verify Compliance mode enabled
+- CloudWatch Events rules for audit tamper detection — verify rules exist for DeleteTrail, StopLogging, DeleteLogGroup
+
+*Test:*
+- Assessor attempts to delete a test CloudWatch log stream using the read-only IAM role — verify the attempt is denied by IAM policy (confirming the resource policy is enforced)
+- Assessor reviews CloudWatch Events rule configuration and confirms the SNS notification target is active
+
+---
+
+#### Contingency Planning (CP) Family
+
+**CP-9: Backup**
+
+*Assessment Objective:* Determine whether backups are configured, encrypted, and tested as documented.
+
+*Examine:*
+- RDS automated backup configuration — verify 90-day retention, point-in-time recovery enabled, encryption with customer-managed KMS key
+- S3 backup bucket — verify Object Lock enabled, SSE-KMS, bucket policy denying unencrypted uploads
+- Most recent quarterly restoration test record — verify restoration was completed within RTO, data integrity verified, results documented
+
+*Interview:*
+- IT Administrator: describe the restoration process; what would happen if the primary AWS region became unavailable?
+
+*Test:*
+- Assessor attempts to upload a test object to the S3 backup bucket without SSE-KMS encryption (using the read-only test role) — this should fail at the IAM level before reaching the bucket policy, confirming the layered protection; assessor documents the failure mode
+
+---
+
+#### System and Communications Protection (SC) Family
+
+**SC-28: Encryption at Rest**
+
+*Assessment Objective:* Determine whether ePHI at rest is encrypted across all storage components.
+
+*Examine:*
+- RDS instance console — verify encryption enabled, KMS key identifier, customer-managed key status
+- EC2 EBS volume list — verify encryption enabled for all attached volumes, KMS key identifier
+- S3 backup bucket — verify SSE-KMS default encryption, KMS key identifier, Block Public Access all enabled
+
+*Test:*
+- Using the read-only IAM role: attempt to retrieve a database snapshot — verify the snapshot is encrypted (cannot be shared or exported without authorization through the KMS key policy)
+- Verify KMS key policy restricts decryption to authorized IAM roles only — assessor reviews key policy and confirms unauthorized roles are not listed
+
+---
+
+**SC-8: Encryption in Transit**
+
+*Assessment Objective:* Determine whether all data in transit between users and the system, and between system components, is encrypted.
+
+*Test:*
+- Using a browser in the test environment: attempt to connect to the OpenMRS domain using HTTP (http://) — verify the connection is redirected to HTTPS or refused
+- Using an SSL/TLS analysis tool (SSL Labs or equivalent): analyze the TLS configuration of the OpenMRS domain — verify TLS 1.2 minimum, no weak cipher suites, valid certificate, forward secrecy enabled
+- Review RDS parameter group: verify rds.force_ssl=1 is set
+
+---
+
+#### Incident Response (IR) Family
+
+**IR-3: Incident Response Testing**
+
+*Assessment Objective:* Determine whether the incident response plan has been tested and results used to improve the plan.
+
+*Examine:*
+- Most recent tabletop exercise scenario document, participant list, and after-action report
+- IRP version history — verify the IRP was updated following the tabletop based on findings
+- Evidence of three after-action improvements incorporated into the IRP
+
+*Interview:*
+- ISSO: describe what happened during the most recent tabletop; what was the most significant finding and how was it addressed?
+- Health IT Manager: do clinical staff know what to do if they believe a security incident has occurred? how would they report it?
+
+---
+
+### Section 7: Rules of Engagement
+
+**Production environment:** Assessor has read-only IAM access to the production AWS account. No write actions, no resource modifications, no active exploitation. All AWS console review activities are logged in CloudTrail — assessor acknowledges that their activities will appear in the audit trail.
+
+**Test environment:** Assessor has standard user access to the OpenMRS test environment for application testing. Test environment contains synthetic data only — no real patient records. Assessor acknowledges the prohibition on introducing test data to the production environment.
+
+**No active exploitation:** The assessment includes testing whether controls are implemented and effective, not penetration testing to exploit vulnerabilities. Finding that MFA can be bypassed is a finding; demonstrating lateral movement through the account after bypassing MFA is out of scope.
+
+**Communication:** All findings are communicated first to the ISSO during the preliminary findings meeting, then formally in the SAR. The assessor does not communicate findings directly to the AO without the ISSO's knowledge.
+
+**Incident handling:** If the assessor discovers evidence of an active security incident (unauthorized access, active malware, data exfiltration in progress), they notify the ISSO immediately and follow MyClinic's incident response plan. Assessment activities are suspended until the incident is resolved.
+
+**Data handling:** The assessor treats all system documentation, configuration data, and evidence as confidential. All materials are handled per the NDA executed before engagement began. Assessment work product is retained by the firm for one year and then securely destroyed per the firm's retention policy.
+
+---
+
+### Section 8: Assessment Deliverables
+
+**Security Assessment Report (SAR):**
+- Executive summary suitable for AO review
+- Control-by-control findings organized by control family
+- Finding severity ratings: High (immediate remediation required before ATO), Moderate (remediation required — POA&M), Low (remediation recommended — POA&M or accepted risk)
+- Root cause analysis for each finding
+- Specific remediation recommendations
+- Summary of POA&M items reviewed — status confirmed or discrepancy noted
+- Assessment limitations (any controls not fully assessed and why)
+
+**Evidence documentation:**
+- Annotated evidence package referencing specific documents reviewed and test results
+- Test execution records with screenshots for all test procedures
+- Interview notes (summary form — not verbatim transcripts)
+
+**Delivery timeline:** SAR draft delivered 4 business days after assessment completion; final SAR delivered 3 business days after ISSO factual accuracy review.
+
+---
+
+### Section 9: SAP Approval
+
+The Security Assessment Plan is reviewed and approved by:
+
+| Role | Name | Signature | Date |
+|---|---|---|---|
+| Lead Assessor | [name] | | |
+| System Owner | Health IT Manager | | |
+| ISSO | Information Security Lead | | |
+| Authorizing Official | Executive Director | | |
+
+---
+
+## A Real-World Example That Made This Click
+
+While developing the AC-3 role-based access control test procedures today, I came across details from the **2013 HIPAA Omnibus Rule implementation guidance** that HHS OCR published following a significant uptick in insider access abuse incidents.
+
+OCR guidance specifically addressed the technical safeguard requirement for access controls — noting that organizations needed to demonstrate not just that roles existed in their EHR systems, but that role permissions were actually scoped to clinical need and that the controls were being tested. OCR had observed in its breach investigations that many healthcare organizations had role-based access control systems configured with overly broad permissions — essentially, clinical roles that could access any patient record regardless of care relationship.
+
+The assessment test for AC-3 that I developed today — specifically, testing that an administrative staff account cannot access clinical encounter documentation, and that a clinician account cannot access system administration functions — directly addresses the gap pattern OCR identified. A security assessment that only examines the role configuration documentation without testing whether the role restrictions are actually enforced in practice would miss the implementation gap where roles are defined but not scoped.
+
+This connects to the broader insight from today's SAP development: the test method in SP 800-53A is what distinguishes a security assessment from a document review. Examining the SSP tells the assessor what MyClinic claims the controls do. Testing the controls in the test environment tells the assessor whether they actually do it. Both methods are necessary; neither alone is sufficient for a High-impact system.
+
+---
+
+## What I Am Still Thinking About
+
+One aspect of the SAP I want to refine before it is finalized: the POA&M review procedure.
+
+The SAP documents that the assessor will review POA&M items during the assessment — confirming that open items are accurately described and that compensating controls are in place. But I have not yet specified exactly how the assessor should document a POA&M finding that is more serious than described.
+
+For example: if the CP-2 clinical downtime procedures POA&M item has a draft procedure document but it is substantially less developed than the POA&M entry implies, should the assessor document that as a new finding, an update to the existing POA&M item, or both?
+
+My instinct is: the assessor documents their own assessment of the POA&M items' status and severity in the SAR, independent of how MyClinic has characterized them. If an item is characterized as "partially implemented with compensating controls" but the assessor finds that the compensating controls are inadequate, the SAR should reflect the assessor's independent evaluation — not defer to MyClinic's self-characterization. The AO should receive the assessor's view, not a confirmation of the system owner's view.
+
+I want to add a specific section to the SAP addressing how the assessor handles POA&M items — documenting that their status assessment is independent and that discrepancies between MyClinic's POA&M characterization and the assessor's findings will be explicitly noted in the SAR.
+
+---
+
+## What's Next
+
+Day 59 covers assessment execution — the actual conduct of the assessment activities defined in today's SAP. What does it look like to work through the examine-interview-test methods in practice? What happens when the assessor finds a control that does not work as documented? How are findings categorized and what does the preliminary findings conversation look like?
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53A Rev 5 – Assessing Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [NIST SP 800-37 Rev 2 – Task A-2 Security Assessment Plan](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [FedRAMP Security Assessment Plan Template](https://www.fedramp.gov/documents-templates/)
+- [HHS OCR HIPAA Security Rule Audit Protocol](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html)
+- [NIST SP 800-115 – Technical Guide to Information Security Testing](https://csrc.nist.gov/publications/detail/sp/800-115/final)
+
+---
+
+*#GRC #SecurityAssessmentPlan #NISTRMF #SP800-53A #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day58*
