@@ -1,115 +1,213 @@
-#  Day 77 – Leveraging AWS Services for GRC Automation
-
-Keeping track of compliance manually is like spinning a hundred plates — stressful and prone to human error. Fortunately, the cloud gives us a better option: **automation**. Today, I explored how AWS-native tools can transform Governance, Risk, and Compliance (GRC) operations from reactive to proactive.
-
-For our **OpenMRS-on-AWS** case study, three services stood out:
+# Day 77 – AWS-Native GRC Automation: Config, Security Hub, and Audit Manager | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  AWS Config – The Real-Time Configuration Auditor
+## From Manual Process to Automated Assurance
 
-**What it does:**  
-AWS Config records the state of AWS resources and continuously evaluates them against defined compliance rules.
+Day 76 produced the OpenMRS access control policy — written to the level of specificity that creates genuine governance rather than compliance decoration. The policy specifies who, what, when, and what happens if the requirement is not met. But a policy that cannot be verified is a policy that cannot be enforced. Section 3.6's quarterly access review requirement depends on the ISSO having accurate, current user account and role data. Section 3.2's MFA requirement depends on monitoring that would detect if MFA enforcement was disabled. Section 3.4's account deactivation requirement depends on logging that captures when accounts are active or inactive.
 
-**How it helps OpenMRS:**  
-- Detects configuration drift in real-time.  
-- For example: A rule like `S3 buckets must not allow public read access` helps ensure OpenMRS patient data remains private.  
-- If someone accidentally opens up a bucket, AWS Config **flags it instantly**.
+Every policy requirement eventually reaches a question of how it is verified. For a cloud-hosted system like OpenMRS on AWS, the answer increasingly lives in AWS-native tooling that automates the verification work that would otherwise fall entirely on the ISSO's manual review capacity.
 
-**Why I value it:**  
-It allows **automated, policy-based monitoring** without waiting for a monthly review. Continuous visibility means continuous control.
+I want to be clear about what I knew coming into today: I have worked with AWS Config, Security Hub, and Audit Manager in the context of the OpenMRS monitoring program throughout this project — Config rules showed up in Day 52's continuous monitoring strategy, Config findings drove the M-002 remediation in Day 71, and the overall monitoring program referenced Security Hub as the aggregation layer. Today I want to examine these tools more carefully and think honestly about what they automate well, what they still require human judgment for, and where they can create a false sense of compliance coverage if used uncritically.
 
 ---
 
-##  AWS Security Hub – The Cloud Security Command Center
+## What I Worked On Today
 
-**What it does:**  
-Aggregates findings from various AWS services (Config, GuardDuty, Inspector) into one dashboard. Applies AWS security best practices and highlights issues by severity.
-
-**How it helps OpenMRS:**  
-- Flags issues like missing patches on EC2 or root account without MFA.  
-- For example: `[S3.2] S3 bucket allows public read access – FAILED` tells us exactly what’s wrong.  
-- Prioritizes alerts (CRITICAL vs. MEDIUM), helping us **focus response efforts**.
-
-**Why I value it:**  
-It’s my **mission control**. One place to assess our entire cloud security posture, triage findings, and stay audit-ready.
+Three AWS-native services are the technical backbone of the OpenMRS continuous monitoring program: AWS Config (configuration compliance monitoring), AWS Security Hub (findings aggregation and security posture assessment), and AWS Audit Manager (evidence collection for compliance frameworks). Today I work through each service in detail — what it does, how it connects to the OpenMRS security controls, what specific rules and checks are relevant, and what the tooling cannot do that still requires human judgment.
 
 ---
 
-##  AWS Audit Manager – Your Built-In Evidence Collector
+## What Actually Clicked for Me
 
-**What it does:**  
-Automatically collects evidence from AWS services for audits and frameworks (NIST, ISO, PCI, etc.).
+The insight that clarified all three tools today is understanding the distinction between automated detection and automated assurance.
 
-**How it helps OpenMRS:**  
-- Gathers logs, settings, and control evaluations that prove compliance.  
-- Connects with AWS Config to confirm whether controls (like encryption, logging, retention) are met.  
-- Great for HIPAA, FedRAMP, or internal audits.
+Automated detection means the tool identifies when something is wrong — a Config rule flags a non-compliant resource, Security Hub aggregates a finding, Audit Manager collects evidence of a configuration state. This is genuinely valuable and dramatically more reliable than manual periodic checks for catching configuration drift quickly.
 
-**Why I value it:**  
-Audit Manager reduces the manual pain of compliance documentation. It **keeps the audit binder full — automatically**.
+Automated assurance — the conclusion that because the tools are running, the system is secure — is a dangerous overclaim. The tools detect what they are configured to detect. They cannot detect what they are not looking for. Config rules catch known compliance violations against defined standards; they do not catch novel misconfigurations that no rule was written to address. Security Hub aggregates findings from services that are enabled and properly configured; it does not generate findings for services it is not integrated with. Audit Manager collects evidence that controls are configured; it does not verify that configured controls are producing their intended security outcomes.
 
----
+The M-002 finding from Day 71 illustrates this precisely: AWS Config detected the IAM password policy drift immediately and flagged it correctly. But Config did not detect — and could not detect — the process failure that caused the drift: the IT Administrator making a security-relevant change without CM-3 compliance. The technical misconfiguration was caught automatically. The process failure required human review of the CloudTrail log to identify the root cause.
 
-##  Summary: Automate the GRC Grind
-
-Together, these services:
-
-| Tool               | Role in GRC                                               | OpenMRS Example |
-|--------------------|-----------------------------------------------------------|------------------|
-| **AWS Config**      | Monitors resource configurations and compliance in real-time | Alerts if S3 bucket becomes public |
-| **AWS Security Hub** | Aggregates findings, prioritizes alerts, shows security posture | Flags missing MFA or unpatched EC2 |
-| **AWS Audit Manager**| Automates evidence collection for compliance frameworks | Provides CloudTrail logs for user access control verification |
-
-They are my **robo-assistants** — catching misconfigurations, compiling evidence, and surfacing issues before they become incidents.
+Automated detection is a powerful tool. Substituting it for genuine security judgment is how organizations end up with well-monitored systems that are nonetheless insecure in ways the monitoring never catches.
 
 ---
 
-##  Hands-On Scenario
+## AWS Config — Configuration Compliance Monitoring
 
-**Finding:**  
-`[EC2.8] No security groups allow unrestricted SSH access – FAILED for sg-123abc`
+AWS Config records the configuration state of AWS resources and evaluates that state against compliance rules. For the OpenMRS deployment, Config is the primary tool for detecting configuration drift — the gap between what the SSP says the configuration should be and what the configuration actually is at any given moment.
 
-**Response Plan:**  
-Restrict the SSH rule to a specific IP range or route through a Bastion host. Public SSH (0.0.0.0/0) is never acceptable for production.
+**How Config works for OpenMRS:**
 
-**Another Finding Example:**  
-`[S3.2] S3 bucket OpenMRS-Data allows public read access – FAILED`
+Config maintains a configuration history for every tracked AWS resource: EC2 instances, RDS instances, S3 buckets, IAM policies, security groups, KMS keys, CloudTrail trails, GuardDuty detectors, and more. When a configuration changes — a security group rule is modified, an S3 bucket policy changes, an IAM user is created — Config records the change with a timestamp, the identity of the principal who made the change, and the before/after configuration state.
 
-**Action:**  
-Remove public permissions, apply a bucket policy to restrict access to known IAM roles, and re-run compliance checks.
+Config rules evaluate resource configurations against defined compliance standards. A rule is either COMPLIANT (the resource meets the rule's requirements) or NON_COMPLIANT (it does not). Config can evaluate rules continuously (triggered by configuration changes) or periodically (on a schedule).
+
+**The OpenMRS Config rule set — what I would configure:**
+
+*Encryption controls (supporting SC-28):*
+- `rds-storage-encrypted` — RDS instances must have encryption enabled. NON_COMPLIANT triggers immediate ISSO notification.
+- `s3-bucket-server-side-encryption-enabled` — S3 buckets must have default encryption enabled.
+- `ec2-ebs-encryption-by-default` — EBS volumes created in the account must use encrypted AMIs.
+- `kms-cmk-not-scheduled-for-deletion` — No customer-managed KMS keys should be scheduled for deletion unexpectedly (protects against accidental key deletion during operations).
+
+*Network access controls (supporting SC-7):*
+- `restricted-ssh` — No security group should allow unrestricted SSH access (0.0.0.0/0 on port 22). This was the control that caught the Finding M-002 type drift pattern.
+- `restricted-common-ports` — No security group should allow unrestricted access on commonly exploited ports (3389 RDP, 3306 MySQL, 8080 HTTP alt).
+- `vpc-flow-logs-enabled` — VPC flow logs must be enabled to support network traffic monitoring.
+- `no-unrestricted-route-to-igw` — No route table should direct all traffic to an internet gateway except through the WAF/load balancer tier.
+
+*Audit and logging controls (supporting AU-2, AU-9):*
+- `cloud-trail-enabled` — CloudTrail must be enabled in the region.
+- `cloudtrail-s3-dataevents-enabled` — CloudTrail must be logging S3 data events (not just management events) for the backup bucket.
+- `cloudwatch-log-group-encrypted` — CloudWatch log groups storing OpenMRS audit logs must be encrypted.
+- `guardduty-enabled-centralized` — GuardDuty must be enabled and reporting to the Security Hub integration.
+
+*IAM controls (supporting AC-2, IA-5):*
+- `iam-password-policy` — IAM account password policy must meet the documented minimum requirements (12 characters, complexity, 90-day rotation, 12-password history). This is the rule that caught the M-002 finding.
+- `iam-root-access-key-check` — Root account must not have active access keys.
+- `mfa-enabled-for-iam-console-access` — IAM users with console access must have MFA enabled.
+- `iam-user-no-policies-check` — IAM users must not have policies attached directly (policies should be applied through roles or groups, supporting least privilege management).
+
+*Backup controls (supporting CP-9):*
+- `dynamodb-pitr-enabled` / `rds-multi-az-support` — Data redundancy controls for the RDS instance.
+- `backup-plan-exists` — A backup plan must exist and be active.
+
+**What Config cannot do:**
+
+Config cannot verify that the IAM policies assigned to roles are correctly scoped — it can confirm that an IAM role exists and that it has policies attached, but it cannot determine whether those policies implement least privilege correctly. That requires the quarterly IAM policy review that the ISSO conducts manually.
+
+Config cannot verify that backup restoration works — it can confirm that backup jobs are running and that recovery points exist, but the quarterly restoration test is the only way to verify that those backups produce working, complete data.
+
+Config cannot evaluate OpenMRS application-layer controls — every Config rule I listed above operates at the AWS infrastructure layer. Whether OpenMRS role-based access control is functioning correctly, whether session timeouts are enforced, whether audit logging is writing all required event types — these require application-layer testing, not infrastructure configuration monitoring.
 
 ---
 
-## � Reflection
+## AWS Security Hub — Findings Aggregation and Posture Assessment
 
-I now feel more confident knowing **automated tools** are watching our cloud environment 24/7. Without Config or Security Hub, we’d be relying on spreadsheets and periodic audits — and that’s not scalable.
+Security Hub is the aggregation and prioritization layer. It receives findings from Config, GuardDuty, Inspector, and other integrated services, normalizes them into a common finding format, and presents them through a unified dashboard with severity scoring and posture assessment.
 
-Still, too many alerts can overwhelm a team. That’s where tuning comes in:
-- Suppress non-relevant findings.
-- Group similar alerts.
-- Focus on high-severity issues first.
+**How Security Hub works for OpenMRS:**
 
-**Most valuable tool?**  
-For OpenMRS, I’d say **Security Hub** — it’s the central nervous system for cloud security. But together with Config and Audit Manager, we have a powerful trio for cloud-native GRC.
+Security Hub continuously ingests findings from all enabled integrations. It applies the AWS Foundational Security Best Practices (FSBP) standard — a set of automated security checks across multiple AWS services — and produces a security score. It also supports NIST SP 800-53 and other compliance standards as optional frameworks, which allows the Security Hub posture score to be mapped to specific control families.
+
+For the OpenMRS ISSO, Security Hub's primary value is the daily 10-minute morning review: open the Security Hub dashboard, review NEW findings by severity (CRITICAL first, then HIGH, then MEDIUM), confirm that previously identified findings are in the expected status (SUPPRESSED or RESOLVED), and check the overall posture score for significant changes from the prior day.
+
+**The Security Hub findings that matter most for OpenMRS:**
+
+*CRITICAL findings — require same-day response:*
+- Any GuardDuty finding rated HIGH or CRITICAL (potential active threat)
+- `[EC2.8] EC2 instance allows unrestricted inbound SSH` (direct remote access exposure)
+- `[S3.1] S3 Block Public Access setting is not enabled` for the backup bucket (ePHI public exposure)
+- `[KMS.1] Customer managed KMS keys should not be scheduled for deletion` (imminent data loss risk)
+- `[CloudTrail.1] CloudTrail should be enabled and configured with at least one multi-Region trail`
+
+*HIGH findings — require 24-hour response plan:*
+- Inspector findings rated HIGH severity
+- `[IAM.9] MFA should be enabled for the root account`
+- `[EC2.2] VPC default security group should not allow inbound or outbound traffic`
+- `[RDS.3] RDS DB instances should have encryption at rest enabled`
+
+*MEDIUM findings — require 72-hour response plan:*
+- `[IAM.4] IAM root user access key should not exist`
+- `[Config.1] AWS Config should be enabled`
+- Config rules showing recurring NON_COMPLIANT for the same resource (indicates remediation is not sticking)
+
+**Finding suppression — the tuning discipline:**
+
+Security Hub generates findings for every configured check. Some findings are expected in the OpenMRS environment and do not require action — they have been reviewed, accepted, and documented. Suppressing these prevents alert fatigue while maintaining a complete audit trail of the suppression decision.
+
+Example of an appropriate suppression: The FSBP check `[IAM.6] Hardware MFA should be enabled for the root account` will generate a MEDIUM finding because MyClinic uses TOTP MFA (software-based) rather than a hardware security key for the root account. This was evaluated during implementation (Day 54) and accepted — the root account is locked away with a complex password, TOTP MFA, and no access keys, and hardware MFA acquisition was not operationally feasible. The finding is suppressed with a note documenting the evaluation and compensating controls.
+
+Suppression decisions must be reviewed quarterly — when the ISSO reviews the suppression list, they confirm that each suppressed finding was suppressed for a documented reason that is still valid. A finding suppressed because "we don't have a use case for this service" should be reviewed if that service is subsequently deployed.
+
+**What Security Hub cannot do:**
+
+Security Hub cannot generate findings for gaps it has no data about. If GuardDuty is disabled, Security Hub receives no GuardDuty findings — not because there are no threats, but because the detection capability is absent. Security Hub's posture score is a measure of how well the configured checks are passing, not a measure of actual security posture. A system that has disabled most security checks will show a misleading posture score.
+
+Security Hub cannot evaluate business context. A finding that is a legitimate CRITICAL in one environment may be an accepted LOW in another — Security Hub assigns severity based on the finding type without knowing whether the affected resource is a production system handling ePHI or a development environment with synthetic data. The ISSO must evaluate business context for every finding; Security Hub provides the initial signal, not the final judgment.
 
 ---
 
-##  Today’s Goal
+## AWS Audit Manager — Evidence Collection for Compliance Frameworks
 
-Explore how AWS tools like **Config**, **Security Hub**, and **Audit Manager** can automate tedious compliance tasks and turn GRC into a scalable, intelligent system — not a last-minute scramble.
+Audit Manager automates the collection of evidence that demonstrates compliance with specific frameworks — NIST SP 800-53, HIPAA, PCI DSS, and others. For the OpenMRS ATO and continuous monitoring program, Audit Manager addresses one of the most labor-intensive aspects of compliance: gathering point-in-time evidence that specific controls are configured and functioning.
+
+**How Audit Manager works for OpenMRS:**
+
+Audit Manager allows the ISSO to create an assessment mapped to a compliance framework (I would configure both NIST SP 800-53 and HIPAA for OpenMRS). For each control in the framework, Audit Manager defines evidence sources — Config rules, Security Hub findings, CloudTrail logs, IAM policies — and automatically collects evidence from those sources on a defined schedule.
+
+The evidence appears in an organized assessment report: for each control, the evidence collected, the dates collected, and whether the evidence indicates compliance or identifies a gap. This is the "audit binder" that would otherwise require the ISSO to manually screenshot Config compliance dashboards, export CloudTrail logs, and document IAM policy states.
+
+**What Audit Manager specifically provides for OpenMRS controls:**
+
+For AC-2 (Account Management): Audit Manager collects CloudTrail evidence of user account creation and deletion events, IAM user listing evidence showing current active accounts, and Config rule compliance evidence for IAM-related rules. This provides a time-stamped record of account management activities that supports the quarterly access review.
+
+For SC-28 (Protection of Information at Rest): Audit Manager collects Config rule evidence for RDS storage encryption, S3 encryption, and EBS encryption — automatically generating the evidence that the ISSO would otherwise manually document before each quarterly review.
+
+For AU-2 / AU-12 (Audit Logging): Audit Manager collects CloudTrail configuration evidence (trails enabled, S3 logging destination, log file validation), CloudWatch log group evidence, and GuardDuty configuration evidence.
+
+For CP-9 (Information System Backup): Audit Manager collects AWS Backup plan evidence and backup job completion status — though it cannot collect evidence of the restoration test, which requires the ISSO to upload the quarterly restoration test documentation manually.
+
+**Audit Manager's limitation — the most important thing I learned today:**
+
+Audit Manager collects evidence that controls are configured. It does not verify that configured controls are producing their intended outcomes. This is the automated detection versus automated assurance distinction applied specifically to evidence collection.
+
+For the re-authorization assessment, the assessors will examine the Audit Manager evidence alongside the ISSO's monitoring records. If Audit Manager shows that RDS encryption was enabled throughout the authorization period (continuous Config rule compliance evidence), that is strong evidence for SC-28. But if a quarterly restoration test failed because the encryption key was not properly preserved in the restoration procedure — a functionality failure that Config rules would not detect — Audit Manager would show the control as compliant while the control was actually not producing its intended outcome.
+
+This is why the Audit Manager evidence collection supplements the M-2 ongoing assessment activities — it does not replace them. The ISSO's quarterly restoration test, quarterly access review, and monthly manual control reviews address the functionality gaps that automated evidence collection cannot cover.
 
 ---
 
-##  Search Terms
+## The Integrated Monitoring Stack — How the Three Tools Work Together
 
-- `AWS Config rules compliance examples`  
-- `AWS Security Hub findings remediation`  
-- `AWS Audit Manager how it works evidence`  
-- `Cloud-native compliance tools AWS`  
+The three tools form a coherent monitoring architecture:
+
+Config is the foundation — it evaluates resource configurations against defined standards and generates the raw compliance findings. Config is also the primary evidence source for Audit Manager.
+
+Security Hub is the aggregation layer — it ingests Config findings alongside GuardDuty threat detections and Inspector vulnerability findings, normalizes them into a common format, prioritizes them by severity, and presents the ISSO with a unified view. The daily ISSO review happens in Security Hub, not in each individual service.
+
+Audit Manager is the documentation layer — it organizes the evidence from Config (and other sources) into a compliance framework structure that supports the formal assessment and re-authorization process. Rather than the ISSO manually compiling compliance evidence before an assessment, Audit Manager maintains a continuously updated evidence library.
+
+Together: Config detects a NON_COMPLIANT finding → Security Hub displays it as a finding with severity and remediation guidance → the ISSO acts on it → the remediation is recorded in Security Hub → Audit Manager collects evidence of the control's compliant state after remediation.
 
 ---
 
-##  Up Next: Day 78
+## A Real-World Example That Made This Click
 
-Next, I’ll focus on how to **track risk remediation and manage POA&M items** effectively — plus how to formally accept certain risks when necessary. It’s all about making smart, documented security decisions. Let’s finish strong!
+The alert fatigue problem — where security teams become overwhelmed by the volume of automated findings and begin unconsciously filtering out legitimate alerts alongside noise — was directly illustrated by the **2020 SolarWinds breach**. Post-incident analysis found that security monitoring tools at many affected organizations had generated alerts during the intrusion period, but the alert volume was high enough that the SolarWinds-specific indicators were not identified as distinctive from the background alert noise.
+
+For OpenMRS, the tuning discipline — suppressing expected findings with documented rationale, setting severity thresholds that match the ISSO's actual response capacity, reviewing the suppression list quarterly — is not about reducing work for its own sake. It is about ensuring that when a genuine HIGH or CRITICAL finding appears, it stands out against a managed background rather than competing with 50 other MEDIUM findings that have been present for months.
+
+Security Hub's value is a function of the discipline applied to its configuration. An untuned Security Hub with 200 open findings of varying relevance is less useful than a tuned Security Hub with 15 findings that all represent genuine, actionable issues. The difference is not the tool — it is the ISSO's investment in maintaining the signal-to-noise ratio.
+
+---
+
+## What I Am Still Thinking About
+
+AWS Audit Manager supports NIST SP 800-53 and HIPAA as built-in frameworks, which maps well to the OpenMRS authorization requirements. But Audit Manager's framework mapping is imperfect — the automated evidence collection covers the controls where AWS infrastructure configuration is the primary implementation mechanism, but many NIST SP 800-53 controls have significant non-technical components that Audit Manager cannot assess.
+
+IR-3 (Incident Response Testing) is a clear example: Audit Manager cannot collect evidence of a tabletop exercise or technical simulation. The ISSO must manually upload that evidence to the Audit Manager assessment. AT-2 (Security Awareness Training) is similar — Audit Manager cannot collect evidence of training completion rates or curriculum content.
+
+For the re-authorization assessment, the evidence package will consist of Audit Manager automated evidence for the infrastructure-layer controls plus ISSO-compiled manual evidence for the procedure and training controls. Understanding which controls fall into which category — before the re-authorization assessment begins — prevents the gap where the ISSO assumes Audit Manager has covered a control that is actually not in scope for automated collection.
+
+I want to create a control-to-evidence-source mapping before the first annual continuous monitoring summary is due — for each of the 80+ controls in the OpenMRS SSP, documenting whether the primary evidence source is automated (Audit Manager / Config / Security Hub) or manual (ISSO test records, training completion reports, restoration test documentation). That mapping turns the annual evidence compilation from a reactive scramble into a checklist-driven process.
+
+---
+
+## What's Next
+
+Day 78 covers POA&M management and risk acceptance — how outstanding findings are tracked through the remediation process, how timelines are revised with documented rationale when original estimates were wrong, and how the formal risk acceptance process works for findings where remediation is not the right answer. The POA&M has been central to this project since Day 50; Day 78 examines the discipline of managing it over time.
+
+---
+
+## Resources I Found Helpful Today
+- [AWS Config – Managed Rules Reference](https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html)
+- [AWS Security Hub – AWS Foundational Security Best Practices Standard](https://docs.aws.amazon.com/securityhub/latest/userguide/fsbp-standard.html)
+- [AWS Audit Manager – NIST SP 800-53 Rev 5 Framework](https://docs.aws.amazon.com/audit-manager/latest/userguide/NIST800-53.html)
+- [NIST SP 800-137 – Automated Support Tools for Continuous Monitoring](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [CISA – Avoiding the Pitfalls of Alert Fatigue in Security Operations](https://www.cisa.gov/resources-tools/resources/handling-destructive-malware)
+
+---
+
+*#GRC #AWSConfig #SecurityHub #AuditManager #GRCAutomation #ContinuousMonitoring #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day77*
