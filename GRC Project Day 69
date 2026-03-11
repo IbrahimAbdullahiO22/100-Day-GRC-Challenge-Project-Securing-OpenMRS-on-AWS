@@ -1,129 +1,178 @@
-#  Day 69: Task M-1 – Monitor System & Environment Changes
-
-Welcome to **Day 69** of my 100-Day GRC journey!
-
-Today marks our first step into the **Monitor** phase of the NIST Risk Management Framework (RMF). Now that OpenMRS has received its **Authorization to Operate (ATO)** and is in production, our focus shifts to making sure it stays secure.  
-
-This is where **Task M-1 – Monitor System & Environment Changes** becomes essential. It’s not just about watching for known threats — it’s about staying alert to **anything that changes** and could affect security or privacy posture.
+# Day 69 – Task M-1: Monitoring System and Environment Changes | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Why Monitor System and Environment Changes?
+## The Monitor Step Begins
 
-The truth is simple: **Change is inevitable.**  
+Day 68 completed the Authorize step with Task R-5 authorization reporting — the governance stakeholder memo, the all-staff communication, the system registry entry, and the archival package with its README orientation guide for future reviewers. The Authorization Decision Document is signed. The system is authorized. The Authorize step is closed.
 
-- Systems get updated  
-- Infrastructure evolves  
-- Threats become more sophisticated  
-- Business needs shift  
+The Monitor step — the seventh and final step of the NIST RMF — begins today and does not end. It runs for the life of the system. Every other RMF step had a completion point: the system description was finalized, the controls were selected, the implementation was verified, the assessment was completed, the authorization was issued. The Monitor step has no completion point. It is the operational posture that keeps the authorization valid.
 
-Even the smallest change — like an opened port in an AWS Security Group — can undermine months of hardening work. That’s why M-1 emphasizes **proactive awareness**.
+Task M-1 is the foundational task of the Monitor step: establishing and executing the system and environment change monitoring that ensures the ISSO and AO have situational awareness when the system's security posture changes. The authorization was based on a specific system configuration as of the assessment date. If that configuration changes — technically, operationally, or in its threat environment — the ISSO needs to know whether those changes affect the authorization's validity.
 
 ---
 
-##  Applying M-1 to OpenMRS on AWS
+## What I Worked On Today
 
-Let’s explore what this looks like in practice. Suppose I'm managing an OpenMRS deployment hosted on AWS for a healthcare NGO. I would track changes in two key areas:
-
-###  1. Technical System Changes
-
-These include:
-
-- OS updates (e.g., Ubuntu patches)
-- OpenMRS core or module upgrades
-- AWS configuration tweaks (e.g., modifying EC2, RDS, or S3 permissions)
-- Deployment of new scripts or APIs
-- Changes in IAM roles or security group settings
-
-**Monitoring Techniques:**
-
-- **AWS CloudTrail**: Tracks who made what change and when  
-- **AWS Config**: Detects configuration drift against baselines  
-- **Security Information and Event Management (SIEM)**: Aggregates alerts and changes for correlation  
-- **Code deployment logs**: Reveal unexpected updates or failed rollbacks  
+NIST SP 800-37 Task M-1 requires ongoing monitoring of the system and its operational environment to identify changes that might affect the security posture documented in the SSP and assessed in the SAR. The monitoring must cover both technical system changes (configuration, software, infrastructure) and operational environment changes (organizational, regulatory, threat landscape). Today I work through what M-1 looks like in practice for the OpenMRS system that is now in authorized operation.
 
 ---
 
-### 2. Environmental Changes
+## What Actually Clicked for Me
 
-These include:
+The concept that clarified Task M-1 today is the distinction between monitoring for known bad events and monitoring for change.
 
-- Organizational changes (e.g., new clinic location, new staff)
-- Policy updates (e.g., new HIPAA interpretation, stricter MFA policies)
-- Regulatory shifts (e.g., GDPR/HIPAA alignment, state-level changes)
-- Threat landscape shifts (e.g., ransomware surge targeting healthcare)
+Most security monitoring is oriented toward detecting known bad events: GuardDuty detecting unusual API call patterns that match known threat actor behavior, Config detecting a security group rule that opens SSH to the internet, Inspector identifying a CVE in an installed package. These are important and the continuous monitoring strategy from Day 52 covers them thoroughly.
 
-**Monitoring Techniques:**
+But M-1 adds a layer that detection-focused monitoring misses: monitoring for changes that are not bad in themselves but that affect the security posture documented in the SSP. A new OpenMRS module installed by the IT Administrator may be fully legitimate and not malicious in any way — but if that module changes the application's authentication flow, introduces a new dependency with known vulnerabilities, or creates new data access patterns not covered by the existing audit logging configuration, the ISSO needs to know about it and evaluate its security impact before it becomes a finding at re-authorization.
 
-- **Threat intelligence feeds**
-- **Policy review cadence (quarterly or annual)**
-- **Regular security awareness and training feedback**
-- **Business continuity plans** updated to reflect new environments
+The SSP is a living document that should reflect the system as it actually operates. Task M-1 is what keeps the SSP current — not through periodic scheduled reviews, but through a systematic process that connects every change to a security impact evaluation before the SSP falls out of sync with reality.
+
+This is why M-1 is not just a monitoring function — it is a governance function. The question M-1 answers is not only "what changed?" but "does this change require an SSP update, a POA&M entry, an AO notification, or re-authorization?"
 
 ---
 
-## Blending Process and Technology
-
-A strong GRC leader knows that **technology alone is not enough**. We also need **governance processes** in place:
-
--  **Change Management Policy**: Every change must go through approval, logging, and rollback planning  
--  **Configuration Management Plan**: Defines which configurations are approved and monitored  
--  **Security Impact Analysis (SIA)**: Evaluates whether a proposed change will affect the system's security controls  
--  **Stakeholder Review**: For high-risk or impactful changes  
-
-By pairing automated detection tools with structured decision-making processes, we reduce the chance that a silent change erodes trust or opens a vulnerability.
+## The Two Change Categories That Require M-1 Coverage
 
 ---
 
-##  Reflection
+### Category 1: Technical System Changes
 
-If I were managing OpenMRS today, here are three **environmental/system changes** I’d monitor closely:
+Technical system changes are changes to the system components within the authorization boundary — the software, configuration, infrastructure, and integrations that together constitute the OpenMRS deployment.
 
-1. **Change in firewall rules** on AWS that open port 8080 to the internet  
-2. **Deployment of unverified OpenMRS modules** by development teams  
-3. **Expansion to new clinic locations** with unclear network segmentation or physical security practices  
+**What counts as a technical system change for M-1 purposes:**
 
-For each, I’d implement alerts via CloudTrail and AWS Config, require change tickets in our ITSM tool, and hold monthly change control board (CCB) meetings to review trends.
+*Software changes:* OpenMRS core version updates, OpenMRS module additions or removals, Java runtime updates, Tomcat version changes, Ubuntu OS updates beyond routine security patches, MySQL version changes. Any of these can introduce new functionality, change existing behavior, or alter the dependency chain in ways that affect security controls.
+
+*AWS configuration changes:* IAM policy modifications, security group rule changes, KMS key policy changes, S3 bucket policy changes, CloudTrail configuration changes, GuardDuty or Config rule changes, WAF rule updates, VPC routing changes. These are the changes where the existing automated monitoring (Config rules, CloudTrail EventBridge alerts) catches many issues automatically — but automated detection is not a substitute for ISSO review of whether the change's security implications were considered before it was made.
+
+*New integrations or interconnections:* Any new system that connects to OpenMRS, any new API that exposes OpenMRS data, any new BAA or ISA relationship. These expand the attack surface and may require SSP updates to the interconnection documentation and system boundary.
+
+*Data changes:* New types of data stored or processed, new user populations with access, new clinical use cases that change the system's function. These may affect the FIPS 199 categorization — if the system begins processing data types with higher impact requirements than the current HIGH categorization, the categorization may need revision.
+
+**How technical system changes flow through M-1:**
+
+The CM-3 change management process — updated in Task A-5 remediation to include IAM entity creation as a required ISSO notification trigger — is the entry point for all technical system changes. Every change goes through change management. Change management generates ISSO notification. The ISSO evaluates the security impact. The security impact evaluation determines the SSP update requirement and AO notification threshold.
+
+The Security Impact Analysis (SIA) is the structured ISSO evaluation:
+
+*Step 1 — Describe the change:* What specifically is changing? System component, configuration parameter, integration endpoint, data type.
+
+*Step 2 — Identify affected controls:* Which controls in the SSP are affected by this change? A new module that changes authentication flows affects IA controls. A new S3 bucket affects SC-28 encryption. A new IAM role affects AC-6 least privilege.
+
+*Step 3 — Evaluate impact:* Does the change reduce the effectiveness of any affected control? Introduce a new vulnerability? Expand the attack surface? Create a new data flow not covered by existing controls?
+
+*Step 4 — Determine action:* 
+- No control impact → document in change log, no SSP update required
+- Control implementation change (same effectiveness, different mechanism) → SSP update required, no AO notification
+- Control effectiveness reduction → SSP update + POA&M entry + AO notification per Condition 3
+- Material system boundary or categorization change → SSP update + AO notification + possible re-authorization
+
+**Practical example — OpenMRS module addition:**
+
+The Health IT Manager wants to add the OpenMRS Reporting module to enable clinical quality reporting. Before installation, the IT Administrator submits a change request via CM-3 which automatically notifies the ISSO (per the EventBridge rule from Finding A-7 remediation — this rule covers IAM entity creation, but an analogous process applies to software changes).
+
+ISSO SIA:
+- Describe: New OpenMRS module — Reporting v[version]; adds SQL-based report generation capability accessible to users with Reporting role
+- Affected controls: AC-3 (new role with data access), AU-2 (new system actions that should be logged), SC-28 (reports may generate new output files containing ePHI — need encryption verification), SA-10/SR (new module dependency chain — verify no known CVEs in new dependencies)
+- Impact: The Reporting role requires scoping to clinical leadership only — if broadly assigned, it could expose population-level ePHI views. New dependency libraries need Inspector scan before deployment.
+- Action: SSP update to document Reporting role and its access scope; Inspector scan of new dependencies before production installation; AC-3 test in test environment to confirm role scoping; AU-2 review to confirm report generation events are logged.
+
+The SIA takes 30-45 minutes. It prevents a module installation that seemed routine from introducing a new access control gap that would show up as a finding at re-authorization.
 
 ---
 
-##  Today’s Goal Recap
+### Category 2: Operational Environment Changes
 
-Task M-1 taught me to think like a **continuous risk assessor**.  
+Operational environment changes are changes outside the system's technical boundary that affect the risk context in which the system operates.
 
-Security is not a one-time setup — it’s a **living, breathing process**. I now understand that:
+**What counts as an operational environment change for M-1 purposes:**
 
-- **System changes** must be logged, reviewed, and monitored  
-- **Environmental changes** must be anticipated and incorporated into strategy  
-- **Tooling and policy** go hand in hand to create real-time visibility  
+*Organizational changes:* New clinic location (physical access, network connectivity, new users), significant staff changes (loss of ISSO, Health IT Manager, clinical staff with administrative access), organizational restructuring that changes who has authority over system decisions.
 
----
+*Threat landscape changes:* New ransomware variants specifically targeting healthcare EHR systems (directly relevant to OpenMRS availability categorization), new attack techniques targeting AWS environments, new intelligence about specific threats to OpenMRS (the open-source application is visible to threat actors who can study its architecture).
 
-##  Hands-On Activity
+*Regulatory and policy changes:* New HHS guidance on HIPAA Security Rule requirements, state-level patient data protection legislation, new OCR enforcement priorities that affect what controls are most scrutinized in investigations, changes to the NIST SP 800-53 control framework.
 
-Design a quick monitoring checklist for your system:
+*Vendor and supply chain changes:* OpenMRS community security advisories, AWS service changes that affect inherited controls, third-party integrations that change their security posture (relevant to the Laboratory Information System ISA documented in the SSP).
 
-| Change Type | Example | How It’s Monitored |
-|-------------|---------|--------------------|
-| Technical | EC2 IAM Role change | AWS CloudTrail alert |
-| Policy | New MFA mandate | Change advisory review |
-| Threat | Ransomware alert for healthcare | Threat Intel + SOC updates |
-| Network | New VPN endpoint added | Network scan + config baseline diff |
+**How environmental changes flow through M-1:**
 
----
+Unlike technical system changes — which have a structured entry point through change management — environmental changes require proactive scanning. The ISSO cannot rely on a notification system to flag that healthcare ransomware activity has increased; they need to actively monitor threat intelligence sources.
 
-##  Search Terms to Explore
+For MyClinic, the environmental monitoring program:
 
-- `Continuous monitoring strategy NIST RMF`  
-- `AWS CloudTrail for compliance`  
-- `IT change management and configuration drift detection`  
-- `Security impact analysis (SIA)`  
+*Weekly:* ISSO reviews HHS HC3 (Health Sector Cybersecurity Coordination Center) threat briefings, AWS Security Bulletins, and OpenMRS community security advisories. These are the three most directly relevant sources for MyClinic's specific threat environment — healthcare sector threats, AWS platform threats, and OpenMRS application threats.
+
+*Monthly:* ISSO reviews CISA Known Exploited Vulnerabilities catalog for any entries relevant to OpenMRS or AWS components. Reviews HHS OCR enforcement actions for patterns that suggest new compliance focus areas. This monthly scan takes approximately one hour and feeds into the monthly vulnerability management activity.
+
+*Quarterly:* ISSO reviews the SSP's threat and risk assessment sections for continued accuracy. Has the threat environment changed in ways that affect the risk register? Are the risk ratings in the risk register still accurate given threat intelligence from the quarter?
+
+*As-needed:* When a significant environmental change occurs — a major healthcare breach widely reported in the news, new OCR guidance, a significant OpenMRS security advisory — the ISSO performs an immediate impact assessment rather than waiting for the next scheduled review.
 
 ---
 
-## Teaser for Day 70
+## Change Classification and AO Notification Threshold
 
-Tomorrow, we continue our Monitor phase by diving into **Task M-2 – Ongoing Control Assessments**.  
+Not every change requires AO notification — notifying the AO of every routine patch cycle would dilute the significance of genuine notifications and burden the AO unnecessarily. The classification framework:
 
-It’s not enough to know something changed — we must assess whether our **controls still work** as expected after those changes. See you then!
+| Change Type | SSP Update? | AO Notification? | Timeline |
+|---|---|---|---|
+| Routine security patch (OS, libraries) | No — change log only | No | Within 14 days of patch |
+| OpenMRS version update | Yes — update component versions | No (unless introduces new controls) | Before production deployment |
+| New OpenMRS module | Yes — SIA required; SSP updated | Only if creates new risk above baseline | Before production deployment |
+| New IAM entity | Yes — IAM inventory update | No (EventBridge auto-notification to ISSO) | Before granting access |
+| Security group change | Yes if access scope changes | If opens new inbound access | Within 24 hours |
+| New system interconnection | Yes — interconnection section update | Yes — new BAA/ISA required | Before integration |
+| New data type processed | Yes — possible categorization review | Yes — potential re-authorization | Before new data flows |
+| Threat landscape: new relevant CVE | POA&M if not patched within SLA | If High severity unpatched | Per severity SLA |
+| Regulatory change (new HIPAA guidance) | If affects control implementation | If affects authorization basis | Within 90 days of guidance |
+| Significant staff change (ISSO departure) | Succession documentation | Yes — AO must designate new ISSO | Immediately |
 
+The last entry — ISSO departure — is the single environmental change that requires the most careful handling. If the ISSO who built this security program departs, the AO needs to know immediately, because the authorization assumptions include the existence of a qualified, knowledgeable ISSO executing the continuous monitoring program. The archival README document from Day 68 is what makes the succession less catastrophic — but it does not eliminate the need for AO notification and an expedited onboarding process for the successor.
+
+---
+
+## A Real-World Example That Made This Click
+
+While developing the module addition SIA example today — specifically the dependency scanning step — I thought about the **2021 Log4Shell vulnerability (CVE-2021-44228)** and how it affected OpenMRS directly.
+
+Log4Shell was a critical Remote Code Execution vulnerability in the Log4j Java logging library, disclosed in December 2021. OpenMRS uses Java, and some versions of OpenMRS and its modules included Log4j as a dependency. The OpenMRS community issued security advisories and patches, but organizations running OpenMRS needed to identify whether their specific deployment used an affected version of Log4j and in what context.
+
+The organizations that responded fastest to Log4Shell were the ones that had dependency inventories — systems that knew which libraries were present in their deployments. The SIA process for module additions builds exactly that kind of institutional knowledge incrementally: every module installation is accompanied by a dependency scan, so the ISSO always has a reasonably current picture of what libraries are present in the OpenMRS deployment.
+
+An organization that installed modules without SIA over several years arrived at Log4Shell with no idea whether they were affected. An organization that practiced M-1 change monitoring consistently arrived at Log4Shell with an Inspector scan history and a dependency list that made the impact assessment take hours instead of weeks.
+
+This is the compounding value of disciplined M-1 monitoring — it is not just about the changes being monitored; it is about building the organizational knowledge base that makes future rapid response possible.
+
+---
+
+## What I Am Still Thinking About
+
+The environmental monitoring program I described today relies heavily on ISSO initiative — weekly threat briefing reviews, monthly CISA catalog scans, quarterly SSP accuracy reviews. These are calendar-driven activities that the ISSO needs to execute consistently to be meaningful.
+
+The AT-2 quarterly training review lapse in Day 55 — where a calendar-driven activity fell through the cracks — is a reminder that ISSO capacity is finite and competing priorities exist. The M-1 environmental monitoring activities are less automated than the technical monitoring (GuardDuty, Config, Inspector run automatically) and more dependent on disciplined ISSO execution.
+
+One way to strengthen the environmental monitoring is to build accountability into it beyond the ISSO's personal calendar. Monthly ISSO threat briefing notes, shared with the Health IT Manager, serve two purposes: they document that the monitoring occurred (accountability), and they keep the Health IT Manager informed about the threat landscape affecting their clinical system (organizational awareness). If the ISSO misses a monthly briefing, the Health IT Manager notices the absence of the monthly note — creating a lightweight peer accountability mechanism.
+
+This kind of distributed accountability — not surveillance, but shared visibility — is what makes security programs resilient to the capacity constraints that affect every small organization's security function.
+
+---
+
+## What's Next
+
+Day 70 covers Task M-2 — ongoing control assessments. M-1 monitors for changes; M-2 assesses whether controls remain effective after those changes and over time. The ongoing control assessment program is how the authorization stays valid between formal re-authorization cycles — not by assuming controls continue to work, but by periodically verifying that they do.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task M-1 System and Environment Monitoring](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-137 – Information Security Continuous Monitoring](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [HHS HC3 – Health Sector Cybersecurity Coordination Center Threat Briefings](https://www.hhs.gov/about/agencies/asa/ocio/hc3/index.html)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- [OpenMRS Security Advisories](https://talk.openmrs.org/c/security/40)
+
+---
+
+*#GRC #ContinuousMonitoring #NISTRMF #TaskM1 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Log4Shell #Day69*
