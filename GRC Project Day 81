@@ -1,99 +1,264 @@
-#  Day 81 – Incident Response & Business Continuity Planning | 100 Days of GRC
-
-As I continue to deepen my expertise in Governance, Risk, and Compliance (GRC), Day 81 brings us to one of the most mission-critical areas of any security program: **Incident Response (IR)** and **Business Continuity/Disaster Recovery (BCP/DR)**.
-
-Whether it's a data breach, a natural disaster, or a regional cloud outage, the ability to respond swiftly and recover operations is what separates resilient organizations from the rest. In the context of our **OpenMRS deployment on AWS**, these capabilities are not optional — they’re essential.
+# Day 81 – Incident Response and Business Continuity Planning | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What I’ve Learned
+## When the Plan Meets Reality
 
-###  Incident Response Planning (IRP)
+Day 80 built the audit readiness framework — the evidence trail, the people preparation, the narrative consistency check, and the IR-3 tabletop exercise design question that ended the entry: a scenario where the primary contact is unreachable and the IRP does not explicitly address the escalation path. That open question is where Day 81 begins.
 
-An **Incident Response Plan** is like a fire drill for cybersecurity incidents. When a security event like unauthorized access occurs, it’s not the time to improvise. Everyone on the team should know their role, what steps to take, and how to escalate.
+The OpenMRS Incident Response Plan exists. The HIPAA breach notification workflow was added in Q1 monitoring (POA&M item 006 closed). The technical incident response capability — GuardDuty detection, Security Hub aggregation, CloudTrail forensic evidence — was verified during the formal assessment. What has not been tested is whether the people who would execute the IRP can actually execute it under pressure, with incomplete information, at 2am, when things are not going according to the procedure document.
 
-#### IR Lifecycle Applied to OpenMRS on AWS:
-- **Identify**: Detect suspicious access to patient data via logs or SIEM alerts.
-- **Contain**: Temporarily disable the affected OpenMRS instance or revoke credentials.
-- **Eradicate**: Patch the exploited vulnerability or remove malware.
-- **Recover**: Restore OpenMRS from clean backups, validate integrity.
-- **Learn**: Conduct a post-mortem, update playbooks, and train teams.
-
-A robust IRP also includes:
-- **Communication Plans**: Who gets notified and when (e.g., internal leaders, affected patients, regulators).
-- **Evidence Handling**: Proper logging, preserving forensic data for analysis or compliance reporting.
-- **Defined Roles**: Clear roles and responsibilities for each IR team member.
+Day 81 examines incident response and business continuity planning at the operational depth that the project has established for everything else — not as abstract concepts, but as specific decisions and procedures for the OpenMRS system, with honest attention to where the current program is strong and where it has gaps that testing will surface.
 
 ---
 
-###  Business Continuity & Disaster Recovery (BCP/DR)
+## What I Worked On Today
 
-When incidents go beyond security breaches — like **AWS outages**, hardware failure, or natural disasters — you need BCP and DR to ensure operations **continue or recover quickly**.
-
-#### Real-World OpenMRS BCP/DR Example:
-Imagine a fire in an AWS data center hosting OpenMRS:
-- **BCP** ensures the clinic can continue operations:
-  - Revert to paper records.
-  - Redirect staff to alternative workflows.
-- **DR Plan** triggers technical recovery:
-  - Restore OpenMRS from encrypted backups in a separate AWS region.
-  - Validate restored environment before resuming operations.
-
-#### Key DR Elements I Practice:
-- **Cross-region backup strategy** on AWS.
-- **Periodic testing** of restore procedures (don’t wait for the real thing).
-- **Emergency mode operations** per HIPAA guidelines (e.g., staff access via secure offline workflows).
+Incident response is governed by NIST SP 800-61 Rev 2 (Computer Security Incident Handling Guide) and HIPAA 45 CFR §164.308(a)(6) (Security Incident Procedures). Business continuity and disaster recovery are governed by NIST SP 800-34 Rev 1 (Contingency Planning Guide) and HIPAA 45 CFR §164.308(a)(7) (Contingency Plan). The OpenMRS SSP documents IR and CP controls; today I work through the operational depth of those controls — specific playbooks, HIPAA-specific decision points, DR architecture, and the tabletop scenario design that will test the plan against operational reality.
 
 ---
 
-##  Hands-On Activity
+## What Actually Clicked for Me
 
-One **critical element** in my IRP for OpenMRS is a **clear communication plan**. Here’s why:
+The concept that clarified incident response today is the difference between a response procedure and a response capability.
 
-> In a high-stakes moment like a breach, minutes matter. Knowing exactly *who to call*, *how to escalate*, and *what information to share* keeps the response organized, timely, and compliant. Whether it’s the IT lead, AWS support, or clinic leadership, outdated contacts can paralyze response. I maintain and regularly validate an up-to-date IR contact list across key roles and vendors.
+A response procedure is a documented sequence of steps: detect, contain, eradicate, recover, post-incident activity. The procedure is necessary — it establishes the expected sequence and the decision points. But a procedure sitting in a document is not a capability. A capability is the combination of the procedure, the trained people who know how to execute it, the technical tools that support the execution, and the organizational authority structures that allow rapid decisions under pressure.
 
----
+The most common incident response failure mode is not a flawed procedure — it is the gap between the procedure and the capability. The IRP says "contain the affected system by revoking the compromised credentials." The procedure is correct. The capability gap: who has the AWS console access to revoke IAM credentials at 2am? The IT Administrator does. But does the IT Administrator have the authority to take that action without Health IT Manager approval? The IRP should answer this. If it does not, the incident response stalls at a decision point while someone tries to reach the Health IT Manager.
 
-## � Reflection
-
-If OpenMRS were to go offline **right now**, would my team and I know what to do?
-
- Yes — because we’ve developed and **tested** our plans.
-
-- The IRP ensures everyone knows their role.
-- The BCP ensures patients are still cared for.
-- The DR plan ensures OpenMRS gets restored securely and swiftly.
-
-But this journey taught me it’s not enough to document plans. I must **operationalize them**:
-- Run **tabletop simulations**.
-- Review and revise playbooks quarterly.
-- Verify **backup integrity and restore time** regularly.
+This capability gap — authority to act without approval during an active incident — is the most common gap that tabletop exercises surface. The procedure describes what should happen; the exercise reveals whether the people involved have both the technical access and the organizational authority to make it happen in real time.
 
 ---
 
-##  Key Takeaways
-
--  **IRP is not just a document** – it's a rehearsed action plan.
--  **BCP/DR are business enablers**, not IT-only concerns.
--  **Testing and drills** reveal gaps that written plans cannot.
--  **Communication and clarity under pressure** make or break incident response.
--  **HIPAA and NIST require these plans** – but smart leaders practice them because it protects lives and mission.
+## The OpenMRS Incident Response Program — Operational Depth
 
 ---
 
-## � Suggested Search Terms
+### Incident Classification — What Counts as an Incident?
 
-- `Incident Response Plan Steps (NIST Incident Handling)`
-- `Business Continuity vs Disaster Recovery (IT examples)`
-- `Healthcare IT Contingency Planning (HIPAA requirements)`
-- `AWS Backup and Restore Best Practices`
-- `Disaster Recovery Cloud Deployment Strategies`
+Before the response procedure, the detection and classification procedure. Not every security alert is an incident. Every incident requires a specific response. The classification framework determines which alerts require which level of response, and prevents both over-response (treating every Config NON_COMPLIANT finding as a crisis) and under-response (treating a GuardDuty HIGH finding as routine).
+
+**For OpenMRS, the incident classification tiers:**
+
+*Tier 1 — Security Event (monitor and document, no immediate escalation):*
+Failed authentication attempts within normal thresholds (fewer than 10 per user per day), Config NON_COMPLIANT findings for Low-severity rules, Inspector findings with CVSS below 7.0, GuardDuty LOW findings.
+
+*Tier 2 — Security Incident (ISSO-led response, Health IT Manager notification within 4 hours):*
+Any GuardDuty MEDIUM finding, any Config NON_COMPLIANT finding for HIGH-severity rules (restricted-ssh, rds-storage-encrypted), failed authentication above threshold for a single account (possible credential stuffing), any unauthorized configuration change identified through CloudTrail review.
+
+*Tier 3 — Critical Incident (immediate multi-party response, AO notification within 24 hours):*
+Any GuardDuty HIGH or CRITICAL finding, any confirmed unauthorized access to OpenMRS, any confirmed ePHI exposure, any ransomware indicator, any complete system unavailability (RTO clock starts immediately).
+
+*Tier 4 — HIPAA Reportable Incident (Compliance Officer notification immediately, 60-day reporting clock starts):*
+Any confirmed or suspected unauthorized access to, use of, or disclosure of ePHI that does not qualify under a HIPAA exception. The Compliance Officer begins the four-factor breach assessment in parallel with the technical investigation.
+
+The Tier 4 classification is the one most likely to be applied incorrectly under pressure. The instinct in a healthcare organization is to avoid the word "breach" until the investigation is conclusive. The HIPAA clock does not wait for a conclusive investigation — it starts from when the organization knew or should have known. Getting the Compliance Officer involved at the Tier 3 determination is the mechanism that ensures the HIPAA clock is tracked from the correct starting point, not from the point when the investigation concludes.
 
 ---
 
-##  Final Thought
+### The Incident Response Playbooks
 
-In GRC, it's not *if* something goes wrong — it's *when*. By building and testing Incident Response and Business Continuity capabilities into my OpenMRS@AWS project, I'm not only meeting compliance — I'm strengthening organizational resilience.
+The general IRP documents the overall IR program structure. Playbooks provide specific step-by-step response procedures for the most likely incident types. For OpenMRS, three playbooks are most important:
 
-Leadership is about preparing teams to respond with calm, clarity, and control — and that’s exactly what well-executed IR and BCP/DR plans deliver.
+---
 
+**Playbook 1: Compromised Credentials / Unauthorized OpenMRS Access**
+
+*Detection trigger:* GuardDuty finding for unusual IAM activity, OpenMRS audit log showing access from unrecognized IP or at unusual hours, failed authentication spike followed by successful authentication.
+
+*Immediate containment (ISSO or IT Administrator, no approval required for Steps 1-3):*
+1. Identify the potentially compromised account from the detection source.
+2. Disable the IAM user (if AWS credential compromise) or deactivate the OpenMRS user account (if application credential compromise). No Health IT Manager approval required for account disable during active incident — this authority is explicitly delegated in the IRP. Document the time of disable action.
+3. Revoke any active sessions associated with the account (AWS: revoke active sessions in IAM console; OpenMRS: force logout via admin console).
+4. Notify ISSO (if IT Administrator acting) or Health IT Manager within 30 minutes.
+
+*Investigation (ISSO-led):*
+5. Pull CloudTrail logs for the affected IAM identity for the prior 30 days. What resources were accessed? What API calls were made? Were any new IAM entities created, any S3 objects accessed, any EC2 configurations modified?
+6. Pull OpenMRS audit log for the affected application account. What records were accessed? Were any records modified? Were any administrative functions accessed?
+7. Determine whether any ePHI was accessed or exfiltrated. This determination triggers Tier 4 classification if ePHI access is confirmed or cannot be ruled out.
+
+*HIPAA breach assessment (Compliance Officer, parallel to investigation):*
+8. Apply four-factor test: (1) Nature and extent of PHI involved (types of data, likelihood of re-identification); (2) Who accessed the PHI (was it someone with a legitimate treatment relationship?); (3) Whether PHI was actually acquired or viewed; (4) Extent to which the risk has been mitigated. If the investigation cannot rule out ePHI access, presumption of breach applies — notification is required unless an exception applies.
+
+*Recovery:*
+9. Create new credentials for the affected account after root cause investigation confirms the compromise vector is eliminated.
+10. Verify account re-creation is documented in IAM inventory.
+11. Brief the affected account holder on what happened and how to recognize similar attempts.
+
+*Post-incident:*
+12. Document in monitoring log with full timeline.
+13. Update POA&M if root cause analysis reveals a control gap.
+14. ISSO delivers incident summary to Health IT Manager within 5 business days.
+
+---
+
+**Playbook 2: Ransomware Indicator**
+
+*Why this playbook is a priority:* The HC3 threat briefing from Q1 monitoring identified healthcare EHR ransomware as an elevated threat for organizations matching MyClinic's profile. The HC3 briefing is the reason this playbook receives priority development — known, elevated threats should have specific playbooks, not just general IR procedures.
+
+*Detection trigger:* GuardDuty finding for CryptoCurrency:EC2/BitcoinTool (potential cryptocurrency mining, sometimes associated with ransomware staging), unusual file modification volume in EC2 EBS volume, OpenMRS application unavailability with no known maintenance window, EC2 instance behaving unusually (CPU spike, unexpected network connections).
+
+*Immediate containment (IT Administrator, no approval required):*
+1. Isolate the affected EC2 instance immediately: modify the security group to deny all inbound and outbound traffic. This stops lateral movement and command-and-control communication. Document isolation time.
+2. Do NOT shut down the EC2 instance yet — forensic memory artifacts may be needed. Capture a memory snapshot if tooling supports it.
+3. Notify ISSO and Health IT Manager immediately. Invoke Tier 3 classification. AO notification within 24 hours.
+
+*Critical operational decision — invoke BCP or not:*
+4. If OpenMRS is the only clinical application and patient care is occurring: invoke clinical downtime procedures immediately. Clinical staff shift to paper forms. Health IT Manager leads the clinical transition; IT Administrator leads the technical response. These are parallel tracks.
+
+*Investigation (do not rush to recovery):*
+5. Identify the ransomware variant if possible — this affects recovery strategy. Some variants have available decryptors.
+6. Determine the initial access vector: phishing? Unpatched vulnerability? Compromised credentials? This is critical for preventing re-infection after recovery.
+7. Identify the extent of encryption: which files/databases are affected? Is the RDS instance (separately managed by AWS) affected, or only EC2 EBS volumes?
+
+*Key insight about AWS architecture and ransomware:* The OpenMRS deployment on AWS has an architectural property that significantly limits ransomware impact on data: the patient records are in the RDS instance, which is a managed AWS service that ransomware running on the EC2 instance cannot directly access at the filesystem level. Ransomware that encrypts the EC2 instance's EBS volumes encrypts the OpenMRS application and configuration but does not encrypt the database that holds the patient records. Recovery in this scenario is: restore the EC2 instance from a known-clean backup or rebuild from the SSP configuration baseline; reconnect to the existing (unaffected) RDS instance. Recovery time may be measured in hours rather than days.
+
+This is worth documenting explicitly in the playbook — clinical staff and leadership who hear "ransomware" may assume all data is lost. Understanding that the RDS separation provides an architectural recovery advantage is information the ISSO needs to communicate accurately and quickly to reduce panic and support rational decision-making during the incident.
+
+*Recovery:*
+8. Rebuild EC2 instance from clean baseline (SSP configuration baseline documentation from Day 50-51).
+9. Apply all current patches before reconnecting to RDS.
+10. Reconnect to RDS instance and verify application integrity before returning to production use.
+11. Verify audit logging is active before returning to production.
+
+---
+
+**Playbook 3: OpenMRS Unavailability (Non-Security)**
+
+This playbook covers availability incidents — AWS regional outage, RDS instance failure, network configuration error — that are not security incidents but require the same rapid, organized response.
+
+*Detection trigger:* OpenMRS health check fails (automated monitoring alert), clinical staff report inability to access patient records, RDS instance status check failing in AWS console.
+
+*Immediate assessment (IT Administrator):*
+1. Determine scope: Is OpenMRS unavailable for all users or specific users? Is the EC2 instance running and accessible? Is the RDS instance running and accessible? Is the network path between them intact?
+2. Check AWS Health Dashboard for any active service disruptions in the region.
+3. Estimate time to resolution — this determines whether to invoke clinical downtime procedures or wait for technical recovery.
+
+*RTO decision point:* If the estimated time to resolution exceeds 30 minutes, invoke clinical downtime procedures. Do not wait until 4 hours have passed (the RTO target) to start the downtime procedure — clinical operations cannot wait 4 hours without some form of patient care workaround.
+
+The 30-minute threshold for downtime invocation is distinct from the 4-hour RTO target. The RTO measures how long technical recovery takes; the 30-minute threshold triggers operational continuity. The Health IT Manager makes the downtime invocation decision based on the IT Administrator's time-to-resolution estimate.
+
+*Recovery:*
+4. Execute technical recovery per CP-2 procedures. For RDS failure: initiate point-in-time recovery from most recent recovery point.
+5. Before returning to production: verify data integrity (record counts, spot-check recent entries), verify audit logging is active, verify authentication controls are functioning.
+6. Document the outage duration, root cause, and recovery timeline in the monitoring log.
+7. If the outage exceeded 4 hours (RTO missed): this is a CP-9 finding requiring documentation and possible POA&M entry.
+
+---
+
+## Business Continuity and Disaster Recovery Architecture
+
+The BCP and DR program for OpenMRS addresses the scenario beyond a recoverable service disruption — regional AWS failure or infrastructure loss that requires a full environment restoration.
+
+**Current DR architecture:**
+
+The weekly S3 export of the OpenMRS database to a second AWS region (us-west-2, separate from the primary us-east-1 deployment) is the primary DR data protection mechanism. The S3 bucket is replicated cross-region, so a complete loss of us-east-1 availability does not affect access to the backup data.
+
+Recovery from a regional failure:
+1. Provision new EC2 instance in us-west-2 from the OpenMRS AMI (stored in both regions).
+2. Restore RDS instance from the most recent cross-region S3 export.
+3. Update DNS to point to the new us-west-2 endpoint.
+4. Verify application integrity and authentication controls.
+5. Return to production.
+
+**Recovery time and recovery point objectives:**
+
+*RTO (Recovery Time Objective):* 4 hours — the time from incident declaration to OpenMRS being available for clinical use in the DR environment.
+
+*RPO (Recovery Point Objective):* 7 days — the maximum data loss window. The weekly S3 cross-region export means up to 7 days of patient records could be lost in a scenario where the primary region is completely unrecoverable and no RDS automated backup recovery point is accessible.
+
+*Honest assessment of the RPO:* A 7-day RPO for a healthcare EHR is concerning for patient safety — 7 days of clinical encounters, medications, and diagnoses would need to be reconstructed from paper records. The CP-2 clinical downtime procedures that are AT RISK for the 90-day deadline include a section on post-recovery reconciliation — the process for reconstructing the records accumulated during the outage period from paper documentation.
+
+The RPO could be reduced by increasing the S3 export frequency from weekly to daily — a low-cost configuration change that would reduce maximum data loss from 7 days to 1 day. This is worth raising with the Health IT Manager and AO as a CP-9 enhancement — not a POA&M finding, but a proactive improvement.
+
+**BCP — Clinical Operations Without OpenMRS:**
+
+The clinical downtime procedures document the paper-based workflows for:
+- Patient registration (paper intake forms)
+- Medication administration (medication administration record cards)
+- Clinical documentation (SOAP note paper forms)
+- Lab ordering (paper requisitions)
+- Prescription generation (handwritten prescriptions per state law)
+
+The downtime kit — paper forms, clipboards, reference cards, a printed list of the 20 most common medication dosages — is maintained in a designated supply cabinet in the clinical area. Location is communicated to all clinical staff during onboarding.
+
+The CP-3 retention gap from Day 79 (one of two staff members could not describe the downtime procedure) signals that the downtime kit location and the basic downtime workflow need to be reinforced through regular drill. The quarterly fire drill that clinical organizations already conduct is a natural vehicle — a brief 5-minute downtime procedure review added to each quarterly fire drill would reinforce retention without requiring a separate training event.
+
+---
+
+## The Tabletop Exercise Design — Completing the Day 80 Question
+
+Day 80's IR-3 tabletop scenario design question: a GuardDuty HIGH finding at 2am Saturday, primary contact unreachable, IRP escalation path unclear. Here is how that exercise would be structured:
+
+**Scenario: Saturday 2:17am — GuardDuty HIGH finding**
+
+*Inject 1:* GuardDuty generates a HIGH finding: "Cryptocurrency mining activity detected on EC2 instance associated with the OpenMRS deployment. Multiple outbound connections to known cryptocurrency mining pools." The IT Administrator on call receives the SNS notification.
+
+Questions for participants:
+- What do you do first? (Validate the finding, assess severity, isolate the instance?)
+- Who do you call? (The IRP says notify ISSO. The ISSO is not responding at 2am. What is the escalation path?)
+- Do you isolate the instance before notifying anyone? (The playbook says yes — isolation authority is delegated. Do participants know this?)
+
+*Inject 2:* IT Administrator isolates the EC2 instance. OpenMRS is now unavailable. It is 2:30am. No clinical operations are occurring (Saturday night). The Health IT Manager's phone goes to voicemail.
+
+Questions:
+- Does the IT Administrator have the authority to keep the instance isolated until morning, or must they get approval to proceed?
+- Who is the next escalation point if both the ISSO and Health IT Manager are unreachable?
+- Is the AO notification clock running? (Yes — GuardDuty HIGH finding, Tier 3 classification, 24-hour notification clock started at 2:17am.)
+
+*Inject 3:* At 7:15am Saturday, the ISSO becomes reachable. CloudTrail review reveals that a new IAM user was created 3 days ago with EC2 launch permissions that were not in the IAM inventory. The new user has been running cryptocurrency mining workloads on a separate EC2 instance that was launched without a change management ticket.
+
+Questions:
+- Is this a HIPAA breach? (Unauthorized IAM user — was ePHI accessed? The CloudTrail review will show whether the new IAM user accessed the RDS instance or the backup S3 bucket.)
+- How does the Compliance Officer get involved at this point? (HIPAA clock started when?)
+- What is the root cause, and is it the same A-7 / M-002 pattern — IT Administrator not following CM-3 process — or a third-party compromise?
+
+The tabletop exercise is designed to test: (1) whether the delegation of authority for immediate containment is understood, (2) whether the escalation path for unreachable primary contacts is documented and known, (3) whether the HIPAA clock trigger is understood as starting at detection, not at investigation completion, and (4) whether the participants can reason through an unfamiliar scenario rather than reciting the IRP.
+
+---
+
+## A Real-World Example That Made This Click
+
+The 2am unreachable-primary-contact scenario is not hypothetical. The **2020 Universal Health Services ransomware attack** — one of the largest healthcare ransomware incidents on record, affecting approximately 400 UHS facilities — occurred over a Sunday night into Monday. Staff at multiple facilities reported that the initial response was delayed because the incident occurred outside business hours and the escalation path for reaching IT security leadership was not functioning as expected.
+
+The UHS incident ultimately resulted in an estimated $67 million in losses — including the costs of reverting to paper records across hundreds of facilities, overtime for IT staff, and lost revenue during the recovery period.
+
+The operational lesson is exactly what the tabletop scenario tests: the incident response plan must address not just the technical response sequence but the authority and escalation structures that allow the response to begin immediately, at any hour, without waiting for the normal business-hours approval chain to become available.
+
+For MyClinic — a small organization where the primary contacts are a small team — the after-hours escalation path is simpler than at a large health system, but it is equally important. The IRP should name, in order: IT Administrator (immediate technical response, authority to isolate without approval), ISSO (technical leadership, first escalation), Health IT Manager (operational authority, second escalation), Executive Director/AO (organizational authority, third escalation). If the IT Administrator cannot reach anyone up the chain within 30 minutes, the IT Administrator proceeds with containment and documents all actions for review when contacts become available.
+
+Explicitly documenting this authority delegation — in the IRP, not just understood informally — is what makes the after-hours response reliable rather than dependent on individual judgment under pressure.
+
+---
+
+## What I Am Still Thinking About
+
+The RPO observation — 7-day maximum data loss from the weekly S3 cross-region export — deserves a more direct follow-up than a passing mention.
+
+For a system categorized HIGH for availability and HIGH for integrity, a 7-day RPO means that a complete regional failure scenario could require reconstructing one week of clinical encounters from paper records. For a clinic seeing [N] patients per day, that is [N × 7] patient encounters that need to be re-documented before the EHR reflects current clinical state.
+
+The post-recovery reconciliation challenge is well-documented in healthcare IT — the 2017 WannaCry NHS attack (referenced in Day 63) produced exactly this problem at affected NHS trusts, where the mismatch between paper records accumulated during the outage and the pre-outage EHR state created patient safety risks during reconciliation.
+
+Reducing the S3 export frequency from weekly to daily would reduce the maximum RPO from 7 days to 1 day at minimal additional cost. The technical change is straightforward — a parameter change in the RDS automated backup schedule and a corresponding S3 export job adjustment. The operational benefit — reducing the post-recovery reconciliation burden from 7 days of encounters to 1 day — is significant from a patient safety and clinical operations perspective.
+
+I want to bring this RPO reduction as a proactive improvement proposal to the Health IT Manager before the next quarterly report — not as a POA&M finding but as a security architecture enhancement that directly reduces patient safety risk in the worst-case availability scenario.
+
+---
+
+## What's Next
+
+Day 82 examines vendor and third-party risk management — how the security risks introduced by external relationships are identified, assessed, and managed. The AWS relationship, the OpenMRS open-source dependency, and the Laboratory Information System integration represent three distinct categories of third-party risk that require different management approaches.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-61 Rev 2 – Computer Security Incident Handling Guide](https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final)
+- [NIST SP 800-34 Rev 1 – Contingency Planning Guide for Federal Information Systems](https://csrc.nist.gov/publications/detail/sp/800-34/rev-1/final)
+- [HHS OCR – HIPAA Security Rule Contingency Plan and Incident Response Requirements](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [CISA – Healthcare Ransomware Response and Recovery Guidance](https://www.cisa.gov/stopransomware/ransomware-guide)
+- [Universal Health Services Ransomware Incident — Healthcare IT News Coverage](https://www.healthcareitnews.com/news/uhs-confirms-ransomware-attack-report-says-ryuk-malware-was-used)
+
+---
+
+*#GRC #IncidentResponse #BusinessContinuity #DisasterRecovery #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day81*
