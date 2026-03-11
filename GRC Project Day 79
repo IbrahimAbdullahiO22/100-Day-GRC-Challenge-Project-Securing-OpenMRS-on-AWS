@@ -1,106 +1,218 @@
-# 📋 Day 79 – Compliance Checklists & Self-Assessment
-
-Today, I focused on one of the most practical tools in Governance, Risk, and Compliance (GRC): **compliance checklists**. These are more than paperwork — they’re your internal radar system, scanning for gaps before auditors do.
-
-##  What Is a Compliance Checklist?
-
-A **compliance checklist** is a structured list of requirements derived from regulations, standards, or best practices — such as HIPAA, NIST, or CIS Controls. It allows teams to evaluate their systems, processes, and controls proactively. For our **OpenMRS deployment on AWS**, I treated it as a self-assessment mechanism to uncover vulnerabilities, enforce best practices, and prepare for future audits.
-
->  The goal isn’t just to tick boxes.  
-> It’s to **build confidence** that your environment is secure and compliant — and to highlight gaps that need addressing.
+# Day 79 – Compliance Checklists and Self-Assessment | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  HIPAA Security Rule Checklist in Action (OpenMRS Case Study)
+## The Internal Radar — Self-Assessment Before Auditors Arrive
 
-Since OpenMRS deals with **Electronic Health Records (EHR)**, I chose to use a **HIPAA Security Rule checklist** to assess compliance and security. Here’s how I applied it:
+Day 78 built out the POA&M management discipline — the timeline revision process, ownership enforcement, the 90-day aging review, and the formal risk acceptance process. The POA&M tracks gaps that are already identified. Day 79 is about the practice that surfaces gaps before they appear in a formal assessment or, worse, in a breach investigation: structured self-assessment using compliance checklists.
 
-###  Item 1: "Are all sensitive health data encrypted in transit and at rest?"
+I want to be direct about where I am starting from with this topic. The term "compliance checklist" can mean very different things depending on how it is used. At its worst, a compliance checklist is exactly what the phrase "check-the-box compliance" describes — a table with a column of requirements and a column of yes/no answers, completed under time pressure before an audit, with the goal of generating a passing score rather than an accurate picture of the organization's security posture. At its best, a compliance checklist is a structured self-interrogation that forces the organization to look at its own controls honestly, surface gaps, and feed the findings into the POA&M and continuous monitoring program.
 
-**Assessment:**
-- **In Transit:** Confirmed SSL/TLS is enforced via HTTPS for all OpenMRS endpoints.
-- **At Rest:** AWS RDS encryption is enabled; S3 buckets use AES-256 server-side encryption.
-
-**Status:**  **Compliant**
+The difference is not the format. It is the intent and the follow-through. Today I want to examine what makes self-assessment genuinely useful rather than theater.
 
 ---
 
-### ⚠️ Item 2: "Do we log and review access to patient records?"
+## What I Worked On Today
 
-**Assessment:**
-- OpenMRS provides some basic audit logging.
-- However, read-access logs for patient records are **limited by default**.
-- AWS CloudTrail logs are configured, but application-level read-access logging needs improvement.
-
-**Status:** ⚠️ **Gap Identified**
-
-**Action Plan:**
-- Enhance OpenMRS logging with a plugin or custom implementation.
-- Integrate logs with AWS CloudWatch for centralized visibility.
-- Document the deficiency in the POA&M and assign follow-up.
+Compliance self-assessment is a practice supported by multiple frameworks — NIST SP 800-53A provides assessment procedures for each control in the 800-53 control catalog, the HHS HIPAA Security Rule has an official self-assessment guidance document, CIS Controls provide implementation verification checklists, and the AWS Well-Architected Framework security pillar provides cloud-specific self-assessment questions. Today I work through what a substantive self-assessment looks like for the OpenMRS deployment — not a single checklist pass but a multi-framework self-assessment structure that covers the most important gaps an internal reviewer should surface before a formal re-authorization assessment.
 
 ---
 
-##  Why Checklists Matter
+## What Actually Clicked for Me
 
-Checklists help turn abstract compliance goals into **tangible control reviews**. For OpenMRS, it was like giving the system a **compliance health check**. They ensure:
+The concept that clarified self-assessment today is understanding the difference between a compliance assertion and a compliance demonstration.
 
-- Nothing critical slips through the cracks
-- Evidence is gathered before an audit
-- Risk discussions are **data-driven**, not guesswork
+A compliance assertion is a statement: "Yes, we encrypt data at rest." A compliance demonstration is the evidence and context that makes the assertion verifiable: "RDS instance encryption is enabled using customer-managed KMS key [ARN]. S3 backup bucket has server-side encryption enabled with AES-256. EC2 EBS volumes were created with encryption enabled as the account default. Config rule `rds-storage-encrypted` has been COMPLIANT continuously since [date]. The most recent Audit Manager evidence collection [date] shows these controls in compliant state."
 
-However, I’ve learned that checklists alone are not enough. They must be part of a **risk-based mindset**. Just because something is "checked off" doesn't mean the risk has vanished. Every item needs to be backed by:
+Most compliance checklists produce assertions. Effective self-assessment produces demonstrations. The difference matters because assertions can be wrong — not through dishonesty, but through incomplete knowledge. The ISSO who asserts "we log access to patient records" may be genuinely believing that assertion, based on knowing that CloudTrail is enabled and OpenMRS has an audit log module. The ISSO who demonstrates compliance needs to actually verify that the OpenMRS audit log is capturing read events for patient records, that those events include the required fields (who, what, when, from where), that the logs are flowing to CloudWatch, and that the CloudWatch log retention is configured to meet the HIPAA requirement. The demonstration process frequently discovers that the assertion was only partially accurate.
 
-- Context
-- Evidence
-- Continuous monitoring
+This is why self-assessment is valuable even for a well-monitored system: the monitoring program watches for deviations from the known configuration. Self-assessment questions whether the known configuration is actually what was implemented and verified. It catches the gap between what we think we have and what we actually have.
 
 ---
 
-##  Reflection
+## Self-Assessment Framework for OpenMRS
 
-> How do we use checklists without falling into a "check-the-box" trap?
+Rather than a single checklist, a multi-framework self-assessment examines the system from several angles. Each framework reveals different types of gaps:
 
-As a leader in GRC, I’ve adopted the mindset that **checklists support — not substitute — critical thinking**. My approach includes:
+**HIPAA Security Rule self-assessment** reveals whether the administrative, physical, and technical safeguard requirements are met in operational practice — not just in documented policy.
 
-- Using checklists to **start conversations**, not end them.
-- Asking "What’s the risk behind this item?" for each entry.
-- Reviewing items periodically — not just at audit time.
-- Training team members to understand **why** each item exists.
+**NIST SP 800-53A control assessment procedures** reveal whether the specific controls in the SSP are implemented correctly, operating as intended, and producing the required outcomes.
 
-That’s how I integrate checklists into a living, breathing compliance culture.
+**CIS Controls v8 self-assessment** reveals operational security hygiene gaps — patching, configuration management, access control — that may exist even in a formally authorized system.
 
----
+**AWS Well-Architected Framework Security Pillar** reveals cloud-specific implementation gaps in the five security design principles: identity and access management, detection, infrastructure protection, data protection, and incident response.
 
-##  Hands-On Assessment Summary
-
-| Checklist Item                                | Status        | Evidence/Notes |
-|----------------------------------------------|---------------|----------------|
-| Data encrypted at rest and in transit         |    Compliant   | RDS/S3 encryption, HTTPS enforced |
-| Access to patient records is logged & reviewed| ⚠️ Gap Found  | Basic audit logs present, needs improvement at app-level |
+Today I work through a representative sample of high-value self-assessment questions from each framework, using the OpenMRS system as the subject.
 
 ---
 
-##  Today’s Goal Recap
+## HIPAA Security Rule Self-Assessment — Administrative Safeguards
 
-- ✔ Explored how compliance checklists support proactive security
-- ✔ Used HIPAA Security Rule to assess OpenMRS controls
-- ✔ Identified both compliant areas and control gaps
-- ✔ Connected checklist outcomes to POA&M and risk tracking
+The HIPAA Security Rule's Administrative Safeguards (45 CFR §164.308) are the category where paper compliance and operational reality most frequently diverge. Documents exist; processes may not function as documented.
 
 ---
 
-##  Suggested Search Terms
+**§164.308(a)(1) — Security Management Process: Risk Analysis**
 
-- `HIPAA Security Rule Checklist Self-Assessment`  
-- `IT Compliance Internal Audit Checklist`  
-- `OpenMRS HIPAA Compliance Tips`  
-- `Risk-Based vs. Checklist Compliance`
+Self-assessment question: Has a risk analysis been conducted that covers the current operational system — not the system as it existed at authorization, but the system as it operates today including all changes made since authorization?
+
+*Honest evaluation:* The formal risk assessment was conducted during the Categorize step (Day 38). The continuous monitoring program updates the risk register as new findings emerge. The most recent risk register update incorporated the HC3 threat intelligence briefing from Q1 monitoring. However, the structured risk analysis has not been formally refreshed since authorization — the monitoring program produces incremental updates to individual risk items but has not conducted a comprehensive re-analysis that asks "are there threat scenarios or vulnerabilities we have not previously considered?"
+
+*Self-assessment finding:* The risk management program is functioning, but a structured comprehensive risk analysis should be included in the annual continuous monitoring summary to provide the AO with evidence that the risk analysis remains current rather than just updated at the margins.
+
+*POA&M action:* Add structured annual risk analysis to the annual continuous monitoring summary checklist. Owner: ISSO. Due: Annual continuous monitoring summary [date].
 
 ---
 
-##  Final Thought
+**§164.308(a)(3) — Workforce Security: Authorization and Supervision**
 
-Checklists aren’t about compliance theater — they’re tools to help security and GRC professionals do the right thing, **before someone tells you that you didn’t.**  
-When paired with risk analysis and action tracking, they become a **force multiplier** in any compliance effort.
+Self-assessment question: Is there a process for authorizing workforce members who work with ePHI to access the OpenMRS system, and is that process actually being followed?
 
+*Honest evaluation:* The access request and approval process (SSP AC-2 implementation, POA&M item M-004 remediation) documents that new account requests require Health IT Manager and ISSO approval. The M-004 finding from Q1 monitoring revealed that the process was not reliably triggered for internal role changes. POA&M item M-004 is in progress to address this gap.
+
+*Self-assessment finding:* Process exists and is documented. Gap identified in Q1 monitoring and being addressed through M-004. Self-assessment confirms the M-004 remediation is the right priority.
+
+---
+
+**§164.308(a)(5) — Security Awareness and Training: Log-In Monitoring**
+
+Self-assessment question: Are workforce members trained to recognize and report unusual system activity — specifically, to recognize that their own login sessions might be used for unauthorized access if their credentials were compromised?
+
+*Honest evaluation:* The security awareness training (AT-2) covers phishing awareness and credential protection. The training does not explicitly cover the concept that a user might not notice their account being used during off-hours because the unauthorized access would not appear on their own screen. This is a gap in the training content — users know to protect their passwords but may not know to check their own login history for anomalies.
+
+*Self-assessment finding:* AT-2 training content gap — login history review not covered. Add "how to check your OpenMRS login history and why it matters" to the next training cycle. Owner: ISSO + Health IT Manager. Due: Next quarterly training cycle.
+
+---
+
+## NIST SP 800-53A Self-Assessment — Selected High-Value Controls
+
+NIST SP 800-53A provides examine, interview, and test procedures for every control in the 800-53 catalog. Self-assessment using 800-53A procedures is the closest approximation to what an external assessor will do at re-authorization — not as rigorous, because the ISSO lacks the independence of an external assessor, but using the same methodology.
+
+---
+
+**AU-2 / AU-12 — Audit Logging: Self-Assessment Test**
+
+The formal assessment (Day 59) verified that the four required event types were being captured with all required fields. Nine months later: is this still true?
+
+Self-assessment test: Log in to OpenMRS as a test user. Perform each of the four required event types: (1) successful authentication, (2) failed authentication attempt, (3) record modification, (4) privilege escalation attempt (attempt to access a function outside the assigned role).
+
+Then: Open the OpenMRS audit log. Verify that all four events appear in the log within 60 seconds of occurrence. Verify that each event includes: user ID, event type, timestamp, and patient record identifier where applicable.
+
+*Result:* Events 1, 2, and 3 confirmed in audit log with all required fields. Event 4 (privilege escalation attempt) generated an access denial message in the application but did not generate an audit log entry. The denied access was not logged.
+
+*Self-assessment finding:* AU-12 gap — denied access attempts are not being logged. This is a control effectiveness degradation since the formal assessment. The formal assessment verified that access control enforcement worked (denied access correctly); the self-assessment reveals that the logging of denied access events is not functioning as documented.
+
+*Severity:* Moderate — the gap reduces the ISSO's ability to detect patterns of unauthorized access attempts that are consistently denied. A determined attacker probing for role escalation vulnerabilities would not appear in the audit log.
+
+*Action:* Investigate whether a recent OpenMRS update changed the audit module configuration. Determine whether this requires an OpenMRS module configuration fix or an application update. Create POA&M item. Notify AO per Condition 3 (Moderate finding from continuous monitoring).
+
+This finding illustrates exactly why self-assessment using test procedures — not just configuration review — is necessary even for a monitored system. The Config rules and Security Hub monitoring would not have detected this gap because it is an application-layer logging failure, not an infrastructure configuration issue.
+
+---
+
+**CP-3 — Contingency Plan Training: Self-Assessment Interview**
+
+Self-assessment question: Ask two clinical staff members — without advance notice and without leading questions — to describe what they would do if OpenMRS became unavailable during a patient encounter.
+
+*Result of informal conversations:*
+
+Staff member 1 (clinical nurse): "I would go get the downtime forms from the supply cabinet. Dr. [name] showed us where they are when we first started." Correct general approach, but this staff member referred to a training session conducted during onboarding — not the formal CP-3 training from the POA&M item 002 completion.
+
+Staff member 2 (administrative coordinator): "I'm not sure — I think we have paper forms? I've never had to use them." This staff member has not internalized the downtime procedure even after the training module was delivered.
+
+*Self-assessment finding:* CP-3 training completion is documented, but retention is not verified. Documenting that staff completed a training module and verifying that staff can actually recall and execute the procedure are different standards. The CP-2 downtime procedure (POA&M item 001, near-deadline at Day 73) is the document; CP-3 training is the human readiness to use it. The informal conversation reveals that readiness is incomplete.
+
+*Action:* Add a brief retention check to the next quarterly training review — not a formal test, but a structured conversation with a sample of staff to verify retention of the key downtime procedure elements. Document the check and its results.
+
+---
+
+## AWS Well-Architected Framework — Security Pillar Self-Assessment
+
+The AWS Well-Architected Security Pillar provides self-assessment questions organized around five design principles. For OpenMRS, the two most productive areas:
+
+---
+
+**Identity and Access Management — "How do you manage credentials for my workloads?"**
+
+Self-assessment question: Are there any long-term IAM access keys in use for the OpenMRS deployment? Long-term access keys are a persistent credential risk; IAM roles with short-term credentials are preferred.
+
+*Honest evaluation:* The IAM inventory audit from Q1 monitoring identified the OpenMRS EC2 instance using an instance profile (IAM role) rather than access keys for all AWS service interactions — this is the preferred pattern. However, the CloudWatch agent configuration uses a separate IAM user with long-term access keys rather than an IAM role. This was a configuration decision made during implementation for simplicity; it was documented but not flagged as a best practice gap at the time.
+
+*Self-assessment finding:* One long-term access key in use for the CloudWatch agent IAM user. Recommended remediation: convert CloudWatch agent authentication to use an IAM role attached to the EC2 instance profile rather than a separate IAM user with long-term credentials. This is a Low severity finding — the key is scoped to CloudWatch write permissions only, creating limited blast radius if compromised — but it is inconsistent with IAM best practices.
+
+*Action:* Add to next quarterly change management cycle. Owner: IT Administrator. Low severity, no POA&M entry required — document in monitoring log and change management ticket.
+
+---
+
+**Incident Response — "How do you ensure that you have the appropriate incident response capability?"**
+
+Self-assessment question: If GuardDuty detected a HIGH finding indicating active compromise of the EC2 instance right now, what would the ISSO do first?
+
+*Honest evaluation:* The Incident Response Plan (IRP) documents the response procedure. But "the IRP documents the procedure" is an assertion. The genuine self-assessment question is: can the ISSO execute the first four steps of the IRP without consulting the document? The IR-3 tabletop exercise (POA&M item 004) is designed to test this — but it has not been executed yet.
+
+*Self-assessment finding:* IR-3 exercise has not occurred. The ISSO's confidence in their ability to execute the IRP without the document as a reference is untested. The tabletop exercise is the appropriate mechanism to address this — its scheduled completion date should be treated as a genuine deadline, not an aspirational target.
+
+---
+
+## The Self-Assessment Scorecard
+
+After working through the multi-framework self-assessment, the findings are organized into a brief scorecard that goes to the Health IT Manager:
+
+| Area | Framework | Finding | Severity | Action |
+|---|---|---|---|---|
+| Risk analysis currency | HIPAA §164.308(a)(1) | No comprehensive re-analysis since authorization | Low | Add to annual CM summary |
+| Login history training | HIPAA §164.308(a)(5) | Users not trained to review own login history | Low | Next AT-2 cycle |
+| Denied access logging | NIST AU-12 | Denied access events not appearing in audit log | Moderate | POA&M; AO notification |
+| CP-3 training retention | NIST CP-3 | Staff retention incomplete after training completion | Low | Quarterly retention check |
+| Long-term IAM access key | AWS Well-Architected | CloudWatch agent using long-term key | Low | Quarterly change cycle |
+| IR-3 tabletop exercise | NIST IR-3 | Exercise not yet conducted | Low (existing POA&M item 004) | Priority scheduling |
+
+Six findings in one structured self-assessment session. One is Moderate and requires AO notification. The others are Low. All are now tracked and assigned.
+
+This is the genuine value of periodic self-assessment: the AU-12 denied-access logging gap would likely not have surfaced through the standard monitoring program before re-authorization. Config rules don't test application-layer logging. Security Hub doesn't evaluate OpenMRS audit log completeness. The ISSO's manual test — log in, do something denied, check the log — is what found it.
+
+---
+
+## A Real-World Example That Made This Click
+
+The CP-3 training retention finding — staff completing training modules without retaining actionable knowledge — is the exact pattern that contributed to the **2016 Hollywood Presbyterian Medical Center ransomware incident**, where the hospital paid a $17,000 Bitcoin ransom after ransomware encrypted systems and staff were unable to execute manual downtime procedures effectively.
+
+Post-incident accounts indicated that staff had not been adequately drilled on paper-based downtime procedures and that the ransomware incident — which lasted approximately ten days — created significant clinical operational chaos precisely because the muscle memory for operating without the EHR had not been developed through regular practice.
+
+The self-assessment question — asking two staff members without advance notice to describe what they would do if OpenMRS was unavailable — is the lightweight equivalent of the drilled readiness that Hollywood Presbyterian lacked. The goal is not a formal exam. It is a reality check: do the people who would need to execute the downtime procedure actually know what to do, or do they know that a document exists that they have never read?
+
+The distinction between documented readiness and genuine readiness is what CP-3 training is designed to address. The self-assessment finding that one out of two clinical staff could not describe the downtime procedure is a low-cost early warning that the training has not achieved its intended outcome.
+
+---
+
+## What I Am Still Thinking About
+
+The AU-12 denied-access logging finding is the most significant outcome of today's self-assessment — it is a Moderate finding requiring AO notification, discovered through a test procedure rather than automated monitoring. I want to think about why this gap appeared.
+
+The formal assessment (Day 59) verified that denied access was being detected and denied correctly — the assessor tested three cross-role access attempts and all three were rejected. But the assessor tested whether the control enforcement was working, not whether the logging of denied enforcement was working. The two are different aspects of the same control.
+
+The ISSO who designed the continuous monitoring program (Day 52) included monitoring for access control effectiveness but oriented the monitoring toward active intrusion detection (GuardDuty unusual patterns, failed authentication alerts) rather than toward verification that the audit log was capturing all required event types continuously.
+
+The gap this reveals: the M-2 ongoing assessment program should include a periodic audit log completeness test — actually generating each of the required event types in the test environment and verifying they appear in the log with all required fields. This is different from verifying that the logging configuration is enabled (which Config rules check) — it is verifying that the logging configuration produces complete and accurate logs (which requires a test).
+
+I want to add a semi-annual audit log completeness test to the M-2 assessment schedule: generate each required event type in the test environment, verify each appears in the CloudWatch log group with the required fields, and document the test results in the monitoring log. This is the kind of test that catches AU-12 degradation before re-authorization rather than during it.
+
+---
+
+## What's Next
+
+Day 80 examines vendor and third-party risk management — the governance discipline for managing the security risks introduced by the external relationships that the OpenMRS deployment depends on. The AWS relationship, the OpenMRS open-source community, and the Laboratory Information System integration all introduce risks that the SSP acknowledges but that deserve deeper examination as a standalone governance concern.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53A Rev 5 – Assessment Procedures for Self-Assessment Use](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS OCR – HIPAA Security Rule Guidance and Self-Assessment Tools](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [CIS Controls v8 – Implementation Group Self-Assessment](https://www.cisecurity.org/controls/v8)
+- [AWS Well-Architected Framework – Security Pillar](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html)
+- [Hollywood Presbyterian Ransomware Incident – Healthcare IT News Coverage](https://www.healthcareitnews.com/news/hollywood-hospital-pays-17000-bitcoin-ransomware-attackers)
+
+---
+
+*#GRC #ComplianceChecklist #SelfAssessment #HIPAA #NISTRMF #OpenMRS #HealthcareSecurity #100DaysOfGRC #AWS #Day79*
