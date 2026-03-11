@@ -1,111 +1,267 @@
-#  Day 64: Task R-1 – Assemble Authorization Package
-
-Welcome to Day 64!  After weeks of securing and assessing OpenMRS on AWS, today I took a big step forward in the NIST Risk Management Framework (RMF): **assembling the Authorization Package**. This is the formal bundle of documents we submit to the Authorizing Official (AO) for a risk-based decision on whether the system is secure enough to operate.
-
-##  Why This Step Matters
-
-Think of the Authorization Package as the **final report card** for the system. It consolidates all our security efforts—designs, assessments, fixes, and risk decisions—into one cohesive package. It's also where leadership gets to see the big picture.
-
-As a GRC practitioner working toward a future in healthcare compliance, this step is key for showing I can **communicate risk clearly**, **document thoroughly**, and **lead through assurance**.
+# Day 64 – Task R-1: Assembling the Authorization Package | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Key Components of the Authorization Package
+## The Authorize Step Begins
 
-###  1. System Security Plan (SSP)
-This contains:
-- Overview of OpenMRS on AWS: system purpose, boundaries, and environment
-- The full list of implemented NIST SP 800-53 controls
-- AWS architectural diagrams
-- Encryption protocols, IAM, backup strategies, etc.
+Day 63 produced the final post-assessment POA&M — ten open items, one Moderate and nine Low, each with documented compensating controls, milestone schedules, and responsible owners. The Assess step is complete. Today begins the sixth step of the NIST RMF: Authorize.
 
- *Status:* Finalized and reviewed for consistency. Encryption and IAM sections double-checked for accuracy.
+The Authorize step has two tasks. Task R-1 — today — assembles the authorization package: the complete set of documents that the Authorizing Official will review to make the authorization decision. Task R-2 — Day 65 — is the AO's review, risk determination, and authorization decision itself.
+
+The authorization package is not a new document — it is a structured assembly of work products that already exist, organized for the AO's review in a way that supports a defensible risk decision. The SSP, SAR, and POA&M have all been produced and iteratively refined over the past several weeks. The task today is ensuring they are internally consistent, that the executive summary accurately represents the risk posture, and that the package is organized so the AO can navigate it efficiently.
 
 ---
 
-###  2. Security Assessment Report (SAR)
-Summarizes:
-- Which controls were assessed (e.g., AC-2, SI-2, SC-13)
-- Methods used: Interviews, testing, documentation review
-- Results: 100 controls tested, 5 moderate-risk findings, 0 high-risk
-- Control-by-control evidence of effectiveness
+## What I Worked On Today
 
- *Status:* Complete. Assessment results verified, including screenshots and logs as supporting evidence.
+NIST SP 800-37 Task R-1 requires the system owner and ISSO to compile the authorization package — at minimum: the SSP (including all supporting documentation), the SAR, and the POA&M. The package is submitted to the AO with sufficient supporting material that the AO can make an informed, documented, risk-based authorization decision without needing to request additional information.
+
+Today I work through each component of the authorization package, verify internal consistency across documents, identify and resolve any cross-document discrepancies, produce the executive summary, and document the package index that tells the AO what is in the package and where to find specific information.
 
 ---
 
-###  3. Plan of Action and Milestones (POA&M)
-Outlines:
-- Outstanding issues and their risk ratings
-- Remediation plans, responsible parties, and deadlines
-- Example: Weak MFA on admin accounts (moderate) – due 05/15/2025
-- Demonstrates that unresolved risks are being actively managed
+## What Actually Clicked for Me
 
- *Status:* Living document. All high-risk items mitigated; moderate/low items are scheduled with owners assigned.
+The concept that clarified authorization package assembly today is cross-document consistency — and why it matters more than any individual document being thorough.
 
----
+Each document in the authorization package was produced at a different point in the process by different people working different tasks. The SSP was written and updated across Days 43 through 56. The SAR was produced by the external assessor. The POA&M has been updated incrementally since Day 50. The executive summary is being written today.
 
-###  4. Executive Summary
-This one-pager delivers the strategic narrative:
-> *"OpenMRS is an open-source EHR system deployed on AWS to support multiple healthcare clinics. It underwent full NIST SP 800-53A assessment with zero high-risk findings. All moderate findings are documented and under remediation. The system's risk posture is considered acceptable for operation with ongoing monitoring in place."*
+Any inconsistency across these documents creates a problem for the AO. If the SSP says backup retention is 90 days and the SAR says the assessor found a retention discrepancy corrected to 35 days that was subsequently fixed, the AO needs to be able to trace the full story — original documentation, finding, correction, current state. If the POA&M lists CP-2 as "partially implemented — draft exists" but the SAR assessor noted that "the draft scope is more limited than the POA&M implies," those characterizations need to be reconciled before the package goes to the AO. If the executive summary says "zero high-risk findings" and the SAR found three Moderate findings that were resolved pre-authorization, the executive summary needs to accurately represent the resolved findings rather than omitting them.
 
- *Status:* Complete. Reviewed for alignment with SAR and POA&M.
+Cross-document consistency is how the AO knows the package reflects a coherent, honest picture of the system — not a best-case narrative assembled from selectively interpreted documents.
 
 ---
 
-##  Leadership Lessons Learned
-
-Assembling the package forced me to:
-- **Think holistically** about risk—not just control-by-control
-- **Ensure documentation integrity**—what’s in the SSP must align with SAR and POA&M
-- **Summarize complexity** for executive audiences
-- **Own accountability** as a system steward
-
-I also saw how powerful well-documented evidence can be in building trust. When an AO sees a clean, coherent package, they gain confidence in the team behind the system.
+## Authorization Package Components — Verification and Final Status
 
 ---
 
-##  Hands-On Checklist
+### Component 1: System Security Plan (SSP)
 
-Here’s a quick self-check I used before finalizing:
+**Current version:** v1.1.3 (most recent update: KMS root account condition documentation)
 
-| Component | Status | Notes |
-|----------|--------|-------|
-| System Security Plan | ✅ Finalized | Includes AWS architecture, IAM, encryption |
-| Security Assessment Report | ✅ Complete | 100 controls tested, findings clearly documented |
-| POA&M | ✅ Updated | 3 open moderate issues with dates & owners |
-| Executive Summary | ✅ Done | Matches SAR & SSP; reviewed for clarity |
+**Final consistency review:**
 
----
+*Control implementation descriptions:* All seven assessment findings reviewed against SSP entries.
+- Finding A-1 (IAM PassRole): IT Administrator IAM policy entry updated to reflect corrected PassRole condition. ✓
+- Finding A-2 (KMS root account): SC-28 entry updated in v1.1.3. ✓
+- Finding A-3 (service account): IAM entity inventory updated; service account entry added. ✓
+- Finding A-4 (modification logging): AU-3 entry flagged as pending POA&M Item 009 resolution — implementation description notes current capability and POA&M reference. ✓
+- Finding A-5 (access review template): AC-2 implementation description updated to note POA&M Item 010 — template update in progress. ✓
+- Finding A-6 (downtime training): AT-2/CP-3 entries note POA&M Items 001 and 002. ✓
+- Finding A-7 (IAM creation CM trigger): CM-3 implementation description updated to reflect the addition of IAM entity creation to the ISSO notification trigger list and the EventBridge automated notification rule. ✓
 
-##  Reflection
+*POA&M cross-reference:* All ten POA&M items have corresponding SSP entries with cross-references. Every SSP control that has an open POA&M item notes the POA&M item ID in the implementation description. ✓
 
-Gathering all this evidence felt like both a celebration and an audit of my own discipline. Every weak spot in documentation exposed a possible gap in process. I learned that **security isn’t just about technical controls—it’s about traceability, accountability, and communication**.
+*Version history completeness:* SSP revision log reviewed — all five version increments (v1.0 through v1.1.3) documented with dates, change summaries, and AO review status. ✓
 
-This also reinforced a mantra I’ve started adopting:
-> *“If it’s not documented, it didn’t happen.”*
+*Supporting documentation appendices confirmed present:*
+- Appendix A: Asset inventory (Day 33)
+- Appendix B: System boundary diagram (Day 34)
+- Appendix C: Data flow diagrams with ePHI flows
+- Appendix D: IAM entity inventory (updated post-remediation)
+- Appendix E: Control allocation record (inherited vs. system-specific vs. hybrid)
+- Appendix F: AWS inherited controls (SOC 2 certification reference)
+- Appendix G: Interconnection documentation (Laboratory Information System ISA/BAA)
+- Appendix H: Continuous monitoring strategy (Day 52, updated)
 
-Clear documentation isn’t just compliance—it’s leadership in action.
-
----
-
-##  Search Terms I Used
-
-- “NIST RMF Authorization Package contents”
-- “FedRAMP ATO checklist”
-- “Security Assessment Report vs POA&M”
-- “HIPAA ATO documentation healthcare”
-- “How to write an executive summary for system security”
-
----
-
-##  What’s Next?
-
-Next is Task R-2: Review Authorization Package and make the risk-based decision. I’ll step into the AO’s mindset and assess whether the system is ready for Authorization to Operate (ATO). It’s where assurance meets executive judgment.
+**SSP status for authorization package:** Final. No additional revisions required before submission.
 
 ---
 
-Thanks for following along on Day 64. This stage taught me the art of **closing the loop** in security work. If you’re building in GRC or healthcare cybersecurity, make documentation your ally and your leadership tool.
+### Component 2: Security Assessment Report (SAR)
 
-Stay tuned for Day 65!
+**Current version:** Post-remediation update (assessor updated SAR following Task A-5 verification)
 
+**Final consistency review:**
+
+*Finding status accuracy:* All seven findings reviewed for accurate post-remediation status.
+
+| Finding | SAR Status | POA&M Status | Consistent? |
+|---|---|---|---|
+| A-1 — IAM PassRole | Resolved pre-authorization | Not in POA&M (resolved) | ✓ |
+| A-2 — KMS documentation | Resolved pre-authorization | Not in POA&M (resolved) | ✓ |
+| A-3 — Service account | Resolved pre-authorization | Not in POA&M (resolved) | ✓ |
+| A-4 — Modification logging | Open — POA&M 009 | Open — POA&M Item 009 | ✓ |
+| A-5 — Access review template | Open — POA&M 010 | Open — POA&M Item 010 | ✓ |
+| A-6 — Downtime training | Open — POA&M 002 (updated) | Open — POA&M Item 002 | ✓ |
+| A-7 — IAM creation CM trigger | Resolved pre-authorization | Not in POA&M (resolved) | ✓ |
+
+*POA&M Item 001 characterization alignment:* The SAR noted that POA&M-CP2-01's scope description required revision. POA&M Item 001 in the Day 63 POA&M has been updated with the revised scope description. Confirmed consistent. ✓
+
+*Assessor independence documentation:* SAR cover page includes assessor credentials, engagement letter reference, and independence basis statement. ✓
+
+*Evidence package reference:* SAR references the assessment evidence package (organized by section as established during Task I-2). Evidence package is included in the authorization package as a supporting document. ✓
+
+**SAR status for authorization package:** Final. Post-remediation version signed by lead assessor [date].
+
+---
+
+### Component 3: Plan of Action and Milestones (POA&M)
+
+**Current version:** v2.0 (post-assessment)
+
+**Final consistency review:**
+
+*SSP cross-reference:* All ten POA&M items have corresponding SSP entries. ✓
+
+*SAR cross-reference:* Four items sourced from SAR findings (Items 009, 010, 002 updated, 001 scope-revised). All four are accurately described. ✓
+
+*Compensating controls documentation:* All ten items have documented compensating controls. ✓
+
+*Target dates reviewed for achievability:* ISSO and Health IT Manager reviewed all target dates. POA&M Item 001 (90-day CP-2 target) is the most aggressive — confirmed achievable with clinical leadership engagement commitment from Health IT Manager. ✓
+
+*No open Moderate items beyond CP-2:* The three Moderate assessment findings were resolved pre-authorization. The only remaining Moderate item is POA&M Item 001 (CP-2 clinical downtime procedures) — the single most significant operational risk item for the authorization decision. ✓
+
+**POA&M status for authorization package:** Final. ISSO and Health IT Manager signatures affixed [date].
+
+---
+
+### Component 4: Executive Summary
+
+The executive summary is the first document the AO will read. It needs to be accurate, complete, and structured for an executive audience — conveying the essential risk picture without requiring the AO to read the full SSP, SAR, and POA&M to understand the system's security posture.
+
+---
+
+**EXECUTIVE SUMMARY — AUTHORIZATION PACKAGE**
+**System:** MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001)
+**Date:** [authorization package date]
+**Prepared by:** Information Security Lead (ISSO)
+**Submitted to:** MyClinic Executive Director (Authorizing Official)
+
+---
+
+**System Overview**
+
+MyClinic OpenMRS is a cloud-hosted electronic health record system deployed on Amazon Web Services, supporting clinical operations including patient registration, encounter documentation, medication management, and laboratory result tracking. The system processes, stores, and transmits electronic protected health information for MyClinic's patient population. The system is categorized as HIGH impact across all three security objectives (confidentiality, integrity, and availability), reflecting the sensitivity of ePHI, the use of the system for real-time clinical decision support, and the absence of a fully tested paper-based downtime procedure.
+
+**Assessment Summary**
+
+The system underwent a full NIST SP 800-53 Rev 5 High baseline assessment conducted by [external firm name] between [start date] and [end date]. The assessment used NIST SP 800-53A examine, interview, and test methods across all control families. The assessor reviewed the System Security Plan, assessed AWS infrastructure using read-only console access, tested OpenMRS application controls in a production-equivalent test environment, and interviewed four MyClinic personnel.
+
+The assessment identified seven findings: three Moderate severity and four Low severity. No High-severity findings were identified — the system's core security architecture (encryption, network controls, authentication, and audit logging) is implemented and operating effectively.
+
+**Pre-Authorization Remediation**
+
+All three Moderate findings were resolved before this authorization package was submitted:
+
+The IAM administrator role included an unrestricted `iam:PassRole` permission creating a privilege escalation pathway. This was corrected by restricting the permission to two named roles required for operational functions. The assessor verified the remediation.
+
+An undocumented service account created for a monitoring integration had console access enabled with no MFA enrollment. Console access was disabled, the account was added to the IAM inventory and quarterly review scope, and an automated EventBridge notification was implemented to alert the ISSO of any future IAM entity creation. The assessor verified the remediation.
+
+The change management procedure did not list IAM entity creation as a required ISSO-notification change category — the root cause that allowed the service account gap to go undetected. The procedure was updated and the IT Administrator was briefed. The assessor verified the remediation.
+
+Two Low findings were resolved as documentation updates (KMS key policy root account condition added to SSP; access review template root cause analysis). Four Low findings are tracked in the POA&M.
+
+**Current Risk Posture**
+
+Zero Moderate or High findings remain open. The system's residual risk is concentrated in one Moderate POA&M item (clinical downtime procedures — Item 001) and nine Low POA&M items. The clinical downtime procedures gap is the most operationally significant open item: while the system's technical recovery capability is tested and functional, clinical staff procedures for operating during an EHR outage are not fully documented or drilled. This gap affects patient care continuity during a downtime event more than the system's security posture.
+
+**Assessor Authorization Recommendation**
+
+The external assessor recommended authorization. The three conditions from the conditional authorization recommendation (remediate Moderate findings A-1, A-3, and A-7) have been satisfied. The assessor's updated SAR supports unconditional authorization with POA&M tracking of the four remaining Low findings and the CP-2 Moderate item.
+
+**ISSO Recommendation**
+
+The ISSO recommends Authorization to Operate with the following AO-level awareness items:
+
+The clinical downtime procedures (POA&M Item 001) have a 90-day completion target. This is the highest-priority open item and carries a Moderate risk rating given the system's High-impact categorization and its role in real-time patient care. The AO may wish to establish a 90-day check-in to confirm this item is on track.
+
+The quarterly POA&M status report process — first report due [date + 90 days] — will provide the AO with ongoing visibility into POA&M progress without requiring ad-hoc status requests.
+
+**Supporting Documents in This Package**
+
+| Document | Version | Date | Location |
+|---|---|---|---|
+| System Security Plan | v1.1.3 | [date] | Package Section 1 |
+| Security Assessment Report | Post-remediation | [date] | Package Section 2 |
+| Plan of Action and Milestones | v2.0 | [date] | Package Section 3 |
+| Assessment Evidence Package | Final | [date] | Package Section 4 |
+| Risk Register | v3 | [date] | Package Section 5 |
+| Formal Categorization Record | Final | [date] | Package Section 6 |
+| Tailoring Decision Record | Final | [date] | Package Section 7 |
+| Continuous Monitoring Strategy | v2 | [date] | Package Section 8 |
+
+---
+
+### Component 5: Package Index and Navigation Guide
+
+The authorization package includes a one-page navigation guide for the AO — mapping specific AO questions to the relevant package sections. This is not required by NIST but is a practical courtesy that enables the AO to find information efficiently rather than reading the entire package sequentially.
+
+| AO Question | Primary Reference |
+|---|---|
+| What does this system do and what data does it handle? | SSP Section 1-3; Executive Summary |
+| Why is this system categorized as High? | SSP Section 4; Categorization Record (Package Section 6) |
+| What controls are in place? | SSP Sections 5-15 (control families) |
+| What did the assessment find? | SAR Section 3 (findings); Executive Summary |
+| What was fixed before this package was submitted? | SAR post-remediation finding status; Executive Summary |
+| What is still open and what is the plan? | POA&M v2.0 (Package Section 3) |
+| What is the biggest remaining risk? | POA&M Item 001 (CP-2); Executive Summary |
+| How will I know the open items are being addressed? | Continuous Monitoring Strategy Section 6 (POA&M review cadence) |
+| What controls does AWS handle? | SSP Appendix F; Control Allocation Record (Package Section 7) |
+| How was the assessor selected and are they independent? | SAR cover page; Day 57 assessor selection documentation |
+
+---
+
+## Cross-Document Consistency — Final Verification
+
+Before the package is submitted, the ISSO conducts a final cross-document consistency check — verifying that key facts are stated consistently across all documents.
+
+| Fact | SSP | SAR | POA&M | Executive Summary | Consistent? |
+|---|---|---|---|---|---|
+| Impact categorization | HIGH | HIGH | HIGH referenced | HIGH | ✓ |
+| Backup retention | 90 days (corrected) | 90 days (post-correction) | CP-9 not in POA&M (resolved) | Not detailed | ✓ |
+| MFA scope | All users | All users verified | Not in POA&M (implemented) | Not detailed | ✓ |
+| CP-2 status | Partially implemented — POA&M | Limited draft — scope needs revision | Item 001, 90-day target | Moderate open item, 90 days | ✓ |
+| Open Moderate findings | 1 (CP-2) | 0 (post-remediation) | 1 (Item 001) | 1 (Item 001) | ✓ |
+| Assessor independence | Referenced | Documented | N/A | Referenced | ✓ |
+
+All cross-document consistency checks passed. The package is ready for AO submission.
+
+---
+
+## A Real-World Example That Made This Click
+
+The authorization package navigation guide — the one-page AO question-to-section map — was something I added after thinking about the circumstances of the **2014 OPM breach** through a specific lens that does not usually come up: the authorization package documentation.
+
+Post-breach investigation revealed that some OPM systems had operated for years on either expired ATOs or no ATOs at all. Congressional testimony suggested that authorization packages for some of these systems were, charitably, minimal — documentation that satisfied the form of the requirement without the substance.
+
+One of the patterns that enables authorization to become a checkbox exercise rather than a genuine risk decision is authorization package complexity that overwhelms AOs who have limited time and broad responsibility. An AO reviewing twenty-plus systems annually cannot spend two hours reading each authorization package. If the package does not make the key risk information findable quickly, the AO either defers to the ISSO's recommendation without engaging the underlying evidence, or approves to clear a queue rather than to accept a specific, understood risk.
+
+The navigation guide is a small but meaningful design choice for MyClinic's AO — the Executive Director who has clinical and administrative responsibilities beyond cybersecurity authorization. Making the key risk information findable in under ten minutes respects the AO's time while preserving the accountability that authorization is supposed to create. The AO should be able to read the executive summary (five minutes), review the POA&M summary table (two minutes), and ask one or two informed questions — and arrive at a genuine risk acceptance decision, not an administrative approval.
+
+That is what authorization is supposed to be.
+
+---
+
+## What I Am Still Thinking About
+
+One question from today's package assembly: what is the right level of detail in the executive summary?
+
+The executive summary I drafted today is about 600 words — long for an executive summary, but the system is High-impact and the AO needs substantive information. A shorter summary risks omitting material information that the AO needs to make a genuine risk decision. A longer summary risks becoming another document the AO skims rather than reads.
+
+My instinct is that the right framework for executive summary length is: include every piece of information that, if omitted, could cause the AO to make a different authorization decision or ask a follow-up question. Include nothing else.
+
+For this package, the material information is: what the system does, why it is High-impact, that no High or Moderate findings remain open, what the three resolved Moderate findings were and how they were fixed, what the one remaining Moderate POA&M item is (CP-2) and its 90-day timeline, and what ongoing visibility the AO will have through the quarterly POA&M report. Everything else is detail available in the package for the AO who wants to go deeper.
+
+That framework produces a 500-700 word executive summary for a High-impact healthcare EHR. For a simpler system with fewer findings, the summary would be shorter. The length should follow the material information requirement, not a word count target.
+
+---
+
+## What's Next
+
+Day 65 covers Task R-2 — the AO's review of the authorization package and the authorization decision itself. What is the AO actually evaluating? How is the risk determination structured? What does Authorization to Operate mean in practice — and what does it not mean? The authorization decision is the moment where all of the previous 64 days of work either results in a green light to operate or a set of conditions that must be met first.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task R-1 Authorization Package](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [FedRAMP Authorization Package Checklist](https://www.fedramp.gov/documents-templates/)
+- [NIST SP 800-18 Rev 1 – SSP Content Requirements](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [OPM Data Breach OIG Reports — Authorization Program Analysis](https://www.opm.gov/our-inspector-general/reports/)
+- [NIST SP 800-137 – Continuous Monitoring and POA&M Review Cadence](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+
+---
+
+*#GRC #AuthorizationPackage #NISTRMF #TaskR1 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day64*
