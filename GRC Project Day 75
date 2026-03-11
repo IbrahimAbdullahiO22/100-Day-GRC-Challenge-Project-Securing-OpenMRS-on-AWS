@@ -1,96 +1,214 @@
-#  Day 75 – System Disposal (Secure Decommissioning)
-
-Even the most mission-critical systems must eventually sunset. Today, on **Day 75** of my 100 Days of GRC, we focus on **Task R-1: System Disposal** — the secure, complete decommissioning of a system like **OpenMRS running on AWS**.
-
-Whether due to a system upgrade, project termination, or modernization effort, system disposal is **not just about pulling the plug** — it’s about ensuring no sensitive data is left behind, no residual risks remain, and all documentation reflects the system’s retirement.
+# Day 75 – System Disposal: Secure Decommissioning of OpenMRS | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Why Disposal Matters
+## Security Doesn't End at Shutdown
 
-Failing to securely decommission systems can lead to:
+Day 74 completed the Monitor step's conceptual framework — ongoing authorization as a continuous risk acceptance discipline, the triggers that require formal re-authorization, and the organizational learning value of three years of continuous monitoring data going into re-authorization. The seven-step NIST RMF is complete in concept.
 
-- **Data breaches from residual storage**
-- **Unauthorized access to “forgotten” infrastructure**
-- **Audit findings for poor lifecycle management**
+Day 75 addresses the final chapter of the system lifecycle: disposal. The RMF's seven steps govern a system from categorization through continuous monitoring. System disposal is not a formal RMF step in the same way — it is addressed in NIST SP 800-37 as a preparatory task and in NIST SP 800-88 as a standalone media sanitization framework. But it is the discipline that closes the lifecycle with the same rigor it was opened.
 
-Disposal is the final chapter in the RMF lifecycle — and it must be written with the same discipline and care as system authorization.
+I want to be direct about why disposal matters as much as authorization: a system that is securely authorized and securely operated but insecurely decommissioned has left patient data exposed through the final door. The authorization was never the goal — protecting patient information was. Disposal is the final test of whether that commitment was genuine or just compliant.
 
----
-
-##  Key Steps for Secure Decommissioning
-
-Here’s how I would approach shutting down the OpenMRS-on-AWS system:
-
-###  1. Archive Required Data
-- **Export and encrypt** critical patient records.
-- Store in **long-term secure cloud storage** (e.g., Amazon S3 Glacier Deep Archive).
-- Retention aligns with **HIPAA** or applicable compliance standards.
-
-###  2. Sanitize All Sensitive Data
-Apply **NIST SP 800-88 Rev. 1** media sanitization principles:
-
-- **Purge EC2 volumes and RDS instances** using built-in AWS secure deletion tools.
-- **Permanently delete S3 buckets** (and all object versions and delete markers).
-- **Destroy encryption keys** used for data-at-rest to render residual storage unreadable.
-- **Remove CloudWatch logs**, Lambda archives, and related backups that contain PHI or sensitive information.
-
-###  3. Decommission Infrastructure
-- Terminate AWS resources (EC2, RDS, S3, IAM policies specific to OpenMRS).
-- Delete Route53 records and domain names linked to the system.
-- Remove the system from **asset inventories**, dashboards, and monitoring tools.
-
-###  4. Update Documentation
-- Annotate the **System Security Plan** to reflect retirement.
-- Close all remaining **POA&M** items or transfer them to lessons-learned documentation.
-- Document steps in a **Disposal Report** for audit trail and ATO closure.
-
-###  5. Revoke Access
-- Deactivate all OpenMRS admin and user accounts.
-- Revoke IAM roles, VPN profiles, and third-party integrations.
-- Remove OpenMRS from **authentication directories and federated access systems**.
+For OpenMRS on AWS — which processes ePHI including mental health records, medication histories, and HIV status for MyClinic's patient population — disposal requires careful sequencing of data archival, sanitization, infrastructure decommissioning, access revocation, and documentation closure. The HIPAA retention obligation means some data must be preserved; the security obligation means everything that is not retained must be unrecoverable.
 
 ---
 
-##  Disposal Checklist (Sample Items)
+## What I Worked On Today
 
-- ✔️ Archive encrypted database backup in Glacier Vault (retention: 7 years)
-- ✔️ Delete all S3 buckets used for OpenMRS image uploads and verify object removal
-- ✔️ Terminate EC2 instances and confirm volume deletion via AWS console
-- ✔️ Shred any on-prem hardware backups or laptops storing PHI (if applicable)
-- ✔️ Revoke all OpenMRS-related IAM roles and document access log closure
-- ✔️ Update SSP and asset inventory to reflect system retirement date
+NIST SP 800-37 addresses system disposal in its preparatory tasks and in the context of the overall system lifecycle. NIST SP 800-88 Rev 1 provides the media sanitization technical guidance. HIPAA 45 CFR §164.310(d) requires covered entities to implement policies and procedures to address final disposition of ePHI and the hardware or electronic media on which it is stored.
+
+Today I work through the complete disposal process for the OpenMRS system — the sequencing decisions, the data classification that drives different treatment for different information categories, the specific AWS decommissioning procedures, and the documentation required to close the system's authorization record.
 
 ---
 
-##  Reflection
+## What Actually Clicked for Me
 
-Deleting a file doesn’t mean it’s gone. In cloud environments, **versioning, backups, shadow copies**, and **metadata caches** can all hold sensitive remnants. That’s why we don’t just “delete” — we **sanitize**.
+The concept that clarified disposal today is understanding that "delete" in a cloud environment is not a single action — it is a process that must account for every location where data may exist, including locations that are not immediately obvious.
 
-The real challenge is balancing:
+In a cloud environment like AWS, ePHI from the OpenMRS deployment may exist in: the primary RDS database instance, automated RDS snapshots, manual RDS snapshots created for testing or backup purposes, the weekly S3 export files in the backup bucket, CloudWatch log streams containing patient MRNs from the OpenMRS audit log, EC2 EBS volumes (the root volume and any data volumes), EC2 AMI images created from the OpenMRS instance, S3 object versions and delete markers if versioning is enabled, AWS Backup recovery points if AWS Backup was used, any data shared with assessment evidence (screenshots that may include patient data), and potentially in CloudTrail logs if API calls included patient identifiers in their parameters.
 
-- **Data retention** (e.g., for HIPAA or legal compliance)
-- **Data destruction** (e.g., to avoid residual risk)
+None of these locations will be automatically cleared by terminating the EC2 instance or deleting the RDS instance. Each requires a specific disposal action. The disposal checklist is not a courtesy — it is the mechanism that ensures no ePHI remains in an uncontrolled location after the system is decommissioned.
 
-Using cloud-native tools alongside frameworks like **NIST SP 800-88** gives us confidence that once data is deleted — it’s **gone for good**.
-
----
-
-##  Search Terms
-
-- `NIST SP 800-88 media sanitization guidelines`  
-- `Secure cloud data deletion AWS`  
-- `System decommission checklist security`  
-- `HIPAA data retention vs destruction best practices`
+This is why NIST SP 800-88 distinguishes between Clear (overwriting accessible storage), Purge (rendering data unrecoverable against laboratory-level attacks), and Destroy (physically destroying the media) — different disposal contexts require different sanitization rigor. For cloud-hosted systems where MyClinic does not own the physical media, the primary mechanism is cryptographic erasure: destroying the encryption keys that protect the data renders the encrypted data permanently unreadable even if the physical storage is later recovered or repurposed by AWS.
 
 ---
 
-##  Today’s Goal
+## Pre-Disposal Decision: What Must Be Retained?
 
-Understand the **full lifecycle closure** of a system — not just turning it off, but decommissioning securely, documenting actions, and validating data sanitization.
+Before any decommissioning begins, the ISSO and Compliance Officer must establish what must be retained and for how long, because retention and destruction are the two sides of the same ePHI disposition decision.
+
+**HIPAA medical record retention:** HIPAA itself does not specify a record retention period — it defers to state law. Minnesota law (where MyClinic operates) requires medical records to be retained for a minimum of 7 years from the date of service, or 3 years after a minor patient reaches age 18, whichever is longer. This means the OpenMRS patient record database cannot be destroyed at decommissioning — it must be preserved in an accessible (or at minimum recoverable) form for the applicable retention period.
+
+**System documentation retention:** HIPAA requires covered entities to retain documentation of security policies and procedures for 6 years. The SSP, SAR, POA&M, authorization package, and monitoring records all fall under this requirement. These must be archived, not destroyed.
+
+**Operational data that can be destroyed:** System logs that do not contain clinical data (infrastructure performance logs, system error logs without PHI content), temporary files, test data from the test environment, assessment evidence that does not contain real patient information — these can be destroyed at decommissioning.
+
+The disposal plan therefore has two parallel tracks: the **Archive Track** (what must be preserved, where, and how) and the **Destruction Track** (what must be sanitized and how).
 
 ---
 
-##  Up Next: Day 76 – Writing Security Policies that Actually Work
+## The Archive Track — Data That Must Be Retained
 
-We’ve retired OpenMRS safely — now it’s time to explore the foundation of every GRC program: **security policies**. Tomorrow, I’ll break down how to craft policies that are clear, enforceable, and actually followed. No more doorstops — we’re writing for impact.
+**Patient Records (7-year retention minimum):**
+
+The primary OpenMRS RDS database contains all patient records. These cannot be destroyed — they must be exported and preserved in a secure, accessible format for the retention period.
+
+*Process:*
+1. Export the complete OpenMRS database to a structured format (SQL dump or CSV exports organized by table) that can be accessed without requiring the OpenMRS application to be running. This is critical — if the archived data can only be accessed through OpenMRS, and OpenMRS is decommissioned, the data is effectively inaccessible even though technically preserved.
+2. Encrypt the export using a customer-managed KMS key that will be retained for the duration of the retention period. Document the key ARN and rotation schedule in the archive metadata.
+3. Store in Amazon S3 Glacier Deep Archive — the lowest-cost storage tier, appropriate for rarely-accessed archival data. Configure Object Lock in Compliance mode with a retention period matching the longest applicable state retention requirement.
+4. Verify the archive: restore from the archive to a temporary environment, confirm data integrity, confirm that all patient records are present and readable, then terminate the test environment.
+5. Document the archive location, encryption key, retention period, and data inventory in the disposal report.
+
+**Authorization Package and Security Documentation (6-year retention):**
+
+The complete authorization package — SSP, SAR, POA&M, monitoring logs, authorization decision document — must be preserved for 6 years. This is already archived per Day 68's archival structure. Confirm that the archive location is not dependent on the OpenMRS AWS infrastructure being active.
+
+*Process:*
+Verify that the Day 68 archival package is stored in a location that will persist after the OpenMRS AWS account is modified. If the archive is in the same AWS account as the OpenMRS deployment, copy it to a separate account or durable external location (secure document management system, encrypted external drive) before decommissioning begins. The authorization archive should not depend on the infrastructure it documents.
+
+---
+
+## The Destruction Track — Sequenced Decommissioning
+
+The destruction track follows a specific sequence to ensure that data is not inaccessible before it is properly archived, and that all copies are destroyed after archival is confirmed.
+
+**Step 1: Suspend new data writes**
+
+Before any decommissioning begins, the system must be placed in a read-only state — or taken offline entirely if clinical operations can be transitioned to the replacement system. This prevents new ePHI from being written to the system while the disposal process is underway. Clinical staff must be notified and their workflows transitioned before this step.
+
+Timing: This step coordinates with clinical operations, not just IT. The Health IT Manager leads the clinical transition; the ISSO leads the technical decommissioning.
+
+**Step 2: Final archive verification**
+
+Confirm that the Archive Track is complete and the archived data is verified before any destruction begins. The destruction sequence is irreversible — if the archive was incomplete, data will be permanently lost. Verification is the checkpoint that separates recoverable from irrecoverable.
+
+*Verification checklist:*
+- Patient record export: row count matches production database row count ✓
+- Export decrypts successfully using archived KMS key ✓
+- Sample of 20 randomly selected patient records verified readable and complete ✓
+- Archive stored in Glacier Deep Archive with Object Lock ✓
+- Authorization package archive confirmed in retention location independent of OpenMRS AWS account ✓
+
+Only proceed to Step 3 after all verification items are confirmed.
+
+**Step 3: Revoke access credentials**
+
+All OpenMRS user accounts, AWS IAM users and roles associated with the OpenMRS deployment, API keys, service account credentials, and third-party integration credentials must be revoked before infrastructure is decommissioned.
+
+*Process:*
+- OpenMRS: Deactivate all user accounts via admin console. Export final user account list with deactivation timestamps. Confirm zero active sessions.
+- AWS IAM users with OpenMRS-specific permissions: Delete IAM users [list]. Confirm deletion in IAM console.
+- AWS IAM roles associated with OpenMRS resources: Delete EC2 instance profile role, backup service role, monitoring service role. Confirm deletion.
+- AWS IAM policies associated specifically with OpenMRS: Delete customer-managed policies. Confirm deletion.
+- Laboratory Information System integration: Notify LIS administrator of pending disconnection. Terminate the integration API connection. Confirm in LIS that the OpenMRS connection is terminated.
+- CloudWatch monitoring alerts: Delete SNS notification subscriptions for OpenMRS monitoring alerts.
+
+Access revocation precedes infrastructure decommissioning so that no window exists where the infrastructure is still running but access controls have been removed.
+
+**Step 4: Decommission OpenMRS application and data infrastructure**
+
+*CloudWatch Logs:*
+OpenMRS application audit logs contain patient MRNs. These logs must be sanitized, not simply deleted — for logs within the retention period, export and add to the archive. For logs beyond the retention period, delete via CloudWatch console (DeleteLogGroup API call). Confirm deletion in CloudWatch.
+
+*RDS database:*
+The production database contains ePHI. Before deleting the RDS instance: confirm that the final archive was created after the last data write (Step 1) so no data written after the archive was created remains unarchived. Then delete the RDS instance with the "Skip final snapshot" option — a new snapshot at this point would create another ePHI-containing artifact to sanitize. Delete all existing automated snapshots and manual snapshots for the instance. Confirm deletion in RDS console.
+
+*S3 backup bucket:*
+The backup bucket contains encrypted database exports, each of which contains ePHI. Delete all objects, all object versions (if versioning is enabled), and all delete markers. Confirm bucket is empty. Delete the bucket. Confirm deletion.
+
+Note: Because all data in the backup bucket was encrypted with a customer-managed KMS key, the data was rendered unreadable before deletion when the KMS key is scheduled for deletion in Step 5. The S3 object deletion provides additional assurance — defense in depth in destruction as well as protection.
+
+*EC2 instance and EBS volumes:*
+Stop the EC2 instance. Terminate the instance with the option to delete associated EBS volumes confirmed. Verify in EC2 console that the instance is terminated and volumes are deleted. If any AMI images were created from the OpenMRS instance, deregister each AMI and delete the associated snapshots.
+
+**Step 5: Destroy encryption keys**
+
+Scheduling KMS key deletion is the cryptographic erasure step — after this step, all encrypted data (even if undeleted remnants exist on AWS physical storage) is permanently unreadable.
+
+*Process:*
+For each of the three customer-managed KMS keys (openmrs-rds-encryption, openmrs-ec2-encryption, openmrs-s3-backup): schedule key deletion with the minimum waiting period (7 days). Document the key ARNs, the scheduled deletion dates, and the confirmation that all data encrypted with these keys has been either archived with a separate retained key or deleted.
+
+Important exception: The KMS key used to encrypt the Glacier Deep Archive patient record archive must NOT be deleted. That key must be retained for the full retention period alongside the archived data. Document this retention requirement explicitly — the key ARN, the retention period, and the reason it is not being deleted with the other keys.
+
+**Step 6: Decommission remaining AWS infrastructure**
+
+- AWS WAF: Delete web ACL and associated rules
+- CloudTrail: Delete trail (after confirming CloudTrail logs are archived or no longer required for retention purposes)
+- GuardDuty: Disable detector
+- AWS Config: Delete configuration recorder and delivery channel
+- Security Hub: Disable Security Hub
+- SNS topics: Delete all OpenMRS monitoring notification topics
+- EventBridge rules: Delete all OpenMRS-related rules (IAM creation notification, CloudTrail tamper detection)
+- VPC: Terminate any remaining instances, delete subnets, delete route tables, detach and delete internet gateway, delete VPC
+- Route 53: Delete DNS records for the OpenMRS domain
+
+*AWS account consideration:* If the OpenMRS AWS account was created specifically for this deployment (dedicated account model), the account itself can be closed after all resources are decommissioned. If OpenMRS shared an account with other systems, decommissioning stops at the resource level — the account remains for the other systems.
+
+---
+
+## Documentation Closure
+
+**Disposal Report:**
+
+The formal record of the disposal process, prepared by the ISSO and reviewed by the Health IT Manager and Compliance Officer:
+
+| Section | Content |
+|---|---|
+| System identification | MCOPENMRS-001; decommission date |
+| Reason for disposal | [System replacement / upgrade / retirement] |
+| Archive inventory | Patient records archive location, encryption key ARN, retention period; authorization package archive location |
+| Destruction confirmation | List of all destroyed resources with confirmation timestamps |
+| KMS key disposal | Keys deleted: [list with deletion dates]; Key retained: [archive key ARN, retention period] |
+| Access revocation record | All user accounts, IAM entities, and third-party connections revoked as of [date] |
+| Verification attestation | ISSO signature — archive verification checklist completed before destruction began |
+| Compliance Officer review | Confirmation that HIPAA retention obligations have been met |
+
+**SSP closure annotation:**
+The SSP is annotated with a decommission header: "SYSTEM DECOMMISSIONED [date]. This document is retained for historical reference per HIPAA documentation requirements. The system described herein is no longer operational. See Disposal Report [date] for decommissioning record."
+
+**System registry update:**
+The system registry entry is updated: Authorization Status — DECOMMISSIONED [date]. Archival location noted for future reference.
+
+---
+
+## A Real-World Example That Made This Click
+
+The sequencing discipline — archive verification before destruction, and cryptographic erasure as defense-in-depth — was shaped by reflecting on the **Advocate Medical Group breach of 2013**, which resulted in a $5.55 million HIPAA settlement. The breach involved unencrypted laptops containing patient data stolen from an employee's car.
+
+What made the Advocate case significant for disposal thinking: the data on those laptops was never formally inventoried or tracked as part of a data management program. Patient data had accumulated on devices that were not subject to the same controls as the primary clinical systems — a disposal and data management gap that made the breach possible.
+
+The cloud equivalent of the Advocate scenario is ePHI accumulating in unexpected AWS locations — CloudWatch logs with patient MRNs, EC2 AMI images captured for testing, S3 object versions not covered by the primary backup policy. The comprehensive disposal checklist that works through every AWS service where ePHI may exist is the technical response to the Advocate pattern: systematic inventory of all data locations before disposal begins, not a best-effort cleanup that misses the non-obvious locations.
+
+---
+
+## What I Am Still Thinking About
+
+The patient record archive — retained in Glacier Deep Archive for 7 years with the KMS key preserved — creates a long-term data stewardship obligation that extends years beyond the system's operational life.
+
+Who is responsible for that archive? The ISSO who executed the disposal may not be at MyClinic in 7 years. The KMS key must be accessible when records need to be retrieved (for patient requests, legal proceedings, or audits). The archive must be monitored to confirm the data remains intact and the encryption key remains valid.
+
+This is an under-discussed aspect of healthcare data governance: the disposition of clinical records at the end of a system's life requires a formal data stewardship plan that names responsible parties and establishes monitoring procedures for the retention period. The Compliance Officer should own this plan, not the ISSO — the obligation is clinical and regulatory, not technical.
+
+I want to add a formal data stewardship designation to the disposal report: a named individual (or organizational role) responsible for the archive for the duration of the retention period, with documented procedures for record retrieval requests and an annual confirmation that the archive remains intact and accessible.
+
+---
+
+## What's Next
+
+Day 76 begins a new phase of the project — moving beyond the RMF process to explore the governance foundations that make the RMF work: security policies. A security program built on clear, enforceable, operationally realistic policies is fundamentally different from one built on policies that exist to satisfy auditors. Day 76 examines what makes policies effective rather than decorative.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-88 Rev 1 – Guidelines for Media Sanitization](https://csrc.nist.gov/publications/detail/sp/800-88/rev-1/final)
+- [NIST SP 800-37 Rev 2 – System Disposal in the RMF Lifecycle](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [HHS OCR – HIPAA Data Retention and Disposal Requirements](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [AWS – Deleting Customer Master Keys and Data Lifecycle Management](https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html)
+- [Advocate Medical Group Breach — HHS OCR Settlement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/advocate/index.html)
+
+---
+
+*#GRC #SystemDisposal #SecureDecommissioning #NISTRMF #NISTSP80088 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day75*
