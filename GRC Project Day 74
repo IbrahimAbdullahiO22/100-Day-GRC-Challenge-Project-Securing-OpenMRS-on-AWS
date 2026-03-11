@@ -1,97 +1,155 @@
-#  Day 74 – Ongoing Authorization (Periodic Review)
-
-Today marks **Day 74** in my 100 Days of GRC, and we’re diving into **Task M-6: Ongoing Authorization** — a game-changer in how we think about compliance and Authority to Operate (ATO).
-
-For years, organizations treated ATO like a driver’s license — valid for three years, then up for renewal. That legacy model meant **long gaps between assessments**, **last-minute paperwork scrambles**, and **periods of risk between reviews**.
-
-But ongoing authorization changes the game. Instead of “pause everything and reassess,” we shift to **real-time trust validation** through **continuous monitoring**.
+# Day 74 – Task M-6: Ongoing Authorization | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What is Ongoing Authorization?
+## Authorization as a Continuous State, Not a Periodic Event
 
-It’s a proactive, modern approach that allows systems like **OpenMRS on AWS** to **maintain their ATO without a full reassessment**, as long as:
+Day 73 produced the M-5 reporting structure — the quarterly POA&M report to the AO, the monthly monitoring summary to the Health IT Manager, the privacy incident summary to the Compliance Officer, and the annual continuous monitoring summary. The CP-2 condition is 12 days from deadline. The quarterly report flagged it AT RISK with an explicit AO action request. The communication infrastructure for the authorization period is functioning.
 
-- No **major risks** emerge,
-- No **significant system changes** occur, and
-- Continuous monitoring shows that **controls remain effective**.
+Task M-6 addresses the conceptual and operational question that underlies all of the Monitor step tasks: what does it mean for an authorization to remain valid over time? The ATO was issued on a specific date based on a specific security posture assessment. The system has been operating for a quarter. Things have changed — patches applied, findings remediated, POA&M items closed, new items opened. The system is not identical to the system that was authorized.
 
-It aligns perfectly with **cloud-first** and **DevSecOps** environments where systems evolve rapidly — because security shouldn’t stall innovation.
+Does the authorization still apply?
 
----
-
-##  How It Works in Practice
-
-We maintain an ATO by **demonstrating control, visibility, and responsiveness** over time, not by redoing assessments on a calendar date.
-
-> “Trust isn’t granted every 3 years. It’s earned every day.”
-
-In the case of OpenMRS on AWS, our real-time monitoring tools (like AWS CloudTrail, Inspector, and GuardDuty) continuously feed data to security stakeholders. As long as:
-
-- No critical vulnerabilities persist,
-- No drastic infrastructure or feature changes happen, and
-- Risk levels remain within our organization’s tolerance,
-
-...the **ATO stays active.**
+Task M-6 is the framework for answering that question continuously — not by re-authorizing every time something changes, but by maintaining AO situational awareness such that the AO's authorization decision is always based on a reasonably current understanding of the system's risk posture. The authorization remains valid as long as the risk picture has not materially changed beyond what the AO accepted. When it has materially changed, re-authorization is required.
 
 ---
 
-##  What Could Break Ongoing Authorization?
+## What I Worked On Today
 
-Here are a few scenarios that would **trigger a reauthorization**:
+NIST SP 800-37 Task M-6 requires the AO to conduct ongoing authorization — maintaining the authorization decision in a current state by reviewing the outputs of the continuous monitoring program and determining whether the authorization remains appropriate. The AO does not re-sign the authorization document on a quarterly basis, but the AO's ongoing engagement with the monitoring and reporting program constitutes continuous re-validation of their risk acceptance.
 
-- **Major security breach** (e.g., unauthorized access to patient data)
-- **Significant architectural changes** (e.g., moving databases to a new cloud provider or adding a new AI module processing PII)
-- **Deployment of new sensitive features** (e.g., integration with third-party APIs storing medical records)
-- **Discovery of high-risk vulnerabilities** that require major reengineering
-- **Compliance scope change** (e.g., system must now adhere to additional federal standards or regulatory controls)
-
-These “disruptions” reset the risk baseline and would justify pausing to formally reassess the system.
+Today I work through what ongoing authorization looks like operationally for the MyClinic OpenMRS system — the AO's engagement model, the thresholds that trigger formal re-authorization before the three-year expiration, and the distinction between the traditional periodic re-authorization model and the ongoing authorization model that NIST SP 800-37 Rev 2 introduced.
 
 ---
 
-##  Why It Matters
+## What Actually Clicked for Me
 
-Ongoing authorization isn’t just about skipping paperwork — it’s about smarter security:
+The insight that clarified Task M-6 today is understanding why NIST SP 800-37 Rev 2 added explicit ongoing authorization guidance — and what problem it was solving.
 
--  **Enables agility** – Ideal for systems that evolve frequently (like OpenMRS in DevOps environments)
-- � **Improves visibility** – Risk posture is tracked in near real time, not at intervals
-- � **Fosters collaboration** – Keeps AOs, CISOs, engineers, and assessors aligned
--  **Reduces audit shock** – There are fewer surprises when you’re continuously in compliance
+The traditional ATO model — authorize once, re-authorize on a three-year cycle — created a structural problem: the authorization was accurate at the moment of issuance, then decayed in accuracy for three years, then was refreshed at re-authorization, then decayed again. The security posture between re-authorization cycles was essentially unverified from the AO's perspective — the AO had signed off on a specific risk picture and was then largely uninformed about how that picture was evolving.
 
-For OpenMRS, this means **better protection of patient data**, **less downtime for reassessment**, and **more focus on care delivery and innovation**.
+This decay problem is exactly what produced situations like the OPM systems operating on expired ATOs and the Banner Health monitoring data that was present but not surfaced to decision-makers. The authorization process had been completed; the ongoing governance that makes the authorization meaningful had not been sustained.
 
----
+Ongoing authorization is the NIST response to that decay problem. Instead of a single point-in-time authorization followed by a three-year maintenance period, ongoing authorization creates a continuous feedback loop: monitoring produces findings, findings are reported, the AO reviews reports, the AO's risk acceptance is continuously informed. The authorization is always based on recent information rather than a three-year-old snapshot.
 
-##  Reflection
-
-As a GRC leader, I strongly believe in the power of **ongoing assurance** over point-in-time validation. Continuous ATO is not just about process efficiency — it’s about **operational resilience**.
-
-Would I trade quarterly control checks and real-time dashboards for a stressful tri-annual review? **Absolutely.**
-
-> Continuous trust, validated daily, beats stale paperwork every time.
-
-Biggest benefit for OpenMRS? **Both security and efficiency**. Real-time risk insights help us react swiftly, protect patients, and keep leadership informed — all while avoiding unnecessary reassessment cycles.
+The practical implication for MyClinic: the AO's quarterly POA&M review, the 45-day CP-2 check-in, the annual continuous monitoring summary — these are not just compliance requirements. They are the mechanism that makes the ongoing authorization concept real rather than nominal. An AO who receives reports but does not engage with them is not conducting ongoing authorization; they are receiving paper. Genuine ongoing authorization requires the AO to read, understand, and act on the information they receive.
 
 ---
 
-## Today’s Goal
+## The AO's Ongoing Authorization Responsibilities
 
-Recognize how ongoing authorization keeps systems secure and compliant **without interrupting operations** — and understand the **conditions that trigger reauthorization** when needed.
+In the traditional authorization model, the AO's role was concentrated at the authorization decision moment. In the ongoing authorization model, the AO has distributed responsibilities throughout the authorization period:
+
+**Quarterly:** Review the POA&M status report. Confirm that authorization conditions are being met or engage when they are at risk. Acknowledge receipt and confirm continued authorization.
+
+**At 45-day CP-2 check-in (this week):** Receive the Health IT Manager's direct briefing on CP-2 progress. Confirm the clinical leadership meeting scheduling. If the meeting is not confirmed, exercise AO authority to compel the attendance — this is a patient safety issue with a named AO condition attached, not a security team request that clinical leadership can defer.
+
+**Annually:** Review the continuous monitoring summary and the ISSO's authorization recommendation. Decide whether to continue the current authorization, initiate early re-authorization, or flag a material change requiring immediate review.
+
+**On material risk change notification:** Review the notification within 24 hours. Determine whether the change requires an interim re-authorization decision, additional compensating controls, authorization suspension, or acceptance within the existing authorization scope.
+
+**At three-year expiration:** Initiate the formal re-authorization process. The re-authorization is not a repeat of the initial authorization from scratch — it is an updated authorization based on what has changed, with credit for the continuous monitoring work of the three-year authorization period.
 
 ---
 
-##  Search Terms
+## What Triggers Re-Authorization Before Three Years
 
-- `Continuous ATO vs periodic reauthorization`  
-- `Ongoing authorization NIST continuous monitoring`  
-- `DoD continuous Authority to Operate cATO guidance`  
-- `RMF M-6 implementation best practices`
+The ongoing authorization model does not eliminate formal re-authorization — it changes when re-authorization is required. Rather than automatically at three years, re-authorization is required when the risk picture has changed materially enough that the AO's original acceptance is no longer an informed acceptance of the current risk.
+
+The specific triggers for MyClinic's OpenMRS:
+
+**Trigger 1: High-severity finding with no immediate remediation path.** If a High-severity vulnerability is identified that cannot be patched within the standard SLA and for which no effective compensating control exists, the AO's original authorization — which was based on no High findings — no longer accurately reflects the system's risk posture. The AO needs to make a new decision: accept the High risk with documented rationale, impose additional controls, or suspend authorization until the risk is addressed.
+
+**Trigger 2: Authorization condition not met by deadline.** The CP-2 90-day condition is the current example. If the clinical downtime procedures are not completed by the deadline, the conditional authorization's premise is violated. The AO needs to decide: grant a documented extension (which is a new risk acceptance decision), require interim compensating controls, or review whether the clinical operational risk warrants a temporary operating restriction.
+
+**Trigger 3: Material system change.** A significant change to the authorization boundary, the data types processed, or the system architecture that was not captured in the SSP change management process. Examples: OpenMRS begins processing genomic data (new PHI sensitivity level), the clinic expands to a second location (new network boundary), a major third-party EHR integration is implemented (new interconnection and data flow). These changes alter the system the AO authorized in ways that may exceed the original authorization scope.
+
+**Trigger 4: Significant threat environment change.** A new threat actor specifically targeting OpenMRS deployments with a demonstrated capability to compromise the system's primary security controls. If the threat environment changes such that the risk rating for a previously Low-probability scenario becomes High-probability, the residual risk the AO accepted may no longer be within tolerance even though no controls have changed.
+
+**Trigger 5: Organizational authorization baseline change.** If MyClinic's organizational risk tolerance changes — a new regulatory requirement, a Board-level decision to treat patient data with a higher protection standard, or a significant leadership change that brings a new risk philosophy — the AO's individual authorization decision should be reviewed against the updated organizational baseline.
 
 ---
 
-## � Up Next: Day 75 – Secure System Disposal
+## What Does NOT Require Re-Authorization
 
-The end is near — but not in a bad way. Tomorrow, I’ll walk through the **final step of the RMF lifecycle: system disposal**. When OpenMRS reaches end-of-life, how do we decommission it **securely and responsibly**?
+Equally important is understanding what the ongoing authorization model specifically does not require re-authorization for:
 
-Because security doesn’t stop until every byte is wiped and every secret is retired. 
+Routine security patches, including Critical patches applied within SLA, do not require re-authorization. This is expected maintenance, not a material change to the authorization basis.
+
+New POA&M items from continuous monitoring findings do not require re-authorization as long as the findings are Low or Moderate severity, compensating controls are documented, and remediation is on track. The authorization explicitly acknowledged that POA&M items would be added and managed through the authorization period.
+
+Personnel changes in non-AO roles (ISSO, IT Administrator, Health IT Manager) do not require re-authorization if the incoming personnel have appropriate qualifications and a documented handoff ensures continuity. Personnel changes that affect the AO role itself require the new AO to review and affirm the existing authorization — they cannot inherit responsibility for a risk acceptance they have not made.
+
+Minor SSP updates reflecting implementation changes or documentation improvements do not require re-authorization. These are administrative maintenance of the authorization package, not changes to the security posture.
+
+The underlying principle: re-authorization is required when the risk picture has changed materially in a way that the AO's original acceptance no longer covers. Routine operations within the accepted risk envelope — including managing findings through the POA&M process — are part of what the AO authorized, not events that interrupt it.
+
+---
+
+## The 45-Day CP-2 Check-In — AO Engagement in Action
+
+The 45-day check-in happening this week is an example of ongoing authorization operating as designed. The authorization condition was set because the CP-2 gap was the most significant operational risk item at authorization. The check-in was specified in the authorization conditions — not as a courtesy, but as a governance mechanism to ensure the AO has visibility at the point where there is still enough time to intervene if things are off track.
+
+The Health IT Manager's briefing to the AO should cover: Milestone completion status (1 and 2 complete, 3 and 4 scheduled with specific dates), the clinical leadership attendance status for the Milestone 3 meeting, any obstacles that have emerged in the drafting process, and the realistic probability of meeting the 12-day deadline.
+
+The AO's engagement at the check-in should not be passive confirmation that the ISSO's report is received. The AO should ask: "What do you need from me to make the Milestone 3 meeting happen on schedule?" The one unresponsive clinical leadership participant represents exactly the kind of obstacle that requires AO-level authority to resolve. The ISSO cannot compel clinical leadership attendance. The Executive Director can.
+
+This is ongoing authorization working at its best — the AO is not a rubber-stamp signature on quarterly reports. They are an active participant in maintaining the security posture they authorized, exercising their organizational authority at the moments when it is needed.
+
+---
+
+## Ongoing Authorization vs. Traditional Periodic Authorization — Honest Assessment
+
+The ongoing authorization model is more demanding than the traditional model — it requires genuine ongoing AO engagement, a functioning continuous monitoring program, and the discipline to report accurately including unflattering findings like AT RISK condition status. Organizations that cannot sustain that level of engagement often find the traditional periodic model operationally easier.
+
+The honest tradeoff: the traditional model concentrates the security assessment and AO engagement effort at three-year intervals, which is operationally manageable but produces three-year periods of declining authorization accuracy. The ongoing model distributes that effort continuously, which is operationally more demanding but produces a continuously accurate authorization picture.
+
+For a High-impact healthcare system processing ePHI used in real-time clinical decision support — which is what MyClinic's OpenMRS is — the ongoing model's continuous accuracy is worth the operational investment. A traditional three-year model for a system at this impact level means the AO may be operating on authorization documentation that is 18 months out of date at the midpoint of the authorization period. That is not consistent with the risk management obligations that come with a High-impact system authorization.
+
+The ongoing authorization model is not just more modern — for a system like OpenMRS, it is more appropriate.
+
+---
+
+## A Real-World Example That Made This Click
+
+The contrast between ongoing and periodic authorization is vividly illustrated by the **DoD's Continuous Authority to Operate (cATO) program**, which the Department of Defense launched in 2022 as a formal implementation of the ongoing authorization concept for DoD systems.
+
+The cATO program requires systems to demonstrate a certain maturity level in their continuous monitoring program before being eligible — specifically, active use of an approved monitoring tool, current POA&M management, and a defined reporting cadence to the authorizing official. Systems that meet these requirements can maintain their authorization continuously rather than re-authorizing on a fixed schedule.
+
+The DoD's experience with cATO has been instructive: the program works well for systems with mature, well-resourced security programs and genuinely engaged authorizing officials. It creates challenges for systems where the continuous monitoring program is nominal — where the tools are in place but findings are not actioned, reports are generated but not read, and the AO engagement consists of acknowledging receipt.
+
+For MyClinic, the honest self-assessment is that the program is early in its maturity. The first quarter has produced genuine findings, genuine responses, and genuine AO engagement through the 45-day check-in. The question for the remaining authorization period is whether that discipline sustains — whether the monthly Health IT Manager report continues to be read and acted on, whether the quarterly AO report continues to receive genuine engagement, and whether the POA&M items continue to be driven to closure rather than accumulating as acknowledged-but-unresolved items.
+
+That sustainability question is what distinguishes a security program that implements ongoing authorization in form from one that implements it in substance.
+
+---
+
+## What I Am Still Thinking About
+
+The three-year authorization expiration and re-authorization cycle — even under the ongoing authorization model — raises a question about organizational learning.
+
+At the end of the three-year authorization period, MyClinic will initiate re-authorization. The re-authorization will include an updated assessment. The updated assessment will evaluate the system as it exists three years into operations — with the benefit of everything the continuous monitoring program has produced, all the findings identified and remediated, all the process improvements made, and all the institutional knowledge accumulated.
+
+That accumulated knowledge is what I want to ensure is captured formally in the re-authorization package — not just the current state of controls, but the story of how the security program matured. What did the first formal assessment find that the internal implementation work had missed? What did the continuous monitoring program surface that neither the implementation work nor the formal assessment had caught? What process design improvements were made based on operational experience?
+
+This organizational learning narrative — captured in the annual continuous monitoring summaries and the monitoring logs over the three-year period — is a genuinely valuable input to the re-authorization process. It tells the next assessor what the organization has learned about its own system, what the persistent risks are, and where the security program has grown. That context makes the re-authorization assessment more efficient and more valuable than a cold-start assessment of a system the assessor has never seen before.
+
+---
+
+## What's Next
+
+Day 75 covers system disposal — the point at which the system reaches end of operational life and is decommissioned. Security does not end at authorization and it does not end at system shutdown — the decommissioning process requires specific security disciplines around data destruction, credential retirement, interconnection termination, and documentation archival.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task M-6 Ongoing Authorization](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-137 – Continuous Monitoring Supporting Ongoing Authorization](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [DoD Instruction 8510.01 – Continuous ATO (cATO) Implementation Guidance](https://www.esd.whs.mil/Portals/54/Documents/DD/issuances/dodi/851001p.pdf)
+- [OMB Circular A-130 – Managing Information as a Strategic Resource](https://www.whitehouse.gov/wp-content/uploads/legacy_drupal_files/omb/circulars/A130/a130revised.pdf)
+- [CISA – Zero Trust Maturity Model and Continuous Verification Principles](https://www.cisa.gov/zero-trust-maturity-model)
+
+---
+
+*#GRC #OngoingAuthorization #ContinuousATO #NISTRMF #TaskM6 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day74*
