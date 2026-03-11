@@ -1,144 +1,213 @@
-# 🔍 Day 57 – Who Ya Gonna Call? (Selecting the Right Security Assessor)
-_100 Days of GRC – OpenMRS on AWS_
+# Day 57 – Task A-1: Selecting the Security Assessor | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Task A-1: Assessor Selection
+## The Assess Step Begins
 
-We’ve entered the **Assess** phase of the NIST Risk Management Framework, and Day 57 focuses on the foundational step: **choosing the right assessor**. After designing, implementing, and documenting controls for OpenMRS-on-AWS, it’s time to invite an **independent, qualified professional** to evaluate the system.
+The Implement step produced a verified, as-implemented System Security Plan with specific configuration evidence for every technical control and operational evidence for every administrative control. The POA&M documents eight open items with owners and target dates. The SSP version control structure ensures the document reflects current reality, not planned intent.
 
-This post walks through not just how to select an assessor, but how to **think like a leader** — making risk-informed, ethics-rooted, and collaborative choices that strengthen both compliance and culture.
+The Assess step — the fifth step of the NIST RMF — is where an independent assessor examines the implemented controls and determines whether they are in place, operating as intended, and producing the desired outcomes. The assessment produces the Security Assessment Report, which is the primary input to the Authorizing Official's authorization decision. Everything built in the Prepare, Categorize, Select, and Implement steps is preparation for this moment.
 
----
-
-##  Why Assessor Independence Matters
-
-I’ve been involved from Day 1 in designing, hardening, and documenting our OpenMRS system on AWS. But that proximity can lead to **blind spots**. No matter how experienced you are, self-assessing a system you helped build risks unintentional bias. That’s why **independence** is essential.
-
-> You wouldn’t let a developer test their own code in production.
-> So why let a system owner validate their own security posture?
-
-NIST RMF (and frameworks like FedRAMP) emphasize independence to ensure credibility, objectivity, and transparency. An independent assessor acts like a referee — fair, but firm — ensuring the controls actually work, not just look good on paper.
+Task A-1 is the first task of the Assess step: selecting the assessor. This might seem like an administrative detail, but assessor selection has direct consequences for the credibility of the authorization package. An assessment conducted by someone without the independence, competence, or rigor required for a High-impact system produces a Security Assessment Report that the AO cannot rely on with confidence — which undermines the entire authorization process.
 
 ---
 
-##  What Makes a Good Assessor?
+## What I Worked On Today
 
-Here’s the checklist I use when evaluating potential assessors:
-
-###  Technical Competence
-- **Understands AWS services** (IAM, CloudTrail, EC2, RDS, WAF)
-- **Knows healthcare IT** and security priorities (e.g., PHI protection, HIPAA safeguards)
-- Familiar with **OpenMRS** or similar EHRs
-- Holds relevant certifications: **CISA**, **CISSP**, **AWS Security Specialty**
-
-###  RMF/NIST Knowledge
-- Practical experience with **NIST 800-53** and **800-53A** controls  
-- Understands how to assess **Access Control (AC)**, **Audit Logging (AU)**, etc.  
-- Familiar with how assessments map to **risk posture**
-
-###  Independence
-- Was **not involved** in implementing OpenMRS
-- Is **organizationally separate** from the development or DevSecOps team
-- If internal, comes from audit or GRC team; if external, no prior engagement as a system integrator
-
-###  Communication and Collaboration
-- Can clearly explain findings and walk through technical logic
-- Uses constructive, solution-focused language  
-- Not a “gotcha” assessor — but also doesn’t sugarcoat gaps
-
-###  Trustworthiness & Confidentiality
-- Will see sensitive configuration details and possibly PHI
-- Must respect boundaries, sign NDAs, and demonstrate discretion  
-- Has a reputation for professionalism  
+NIST SP 800-37 Task A-1 requires the organization to select an assessor or assessment team and ensure that the assessor meets independence requirements appropriate for the system's impact level. NIST SP 800-53A provides the detailed guidance on assessor independence and the assessment methods that apply to each control. Today I work through the independence requirements, the competency requirements for the OpenMRS assessment specifically, the organizational models that could provide a qualified assessor, and what the assessor engagement looks like in practice.
 
 ---
 
-##  Who Might Assess OpenMRS on AWS?
+## What Actually Clicked for Me
 
-Depending on your org, here are three models that could work:
+The concept that clarified assessor selection today is understanding what independence actually requires — and why the requirements scale with impact level.
 
-### 1. **Internal Assessor (Independent Team)**
-- Example: Your hospital’s internal **IT audit team**
-- Pro: Low cost, internal familiarity
-- Con: May lack AWS/OpenMRS depth if not trained
+NIST SP 800-37 defines assessor independence on a spectrum. For Low-impact systems, the system developer or operator can often conduct a self-assessment — the risk of bias is acceptable given the low potential consequences of a missed finding. For Moderate-impact systems, an independent assessor from within the organization who was not involved in the system's development or implementation is typically sufficient. For High-impact systems, a greater degree of independence is required — ideally an assessor from outside the system's development and operational chain, with independence sufficient to produce an objective and impartial assessment.
 
-### 2. **Peer Review (Community-Driven)**
-- Example: Security engineer from another OpenMRS implementation
-- Pro: Domain-specific insights
-- Con: May lack formality, independence depending on affiliation
+For OpenMRS at MyClinic — a High-impact system handling ePHI used in direct patient care — the independence requirement means the assessor cannot have been involved in designing, implementing, or operating the OpenMRS system. The ISSO who built the SSP cannot assess their own SSP. The IT Administrator who configured the encryption cannot verify their own encryption configuration. The Health IT Manager who approved account provisioning cannot assess the account management controls.
 
-### 3. **External Consultant / 3PAO**
-- Example: A firm like **CyberSecure Inc.** or **AWS Partner**
-- Pro: High independence, formal reporting, certified assessors
-- Con: Costly, may require coordination
+This is not a critique of those individuals' competence or integrity. It is a structural principle: the value of an assessment comes from its independence. An assessment conducted by the people who built the system tells the AO that the system does what the builders think it does. An assessment conducted by someone with no stake in the outcome and no prior involvement tells the AO what the system actually does, as evaluated by a neutral party.
+
+For MyClinic — a small clinic without a large internal security organization — achieving meaningful assessor independence requires either using a different part of the organization or going external. Both options have tradeoffs that need to be evaluated honestly.
 
 ---
 
-##  What I’d Provide to the Assessor
+## Independence Requirements for a High-Impact System
 
-As part of assessor onboarding, I’d prepare a package to help them plan efficiently:
+NIST SP 800-37 Section 2.7 discusses assessor independence in the context of impact level. For High-impact systems, the guidance indicates that assessors should be "as independent as practicable" and that the AO should consider the degree of independence when evaluating the credibility of the assessment results.
 
-###  Assessor “Intro Kit” Checklist:
--  **Updated System Security Plan (SSP)**
--  **Network Diagram** of OpenMRS on AWS
--  **Architecture Diagram** (e.g., EC2, RDS, S3 flow)
--  **IAM Role Mapping + MFA Reports**
--  **Access Control Policy**
--  **Security Awareness Training Records**
--  **Incident Response Plan**
--  **Backup & Restore Procedures**
--  **POA&M Tracker** (if applicable)
--  **Contact List** (System Owner, Admin, Compliance Officer)
+The factors that affect assessor independence for OpenMRS at MyClinic:
 
-This transparency builds trust and sets the tone for a **professional and productive assessment**.
+**Who was involved in the system:** The ISSO designed and documented the security program. The IT Administrator implemented the technical controls. The Health IT Manager approved access decisions. The Compliance Officer reviewed the HIPAA alignment. Anyone who contributed to the design, implementation, or approval of controls has a potential independence conflict for assessing those controls.
+
+**What counts as a conflict:** Direct involvement in implementing a specific control is a clear conflict — the IT Administrator cannot assess the RDS encryption they configured. Organizational reporting relationship is also relevant — an assessor who reports to the System Owner has an organizational conflict even if they were not directly involved in the implementation. Advisory involvement is a grayer area — someone who reviewed the SSP and provided comments but did not make implementation decisions may be sufficiently independent for some assessment activities but not others.
+
+**Structural independence vs. personal independence:** Structural independence means the assessor is organizationally separated from the system owner and system team. Personal independence means the individual assessor has no personal stake in the assessment outcome — no performance evaluation tied to the system's authorization, no prior work that the assessment might critique. Both matter; structural independence without personal independence can still produce biased results.
+
+For a small clinic, achieving full structural independence internally may not be feasible. MyClinic may not have an internal IT audit function that is both organizationally independent from the Health IT department and has the AWS and HIPAA technical competency required to assess a High-impact cloud-hosted EHR. This is the practical reality that the assessor selection process needs to address honestly.
 
 ---
 
-## Potential Assessor Options (Hypothetical)
+## Competency Requirements for the OpenMRS Assessment
 
-### 🅰 Option A: Alice, Internal IT Auditor
-- Strength: Certified CISA, 8 years in IT risk, independent of OpenMRS team
-- Weakness: Limited AWS experience
-- Independence:  Yes
-- Consideration: Pair with cloud SME for AWS review
+Independence is necessary but not sufficient. An assessor who is fully independent but lacks the technical competency to assess the specific controls in the OpenMRS SSP produces an assessment that is credible in form but unreliable in substance.
 
-### 🅱 Option B: CyberSecure Inc. (Consulting Firm)
-- Strength: Conducts HIPAA & FedRAMP audits; AWS-certified engineers
-- Weakness: Requires contract, budget approval
-- Independence:  Yes
-- Consideration: Good for external objectivity and documentation polish
+The OpenMRS assessment requires competency in five specific areas:
 
----
+**AWS cloud security assessment:** The majority of the technical controls in the OpenMRS SSP are implemented through AWS services — KMS encryption, security groups, WAF, GuardDuty, CloudTrail, Config, IAM. An assessor who cannot evaluate whether a KMS key policy is correctly configured, whether WAF rules are appropriate for the OWASP Top 10 threats, or whether CloudTrail is configured to capture all required event types cannot provide a credible assessment of these controls. AWS Solutions Architect or AWS Security Specialty certification provides a baseline competency indicator; demonstrated experience assessing AWS deployments is more valuable.
 
-##  Reflection
+**NIST SP 800-53A assessment methodology:** The assessment must follow the examine-interview-test methodology defined in SP 800-53A. An assessor who knows only how to review documents (examine) without conducting technical testing (test) or stakeholder interviews (interview) will produce an incomplete assessment. Experience conducting formal assessments — not just security reviews or penetration tests — is the relevant credential here.
 
-I see the value now in bringing in an assessor early — not just as a “checkpoint,” but as a **partner in strengthening resilience**. It can feel vulnerable to have someone critique your work, but it’s ultimately empowering. Better an assessor catch the weakness than a malicious actor.
+**HIPAA Security Rule and healthcare security context:** The OpenMRS system handles ePHI. The assessor needs to understand what HIPAA requires of technical safeguards, how the HIPAA-to-NIST mapping affects control implementation requirements, and what OCR enforcement history reveals about the most common and consequential gaps in healthcare security programs. CISA or HCISPP certification, or demonstrated healthcare security assessment experience, provides relevant background.
 
-> Independence isn’t just about compliance — it’s about earning **confidence** in your system.
+**OpenMRS application security:** OpenMRS is an open-source Java application with specific security considerations — its authentication architecture, role-based access control configuration, audit logging module, and dependency management. An assessor who is unfamiliar with OpenMRS may not know what to test or how to interpret the application configuration. Prior OpenMRS implementation or assessment experience is valuable but not required if the assessor has strong general web application assessment skills and is willing to study the OpenMRS architecture before the assessment begins.
 
-This process reminds me that leadership in GRC isn’t just about technical skills — it’s about **inviting scrutiny**, **facilitating transparency**, and building a system that’s not only compliant, but credible.
+**Security assessment report writing:** The Security Assessment Report is the primary input to the AO's authorization decision. An assessor who cannot produce a clear, well-structured SAR — with findings categorized by severity, root cause analysis, and specific remediation recommendations — leaves the AO without the information needed to make a defensible risk acceptance decision. Writing quality is a competency that matters.
 
 ---
 
-##  Hands-On Summary
+## Assessor Options for MyClinic
 
-- Identified 2 qualified assessor options (internal and external)
-- Evaluated each for independence and relevant expertise
-- Created a draft “assessor intro kit” with key documentation for handoff
+Three organizational models are available for the OpenMRS assessment. The right choice depends on MyClinic's resources, the AO's independence expectations, and the timeline for authorization.
 
 ---
 
-##  Coming Tomorrow: Assessment Planning (Task A-2)
+### Option 1: Internal Assessor from an Independent Function
 
-Tomorrow we dive into planning the actual assessment. What controls will be tested? How? When? It’s like crafting the script for a security evaluation — and it’s a critical step in ensuring the review is targeted, evidence-based, and efficient. Let’s keep pushing forward! 🎯
+**Description:** MyClinic's internal audit function, compliance team, or risk management team provides an assessor who was not involved in the OpenMRS implementation and is organizationally independent from the Health IT department.
+
+**Independence level:** Moderate. The assessor is organizationally separate from the system team but is still a MyClinic employee. If the AO is the Executive Director, an internal assessor reports ultimately to the same organizational authority — there is a residual organizational dependence even if the assessor's function is independent.
+
+**Competency realistic expectation:** An internal auditor with general IT audit skills and CISA certification may have the NIST framework knowledge and assessment methodology experience, but is unlikely to have the AWS-specific technical depth or OpenMRS application knowledge needed to assess all controls thoroughly. The internal assessor may need to engage an external cloud security subject matter expert to evaluate the AWS-specific controls.
+
+**Practical considerations:** An internal assessor is more likely to be available on a timeline that works for MyClinic's authorization schedule, requires no external contract, and has existing knowledge of the organizational context. However, the AO should document explicitly why the internal assessor's level of independence is sufficient for a High-impact system — this reasoning needs to be recorded in the authorization package.
+
+**Appropriate for:** Organizations where external assessment is not feasible due to resource constraints, where the AO has explicitly accepted the independence tradeoff, and where the internal assessor has documented technical competency in the relevant areas.
 
 ---
 
-##  Suggested Reading
+### Option 2: External Healthcare-Focused Security Assessment Firm
 
-- `“NIST RMF assessor independence” – Official guidance from NIST publications`
-- `“AWS security audit checklist” – Practical assessment guide`
-- `“FedRAMP 3PAO requirements” – What makes a formal assessor eligible`
-- `“HIPAA IT security assessment firms” – External partners for healthcare-focused reviews`
+**Description:** A third-party firm with demonstrated experience conducting HIPAA security assessments and NIST 800-53 control assessments for healthcare organizations provides the assessment team.
 
+**Independence level:** High. The external firm has no organizational relationship with MyClinic beyond the assessment engagement. The firm's personnel had no prior involvement in the OpenMRS implementation. This provides the structural and personal independence that a High-impact system warrants.
+
+**Competency realistic expectation:** A firm that specifically advertises HIPAA security assessments for healthcare organizations is likely to have: CISA or CISSP-certified assessors with healthcare security experience; familiarity with the HIPAA-to-NIST control mapping; experience producing Security Assessment Reports that satisfy NIST SP 800-37 documentation requirements. AWS technical depth varies by firm — the engagement should include explicit requirements for AWS cloud security assessment competency, and the assessor's credentials should be verified before the engagement is contracted.
+
+**Practical considerations:** External assessment firms require a contract with a defined scope of work, schedule, and deliverables. The cost for a formal NIST 800-53 assessment of a High-impact healthcare system is significant — potentially $20,000 to $60,000 or more depending on scope and firm. For a small clinic, this is a meaningful expense. However, the cost of an inadequate assessment — an authorization based on a missed control gap that is later exploited — is substantially higher.
+
+The assessment scope of work should specify: NIST SP 800-53A assessment methodology; assess examine, interview, and test for all High baseline controls; produce a Security Assessment Report with finding severity ratings, root cause analysis, and remediation recommendations; evidence review of all SSP-referenced evidence; and no prior work relationship with MyClinic that would create an independence conflict.
+
+**Appropriate for:** Organizations where the AO requires high confidence in assessment independence for a High-impact system, where budget is available for external assessment, and where the timeline permits an external engagement process.
+
+---
+
+### Option 3: Peer Assessment from a Healthcare IT Security Community
+
+**Description:** An ISSO or security professional from another healthcare organization that has implemented OpenMRS or a comparable EHR conducts the assessment under a formal mutual assessment or peer review arrangement.
+
+**Independence level:** Moderate to high, depending on the specific arrangement. A peer assessor from a different organization has no organizational conflict with MyClinic. However, a peer assessor who shares professional relationships with MyClinic's security team — from a common training program, professional association, or prior collaboration — may have personal independence considerations.
+
+**Competency realistic expectation:** A peer assessor from another OpenMRS implementation may have the application-specific knowledge that external firms often lack — they understand how OpenMRS authentication works, what the audit module captures, and how the role-based access control is typically configured. They may have directly relevant experience with the HIPAA-to-OpenMRS compliance question. AWS technical depth depends on the peer's own deployment environment.
+
+**Practical considerations:** Formal peer assessment arrangements require careful structuring to ensure the assessment is treated with the rigor of a professional engagement rather than a collegial review. A written assessment agreement, a defined scope and methodology, and a formal Security Assessment Report are required regardless of the peer relationship. The peer assessor should be formally documented as the assessor of record in the authorization package, with their credentials and independence basis recorded.
+
+**Appropriate for:** Organizations with strong professional network connections to other healthcare security practitioners, where the peer assessor's credentials and relevant experience can be documented, and where the AO accepts peer assessment as sufficient for a High-impact system.
+
+---
+
+## MyClinic Assessment Decision Framework
+
+Given the High-impact categorization and the patient safety stakes of the OpenMRS authorization, the recommended approach for MyClinic is a hybrid:
+
+**Primary assessment:** External healthcare-focused security assessment firm for the formal NIST 800-53A assessment and Security Assessment Report production. This provides the highest independence level and the most credible basis for the AO's authorization decision.
+
+**Practical constraint acknowledgment:** If external assessment budget is not available for the initial authorization, the AO should formally document the decision to use an internal or peer assessor, the basis for accepting that independence level, and the plan to engage an external firm for the next re-authorization cycle. An honest, documented independence tradeoff is more defensible than an undocumented assumption that internal assessment is sufficient.
+
+The authorization package should include the assessor's credentials, their independence basis, and the AO's documented acceptance of the assessor's independence level — regardless of which model is chosen.
+
+---
+
+## Assessment Readiness Package
+
+Before the assessor begins work, the ISSO prepares a formal assessment readiness package — a structured set of documents that enables the assessor to plan their work efficiently and understand the system before testing begins.
+
+**Assessment readiness package contents:**
+
+*System overview documentation:*
+- Current SSP (Task I-2 version) with revision history
+- System description and architecture diagrams
+- Asset inventory with component roles
+- Data flow diagrams showing ePHI flows
+- System boundary documentation
+
+*Control implementation evidence:*
+- Assessment package organized by control family (Sections 1-15 as referenced in SSP evidence citations)
+- Each section contains the specific evidence referenced in the as-implemented SSP entries
+- Evidence index mapping each control to its section
+
+*Supporting documentation:*
+- POA&M with current status and compensating controls documentation
+- Risk register (Days 37-38) providing context for the prioritization of findings
+- Continuous monitoring strategy (Day 52) showing ongoing monitoring capabilities
+- Most recent monitoring records (GuardDuty findings, Config compliance, vulnerability scan results, restoration test)
+
+*Access logistics:*
+- Read-only AWS console access for the assessor (IAM role with read-only permissions — assessor should not have write access to the production environment)
+- OpenMRS test environment access for application testing (not the production system — a production-equivalent test instance)
+- Contact list for interview scheduling: ISSO, IT Administrator, Health IT Manager, Compliance Officer, System Owner
+- Assessment schedule with defined windows for technical testing
+
+*Rules of engagement:*
+- Scope: defined system boundary (matching SSP boundary)
+- No active exploitation testing against the production environment — testing uses the test instance
+- Findings are communicated to the ISSO before the final report for factual accuracy verification (not to change findings, but to correct factual errors)
+- Sensitive information handling — NDA in place before any access is granted
+
+---
+
+## A Real-World Example That Made This Click
+
+While working through the independence requirements today I found it useful to look at the **FedRAMP Third Party Assessment Organization (3PAO) program** as an illustration of what formal assessor independence requirements look like at scale.
+
+FedRAMP — the federal government's cloud security authorization program — requires that cloud service providers seeking FedRAMP authorization be assessed by an accredited 3PAO. The 3PAO accreditation program, managed by the American Association for Laboratory Accreditation (A2LA), establishes specific requirements for assessor independence, technical competency, and quality management.
+
+The FedRAMP 3PAO requirements include: assessors cannot have performed work for the cloud service provider being assessed within two years; assessors must have demonstrated cloud security and NIST assessment experience; the assessment organization must maintain quality management processes that ensure assessment consistency.
+
+The FedRAMP model is designed for federal government authorizations at scale — it is more formal than what a small clinic requires for its OpenMRS authorization. But the principles are directly applicable: independence has specific operational definitions (no prior engagement within a defined period), competency has documented requirements (certifications and demonstrated experience), and the assessment organization's quality management processes provide assurance that individual assessor variation does not produce wildly inconsistent results.
+
+For MyClinic's external assessor selection, the FedRAMP 3PAO requirements provide a useful benchmark — not as mandatory standards, but as a reference for what "rigorous assessor qualification" looks like. An external firm that could qualify as a 3PAO (even if FedRAMP authorization is not the goal) is likely to have the independence, competency, and process rigor appropriate for a High-impact healthcare system assessment.
+
+---
+
+## What I Am Still Thinking About
+
+One practical question from today's work: how should the ISSO handle the assessor's access to the production OpenMRS environment?
+
+The assessment methodology requires the assessor to test implemented controls — not just review documents. For some controls, testing requires access to the actual production system: verifying that MFA is enforced requires attempting to authenticate without MFA. Verifying that session timeout is configured requires testing the timeout behavior. Verifying that audit logging captures required fields requires generating events and reviewing the resulting log entries.
+
+But production systems in healthcare environments contain live patient data. Granting an external assessor access to a production EHR — even read-only access — creates a disclosure risk for ePHI. The assessor does not need to view actual patient records to test most controls.
+
+The approach I want to document: the assessor tests application-level controls in a production-equivalent test environment — the same software version, same configuration, same role definitions, but populated with synthetic test data rather than real patient data. Infrastructure-level controls (AWS configuration, IAM policies, security group rules, CloudTrail) are tested against the production AWS environment using a read-only IAM role that provides console access without data access.
+
+This approach separates the infrastructure assessment (production, read-only) from the application assessment (test environment, equivalent configuration) in a way that enables thorough testing without creating unnecessary ePHI exposure. The rules of engagement document should specify this approach explicitly so the assessor and MyClinic agree on the access model before the engagement begins.
+
+---
+
+## What's Next
+
+Day 58 addresses Task A-2 — developing the Security Assessment Plan. The Security Assessment Plan is the document that defines what will be assessed, how, by whom, and in what sequence. It is the assessor's roadmap for the engagement and the system owner's contract with the assessor about what the assessment covers. A well-developed assessment plan enables an efficient, comprehensive assessment and sets clear expectations about deliverables and timeline.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task A-1 Assessor Selection and Independence](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-53A Rev 5 – Assessor Qualifications and Independence](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [FedRAMP 3PAO Requirements – A2LA Accreditation](https://www.fedramp.gov/assessors/)
+- [HCISPP – Healthcare Information Security and Privacy Practitioner Certification](https://www.isc2.org/certifications/hcispp)
+- [HHS 405(d) – Healthcare Cybersecurity Practices Assessment Guidance](https://405d.hhs.gov/)
+
+---
+
+*#GRC #AssessorSelection #NISTRMF #SecurityAssessment #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day57*
