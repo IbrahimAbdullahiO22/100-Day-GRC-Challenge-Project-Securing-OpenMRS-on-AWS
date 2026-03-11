@@ -1,92 +1,243 @@
-#  Day 72: Task M-4 – Keeping the Docs Updated (Authorization Package)
-
-Welcome to **Day 72** of my 100-Day GRC journey!  
-
-Now that our system has been continuously monitored and improved, it’s time for one of the most important — yet often overlooked — parts of maintaining a secure and auditable system: **updating the authorization package**.  
-
-This is **Task M-4** in the NIST RMF: keeping the **System Security Plan (SSP)**, **Risk Assessment Report**, and **Plan of Action & Milestones (POA&M)** current. These documents are the living memory of the system’s security posture — and just like the system itself, they must evolve.
+# Day 72 – Task M-4: Updating the Authorization Package | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What I’ve Learned
+## Documentation Currency Is a Security Control
 
-Security is not static — and neither is documentation.
+Day 71 produced five M-3 risk responses from the first quarter of post-authorization monitoring — a Tomcat CVE patched within SLA, an unauthorized IAM password policy change caught and corrected, a backup RTO trend that warrants optimization, an over-privileged role assignment caught by the updated access review template, and a healthcare ransomware threat briefing evaluated against current control effectiveness. Each of those responses generated a change: a configuration correction, a new POA&M entry, a process update, or a monitoring log entry.
 
-If your team works hard to fix vulnerabilities, implement new controls, and adapt to changing environments, but your documentation still reflects the system from 9 months ago… that’s a risk in itself.
+Task M-4 is what ensures those changes are reflected in the authorization package — specifically in the SSP, the POA&M, and any supporting documentation. The authorization package that the AO reviewed and signed in Day 67 described the system as it existed at that moment. The system has been operating for a quarter. Things have changed. Task M-4 is the discipline that keeps the authorization package from becoming historical fiction.
 
-Keeping documentation up-to-date ensures that:
-- **Auditors** have an accurate view of the system
-- **Leadership** can make informed risk decisions
-- **New team members** can onboard more quickly
-- **Continuous monitoring** is supported with integrity
+This might seem like administrative housekeeping, but the stakes are real. The SSP is the primary reference document for incident response — if the ISSO needs to understand what controls are in place during an incident at 11pm, they should be able to open the SSP and find an accurate answer. The SSP is the primary reference document for onboarding a new ISSO — if the current ISSO departs, the successor should be able to reconstruct the security program from the SSP without needing months of oral history. The SSP is the primary reference document for re-authorization — if the authorization package is three years out of date when re-authorization begins, the documentation effort becomes a retrospective archaeology project rather than a current-state update.
+
+Documentation currency is not bureaucratic overhead. It is an operational security investment.
 
 ---
 
-## Real-World Example: OpenMRS on AWS
+## What I Worked On Today
 
-Let’s say we’re running **OpenMRS** in AWS. Over the past few weeks, we:
+NIST SP 800-37 Task M-4 requires that the authorization package be updated to reflect the results of continuous monitoring activities — specifically that the SSP be updated to reflect current control implementations, that the POA&M be updated to reflect current item status, and that any significant changes to the security posture be documented in a manner that supports the AO's ongoing authorization decision.
 
-- **Enabled MFA** for admin accounts  
-- **Closed out a critical vulnerability** found in Nessus  
-- **Moved the backend database** to another AWS region for disaster recovery
-
-Each of these actions requires an update to our documentation:
-
-| Change Made | Document to Update | Notes |
-|-------------|--------------------|-------|
-| Enabled MFA | SSP | Update the `IA-2 (Identification and Authentication)` control section to reflect implementation |
-| Patched SQL vuln | POA&M | Mark the item as "Remediated" and add a remediation date + summary |
-| Database moved | SSP + Network Diagram | Update the architecture overview and data flow to reflect new region |
-
-This ensures the **SSP** tells the current truth, the **POA&M** reflects active and resolved risks, and any **SAR** (Security Assessment Report) findings stay in sync with reality.
+Today I work through the Task M-4 documentation updates for the first quarter of post-authorization monitoring, organize the update decision framework that determines what requires an SSP update versus a monitoring log entry versus a POA&M update, and think through the documentation maintenance process that makes these updates sustainable over a multi-year authorization period.
 
 ---
 
-##  Why It Matters
+## What Actually Clicked for Me
 
-Failing to update your security docs is like relying on an old map to navigate a city that's changed — you're bound to make wrong turns.
+The insight that clarified Task M-4 today is that documentation currency is actually a risk indicator — when the SSP starts drifting from reality, it is a symptom of a monitoring and governance problem, not just an administrative failure.
 
-**Risks of outdated documentation:**
+The Day 71 M-002 finding illustrates this exactly: the IT Administrator made an unauthorized change to the IAM password policy. From a documentation perspective, the SSP's IA-5 implementation description became inaccurate the moment that change was made — the SSP said 12-character minimum, the system was configured for 8. If an assessor had reviewed the SSP and then tested the password policy during those days between the change and its discovery, they would have found a discrepancy that looked like either a documentation failure or a control failure.
 
-- Audit findings (non-compliance due to inaccurate SSP)
-- Confusion during incident response ("Are we logging that service?")
-- Poor decision-making ("I didn’t know the data center changed!")
-- Delayed ATO renewals or re-assessments
+In a well-functioning continuous monitoring program, documentation currency is maintained through the same change management process that governs configuration changes — every change that affects a control implementation is accompanied by an SSP update. The M-002 finding was both a change management compliance failure and a documentation currency failure. The Config rule caught the configuration drift; the documentation drift would have persisted indefinitely if the SSP were only updated on a scheduled basis rather than change-triggered.
 
-Keeping your docs current is one of the **simplest but most powerful ways** to maintain trust, transparency, and operational readiness.
+This is why the version control approach established in Day 56 — with the monthly SSP currency check tied directly to the change log review — is the operational mechanism that makes M-4 sustainable. The ISSO does not do a comprehensive SSP review once a year. They review the change log monthly, identify any changes that affect control implementation descriptions, and update the relevant SSP sections immediately. Small, frequent updates are dramatically less work than a comprehensive annual update and produce a more consistently accurate document.
 
 ---
 
-##  Today’s Goal
+## Task M-4 Documentation Update Framework
 
-Understand that the **authorization package is a living set of documents**, not a one-time deliverable. It must change as your system and risk environment do.
-
-Every configuration update, control enhancement, vulnerability fix, or architecture change is a signal: **update the docs**.
+Before working through the specific updates from the first quarter, establishing the decision framework for what requires what type of documentation update:
 
 ---
 
-##  Reflection
+### Tier 1: Monitoring Log Entry Only
 
-If we **never updated** our system's SSP, POA&M, or SAR, it would be like locking the doors and leaving the keys under the mat — giving us a false sense of security.
+Changes and findings that reflect normal operations with no control implementation change:
 
-Imagine this:
-> A team member refers to the SSP to confirm that OpenMRS logs access to patient data — but logging was disabled during a patch and never turned back on. No one knew because the docs said otherwise. That could be a **HIPAA violation**, and worse — a patient trust breach.
+- Routine security patches applied within SLA
+- Monthly vulnerability scans with no findings above the tracked threshold
+- GuardDuty findings reviewed and dispositioned as false positives or resolved
+- Backup restoration tests completed successfully within RTO
+- Quarterly access reviews completed with no discrepancies
 
-Documentation is a form of **security communication** — it has to be **current, clear, and continuous**.
-
----
-
-##  Search Terms to Explore
-
-- `System Security Plan maintenance best practices`  
-- `Continuous authorization documentation`  
-- `NIST RMF POA&M updates`  
-- `FedRAMP SSP change control`  
+These events are documented in the monitoring log — the ISSO's operational record of continuous monitoring activities. They do not require SSP updates, POA&M entries, or AO notification. The monitoring log provides the audit trail; the SSP remains accurate as written.
 
 ---
 
-##  What’s Next?
+### Tier 2: POA&M Update Only
 
-Tomorrow, in **Day 73**, I’ll dive into **Security Status Reporting** – the art of communicating system security health to leadership, auditors, and stakeholders. If today is about keeping the house clean, tomorrow is about **showing the receipts**.
+Findings that represent new gaps, changes in existing gap status, or timeline revisions:
 
-Let’s keep pushing forward, staying proactive, transparent, and accountable in all things GRC.
+- New vulnerability findings that cannot be patched within the standard SLA
+- Access review findings that reveal a gap corrected immediately with no residual risk
+- Monitoring findings that reveal a process improvement opportunity
+- Closed POA&M items with evidence of completion
+- POA&M items with revised target dates and documented rationale
+
+POA&M updates do not require SSP updates unless the control implementation itself changed. A finding that is remediated through a process improvement does not change the SSP's technical implementation description; it changes the POA&M's open item list.
+
+---
+
+### Tier 3: SSP Update Required
+
+Changes that affect what the SSP documents about the system's security posture:
+
+- Control implementation changes (new tool, different configuration, changed scope)
+- New system components, integrations, or data types
+- Resolved findings that close a documented SSP gap reference
+- Process changes that alter how an administrative control is executed
+- Personnel changes affecting named roles in the SSP (ISSO, System Owner, AO)
+- Remediated POA&M items where the SSP references the POA&M item as a known gap
+
+---
+
+### Tier 4: SSP Update + AO Notification
+
+Changes that affect the authorization basis — the risk picture the AO used to make their decision:
+
+- Significant new control effectiveness gaps
+- System boundary or categorization changes
+- Material threat environment changes affecting residual risk assessment
+- Any finding that crosses the High severity threshold
+- Missed authorization condition deadlines
+
+---
+
+## First Quarter Documentation Updates
+
+Working through the M-3 findings from Day 71 against this framework:
+
+---
+
+### Finding M-001 (Tomcat CVE) — Monitoring Log + POA&M Close
+
+**Update tier:** Tier 1/2 (monitoring log entry for the remediation; POA&M item M-001 closed)
+
+**Monitoring log entry:** [date] — CVE-[number] in Tomcat [version] identified by Inspector. Exploitability assessed: low (Tomcat manager disabled, WAF blocking manager paths). Remediation plan: test environment update [date], production update [date]. Completion: production update applied [date], Inspector re-scan confirmed patched version. POA&M item M-001 closed.
+
+**SSP update required?** No — the Tomcat version change is a patch, not a control implementation change. The control descriptions for SI-2 (Flaw Remediation) and CM-7 (Least Functionality) remain accurate.
+
+**POA&M update:** Item M-001 — Status changed from Open to Closed. Remediation date: [date]. Evidence: Inspector scan showing patched version, monitoring log entry.
+
+---
+
+### Finding M-002 (IAM Password Policy Drift) — SSP Monitoring Note + CM-3 Update
+
+**Update tier:** Tier 3 (SSP update — not to the password policy description, which was correct, but to the CM-3 implementation description)
+
+**The password policy itself was corrected immediately. The SSP's IA-5 implementation description remained accurate throughout — the system was misconfigured for a few days, but the SSP's documented standard (12 characters) was correct. No IA-5 SSP update needed.**
+
+**What does need an SSP update:** The CM-3 implementation description. The finding revealed that the CM-3 ISSO notification procedure is not consistently followed for IAM policy modifications. The SSP's CM-3 implementation description documents what the change management process requires; if the process is not working as documented, the SSP's implementation description is either inaccurate (it says notification happens, but it does not always happen) or needs to be supplemented with the process improvement.
+
+**SSP CM-3 update:** Implementation description updated to add: "IAM policy modifications (including account policy, user policies, and role policies) are included in the ISSO-notification change category. An EventBridge automated notification rule for IAM CreateUser and CreateRole events is in place [reference Day 62 remediation]. An analogous automated notification rule for IAM policy modification events (iam:UpdateAccountPasswordPolicy, iam:PutUserPolicy) will be implemented by [target date] to supplement the procedural notification requirement." This creates a documented gap acknowledgment and remediation commitment in the SSP implementation description itself.
+
+**POA&M update:** New item — CM-3 EventBridge expansion for IAM policy modification events. Owner: IT Administrator. Target: 30 days.
+
+**Monitoring log entry:** [date] — Config NON_COMPLIANT finding for iam-password-policy. Root cause: unauthorized change. Immediate remediation applied. SSP CM-3 updated. POA&M item added for EventBridge expansion.
+
+---
+
+### Finding M-003 (Backup RTO Trend) — POA&M Update + SSP Flag
+
+**Update tier:** Tier 2/3 (POA&M new item; SSP CP-9 implementation description updated with trend note)
+
+**POA&M update:** New item M-003 — CP-9 restoration procedure optimization. Owner: IT Administrator. Target: 60 days. Description: quarterly restoration test RTO of 3:47 — within 4-hour target but narrowing margin. Procedure updated for S3 export format compatibility. Restoration procedure optimization or RTO revision required before data volume growth threatens target compliance.
+
+**SSP update:** CP-9 implementation description updated with a note: "Quarterly restoration test results are tracked in the monitoring log. Most recent test: [date], completion time [3:47], RTO target 4 hours — met. Data volume growth trend indicates restoration procedure optimization review required within 60 days (see POA&M item M-003)." This creates a forward reference from the SSP to the POA&M item, so the SSP accurately reflects the current implementation status including known improvement needs.
+
+---
+
+### Finding M-004 (Internal Role Change Gap) — SSP Update + New POA&M Item
+
+**Update tier:** Tier 3 (SSP update to AC-2 implementation description; new POA&M item)
+
+**SSP AC-2 update:** Implementation description updated to add: "ISSO notification is required for all job function changes that affect required system access levels, including internal transfers between departments and role changes within the organization. The HR and department manager notification process will be updated to include ISSO notification for role changes affecting OpenMRS access (see POA&M item M-004)."
+
+This is an important SSP update: the prior AC-2 implementation description covered account provisioning and deactivation but did not explicitly address the access implications of internal role changes. The finding revealed that this lifecycle stage was undocumented, which is itself a gap — the SSP should describe the complete account management lifecycle, not just the endpoints.
+
+**POA&M update:** New item M-004 — HR/department manager role-change ISSO notification process. Owner: Health IT Manager + ISSO. Target: 45 days.
+
+---
+
+### Finding M-005 (HC3 Threat Briefing) — Monitoring Log + Threat Assessment Update
+
+**Update tier:** Tier 1 (monitoring log entry); risk register update (not an SSP update, but a risk register update reflecting the current threat intelligence)
+
+**Monitoring log entry:** [date] — HC3 briefing reviewed. Healthcare ransomware targeting organizations matching MyClinic profile. Current controls evaluated: MFA enforcement adequate against credential theft vector. Email security posture gap noted for next quarterly review.
+
+**Risk register update:** RS-004 (Ransomware/EHR Unavailability — from Day 38 risk register) updated: current threat intelligence confirms elevated likelihood for organizations matching MyClinic's profile. Likelihood rating reviewed — maintaining current rating but noting HC3 briefing as new supporting evidence. Risk register version updated.
+
+**SSP update required?** No — the threat environment change does not affect the current control implementation descriptions. If the email security gap review produces a finding that requires a new control, that will trigger an SSP update.
+
+---
+
+## SSP Version Update — Post-Quarter 1
+
+Following the Task M-4 documentation updates, the SSP is updated to version 1.2:
+
+**SSP v1.2 revision log entry:**
+- Date: [date]
+- Author: ISSO
+- Change summary: CM-3 implementation description updated for IAM policy modification notification gap and EventBridge expansion commitment; CP-9 implementation description updated with RTO trend note and POA&M M-003 reference; AC-2 implementation description updated for internal role change notification requirement.
+- AO review required: No — all updates are minor implementation description refinements and gap acknowledgments. No control effectiveness change or authorization basis change.
+
+**Revision log (cumulative):**
+
+| Version | Date | Change Summary | AO Review |
+|---|---|---|---|
+| v1.0 | [original date] | Initial SSP — Select step | Yes |
+| v1.1 | [date] | Task I-1/I-2 as-implemented updates | No |
+| v1.1.1 | [date] | CloudTrail evidence reference; AT-2 gap documented | No |
+| v1.1.2 | [date] | IAM inventory updated; service account added | No |
+| v1.1.3 | [date] | KMS root account condition documented | No |
+| v1.2 | [date] | Quarter 1 monitoring updates: CM-3, CP-9, AC-2 | No |
+
+---
+
+## The Authorization Package — Current State Summary
+
+Three months post-authorization, the authorization package reflects:
+
+**SSP:** v1.2 — current. All control implementation descriptions reflect current operational state.
+
+**SAR:** Post-remediation version — still accurate. No re-assessment required; the formal assessment findings have all been addressed and the ongoing monitoring has not identified new findings of comparable severity.
+
+**POA&M:** Updated — 12 open items total (10 original + M-003 RTO optimization + M-004 role-change notification). One item closed (M-001 Tomcat CVE). The CP-2 90-day condition is 12 days from deadline — the 45-day check-in with the AO is scheduled for this week.
+
+**Risk Register:** v2 — updated with HC3 threat briefing current threat intelligence.
+
+**Monitoring Log:** 90 days of entries covering all scheduled monitoring activities.
+
+---
+
+## A Real-World Example That Made This Click
+
+The logging-disabled example in the original Day 72 content — "the SSP says we log access to patient data, but logging was disabled during a patch and never turned back on" — is not hypothetical. The **2014 Community Health Systems breach** involved attackers who maintained persistent access to systems for approximately five months before detection. Post-breach forensic analysis found logging gaps that limited the investigators' ability to reconstruct the full extent of what had been accessed.
+
+While the CHS breach had multiple contributing factors, the documentation and monitoring gap theme is directly relevant: organizations that cannot confidently answer "is our logging actually enabled right now?" because their SSP reflects a configuration from months ago are not just at risk of audit findings — they are at risk of being unable to scope a breach when one occurs.
+
+An ISSO who receives a 2am incident notification and opens the SSP to understand what audit trail exists for patient record access needs to find an accurate answer in the SSP, not a six-month-old description. Task M-4 is what makes that possible. The 15 minutes spent updating the SSP's AU-2 entry when a logging configuration change is made is the investment that pays off at 2am during an incident.
+
+---
+
+## What I Am Still Thinking About
+
+The version 1.2 SSP update today raises a question about the right level of detail in ongoing SSP maintenance.
+
+The CM-3 update I made today added a forward reference to a planned EventBridge expansion: "an analogous rule for IAM policy modification events will be implemented by [target date]." This is a commitment documented in the SSP — if an assessor reviews the SSP during re-authorization and the EventBridge rule was never implemented, there is a discrepancy between the SSP's documented plan and the system's actual state.
+
+There is a tension between two valid principles: the SSP should accurately reflect current state (which supports documenting planned improvements as plans, not as implementations), and the SSP should not make commitments that create future discrepancy risk (which argues for only documenting what is implemented, not what is planned).
+
+My resolution: the SSP should distinguish clearly between implemented controls and planned improvements. The CM-3 update should say "IAM policy modification notification is currently implemented through the procedural CM-3 requirement. Automated notification via EventBridge for IAM policy modification events is planned for implementation by [date] — see POA&M item [number]." This is accurate (current state is procedural), transparent (improvement is planned), and trackable (the POA&M item provides the accountability mechanism).
+
+The SSP documents current reality with a POA&M reference for known improvement needs. The POA&M tracks the commitment. The two documents together provide the complete picture without the SSP making unverified claims about future state.
+
+---
+
+## What's Next
+
+Day 73 covers Task M-5 — security status reporting. The ongoing monitoring activities, M-3 risk responses, and M-4 documentation updates all produce information that flows upward to the AO through structured reporting. Security status reporting is how the continuous monitoring program demonstrates its value to organizational leadership — translating technical monitoring data into governance-relevant risk intelligence.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task M-4 Authorization Package Updates](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-18 Rev 1 – SSP Maintenance and Versioning](https://csrc.nist.gov/publications/detail/sp/800-18/rev-1/final)
+- [FedRAMP Continuous Monitoring SSP Update Requirements](https://www.fedramp.gov/documents-templates/)
+- [Community Health Systems Breach — HHS OCR Investigation](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/chs/index.html)
+- [NIST SP 800-137 – Authorization Package Currency in Continuous Monitoring](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+
+---
+
+*#GRC #AuthorizationPackage #DocumentationCurrency #NISTRMF #TaskM4 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day72*
