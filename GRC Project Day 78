@@ -1,121 +1,194 @@
-#  Day 78 – Managing POA&Ms and Risk Acceptance Over Time
-
-Welcome to the final day of this GRC journey!   
-After weeks of securing, monitoring, and decommissioning systems, we now arrive at one of the most crucial ongoing practices: **managing POA&Ms (Plans of Action and Milestones)** and **risk acceptance**.
+# Day 78 – Managing POA&Ms and Risk Acceptance Over Time | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What Is a POA&M?
+## The POA&M as a Governance Instrument
 
-A **POA&M** is a structured plan that captures security findings, outlines steps to remediate them, and assigns accountability. If a control isn’t immediately satisfied, we don’t ignore it — we **document it**, own it, and track it to closure.
+Day 77 examined the AWS-native tooling layer — Config, Security Hub, and Audit Manager — and the critical distinction between automated detection and automated assurance. The tools catch configuration drift and aggregate findings; human judgment determines what the findings mean, what response is appropriate, and when a finding warrants formal risk acceptance rather than immediate remediation.
 
-> It includes:
-- The identified **weakness**
-- A **remediation plan**
-- Required **resources**
-- Milestones and **target completion dates**
-- **Progress status** (e.g., Open, In Progress, Completed)
+Day 78 is about the governance instrument that captures all of those human judgment decisions and makes them visible, accountable, and trackable over time: the Plan of Action and Milestones. The POA&M has been present throughout this entire project — first introduced in Day 50 as the documentation vehicle for the formal assessment findings, then updated through remediation, authorization conditions, and quarterly monitoring. Today I want to step back from the specific OpenMRS POA&M and think carefully about what makes POA&M management work as a governance discipline rather than as a compliance reporting exercise.
+
+I also want to be honest about something the original Day 78 content glosses over: the POA&M is one of the most commonly mismanaged artifacts in security programs. It can become a graveyard of acknowledged-but-unaddressed findings that grows indefinitely, a political document that is carefully curated before AO reviews and then ignored between them, or a compliance checkmark that satisfies auditors without creating any operational security improvement. Understanding what makes POA&M management effective requires understanding how it fails.
 
 ---
 
-###  Example from the OpenMRS-on-AWS Project:
+## What I Worked On Today
 
-**Weakness:** MFA not enabled for all AWS admin accounts  
-**Plan:** Deploy AWS MFA tokens and train users  
-**Resources:** IAM engineer + training sessions  
-**Milestones:**  
-- Pilot MFA with 2 users by Q1  
-- Full deployment by Q2  
-**Completion Target:** June 30, 2025
-
-As work progresses, we log updates. Example:
-> _"Status: 50% complete – 5 out of 10 admins enrolled in MFA."_  
-This keeps stakeholders informed and shows accountability in real-time.
+NIST SP 800-37 establishes POA&M management as a continuous responsibility of the ISSO and system owner throughout the authorization period. NIST SP 800-53A provides assessment procedures that feed findings into the POA&M. OMB Memorandum M-02-01 established the federal POA&M reporting requirements that shaped modern practice. Today I work through the full POA&M management discipline — the operational cadence, the revision and timeline management practices, the formal risk acceptance process, and the signs that a POA&M is being managed as genuine governance versus compliance theater.
 
 ---
 
-##  What Happens When You Can’t Fix a Risk?
+## What Actually Clicked for Me
 
-Sometimes, despite best efforts, you **can’t immediately fix a weakness** — or it’s not worth the cost or impact. This is where **Risk Acceptance** enters the picture.
+The concept that clarified POA&M management today is the difference between a POA&M that tracks commitments and a POA&M that records history.
 
->  Risk Acceptance is not a failure — it’s a **formal, documented business decision**.
+A POA&M that tracks commitments is a forward-looking governance instrument. Each item represents a specific security gap, a specific remediation plan, a specific owner who has accepted responsibility, and a specific deadline that was set based on a realistic assessment of what is achievable. When a deadline passes without the item being closed, the organization has failed to meet a commitment — which triggers a deliberate decision: revise the timeline with documented rationale, escalate to get the resources needed, or formally accept the risk. The POA&M in this mode creates accountability because deviations from commitments are visible and require explanation.
 
-###  When to Accept a Risk:
+A POA&M that records history is a backward-looking compliance artifact. Items are added when findings occur and closed when something is eventually done about them, but the timeline management is loose, the ownership is nominal, and the escalation process for missed deadlines is absent. The POA&M grows over time because items are added faster than they are closed, and the growing list gradually becomes background noise — acknowledged at every quarterly review but not driving genuine remediation priority.
 
-- The risk is **low-impact** or **within tolerance**
-- A fix would be **disruptive** or **unfeasible** short-term
-- **Compensating controls** reduce overall exposure
-
-###  Real-World Example:
-
-> Risk: OpenMRS backup database is unencrypted  
-> Fix: Encryption degrades performance; backup access is restricted  
-> Acceptance:  
-> _"CISO accepted the risk on 2025-04-30. Compensating controls in place. Revisit by 2026-04-30."_
-
-This goes into the POA&M (or a Risk Register) as a tracked, reviewed decision — not a forgotten issue.
+The difference between these two modes is not primarily in the format of the POA&M document. It is in the organizational discipline around how timeline revisions are handled, how ownership is enforced, and how the AO engages with the POA&M as a governance signal rather than a compliance report.
 
 ---
 
-##  Hands-On Practice
+## The OpenMRS POA&M — Current State and Management Disciplines
 
-### Sample POA&M Update Entry
-
-**POA&M Item:** Enable encryption for all OpenMRS database backups  
-**Initial Deadline:** May 31, 2025  
-**Update:**  
-> _"Status: 50% complete — encryption enabled on test and dev backups. Production backups in progress. Interim risk of unencrypted prod backups formally accepted by CIO until final encryption deadline of June 30, 2025."_  
-
-This update shows:
-- Progress made  
-- Remaining risk  
-- Who approved acceptance and when  
+The OpenMRS POA&M at Day 78 has 10 open items, 5 items closed during Q1 monitoring, and 2 new items added from Q1 monitoring findings. Working through the management disciplines for this specific POA&M:
 
 ---
 
-## Why POA&Ms Matter
+### Timeline Management — When Deadlines Are Missed or Need Revision
 
-POA&Ms help ensure that issues:
-- Don’t slip through the cracks  
-- Are tracked to closure  
-- Are prioritized with context  
-- Are visible to decision-makers
+The original POA&M was built with target dates established at authorization. Twelve items; twelve deadlines. Some were met. Some required revision. The revision discipline is where POA&M management most clearly differentiates genuine governance from compliance decoration.
 
-They keep security teams **accountable** and **focused** on real progress — not just compliance checkboxes.
+**The wrong way to handle a deadline revision:** Update the target date in the POA&M to a new date without documenting why the original date was missed and what is different about the new commitment.
 
----
+**The right way:** A deadline revision requires a formal revision entry in the POA&M item that documents: (1) why the original deadline was not met — specifically, what obstacle was encountered; (2) what has changed that makes the new deadline achievable — resources secured, scope clarified, dependency resolved; and (3) whether the missed deadline requires AO notification per the authorization conditions.
 
-##  Reflection
+**Example — POA&M Item 001 (CP-2 Clinical Downtime Procedures):**
 
->  “Is a POA&M just paperwork — or is it power?”
+The 90-day authorization condition deadline was AT RISK at the Day 73 quarterly report — 12 days remaining, one unresponsive clinical leadership participant. If the Milestone 3 clinical leadership approval meeting is delayed and the deadline is missed, the revision entry would document:
 
-For me, a well-managed POA&M is **a living roadmap**. It turns good intentions into tangible actions and reminds teams that **security is an ongoing commitment**. Even when risks are accepted, they’re not invisible — they’re **monitored, owned, and revisited**.
+*Original deadline:* [authorization date + 90 days]
+*Deadline missed because:* Clinical leadership meeting originally scheduled for [date] was postponed by [name, role] due to [specific operational conflict — e.g., unplanned patient care emergency requiring full clinical leadership attention on scheduled meeting date].
+*Revised deadline:* [original deadline + 14 days]
+*Basis for revised deadline:* Clinical leadership meeting rescheduled for [new date] — all three required participants confirmed. Milestones 3 and 4 achievable within 14-day extension.
+*AO notification:* Yes — missed authorization condition deadline, per Condition 3. AO notified [date]. AO acknowledged extension on [date].
+*Compensating control during extension period:* Existing paper-based downtime procedure reference cards (Day 54 implementation) remain in place.
 
-Not every weakness gets fixed right away — and that’s okay. What matters is transparency, deliberate decision-making, and continuous improvement.
+This revision entry creates an accountable record: what happened, why, what is different, and who knows. An AO reviewing this entry understands the delay was a specific operational disruption, not organizational indifference to the condition.
 
----
+**Timeline revision thresholds for AO notification:**
 
-## Today’s Goal
+Not every deadline revision requires AO notification. The classification:
 
-Understand how to track security weaknesses over time, prioritize remediation, and use risk acceptance **wisely** — not as a shortcut, but as a strategic business decision supported by documentation and review.
-
----
-
-##  Search Terms
-
-- `POA&M management best practices`  
-- `Risk acceptance vs risk mitigation NIST`  
-- `Tracking security remediation actions POA&M`  
-- `Continuous monitoring risk register templates`  
+- Low severity item, first revision, ≤30 days: Document in POA&M, notify Health IT Manager. No AO notification required.
+- Low severity item, second revision or >30 days: Document in POA&M with detailed rationale. AO notification in next quarterly report.
+- Moderate severity item, any revision: AO notification within 5 business days.
+- Authorization condition item, any revision: AO notification within 24 hours.
 
 ---
 
-##  Wrapping Up the GRC Journey
+### Ownership Enforcement — When Named Owners Are Not Executing
 
-This marks the final day in this 78-day GRC journey. From system authorization to monitoring, reporting, and now risk accountability, I’ve built both hands-on experience and leadership insight.
+Every POA&M item has a named owner. Ownership means accountability for meeting the milestone schedule, proactively notifying the ISSO if obstacles arise, and executing the remediation steps within the committed timeline.
 
-Remember:  
-> **GRC is not a checkbox. It’s a culture.**  
-Keep growing, keep learning, and keep securing what matters.
+The M-004 finding (HR role-change notification process, Health IT Manager as owner, 45-day target) provides a concrete example of ownership enforcement in practice. The Health IT Manager has 45 days to update the HR and department manager notification process. The ISSO's role in ownership enforcement:
 
-Stay vigilant. Stay resilient. Stay committed.
+- At 15 days: Check in with Health IT Manager — how is progress going? Any obstacles?
+- At 30 days: Formal status request — what specifically has been completed toward the milestone? What remains?
+- At 40 days (5 days before deadline): If not complete and no extension has been requested, escalate to Health IT Manager's supervisor (Executive Director). Not as a punitive action — as a governance signal that an authorization commitment is approaching its deadline and the organizational owner needs executive visibility.
+
+The escalation at 40 days is the most important part of ownership enforcement, and it is the step that most security programs fail to execute. The ISSO escalating to the Executive Director about a Health IT Manager's POA&M deadline communicates that these commitments are real governance obligations, not suggestions from the security team. If the ISSO absorbs missed deadlines silently, the signal to the organization is that POA&M deadlines are soft targets.
+
+The escalation should be factual and non-accusatory: "The 45-day target for POA&M item M-004 is in five days. Current status is [description]. If this item is not completed by the deadline, the ISSO will revise the timeline and notify the AO per authorization condition requirements. What is needed to complete this item by [date]?"
+
+---
+
+### Risk Acceptance — The Formal Process
+
+Risk acceptance is the POA&M disposition for findings where remediation is not the right answer — either because the risk is within tolerance with compensating controls in place, because the remediation cost significantly exceeds the risk reduction benefit, or because the remediation would create operational disruption disproportionate to the security improvement.
+
+Risk acceptance is not a shortcut. It is a formal organizational decision with specific requirements:
+
+**Who can accept risk:** For Low severity items, the ISSO and Health IT Manager together. For Moderate severity items, the AO must concur. For High severity items, AO acceptance with documented rationale that addresses why the risk is within organizational tolerance despite the severity. The OpenMRS High-impact categorization means that an AO accepting a High finding must document specifically why that acceptance is appropriate for a system processing this sensitivity of ePHI.
+
+**What risk acceptance requires:**
+
+1. *Characterization of the accepted risk:* What specifically is being accepted? What is the worst-case scenario if this risk is exploited? This is not a rhetorical exercise — the accepting official needs to genuinely understand what they are accepting.
+
+2. *Compensating control documentation:* What controls are in place that reduce the likelihood or impact of the risk being accepted? Compensating controls are not a substitute for remediation — they are the evidence that the acceptance is not simply ignoring a gap.
+
+3. *Residual risk rating:* After compensating controls, what is the residual risk rating? This may be lower than the original finding severity if the compensating controls are effective.
+
+4. *Acceptance period and review date:* Risk acceptance is not permanent. Every accepted risk has an expiration date — a date by which the acceptance must be reviewed and either renewed with updated justification, or the risk is reconsidered for remediation as circumstances change.
+
+5. *Accepting official signature:* The individual with the authority to accept the risk signs the acceptance. For Moderate items, the AO's acknowledgment in the quarterly POA&M report counts. For explicit formal acceptance of an item the AO wants on record, a standalone risk acceptance memo is appropriate.
+
+**Example — POA&M Item 009 (AU-3 Modification Audit Logging Previous Values):**
+
+This item has been in the POA&M since the formal assessment. The finding: OpenMRS's modification audit log captures that a record was modified but does not capture the previous value of the modified field. The remediation options evaluated in Day 63 were Option A (application-layer solution requiring OpenMRS customization) and Option B (SSP update accepting the current logging capability).
+
+If MyClinic's conclusion after evaluating the options is that Option A is technically infeasible within the authorization period and Option B does not fully address the AU-3 control requirement, the appropriate path is formal risk acceptance:
+
+*Accepted risk:* OpenMRS modification audit log does not capture previous field values. If a clinical record is maliciously or erroneously modified, the audit log will show that a modification occurred and who made it, but will not show the original content without database-level forensic recovery.
+
+*Compensating controls:* (1) Database-level point-in-time recovery enabled — original values recoverable from RDS PITR for up to 35 days. (2) Application-level audit log capturing modification event, timestamp, and modifying user. (3) Quarterly access review verifying that modification access is appropriately scoped to clinical roles.
+
+*Residual risk:* LOW — the compensating controls provide meaningful recovery and detection capability even without previous-value capture in the application audit log.
+
+*Acceptance period:* 1 year — review at next annual continuous monitoring summary. If OpenMRS community releases a module that addresses previous-value logging, revisit remediation option.
+
+*Accepting officials:* ISSO (risk characterization and compensating controls documented); Health IT Manager (operational impact acknowledged); AO (formal acceptance concurred — included in annual continuous monitoring summary).
+
+---
+
+### The POA&M Aging Problem — Managing Long-Term Open Items
+
+One of the most significant POA&M management failures is age inflation: items that were opened months or years ago, have been "in progress" through multiple quarterly reviews, and have never been closed or formally accepted. The item persists because closing it requires effort, accepting it requires a formal decision, and deferring it requires nothing.
+
+The 90-day aging review is the mechanism that prevents this: any item that has been open for more than 90 days without meaningful milestone progress is reviewed by the ISSO with a specific question: is this item making genuine progress toward closure, or is it aging without real movement?
+
+Items that are aging without real movement have three possible resolutions:
+1. *Genuine remediation path:* The item needs more resources, a higher-priority window in the schedule, or executive support. Escalate appropriately to secure what is needed.
+2. *Formal risk acceptance:* The remediation is not going to happen and the organization needs to formally acknowledge that, document the compensating controls, and make the acceptance decision rather than pretending the item is "in progress."
+3. *Reclassification:* The original finding was documented before all context was understood, and upon 90-day review, the appropriate disposition is different from what was initially proposed. Re-evaluate with current information.
+
+Any item in the POA&M for more than 180 days without closure or formal acceptance is a governance failure signal — it means the organization has acknowledged a security gap, made a commitment to address it, and has not met that commitment or made a deliberate decision to accept it. The AO's quarterly review should include explicit attention to items approaching and exceeding 180 days.
+
+---
+
+## What the POA&M Reveals About Security Program Health
+
+Beyond the individual item management, the POA&M as a whole reveals the health of the security program through patterns that quarterly AO review should examine:
+
+*Are items being added faster than they are being closed?* If the POA&M grows every quarter — new items from monitoring consistently outnumbering closures — the security program may not have sufficient remediation capacity, or the continuous monitoring program is generating findings that the organization lacks resources to address. Both are governance signals that require AO attention, not just ISSO attention.
+
+*Are the same control families repeatedly generating new items?* If access control findings appear in every quarterly monitoring cycle, the root cause may not be individual misconfiguration events — it may be an organizational process that consistently produces access control gaps. The right response is to address the underlying process, not to add individual findings to the POA&M indefinitely.
+
+*Are items being formally accepted or silently deferred?* A healthy POA&M closes items through remediation or formal acceptance. Items that age indefinitely without either represent decision avoidance — the organization is neither fixing the gap nor taking formal responsibility for accepting it. This pattern is what auditors and assessors look for as an indicator that the security program's accountability mechanisms are not functioning.
+
+---
+
+## A Real-World Example That Made This Click
+
+The POA&M aging problem — items acknowledged but never resolved — is at the heart of many of the largest healthcare breaches that OCR has investigated and settled.
+
+The **2019 Premera Blue Cross settlement ($6.85 million)** — referenced in Day 67 in the context of authorization conditions without verification standards — had a POA&M dimension that is directly relevant here. The OCR investigation found that a 2012 risk analysis had identified vulnerabilities in Premera's systems. Those vulnerabilities were not fully remediated. The 2014 breach that exposed 11 million individuals' data exploited some of those same vulnerabilities.
+
+The gap between the 2012 risk analysis identification and the 2014 breach is approximately two years of POA&M items that were acknowledged but not driven to closure or formal acceptance. The organization knew about the gaps. They were documented. They were not fixed, and they were not formally accepted with compensating controls — they aged in a POA&M until an attacker exploited them.
+
+This is the governing lesson of POA&M management: the POA&M does not make the organization safer by itself. The safety comes from the remediation decisions and the formal acceptance decisions that the POA&M tracks. An organization that maintains an impeccably formatted POA&M full of items that are never closed is not a well-managed security program — it is a well-documented one.
+
+---
+
+## What I Am Still Thinking About
+
+The 90-day aging review and the escalation process for items approaching deadlines — together, these create a governance cadence that makes the POA&M a genuine accountability instrument. But this cadence depends on the ISSO having the organizational standing to escalate without consequences.
+
+In many healthcare organizations, the ISSO is not a senior organizational role. Escalating to the Executive Director about a Health IT Manager's missed POA&M deadline requires the ISSO to exercise authority that may not be clearly established in the organizational structure. If the ISSO lacks the organizational standing to escalate effectively — if their escalations are ignored, minimized, or create negative organizational dynamics — the POA&M accountability mechanism fails not because the ISSO is not trying, but because the organizational culture does not support security accountability at the governance level.
+
+This is a GRC leadership challenge that frameworks do not address explicitly: the ISSO needs organizational backing from the AO and the Executive Director that makes escalation a normal part of the governance process rather than an exceptional action that requires the ISSO to choose between organizational harmony and security accountability.
+
+The clearest solution is explicit AO backing in writing — an authorization condition or organizational charter that establishes the ISSO's authority to escalate POA&M deadline concerns to organizational leadership. If the AO has said, in writing, "the ISSO is authorized and expected to escalate unmet authorization commitments to senior leadership," the escalation is an organizational norm, not a political risk.
+
+This is the kind of governance infrastructure that makes security programs sustainable — not just the technical controls and the RMF process, but the organizational authority structures that give the security function the standing to do its job.
+
+---
+
+## What's Next
+
+Day 79 continues the governance foundations section with an examination of vendor and third-party risk management — how organizations assess and manage the security risks introduced by the external relationships that modern systems depend on. For OpenMRS, the AWS relationship, the OpenMRS open-source community dependency, and the Laboratory Information System integration all represent third-party risk that the SSP addresses at the surface level but that requires deeper examination as a standalone governance discipline.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – POA&M as a Continuous Monitoring Output](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [OMB Memorandum M-02-01 – Guidance for Preparing and Submitting Security Plans of Action and Milestones](https://www.whitehouse.gov/wp-content/uploads/legacy_drupal_files/omb/memoranda/2002/m02-01.pdf)
+- [NIST SP 800-53A Rev 5 – Assessment Procedures Supporting POA&M Development](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS OCR – Premera Blue Cross Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/premera-blue-cross/index.html)
+- [CISA – Continuous Diagnostics and Mitigation (CDM) POA&M Management Guidance](https://www.cisa.gov/cdm)
+
+---
+
+*#GRC #POAandM #RiskAcceptance #ContinuousMonitoring #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day78*
