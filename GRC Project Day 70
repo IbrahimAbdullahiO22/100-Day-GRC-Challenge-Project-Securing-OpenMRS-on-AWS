@@ -1,109 +1,222 @@
-#  Day 70: Task M-2 – Ongoing Assessments (Regular Security Checkups)
-
-Welcome to **Day 70** of my 100-Day GRC journey!  
-
-Yesterday, I focused on detecting system and environment changes (Task M-1). Today, I’m moving deeper into the **Monitor** phase of the RMF with **Task M-2: Ongoing Assessments**.  
-
-This is where I shift from watching **for change** to validating that my **security controls** are still doing their job. It’s one thing to deploy controls; it’s another to ensure they’re effective over time. This task is about performing regular, proactive **security health checks** — long before an auditor or attacker shows up.
+# Day 70 – Task M-2: Ongoing Control Assessments | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Why Ongoing Assessments Matter
+## From Change Detection to Effectiveness Verification
 
-Even if your system *seems* fine, risks can quietly accumulate.  
+Day 69 established the M-1 change monitoring framework — the Security Impact Analysis process for technical system changes, the environmental scanning cadence for threat landscape and regulatory changes, and the change classification table that determines when SSP updates and AO notifications are required. M-1 answers the question: what changed?
 
-- Configurations drift  
-- Patches are missed  
-- Roles and permissions expand  
-- New vulnerabilities emerge  
+Task M-2 answers a different question: are the controls still working?
 
-By scheduling **routine checkups**, I maintain **assurance** that the controls I’ve documented in my System Security Plan (SSP) are **still valid** and functioning as intended.
+These are related but distinct. A system can have no significant technical changes and still experience control effectiveness degradation — a monitoring alert that was properly tuned six months ago may now generate so many false positives that the ISSO has unconsciously stopped reading the notifications. An access review process that was being executed correctly may drift as staff turnover changes who is actually performing the review and how carefully they are doing it. A backup that has been running successfully for months may produce a restoration failure the first time an actual restoration is attempted, if the restoration procedure was never tested after an infrastructure change.
 
-This is not about paranoia — it’s about building a culture of **continuous validation and readiness**.
+Task M-2 is the ongoing assessment program that provides continuous assurance — not just that controls are configured, but that they are functioning as intended in the current operational environment.
 
 ---
 
-##  Applying Ongoing Assessments to OpenMRS on AWS
+## What I Worked On Today
 
-Let’s explore what this looks like for my **OpenMRS deployment in AWS**:
-
-###  1. Vulnerability Scanning
-
-- **Tool**: AWS Inspector or open-source options like OpenVAS  
-- **Frequency**: Monthly, or upon major updates  
-- **Goal**: Identify new OS or application vulnerabilities (e.g., CVEs in OpenMRS or Tomcat)  
-- **Action**: Feed results into the POA&M or patch pipeline  
+NIST SP 800-37 Task M-2 requires ongoing assessment of security controls to determine whether controls continue to be implemented correctly, operating as intended, and producing the desired outcomes with respect to meeting security requirements. The ongoing assessment program is defined in the continuous monitoring strategy (Day 52) and executed throughout the authorization period. Today I work through the M-2 assessment activities for the OpenMRS system — organizing them by assessment type, documenting the specific procedures for each, and thinking about how assessment findings feed back into the SSP and POA&M.
 
 ---
 
-###  2. Manual Control Reviews
+## What Actually Clicked for Me
 
-- **Backup validation**: Confirm backup jobs ran successfully and restore points are functional  
-- **Access control audit**: Review IAM roles, group memberships, and ensure least privilege is maintained  
-- **Encryption review**: Validate that S3 buckets, databases, and snapshots are encrypted per policy  
-- **Log retention**: Ensure CloudTrail and OpenMRS logs are stored and protected  
+The distinction that crystallized Task M-2 for me today is the difference between a control being *present* and a control being *effective*.
 
----
+Every control in the OpenMRS SSP was assessed during the Task A-3 formal assessment. The assessor verified that each control was present — configured, documented, and operating at the time of assessment. The SAR reflected the point-in-time state of controls as of the assessment dates.
 
-###  3. Compliance Spot Checks
+Six months from now, each of those controls may still be present in the sense that the configuration exists — but some may no longer be effective in the sense that they produce the desired security outcome. The CloudWatch metric filter for failed authentication anomalies may still be configured but may have a threshold that is now calibrated incorrectly because the user population grew and the baseline changed. The quarterly access review may still be occurring but may have shifted from a genuine recertification exercise to a rubber-stamp approval because the Health IT Manager is overwhelmed with other priorities. The session timeout may still be configured at 15 minutes but may have been temporarily adjusted to 60 minutes to accommodate a clinical workflow need and never reverted.
 
-If HIPAA or other frameworks apply:
+None of these degradations would be captured by monitoring for configuration changes. They require periodic effectiveness verification — actually testing whether the control produces the expected outcome in the current environment.
 
-- **Audit logs**: Are access logs still enabled and reviewed regularly?  
-- **User activity monitoring**: Are we detecting suspicious behaviors?  
-- **Data handling procedures**: Are PHI records still masked when required?  
+This is the core value of Task M-2: it catches the difference between a control that is formally in place and a control that is genuinely working.
 
 ---
 
-##  Integrating Ongoing Assessments into Operations
+## The Ongoing Assessment Program — By Control Family and Frequency
 
-To make these assessments sustainable, I’m building them into standard operating procedures:
-
-| Assessment Area         | Frequency         | Responsible Role          |
-|-------------------------|-------------------|----------------------------|
-| Vulnerability Scanning  | Monthly           | Security Analyst           |
-| IAM/User Audit          | Quarterly         | System Owner + GRC Lead    |
-| Backup Restore Test     | Quarterly         | Infrastructure Engineer    |
-| HIPAA Spot Checks       | Biannually        | Privacy Officer + GRC Team |
-| Firewall Rule Review    | Quarterly         | Network Engineer           |
-| Encryption Checks       | Quarterly         | Security Architect         |
-
-These routines are tracked in our **continuous monitoring plan** and updated in the GRC tool.
+The continuous monitoring strategy from Day 52 established the monitoring schedule. Task M-2 operationalizes that schedule with specific assessment procedures for each activity. The following organizes the ongoing assessment program by frequency tier.
 
 ---
 
-##  Reflection
+### Automated Continuous Assessment
 
-If I were leading the security of OpenMRS, here’s what I’d prioritize in my **routine checkups**:
+These assessments run without ISSO intervention and generate alerts when findings require attention. The ISSO's role is to review findings on the defined schedule and respond appropriately — not to run the assessments manually.
 
-1. **Patch Management**: Is the latest OpenMRS version deployed? Have we patched Log4j-type vulnerabilities recently?
-2. **Access Control Reviews**: Are all user accounts still required? Have any privileged accounts gone stale?
-3. **Backup and Restore Validation**: Could we recover production data within RTO/RPO targets?
-4. **Firewall & Security Group Audit**: Are AWS ports still restricted per policy?
-5. **Encryption Compliance**: Are KMS keys rotated and used correctly for all sensitive data?
+**GuardDuty — Threat Detection (Daily review)**
 
-By doing these checks regularly, I build **muscle memory**, identify drift early, and reduce risk without waiting for a crisis.
+GuardDuty runs continuously and generates findings when it detects behavior matching known threat patterns. The ISSO reviews the Security Hub findings dashboard each morning before other work begins. The review takes approximately 10 minutes on most days — scanning finding severity, verifying that HIGH and MEDIUM findings generated the expected SNS notification, and documenting the disposition of any new findings in the monitoring log.
 
----
+*What M-2 adds beyond M-1:* Monthly, the ISSO reviews the GuardDuty findings history for trends — not just individual findings, but patterns. Are the same finding types recurring? Is the volume of LOW findings increasing (which might indicate a developing threat or configuration drift)? Has GuardDuty been generating findings that are consistently false positives for a specific event type, suggesting a tuning need?
 
-##  Today’s Goal
+*Assessment procedure:* Monthly — ISSO pulls 30-day GuardDuty finding summary from Security Hub. Reviews finding type distribution, severity distribution, and suppressed findings list. Confirms that suppression rules are still appropriate (suppressed findings were suppressed for documented reasons, not convenience). Documents review in monitoring log.
 
-Recognize the **importance of proactive security validation**.  
-Controls are not “set and forget.” They degrade without oversight. Regular assessments create operational maturity and build trust with auditors, leadership, and users.
+**AWS Config — Configuration Compliance (Continuous, weekly review)**
 
----
+Config rules run continuously and flag NON_COMPLIANT resources immediately. The EventBridge alert for high-severity Config findings (like restricted-ssh NON_COMPLIANT) generates an immediate ISSO notification. The ISSO reviews the full Config compliance dashboard weekly during the CloudTrail/change log review activity.
 
-##  Search Terms to Explore
-
-- `Automated vulnerability scanning tools`  
-- `Continuous security control monitoring NIST RMF`  
-- `Security audit frequency best practices`  
-- `Compliance testing in cloud infrastructure`  
+*Assessment procedure:* Weekly — ISSO opens Config compliance dashboard and reviews all rules. For any NON_COMPLIANT findings: confirm whether the finding was already known and tracked in POA&M, or is new. New findings get a same-day SIA. Compliance history is reviewed to confirm that previously remediated issues have not recurred. Documents review in monitoring log.
 
 ---
 
-##  Teaser for Day 71
+### Monthly Assessment Activities
 
-Tomorrow, I’ll move into **Task M-3 – Ongoing Risk Response**, where I translate assessment findings into **real action**. Scans and reviews are only useful if they result in smart, timely decisions.  
+**Vulnerability Scanning — Inspector, Dependency-Check, ZAP**
 
-Stay tuned as I continue turning GRC knowledge into real-world impact.
+Monthly vulnerability scanning covers three layers: operating system and installed package vulnerabilities (Inspector), OpenMRS Java dependency vulnerabilities (OWASP Dependency-Check), and web application vulnerabilities (OWASP ZAP against the test environment).
+
+*Assessment procedure:*
+
+Inspector: Run as a scheduled assessment against the EC2 instance. Review findings by severity. Apply the patch SLA from the vulnerability management policy: Critical — 7 days; High — 30 days; Medium — 90 days; Low — next planned maintenance window. New Critical or High findings that cannot be patched within SLA become POA&M entries with compensating controls documented.
+
+Dependency-Check: IT Administrator runs `dependency-check.sh` against the OpenMRS deployment directory. Output report reviewed by ISSO. Any finding with a CVSS score ≥ 7.0 that is in a library actively loaded by OpenMRS triggers an evaluation — is the vulnerable code path actually reachable? Does the OpenMRS application use the affected functionality? This evaluation prevents CVE panic while ensuring genuine risks are addressed.
+
+ZAP: ISSO or IT Administrator runs a passive scan against the OpenMRS test environment (not production). ZAP passive scan generates findings without active exploitation. Review findings against the WAF rule set — are the detected vulnerabilities covered by WAF rules, or do they represent gaps?
+
+*What effective looks like:* Monthly scans consistently producing Low or Informational findings across all three tools, with patch SLAs being met and dependency scan results showing the OpenMRS dependency tree is actively managed.
+
+*What degradation looks like:* Scans running but findings not being reviewed; High findings accumulating beyond SLA without POA&M entries; Dependency-Check revealing that a library update three months ago introduced a new HIGH vulnerability that went unnoticed because the report was generated but not reviewed.
+
+**Patch Status Review**
+
+Monthly, the ISSO reviews the AWS Systems Manager Patch Manager compliance report for the EC2 instance. Confirmed: all Critical and High patches applied within SLA. Non-compliant patches (if any) are reviewed for POA&M or change management action.
+
+*Assessment procedure:* Pull Patch Manager compliance report. Compare against last month's report — confirm all open items from prior month were addressed. Identify any new non-compliant patches. For each new non-compliant patch: determine severity (Critical/High/Medium/Low), determine patch SLA deadline, determine whether a compensating control is needed during the patching window, create change management ticket for the patch deployment.
+
+---
+
+### Quarterly Assessment Activities
+
+**Access Control Recertification — AC-2**
+
+The quarterly access review is the most labor-intensive ongoing assessment activity, and it is also the activity most prone to becoming a rubber-stamp exercise as organizational comfort with the process increases.
+
+*Assessment procedure (updated to incorporate Finding A-5 remediation):*
+
+The ISSO generates the current active user list with role assignments from OpenMRS and the IAM entity list from the AWS console. Both lists are cross-referenced against the documented IAM inventory and the OpenMRS user roster.
+
+Step 1 — Completeness check: Are there any entities in the console that are not in the documented inventory? (This was the A-3/A-7 finding pattern — the EventBridge rule now provides automated notification, but the quarterly check is a backstop verification.)
+
+Step 2 — Role accuracy review: For each user, the updated quarterly review template (POA&M Item 010) asks two questions: (1) Does this person still need access to OpenMRS? (2) Is the current role assignment — Clinician, Nursing Staff, Administrative Staff, IT Administrator, ISSO — still appropriate for their current job function? The Health IT Manager certifies both questions, not just the first.
+
+Step 3 — Dormant account review: Any account with no login activity in 60 days is flagged for Health IT Manager review. Active clinical staff who have not logged in for 60 days may have changed roles or may be on extended leave — either way, the account should be reviewed.
+
+Step 4 — Privileged account review: IT Administrator and ISSO accounts are reviewed by the Health IT Manager with additional scrutiny — specifically, confirming that the individuals in these roles are still the designated personnel and that no unauthorized privilege grants have occurred.
+
+*Effectiveness indicator:* The review takes 45-60 minutes and produces at least one substantive finding — an account that needs deactivation, a role that needs updating, or a new account added to the inventory. A review that produces zero findings after 90 days of operation is either evidence of excellent access hygiene or evidence that the review is not being conducted with sufficient depth.
+
+**Backup Restoration Test — CP-9**
+
+Quarterly restoration tests have been in the continuous monitoring program since Day 30. The M-2 ongoing assessment adds a specific effectiveness evaluation: not just "did the restoration succeed?" but "does the restoration process still work as documented in the contingency plan?"
+
+*Assessment procedure:*
+
+The IT Administrator follows the documented restoration procedure step-by-step, treating it as a procedure validation rather than a familiar routine. Any step where the actual process differs from the documented procedure is noted — these are SSP/contingency plan update triggers.
+
+Verification checklist after restoration:
+- Patient record count: [N] records in restored instance matches expected count from last backup
+- User accounts: All [N] active user accounts present with correct role assignments
+- Authentication: TOTP MFA functions correctly in restored environment
+- Audit logging: OpenMRS audit log agent active and writing to CloudWatch log group in test environment
+- Encryption: Restored RDS instance encryption verified (customer-managed KMS key)
+- RTO: Restoration completion time recorded — compare against 4-hour target
+
+*What effective looks like:* Restoration consistently completing within RTO, verification checklist passing completely, procedure document matching actual steps.
+
+*What degradation looks like:* Restoration time creeping toward RTO limit as data volume grows without corresponding procedure adjustment; verification checklist items failing because the restored environment differs from the documented expected state in ways that were never updated.
+
+**CloudTrail and Monitoring Activity Review**
+
+The ISSO weekly CloudTrail review is a continuous activity. The quarterly M-2 assessment adds a deeper review: a retrospective analysis of the full quarter's CloudTrail history for patterns not visible in weekly reviews.
+
+*Assessment procedure:*
+
+Pull CloudTrail event history for the quarter. Use Athena or CloudWatch Logs Insights to query for:
+- All IAM entity creation events (verify all are in IAM inventory and change log)
+- All security group modification events (verify all have change log entries)
+- All KMS key usage events outside documented authorized roles (looking for unauthorized decryption attempts)
+- All S3 bucket policy changes (verify all are authorized changes)
+- All CloudTrail configuration changes (verify none occurred without change log entry)
+
+The quarterly review catches patterns that weekly reviews miss: a gradual accumulation of minor security group modifications that individually seem routine but collectively represent a drift from the documented baseline; an IAM role that has been used more frequently than its operational purpose would explain.
+
+---
+
+### Annual Assessment Activities
+
+**Control Effectiveness Full Review**
+
+Annually, the ISSO conducts a structured review of the full SSP — not a re-assessment in the formal NIST SP 800-53A sense, but a thorough self-evaluation of whether each control family is functioning as documented.
+
+This review is less rigorous than the formal external assessment (which happens at re-authorization) but more rigorous than the ongoing weekly and monthly checks. It produces the annual continuous monitoring summary that the AO receives per Condition 4 of the authorization.
+
+**Annual continuous monitoring summary for AO:**
+- Summary of security events and incidents during the year (count, severity, disposition)
+- POA&M item completion status: items closed, items revised, items added
+- Vulnerability management trend: vulnerability scan finding severity trend over 12 months
+- Control effectiveness self-assessment: any controls where the ISSO has identified degradation concerns
+- Changes to threat environment relevant to the system
+- ISSO recommendation: continue current authorization, begin early re-authorization planning, or flag material risk change requiring AO decision
+
+---
+
+## Assessment Findings and the Feedback Loop
+
+Every M-2 assessment produces one of three outcomes:
+
+*No findings:* Controls are operating as intended. Document in monitoring log. No SSP update required.
+
+*Minor finding (process improvement):* A control is operating but with suboptimal effectiveness — a backup took 15 minutes longer than expected, an access review missed one account before the ISSO caught it in the completeness check. Document in monitoring log with corrective action taken. No POA&M entry unless the finding recurs.
+
+*Substantive finding (control degradation):* A control is not operating as intended or is producing inadequate results — a backup restoration failed the verification checklist, a vulnerability scan found a High finding that has been present for 45 days without a POA&M entry, an access review revealed a role assignment that has been incorrect for multiple quarters. These findings require: monitoring log documentation; SSP update if the implementation description needs correction; POA&M entry if the remediation will take longer than 30 days; and AO notification per Condition 3 if the finding materially affects the authorization basis.
+
+The feedback loop from M-2 findings to SSP and POA&M updates is what keeps the authorization package current — not just at re-authorization, but throughout the authorization period.
+
+---
+
+## A Real-World Example That Made This Click
+
+The rubber-stamp access review concern — effectiveness degradation not through misconfiguration but through process habituation — was directly informed by the circumstances of the **2013 Target breach**, which had a vendor access control dimension that is less discussed than the malware component.
+
+Target's HVAC vendor, Fazio Mechanical, had network credentials for the Target environment that were being used for electronic billing and project management. The credentials were compromised and used as the initial entry point for the attackers who eventually reached Target's payment systems.
+
+Post-breach analysis found that Target's access review processes for vendor accounts were not regularly verifying whether the access scope was still appropriate — the Fazio account had more network access than the HVAC billing function required, and that scope had not been reviewed and challenged in the way it would have been if the access review process was genuinely evaluating role accuracy rather than just confirming account continuation.
+
+This connects directly to the Finding A-5 remediation — updating the access review template to prompt role accuracy evaluation rather than just account continuation. The Target vendor account breach illustrates what happens when access reviews confirm that accounts exist without confirming that access scopes are still appropriate.
+
+An access review that asks "Does Fazio still have an HVAC contract with us?" and stops there misses the question "Is Fazio's network access scope still limited to what their HVAC billing function requires?" The updated MyClinic access review template — which now asks about role accuracy, not just access continuation — is a small but meaningful process change that the Target breach illustrates the importance of.
+
+---
+
+## What I Am Still Thinking About
+
+One open question from the quarterly access review procedure: what is the right threshold for flagging a dormant account?
+
+I set 60 days of inactivity as the threshold for Health IT Manager review. But for a clinical system, 60 days of inactivity might be entirely legitimate — a clinician on extended medical leave, a part-time physician who works once monthly, a staff member on parental leave. Flagging all of these for deactivation review would generate significant administrative burden and potentially disrupt legitimate clinical relationships.
+
+The 60-day threshold might benefit from being role-differentiated: IT Administrator and ISSO accounts with 30 days of inactivity should be immediately flagged — there is no operational reason for a privileged account to be inactive for 30 days. Clinical accounts with 90 days of inactivity should be flagged, but with a specific question to the Health IT Manager: "Is this person on approved leave and expected to return?" rather than "Should this account be deactivated?" Administrative staff accounts with 60 days of inactivity should be flagged with a standard review.
+
+Role-differentiated dormancy thresholds make the access review more operationally realistic and more effective — higher scrutiny where the privilege level warrants it, more flexibility where the operational context supports it.
+
+I want to update the quarterly review template to reflect this differentiated threshold before the next quarterly review cycle.
+
+---
+
+## What's Next
+
+Day 71 covers Task M-3 — ongoing risk response. M-2 assessments produce findings. Task M-3 is how the organization responds to those findings — updating the POA&M, adjusting controls, notifying the AO when thresholds are crossed, and making risk acceptance decisions about findings that cannot be immediately remediated.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task M-2 Ongoing Assessments](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-137 – Continuous Monitoring Assessment Frequency Guidance](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [NIST SP 800-53A Rev 5 – Ongoing Assessment Procedures](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/)
+- [Target Breach Post-Mortem — Vendor Access Control Analysis](https://www.commerce.senate.gov/services/files/24d3c229-4f2f-405d-b8db-a3a67f183883)
+
+---
+
+*#GRC #OngoingAssessments #ContinuousMonitoring #NISTRMF #TaskM2 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day70*
