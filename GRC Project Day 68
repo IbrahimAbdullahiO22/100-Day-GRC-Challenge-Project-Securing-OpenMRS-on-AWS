@@ -1,168 +1,228 @@
-#  Day 68: Task R-5 – Authorization Reporting
-
-Welcome to **Day 68** of my 100-Day GRC journey!  
-
-After the excitement of receiving the **Authorization to Operate (ATO)**, you might be tempted to close the book — but **we’re not done just yet**. One final task remains in the Authorize step of the NIST Risk Management Framework (RMF): **Authorization Reporting**.
-
-This is where we **document and communicate** the ATO decision across the organization, making sure everyone who needs to know… does. It’s about transparency, accountability, and laying the foundation for continuous monitoring.
+# Day 68 – Task R-5: Authorization Reporting | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  What Is Task R-5?
+## Closing the Authorize Step
 
-**Authorization Reporting** ensures that the AO’s decision — and any residual risks — are properly recorded and disseminated. It helps align the organization’s understanding of the system’s current security posture and sets expectations for future oversight.
+Day 67 produced the signed Authorization Decision Document — a conditional ATO with four conditions, a three-year authorization period, and the Executive Director's formal acceptance of Low to Moderate residual risk for the MyClinic OpenMRS system. The authorization decision exists. Task R-5 ensures that decision is properly communicated, recorded, and integrated into the organization's risk management picture so it does not sit in a single email thread or a folder on the ISSO's desktop.
 
-Here’s what this step typically includes:
+This is the final task of the Authorize step. It is also the task that most clearly illustrates why the RMF is described as a process, not an event. Authorization Reporting is not a celebration memo — it is the mechanism that connects the individual system authorization to the organization's broader risk posture, ensures continuity across personnel changes, and establishes the accountability structure that makes the Monitor step meaningful.
 
----
-
-###  1. Notify Key Organizational Officials
-
-The **Authorizing Official (AO)** or their delegate must inform relevant stakeholders of the authorization outcome. This often includes:
-
-- CIO  
-- CISO  
-- System Owner  
-- Risk Executive  
-- IT Governance Board
-
-**Why it matters**: Reporting the ATO and any **outstanding vulnerabilities** ensures system-level risks are understood in the broader context of enterprise risk.
-
-**Example:**  
-> "OpenMRS has been granted ATO as of April 1, 2025. No high risks remain. Two moderate risks — MFA implementation and API rate limiting — are being addressed within 60 days."
+A system that has been authorized but not reported might as well not have been authorized from the organization's risk management perspective. The AO's decision only governs the organization's behavior if the people responsible for operating, overseeing, and governing the system know the decision was made and understand its conditions.
 
 ---
 
-###  2. Update the System Registry
+## What I Worked On Today
 
-Every organization should maintain an **inventory of systems** — often housed in a GRC tool or internal registry. This registry should be updated with:
-
-- Authorization Date  
-- Expiration Date  
-- Authorizing Official  
-- Residual Risks  
-- Associated POA&M Items  
-
-For example:  
-> **System**: OpenMRS  
-> **ATO Granted**: Apr 1, 2025  
-> **Expires**: Apr 1, 2028  
-> **AO**: Dr. Tran  
-> **Residual Risk**: Moderate – MFA & rate limiting in progress
+NIST SP 800-37 Task R-5 requires the AO or designated representative to report the authorization decision to appropriate organizational officials, update the system's authorization status in the organization's system inventory, and ensure that the authorization package is archived in a manner that supports continuity and future oversight. Today I work through each of those requirements for the MyClinic OpenMRS authorization and think through what a small clinic's reporting process looks like in practice — which is different from a large federal agency's reporting process, but serves the same governance purposes.
 
 ---
 
-###  3. Record Accepted Risks and Conditions
+## What Actually Clicked for Me
 
-If **moderate or high risks** were accepted, they should be clearly documented and visible to senior leadership. Some organizations maintain a **central risk dashboard** to provide real-time insights into residual risk across all systems.
+The concept that clarified Task R-5 today is understanding who needs to know the authorization decision — and why the answer is different for different audiences.
 
-In our case:  
-- **No high risks**  
-- **Two moderate risks**, accepted with mitigation underway  
-- Conditions noted in the ATO letter and the POA&M
+The AO signed the Authorization Decision Document. The ISSO prepared the authorization package. The Health IT Manager attested to the system description accuracy. These three people were deeply involved in the authorization process and understand the outcome in detail.
 
----
+But there are other people whose behavior should be informed by the authorization decision who were not involved in the process:
 
-###  4. Archive the Authorization Package
+Clinical staff who use OpenMRS need to know the system has been authorized and that there is a security program governing it — not the technical details, but enough to understand that security incidents should be reported, that their accounts are subject to access reviews, and that the EHR has been evaluated and found appropriate for handling their patients' information.
 
-Although not explicitly highlighted in NIST’s step, it’s best practice to **archive the full authorization package** in a secure document repository.
+The organization's leadership (Board of Directors, if applicable) needs to know that the clinical system handling patient data has completed a formal security authorization — not because they will act on the technical details, but because it is material information for organizational governance and fiduciary responsibility.
 
-This includes:
+Future ISSOs, system owners, and auditors need the authorization package to be findable, complete, and accompanied by enough context to understand the decisions that were made — not just the decision documents themselves, but the reasoning behind the conditions, the significance of the POA&M items, and the state of the system at the time of authorization.
 
-- Signed ATO Letter  
-- Final System Security Plan (SSP)  
-- Security Assessment Report (SAR)  
-- Plan of Action & Milestones (POA&M)  
-
-**Why?**  
-To support compliance, future audits, and ensure continuity if personnel change. Organizational knowledge must live beyond the inbox.
+These different audiences require different communication formats. The detailed authorization notification to the Health IT Manager and ISSO is different from the high-level communication to clinical staff, which is different from the archival package structured for future auditors. Task R-5 addresses all of them.
 
 ---
 
-##  Real-World Example – OpenMRS on AWS
+## Audience 1: Internal Governance Stakeholders
 
-After Dr. Tran signed the ATO, the **Information Security Office** initiated the reporting process:
+The primary authorization notification goes to the MyClinic leadership team: the Executive Director (AO, already aware), the Health IT Manager (System Owner, directly involved), the Compliance Officer (consulted during R-2), and any Board members or governance committee members with oversight responsibility for patient data protection.
 
-###  Email Notification:
-> "**Subject**: ATO Granted for OpenMRS Health Records System  
-> **Date**: April 1, 2025  
->  
-> The OpenMRS EHR system has been granted an Authorization to Operate (ATO) valid through April 1, 2028.  
->  
-> Conditions:  
-> - MFA for admin accounts to be implemented before May 31, 2025  
-> - API rate limiting to be deployed by June 30, 2025  
->  
-> No high-severity risks remain. Moderate risks have been accepted and are being mitigated.  
->  
-> Congratulations to the team for their dedication and commitment to security compliance."
-
-###  Registry Update:
-The security analyst updated the internal ATO tracker:
-- Status: **Authorized**  
-- Start Date: **April 1, 2025**  
-- Expiration: **April 1, 2028**  
-- Outstanding POA&M Items: MFA & API security  
-- AO: **Dr. Tran**
-
-Reminders were also scheduled for:
-- **60-day risk mitigation follow-up**  
-- **3-month pre-expiration reauthorization planning**
+For MyClinic, the ISSO prepared a formal authorization notification memo:
 
 ---
 
-##  Why Reporting Matters
+**MEMORANDUM — AUTHORIZATION TO OPERATE: OPENMRS EHR**
 
-Authorization Reporting promotes **institutional memory**, **visibility**, and **accountability**.
+**To:** MyClinic Executive Director; Health IT Manager; Compliance Officer; Board Patient Safety Committee Chair
+**From:** Information Security Lead (ISSO)
+**Date:** [authorization date]
+**Subject:** Authorization to Operate Granted — MyClinic OpenMRS Electronic Health Record System
 
--  **Risk Transparency**: Everyone knows what risks exist and who accepted them  
--  **Smooth Handoffs**: Critical for continuity across system owners, security staff, and leadership  
--  **Strategic Oversight**: Supports enterprise risk dashboards and FISMA/NIST reporting  
--  **GRC Alignment**: Ensures ATO status is current and traceable in all official records
+The MyClinic OpenMRS Electronic Health Record System (MCOPENMRS-001) has been granted a conditional Authorization to Operate, effective [authorization date], valid through [authorization date + 3 years].
 
-Without reporting, the risk decision could live in a silo — but RMF is a **team sport**, and everyone needs to be aligned.
+**Decision Summary:**
+The system underwent a full NIST SP 800-53 Rev 5 High baseline independent security assessment. No High-severity findings were identified. Three Moderate-severity findings were remediated before the authorization package was submitted. The system's current residual risk is assessed as Low to Moderate and within MyClinic's acceptable threshold.
 
----
+**Open Conditions:**
+The authorization is subject to four conditions. The most significant is the completion of clinical downtime procedures (Condition 1) within 90 days — by [specific date]. The Health IT Manager will brief the Executive Director directly at 45 days on progress. The remaining conditions cover quarterly POA&M reporting, material risk change notification, and annual continuous monitoring review.
 
-##  Hands-On Exercise
+**What This Means Operationally:**
+The system is authorized to operate and process patient information. The security program — encryption, access controls, monitoring, incident response — has been independently verified and is functioning. Ten open POA&M items are under active management with defined owners and timelines. The next formal AO touchpoint is the 45-day check-in on Condition 1.
 
-Create a simple ATO summary for a fictional system:
-
-> **System**: XYZ Payroll System  
-> **Owner**: Finance IT  
-> **ATO Granted**: Aug 1, 2025  
-> **Expires**: Aug 1, 2028  
-> **Conditions**: PII encryption for backup files within 30 days  
-> **Residual Risk**: 1 moderate – Accepted
-
-This reinforces what matters most in reporting: who owns the system, what the AO decided, and what risk remains.
+**Authorization Package Location:**
+The complete authorization package is archived at [document repository location]. It includes the SSP, SAR, POA&M, Risk Determination Statement, Risk Response Record, and Authorization Decision Document.
 
 ---
 
-##  Reflection
+## Audience 2: Clinical and Administrative Staff
 
-Reflect on the **importance of making authorization decisions visible**:
+Clinical and administrative staff who use OpenMRS do not need — and should not receive — the technical details of the authorization package. But they do need to know three things:
 
-- How does this support organizational trust and preparedness?
-- If a breach occurred tomorrow, would responders know when the last ATO was granted and what risks were accepted?
-- How does this reporting process reinforce the seriousness of the AO's decision?
+First, the system they are using to document patient care has been formally evaluated and authorized. This is a trust signal — staff should feel confident that the system protecting their patients' information has been subjected to rigorous security review.
 
-**For me, this reinforces that leadership in GRC is not just about compliance — it's about stewardship, communication, and risk-informed decision-making.**
+Second, the security program places responsibilities on all users: reporting suspected security incidents, completing annual security training, following the access management policies for account use and sharing. These responsibilities existed before the authorization, but the ATO is a natural moment to reinforce them.
 
----
+Third, there is a plan for what happens if the system is unavailable. The clinical downtime procedures are in development — clinical staff should know this work is in progress and that they will receive training on downtime procedures when the procedures are finalized.
 
-##  Teaser for Day 69 – Monitoring Begins
-
-Now that OpenMRS is authorized, our job shifts from building to **operating securely**. Tomorrow, in Day 69, we enter the final step of the RMF: **Monitor**.  
-
-This is where we ensure our controls remain effective, respond to new threats, and uphold the integrity of the system over time. Let’s keep going — the finish line is near! 🏁
+The ISSO and Health IT Manager jointly drafted a brief all-staff communication:
 
 ---
 
-##  Suggested Search Terms
+**ALL-STAFF COMMUNICATION**
+**From:** Health IT Manager and Information Security Lead
+**Subject:** OpenMRS Security Authorization Complete
 
-- `RMF R-5 authorization reporting`  
-- `ATO registry entry example`  
-- `enterprise risk dashboard RMF`  
-- `FedRAMP/FISMA reporting requirements`
+We want to share an important update on the security status of our OpenMRS electronic health record system.
 
+Our OpenMRS system has completed a formal security authorization process, including an independent review of all the security controls protecting your patients' information — encryption, access controls, monitoring, and incident response. The system has been formally authorized to operate.
+
+A few important reminders for all staff:
+
+If you observe something that seems like a security problem — unusual system behavior, a request to share your login credentials, a message that seems suspicious — please report it to [contact] immediately. Our incident response plan means every report gets taken seriously.
+
+All staff are required to complete the annual security awareness training. Current completion status will be reviewed quarterly.
+
+We are also working on formal procedures for how to continue patient care documentation if the EHR system is temporarily unavailable. Training on those procedures will be provided when they are finalized in the coming weeks. In the meantime, if you have questions about what to do during a system outage, please contact [Health IT Manager contact].
+
+Thank you for the role you play every day in protecting our patients' information.
+
+---
+
+## Audience 3: System Registry and Organizational Risk Dashboard
+
+Every organization should maintain an inventory of its authorized systems — a registry that enables leadership to understand the authorization status, risk posture, and upcoming re-authorization requirements for all systems at a glance. For a large federal agency, this is a formal GRC platform entry. For a small clinic, it may be a maintained spreadsheet or a section in a risk management tool.
+
+The system registry entry for the OpenMRS authorization:
+
+| Field | Value |
+|---|---|
+| System Name | MyClinic OpenMRS EHR |
+| System ID | MCOPENMRS-001 |
+| System Owner | Health IT Manager |
+| ISSO | Information Security Lead |
+| Authorizing Official | Executive Director |
+| Authorization Date | [date] |
+| Authorization Expiration | [date + 3 years] |
+| Impact Level | HIGH |
+| Authorization Status | AUTHORIZED — CONDITIONAL |
+| Open Conditions | Condition 1 (CP-2) — 90 days; 3 others ongoing |
+| Open POA&M Items | 10 (1 Moderate, 9 Low) |
+| Next AO Touchpoint | 45-day check-in [specific date] |
+| Next Quarterly POA&M Report Due | [date + 90 days] |
+| Re-authorization Planning Start | [date + 2 years 9 months] |
+| Authorization Package Location | [document repository path] |
+| Notes | First formal RMF authorization for this system |
+
+**Re-authorization planning reminder:** The ISSO added a calendar entry for [authorization date + 2 years 9 months] — three months before the authorization expiration date — to begin the re-authorization planning process. Re-authorization is not a repeat of the initial authorization from scratch; it is a structured review of what has changed in the system, the threat environment, and the organization's risk posture, followed by an updated assessment and a new AO decision. Starting three months before expiration allows enough time to complete the process without operating on an expired ATO.
+
+---
+
+## Audience 4: Archival Package for Future Auditors and Successors
+
+The authorization package archived today is designed not just for compliance storage but for future usability. A future ISSO who joins MyClinic in two years should be able to open the authorization package and understand: what the system is, why it was categorized as High, what controls were implemented, what the assessment found, what was remediated, what is still open, and why the AO made the decision they did.
+
+Documents that are technically present but practically unusable because they lack context produce the institutional continuity problem described in Day 67's reflection — security knowledge that lives only in the current ISSO's head.
+
+The archival package includes a **README document** — a one-page orientation guide for future reviewers that summarizes: the system description in plain language; the authorization timeline (key decisions and dates); the most important risks and how they were handled; where to find each document in the package; and what the current POA&M status is as of the archival date.
+
+The README is not a required NIST artifact. It is a practical investment in the organization's security program continuity — the difference between a future ISSO who can get up to speed in an hour and one who needs weeks to reconstruct the context from documents that don't cross-reference each other.
+
+**Authorization Package Archival Structure:**
+```
+MCOPENMRS-001 Authorization Package — [date]
+│
+├── README — Orientation Guide for Future Reviewers
+├── 01 — Authorization Decision Document (signed)
+├── 02 — Executive Summary
+├── 03 — System Security Plan v1.1.3
+│   └── Appendices A through H
+├── 04 — Security Assessment Report (post-remediation)
+│   └── Assessment Evidence Package
+├── 05 — Plan of Action and Milestones v2.0
+├── 06 — Risk Determination Statement
+├── Risk Response Record
+├── 07 — Formal Categorization Record
+├── 08 — Tailoring Decision Record
+├── 09 — Continuous Monitoring Strategy v2
+└── 10 — Authorization Notification Communications
+    ├── Governance Stakeholder Memo
+    └── All-Staff Communication
+```
+
+---
+
+## Scheduling the Re-authorization Cycle
+
+One of the most common failures in security authorization programs is treating the three-year authorization period as a period of inactivity between authorization events — and then scrambling to produce a re-authorization package in the final weeks before expiration.
+
+The continuous monitoring program prevents the security posture from degrading silently during the authorization period. But re-authorization also requires updating the authorization documentation to reflect what has changed — new POA&M items added, old ones closed, system changes documented, threat environment updated, and a new independent assessment conducted.
+
+For MyClinic, the re-authorization planning timeline:
+
+| Milestone | Target Date |
+|---|---|
+| Re-authorization planning begins | [authorization date + 33 months] |
+| SSP currency review — major update if needed | [authorization date + 36 months - 6 weeks] |
+| New assessment engagement contracted | [authorization date + 33 months] |
+| New assessment conducted | [authorization date + 35 months] |
+| New authorization package assembled | [authorization date + 35.5 months] |
+| New AO review and decision | [authorization date + 36 months] |
+
+Building this timeline into the system registry now — as a series of calendar events with responsible parties — means the re-authorization process begins when planned rather than when the expiration date appears unexpectedly.
+
+---
+
+## A Real-World Example That Made This Click
+
+The archival package README concept — a plain-language orientation guide for future reviewers — was directly shaped by reflecting on the **2015 OPM data breach** from the institutional continuity perspective.
+
+The OPM breach involved attackers who had persistent access to OPM networks for over a year before detection. Post-breach analysis found that the security documentation for affected systems was fragmented, inconsistent, and in some cases out of date. Congressional testimony suggested that the security team had knowledge of vulnerabilities that was not consistently documented in ways that transferred across personnel changes.
+
+One of the recommendations that emerged from the OPM breach investigation was that federal agencies needed to maintain security documentation as operational institutional memory, not just as compliance artifacts — documentation that a new ISSO could use to understand the system's security posture without requiring months of oral history from the prior ISSO.
+
+The README document in MyClinic's archival package is a small-clinic implementation of that principle. MyClinic cannot afford the deep security bench that large agencies have. The README acknowledges that reality and addresses it: if the ISSO departs, the documentation should carry enough context that the security program can continue without a lengthy knowledge transfer conversation that may never happen.
+
+This is the difference between documentation that satisfies a requirement and documentation that serves the organization.
+
+---
+
+## What I Am Still Thinking About
+
+The all-staff communication today included a note that clinical downtime procedures training will be provided "in the coming weeks." That framing is accurate — the 90-day CP-2 deadline means training is coming — but it creates an expectation among clinical staff that the ISSO and Health IT Manager now need to deliver on.
+
+I want to make sure there is a feedback loop between the CP-2 milestone progress and the staff communication. If the 90-day deadline slips — which is the risk the AO established a 45-day check-in specifically to prevent — clinical staff who are expecting training in "the coming weeks" will eventually notice the training hasn't appeared. That creates a credibility gap between the security team's communications and the organization's actual execution.
+
+The 45-day check-in needs to include a specific review of the clinical staff communication — if the CP-2 procedures are on track, a more specific training timeline can be communicated to staff. If the procedures are behind, the communication should be updated honestly rather than allowed to sit as an outdated promise. Trust is built incrementally through accurate communication, not through optimistic commitments that the organization then quietly misses.
+
+---
+
+## What's Next
+
+Day 69 begins the Monitor step — the seventh and final step of the NIST RMF. The Monitor step is where the authorization becomes a living commitment rather than a historical document. The continuous monitoring strategy built in Day 52 and updated through the implementation and assessment work now executes in earnest: GuardDuty findings reviewed daily, Config compliance checked continuously, vulnerability scans run monthly, access reviews quarterly, and the POA&M items tracked against their deadlines. The Monitor step does not end — it runs for the life of the system.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task R-5 Authorization Reporting](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST SP 800-137 – Information Security Continuous Monitoring Program](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [FedRAMP Authorization Reporting Requirements](https://www.fedramp.gov/documents-templates/)
+- [OPM Data Breach — House Oversight Committee Report on Security Documentation](https://oversight.house.gov/report/opm-data-breach-how-the-government-jeopardized-our-national-security-for-more-than-a-generation/)
+- [HHS OCR – HIPAA Security Program Documentation Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+
+---
+
+*#GRC #AuthorizationReporting #NISTRMF #TaskR5 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day68*
