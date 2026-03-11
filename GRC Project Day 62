@@ -1,135 +1,241 @@
-# Day 62: Task A-5 – Remediation Actions
-
-Welcome to **Day 62** of my 100 Days of GRC journey.  
-Today marked a pivotal shift: from identifying security weaknesses to actively fixing them. We’ve completed our Security Assessment Report (SAR) for the OpenMRS-on-AWS environment, and now we engage in the real-world discipline of **remediation** — addressing those findings, reducing risk, and moving our system closer to Authorization to Operate (ATO).
+# 📅 Day 62 – Task A-5: Remediation Actions Following the SAR | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Today’s Learning Objectives
+## The SAR Is Not the Finish Line
 
-- **Prioritize and plan remediation efforts** for technical and process-based vulnerabilities.
-- **Execute and document corrective actions** such as patching, configuration hardening, or procedural improvements.
-- **Maintain communication with stakeholders** (e.g., the Authorizing Official) about progress and ongoing efforts.
+Day 61 produced the Security Assessment Report — seven findings, three Moderate and four Low, with an assessor recommendation of conditional authorization pending remediation of the three Moderate findings within defined timelines. Today, Task A-5 begins: the system owner receives the SAR findings and takes action.
 
----
+Task A-5 is specifically about remediation actions taken *before* the authorization package is submitted to the AO. Not all findings need to be remediated before authorization — that is what the POA&M handles for findings that will be addressed post-authorization. But the SAR gave a clear recommendation: remediate the three Moderate findings, particularly Finding A-3 (the undocumented service account with console access and no MFA), within specific timelines. The question for Task A-5 is: what can we fix right now, before the authorization package goes to the AO, to strengthen the authorization package and reduce the conditions the AO needs to impose?
 
-##  From Findings to Fixes – Where to Begin?
-
-Security assessments often leave us with a long list of findings — but not all risks are created equal.
-
-I’ve learned to follow a **risk-based prioritization model**, where:
-- **High-risk** issues are fixed immediately.
-- **Moderate-risk** issues are planned and mitigated soon after.
-- **Low-risk** findings are tracked and scheduled with flexibility.
-
-For example, in the OpenMRS case, suppose the SAR revealed:
-- A **weak password policy** (High risk).
-- An **unpatched Tomcat vulnerability** (High risk).
-- **Missing training documentation** (Moderate risk).
-- **S3 bucket without default encryption** (Moderate risk).
-
-We start with the two high-risk findings — these pose unacceptable exposure and must be addressed before ATO.
+The answer to that question requires honest triage — not panic-remediating everything, which would delay authorization unnecessarily, and not deferring everything to the POA&M, which would undermine the credibility of the authorization package. Task A-5 is disciplined, evidence-backed remediation of the highest-priority items.
 
 ---
 
-##  Executing Remediation Actions
+## What I Worked On Today
 
-Here’s how I tackled real-world remediation steps:
+Task A-5 involves the ISSO and IT Administrator reviewing the SAR findings, determining which items to remediate before the authorization package is finalized, executing those remediations with full change management documentation, verifying each remediation with the assessor, and updating the SAR and POA&M to reflect the post-remediation state.
 
-###  1. **Patching Vulnerabilities**
-
-**Finding:** Outdated Tomcat version running OpenMRS.  
-**Action:** Scheduled a maintenance window, updated Tomcat to the latest secure release, and re-ran vulnerability scans using Amazon Inspector and Nessus.  
-**Outcome:** The patched system passed all critical checks.  
-**Control Remediated:** `SI-2 – Flaw Remediation`  
-**Lesson:** Patching is low-hanging fruit with high impact — but must be coupled with re-testing.
+I also worked on the communication piece — drafting the remediation status update for the AO that documents what was fixed, what remains in the POA&M, and why the remaining items are appropriate for post-authorization tracking rather than pre-authorization remediation.
 
 ---
 
-###  2. **Strengthening Password and IAM Policies**
+## What Actually Clicked for Me
 
-**Finding:** OpenMRS app and AWS IAM had weak password requirements.  
-**Action:**  
-- Enforced a new password policy (12+ characters, uppercase, lowercase, numbers, special characters) within OpenMRS.  
-- Updated AWS IAM to require strong password complexity and enabled MFA for admin accounts.  
-**Outcome:** User accounts now comply with NIST SP 800-53 `IA-5` guidance.  
-**Lesson:** IAM controls are often overlooked but are central to protecting cloud workloads.
+The concept that crystallized Task A-5 for me is understanding the difference between pre-authorization remediation and POA&M-tracked remediation — and why the choice between them matters for authorization credibility.
 
----
+Pre-authorization remediation tells the AO: we found this gap, we closed it before we asked you to authorize, and here is the evidence that it is closed. The authorization package includes the original finding and the verified remediation. The AO authorizes a system with the gap resolved.
 
-###  3. **Fixing Configuration Weaknesses**
+POA&M remediation tells the AO: we found this gap, we are committing to close it within a defined timeline after authorization, and here is our plan. The AO authorizes a system with the gap open, accepting the residual risk for the remediation period.
 
-**Finding:** RDS snapshots and S3 backup buckets were unencrypted.  
-**Action:**  
-- Enabled default encryption on S3.  
-- Re-created RDS snapshots with KMS-managed encryption.  
-**Outcome:** All data-at-rest is now encrypted by default.  
-**Control Remediated:** `SC-12/SC-13 – Cryptographic Protection`  
-**Lesson:** AWS makes secure defaults easy — it’s on us to enforce them.
+Both are legitimate — NIST RMF explicitly supports authorization with open POA&M items. But the choice signals something to the AO about organizational security culture. An organization that remediates its Moderate findings before authorization demonstrates that it takes the assessment seriously and has the operational capacity to respond. An organization that defers every finding to the POA&M may be signaling either resource constraints or a tendency to treat security assessment as a compliance exercise rather than a genuine security improvement process.
+
+For MyClinic, the remediation decision should be guided by: which findings are operationally straightforward to fix now (low effort, high credibility value), and which require significant work that would unreasonably delay authorization?
 
 ---
 
-###  4. **Process and Procedure Enhancements**
+## Pre-Authorization Remediation — What We Fixed
 
-**Finding:** No evidence of routine log reviews or user access recertifications.  
-**Action:**  
-- Drafted and implemented a **monthly CloudTrail review SOP**.  
-- Assigned log review responsibilities to a designated analyst.  
-- Scheduled quarterly user access reviews across OpenMRS and AWS IAM.  
-**Evidence Collected:** Log review checklist, first audit report, access review records.  
-**Lesson:** GRC is as much about **discipline** as it is about tools.
+Working through each finding with that framework:
 
 ---
 
-##  Keeping the AO and Team Informed
+### Finding A-3: Service Account Console Access Disabled — REMEDIATED
 
-Communication is not optional — it’s essential.
+**Original finding:** IAM service account created for monitoring integration with console access enabled and no MFA enrollment. Not in IAM inventory. Not subject to quarterly review.
 
-I prepared a **remediation status memo** for the Authorizing Official (AO) that included:
-- Total number of findings by risk level.
-- Number of items remediated to date.
-- Timeline for completing the remaining actions.
-- Evidence of fixes (screenshots, scan results, audit reports).
+**Remediation decision:** Fix before authorization. This is the highest-priority Moderate finding — it represents a current active security exposure (a console-enabled account with no MFA). The remediation is operationally simple: disable console access on one IAM account. There is no reason to defer this to the POA&M.
 
-This level of transparency fosters trust and keeps everyone aligned.
+**Remediation executed:**
 
-### Example AO Update Summary:
+*Step 1 — Disable console access:*
+IT Administrator navigated to IAM console → Users → [service-account-name] → Security credentials → Console password → Disable. Verified: Console password status now shows Disabled. Timestamp: [date/time]. Change log reference: CM-CHG-[number].
 
+*Step 2 — Verify programmatic access still functions:*
+IT Administrator confirmed monitoring tool continues to operate using access keys — the tool does not use console access. Verification: monitoring tool health check shows normal operation at [date/time].
 
----
+*Step 3 — Add account to IAM inventory:*
+ISSO added [service-account-name] to the SSP IAM entity inventory with documentation: account purpose (monitoring integration), access type (programmatic only), key rotation schedule (annual), quarterly review inclusion: yes. SSP updated to v1.1.2. Change log reference: CM-CHG-[number].
 
-## ✍ Mini Exercise (Real-World Example)
+*Step 4 — Add account to quarterly review scope:*
+IAM entity inventory used for quarterly review updated to include the new entry. Next quarterly review date: [date].
 
-> **04/25/2025 – Enabled encryption on OpenMRS S3 backup bucket via AWS Console.  
-> Verified via Trusted Advisor and AWS Config compliance reports.  
-> Control SC-12 marked as satisfied post-fix.**
+**Post-remediation verification:** AWS Config rule `mfa-enabled-for-iam-console-access` — COMPLIANT as of [date]. Config compliance history shows the transition from NON_COMPLIANT to COMPLIANT with timestamp. Screenshot in remediation evidence package Section R-1.
 
-This kind of clear, timestamped remediation note is what we provide during reassessments and as part of the final ATO package.
-
----
-
-##  Reflection
-
-Today reinforced that **security is a living process**. A good SAR means little without action. Fixing issues — whether it’s a CLI command, AWS Console change, or stakeholder meeting — is where we **move the needle**.
-
-I also realized that:
-- Fixes are easier when controls were well-defined to begin with.
-- Collaboration across IT, GRC, and engineering is essential.
-- Every small fix builds toward a stronger security posture and safer system.
+**Assessor verification:** Remediation evidence submitted to assessor [date]. Assessor confirmed Finding A-3 resolved — SAR updated to reflect remediation status: Resolved pre-authorization.
 
 ---
 
-##  Search Terms Worth Exploring
+### Finding A-7: IAM Entity Creation Added to CM-3 Notification Triggers — REMEDIATED
 
-- `"Remediation of security audit findings best practices"`
-- `"Patch management policy AWS"`
-- `"Risk mitigation vs risk acceptance NIST"`
-- `"Communicating security risk to stakeholders"`
+**Original finding:** The CM-3 change management procedure did not list IAM entity creation as a required ISSO-notification change category, enabling the A-3 service account to be created without ISSO awareness.
+
+**Remediation decision:** Fix before authorization. This is the root cause of A-3 — if we remediate A-3 without A-7, the same pattern can recur. The fix is a procedure document update plus an automated EventBridge notification rule. Both are low effort.
+
+**Remediation executed:**
+
+*Step 1 — Update CM-3 procedure:*
+ISSO updated the change management procedure to add IAM entity creation (CreateUser, CreateRole, CreateGroup, CreateServiceLinkedRole) to the required ISSO-notification change category list. Updated procedure approved by Health IT Manager. Version updated. Change log reference: CM-CHG-[number].
+
+*Step 2 — Implement automated IAM creation notification:*
+ISSO created AWS EventBridge rule: source = `aws.iam`; event type = `AWS API Call via CloudTrail`; detail type = CreateUser OR CreateRole OR CreateGroup. Target: SNS topic → ISSO email and SMS. Rule tested [date] by creating and immediately deleting a test IAM user — SNS notification received within 45 seconds. Test record in remediation evidence package Section R-2.
+
+*Step 3 — Brief IT Administrator:*
+ISSO conducted a 15-minute conversation with the IT Administrator reviewing the updated procedure and the new automated notification. IT Administrator confirmed understanding that all IAM entity creation requires ISSO notification and that the automated rule will now generate an alert regardless of whether the notification is done manually. Record in ISSO communication log [date].
+
+**Post-remediation verification:** EventBridge rule [openmrs-iam-creation-alert] — Active status confirmed. Test notification receipt documented. Procedure document version history shows update [date].
+
+**Assessor verification:** Remediation evidence submitted to assessor [date]. Assessor confirmed Finding A-7 resolved — SAR updated: Resolved pre-authorization.
 
 ---
 
-##  Tomorrow’s Focus: Day 63 – POA&M (Plan of Action and Milestones)
+### Finding A-1: IAM PassRole Condition Added — REMEDIATED
 
-While we’ve remediated high-priority issues, some moderate and low-risk findings may still remain. On **Day 63**, I’ll create a formal **POA&M** to track remaining risks, assign owners, and establish due dates. It’s the bridge from assessment to long-term governance.
+**Original finding:** IT Administrator IAM policy included `iam:PassRole` without a condition restricting which roles could be passed, creating a privilege escalation pathway.
 
-Stay tuned — we’re almost through the Assess phase!
+**Remediation decision:** Fix before authorization. The IAM policy edit is straightforward — add one condition statement to one policy. The remediation closes an active privilege escalation pathway. No reason to defer.
+
+**Remediation executed:**
+
+*Policy change:* ISSO and IT Administrator worked through the IT Administrator's operational role requirements — the IT Administrator legitimately needs to pass two roles: the EC2 instance profile role (for attaching to EC2 instances) and the backup service role (for configuring the backup service). All other roles should not be passable by the IT Administrator.
+
+IAM policy updated — the `iam:PassRole` statement now includes a condition:
+```json
+{
+  "Effect": "Allow",
+  "Action": "iam:PassRole",
+  "Resource": [
+    "arn:aws:iam::[account-id]:role/openmrs-ec2-instance-profile",
+    "arn:aws:iam::[account-id]:role/openmrs-backup-service-role"
+  ]
+}
+```
+
+Resource restriction replaces the previous wildcard resource (`*`). This restricts the IT Administrator to passing only the two named roles. Change log reference: CM-CHG-[number].
+
+*Operational verification:* IT Administrator confirmed that normal operational tasks (launching EC2 instances with the instance profile, configuring AWS Backup) continue to function correctly with the restricted policy. Verified [date].
+
+*IAM policy simulator:* ISSO ran IAM policy simulator confirming that the IT Administrator can no longer simulate passing roles other than the two named roles. Screenshot in remediation evidence package Section R-3.
+
+**Post-remediation verification:** IAM policy document for IT Administrator user reviewed post-change. PassRole statement shows resource restriction to two named roles. No wildcard resource. ✓
+
+**Assessor verification:** Remediation evidence submitted to assessor [date]. Assessor confirmed Finding A-1 resolved — SAR updated: Resolved pre-authorization.
+
+---
+
+## Finding A-2: SSP Documentation Updated — RESOLVED
+
+Finding A-2 (KMS root account condition not documented in SSP) was a documentation accuracy issue. No configuration change required — SSP update only.
+
+ISSO updated SSP SC-28 implementation description to acknowledge the root account KMS condition, note that root account usage requires MFA and generates CloudTrail alerts reviewed by ISSO, and document the policy rationale (prevents permanent key inaccessibility). SSP version updated to v1.1.3. This finding is resolved — not a POA&M item.
+
+---
+
+## Findings Deferred to POA&M — With Rationale
+
+Three assessment findings and the existing eight POA&M items are addressed in the POA&M rather than pre-authorization remediation. The rationale for each deferral:
+
+**Finding A-4 (Modification audit logs — previous value capture):** Remediation requires a decision between two options — implement previous value logging in OpenMRS, or update the SSP to reflect the current capability as sufficient for HIPAA compliance. The decision requires input from the Compliance Officer and Health IT Manager, and the HIPAA compliance analysis needs to be documented carefully. Deferring to POA&M allows this decision to be made deliberately rather than under authorization timeline pressure. Compensating control: current logging satisfies HIPAA audit requirements — the gap is between the SSP's specified standard and the implementation, not between HIPAA requirements and the implementation. Target: 60 days.
+
+**Finding A-5 (Access review template — role accuracy):** Remediation is a template update that can be implemented before the next quarterly review cycle. Low-effort, no technical change required. Deferred to POA&M as a process improvement item. Target: next quarterly review cycle.
+
+**Finding A-6 (Training — no downtime content):** A basic downtime awareness module should be developed and added to the training curriculum. This requires content development that cannot be completed in the pre-authorization window without diverting time from higher-priority remediations. The recommendation from the SAR — develop a basic module independent of the full CP-2 procedure — is the approach. Target: 30 days.
+
+**Existing POA&M items (CP-2, CP-3, CP-4, IR-3, AU-6, IR-1, PS-4, AT-2):** These items were documented before the assessment and were confirmed accurate by the assessor. They continue on their existing timelines with updates to CP-2 (revised scope description) and CP-3 (interim training milestone added).
+
+---
+
+## Post-Remediation SAR Update Summary
+
+After pre-authorization remediation, the SAR finding status is:
+
+| Finding | Severity | Status |
+|---|---|---|
+| A-1 — IAM PassRole restriction | Moderate | **Resolved pre-authorization** |
+| A-2 — KMS documentation | Low | **Resolved pre-authorization** |
+| A-3 — Service account console access | Moderate | **Resolved pre-authorization** |
+| A-4 — Modification audit logging | Low | Open — POA&M, 60 days |
+| A-5 — Access review template | Low | Open — POA&M, next QR cycle |
+| A-6 — Downtime training | Low | Open — POA&M, 30 days |
+| A-7 — IAM creation CM trigger | Moderate | **Resolved pre-authorization** |
+
+All three Moderate findings resolved before authorization. Four Low findings remain in POA&M. The assessor's conditional authorization recommendation can now be reconsidered in light of the pre-authorization remediations — the conditions the assessor recommended (remediate A-1, A-3, A-7) have been satisfied. The authorization package presents a system with zero open Moderate findings and four Low findings tracked in POA&M.
+
+---
+
+## Remediation Status Communication to the AO
+
+The ISSO prepared a one-page remediation status memo for the AO summarizing the pre-authorization actions:
+
+---
+
+**MEMORANDUM**
+
+**To:** MyClinic Executive Director (Authorizing Official)
+**From:** Information Security Lead (ISSO)
+**Date:** [date]
+**Re:** Pre-Authorization Remediation Actions — OpenMRS Assessment Findings
+
+The Security Assessment Report dated [date] identified seven findings. In the period between SAR receipt and authorization package submission, the following actions were taken:
+
+*Three Moderate findings resolved:*
+
+Finding A-1 (IAM PassRole privilege escalation pathway): IAM policy updated to restrict PassRole permission to two named roles required for IT Administrator operational functions. Assessor verified [date].
+
+Finding A-3 (Undocumented service account with console access): Console access disabled, account added to IAM inventory and quarterly review scope, automated IAM creation notification implemented. Assessor verified [date].
+
+Finding A-7 (IAM entity creation not in change management triggers): CM-3 procedure updated, EventBridge automated notification rule deployed, IT Administrator briefed. Assessor verified [date].
+
+*One Low finding resolved (documentation):*
+
+Finding A-2 (KMS root account condition not in SSP): SSP updated to document root account KMS condition and associated compensating controls. No configuration change required.
+
+*Four Low findings tracked in POA&M:*
+
+Findings A-4, A-5, A-6 and the existing eight POA&M items continue on documented timelines. The four open Low findings do not represent current security exposures — they are process and documentation improvements with defined owners and target dates.
+
+*Summary:* Zero Moderate findings remain open. All three conditions from the assessor's conditional authorization recommendation have been satisfied. The authorization package is submitted with the assessor's updated SAR reflecting post-remediation status.
+
+---
+
+## A Real-World Example That Made This Click
+
+Working through the IAM PassRole remediation today — specifically the process of determining which roles the IT Administrator legitimately needs to be able to pass — reminded me of the circumstances surrounding the **2019 CapitalOne breach** in a way I had not fully appreciated before.
+
+The Paige Thompson attack began with a Server Side Request Forgery vulnerability that allowed retrieval of IAM credentials from the EC2 metadata service. Those credentials belonged to a WAF role that had been granted `s3:GetObject` and `s3:ListBucket` permissions far broader than the WAF role needed for its operational function. The WAF needed to write logs to one specific S3 bucket — it did not need read access to the 700+ S3 buckets it ended up being able to access.
+
+The remediation discipline for Finding A-1 follows the same principle — identify exactly what the IT Administrator legitimately needs PassRole to accomplish (pass two named roles), and restrict the permission to exactly that scope. The before state (wildcard resource) was operationally convenient — it would never break anything. The after state (two named roles) is operationally equivalent for legitimate use cases but eliminates the entire class of privilege escalation scenarios that the wildcard resource permitted.
+
+The CapitalOne parallel makes clear that "it probably won't be abused" is not sufficient justification for a wildcard permission in a High-impact system. The permission scope should match the operational requirement, and the operational requirement should be verified — not assumed.
+
+---
+
+## What I Am Still Thinking About
+
+The Finding A-4 deferral — modification audit logs not capturing previous values — requires a decision between implementing previous value logging and updating the SSP to accept current logging capability as HIPAA-sufficient. I deferred this to the POA&M to allow deliberate decision-making, but I want to think through which option is actually the right answer for MyClinic.
+
+The case for implementing previous value logging: it is the technically complete solution. It would make the SSP accurate. It would provide better investigation capability if a data integrity incident occurred — knowing what a record said before it was modified is genuinely useful for determining whether a change was authorized.
+
+The case for accepting current logging with a documented rationale: HIPAA's audit control standard does not require previous value capture. The current logging provides full access accountability. Healthcare organizations operating on constrained IT resources have a legitimate interest in not gold-plating audit logging beyond regulatory requirements when those resources could address the open CP-2 and IR-3 gaps that have more direct patient safety implications.
+
+My instinct is that for MyClinic — a small clinic with limited IT resources — the right answer is the documented risk acceptance option. Implement previous value logging if OpenMRS makes it operationally straightforward; if it requires custom development, document the HIPAA sufficiency rationale and accept the gap explicitly. The Compliance Officer's interview demonstrated that the organization understands its HIPAA obligations — this is a decision they can make deliberately, not a gap they are unaware of.
+
+---
+
+## What's Next
+
+Day 63 formalizes the POA&M update following the assessment — incorporating the new findings, updating existing items, and producing the final POA&M that will accompany the authorization package to the AO. The POA&M is the system owner's formal commitment to the residual risk remediation plan, and it is reviewed by the AO alongside the SAR when making the authorization decision.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – Task A-5 Remediation Actions](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [AWS IAM PassRole Security Best Practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html)
+- [AWS EventBridge – Automated IAM Change Notifications](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html)
+- [NIST SP 800-30 Rev 1 – Risk Mitigation vs Risk Acceptance](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [HHS OCR HIPAA Audit Control Standard – §164.312(b)](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html)
+
+---
+
+*#GRC #RemediationActions #NISTRMF #TaskA5 #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #IAMSecurity #Day62*
