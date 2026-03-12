@@ -1,106 +1,221 @@
-#  Day 90: Capstone Part 4 – Control Implementation Plan | 100 Days of GRC
-
-##  Objective
-
-Today I focused on building out the **Control Implementation Plan** for OpenMRS, guided by the **NIST 800-53 Moderate Baseline** and aligned with **HIPAA Security Rule safeguards**. The goal is to define **how** we mitigate each risk identified earlier using structured, well-documented, and measurable security controls. This ensures our OpenMRS deployment on AWS is not only secure but also **audit-ready**.
-
-Rather than guessing or reacting, we’re using a tested security blueprint — NIST 800-53 — tailored with healthcare-specific controls required by HIPAA.
+# Day 90 – Capstone Part 4: Security Controls and Policy Plan | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Security Control Framework: NIST 800-53 + HIPAA Overlay
+## Connecting Risk to Controls — The Core GRC Translation
 
-We adopted the **NIST SP 800-53 Rev. 5 Moderate Baseline**, which provides comprehensive coverage for systems handling sensitive (but not classified) data. This was enhanced with **HIPAA-specific controls**, especially for protecting **electronic Protected Health Information (ePHI)**, as required by the HIPAA Security Rule.
+Day 89 produced the current-state risk register — seven risks with evolved ratings, residual risk assessments, and two integrated patterns: the threat environment elevation for credential theft and ransomware (RS-001, RS-004), and the AU-12 detection gap affecting multiple risk residuals (RS-001, RS-005). The risk register tells the story of what the program is protecting against. Day 90 answers the question the risk register raises: what is the program actually doing about it?
 
-This combination provides:
+I want to be direct about what the control implementation plan adds at the capstone stage that earlier sections did not already cover. Days 47 through 60 produced the full SSP control implementation descriptions — every selected control with its implementation narrative. Days 62 through 64 produced the formal security assessment results. The capstone control section is not a repetition of that work. Its purpose is to show the relationship between the risk register and the control set — which controls address which risks, whether the control coverage is adequate given current risk ratings, and where the gap between documented control implementation and demonstrated control effectiveness currently exists.
 
--  Proven, widely-accepted control catalog (NIST)
--  Regulatory alignment with federal healthcare law (HIPAA)
--  Scalable, modular controls applicable to AWS-hosted OpenMRS
+This is the risk-to-control traceability that completes the compliance mapping from Day 88. Day 88 traced from regulatory requirement to control to evidence. Day 90 traces from risk to control to current effectiveness status.
 
 ---
 
-##  Key Control Domains & Implementation Examples
+## What I Worked On Today
 
-###  Access Control (AC)
+The control implementation plan draws from the SSP v1.2, the SAR findings, the continuous monitoring record, and the Day 89 risk register. The organizing principle is risk-based: for each significant risk in the register, which controls address it, what is the current implementation status of those controls, and what is the residual gap between implementation and effectiveness?
 
-- Enforce **Role-Based Access Control (RBAC)** in OpenMRS — doctors, nurses, admins each get permissions based on job function.
-- Implement **strong password policies** and consider **Multi-Factor Authentication (MFA)** for elevated roles.
-- On AWS, use **IAM roles**, **Security Groups**, and **VPC-level restrictions** to tightly control server and database access.
-- Follow **Principle of Least Privilege** across all user access paths.
+I also address the policy architecture — which policies currently exist in documented form, which exist only as SSP references, and which are second-year development priorities.
 
 ---
 
-###  Encryption (SC-12, SC-13, SC-28, SC-28(1))
+## What Actually Clicked for Me
 
-- **Data at rest** is encrypted using AWS native tools (RDS encryption for OpenMRS database, S3 encryption for backups).
-- **Data in transit** is protected via **HTTPS (TLS 1.2+)** for OpenMRS and SSL/TLS for backend database communications.
-- Ensure encryption keys are managed using **AWS KMS** with restricted access.
+The insight that clarified the control implementation section today is understanding that control implementation and control effectiveness are different things, and that a security program can have excellent implementation documentation alongside genuine effectiveness gaps.
 
----
+The OpenMRS program has both. The formal assessment produced SAR findings that documented control implementation as largely compliant — the controls are configured and operational. Eight months of monitoring have produced findings that reveal effectiveness gaps: M-002 showed that CM-3 was implemented but not consistently followed; the AU-12 self-assessment finding showed that AU-12 was implemented but not capturing the full required event set; the M-004 finding showed that AC-2 was implemented but the HR notification process did not reliably trigger ISSO action on role changes.
 
-###  Audit Logging (AU)
-
-- OpenMRS logs user activity (logins, patient record views/edits).
-- AWS CloudTrail and CloudWatch track infrastructure-level actions (IAM changes, EC2 access, S3 events).
-- Enable **log aggregation** and **retention policies**, and review audit logs **weekly** for suspicious activity.
+These effectiveness gaps are not failures of the security program — they are the continuous monitoring program working as designed. The Day 70 assessment framework described the distinction between present controls and effective controls. The capstone control section is where that distinction is documented comprehensively.
 
 ---
 
-###  Configuration Management (CM)
-
-- Use hardened AMIs (Amazon Machine Images) for EC2 instances.
-- Disable unnecessary ports, protocols, and services.
-- Apply security patches weekly; monitor for CVEs relevant to OpenMRS and system software.
-- Use **AWS Systems Manager** to run configuration compliance scans and **baseline enforcement**.
+## Control Coverage by Risk — Risk-to-Control Traceability
 
 ---
 
-###  Identification & Authentication (IA)
+### RS-001: Unauthorized Access via Compromised Credentials (HIGH)
 
-- All users have **unique OpenMRS accounts** – no shared credentials.
-- Admin users require **MFA + strong password policies**.
-- In AWS, use **IAM with federated SSO** (if integrated with hospital directory) or IAM users with MFA.
-- Enforce **automatic logoff/session timeout** after inactivity.
-- Use **key-based SSH access** to servers – no password login allowed.
+**Risk summary:** Elevated threat environment per HC3 briefing; phishing credential theft as primary vector; MFA as primary technical mitigation; phishing simulation absence as primary effectiveness gap.
 
----
+**Primary controls addressing this risk:**
 
-##  Hands-On Control Example: Identification & Authentication (IA)
+*IA-2 (Identification and Authentication — Multi-Factor):* TOTP MFA enforced for all OpenMRS accounts. Implementation status: COMPLIANT per SAR; operational per quarterly access review. Effectiveness evidence: bypass testing during formal assessment confirmed MFA cannot be circumvented with password alone. Current state: fully effective.
 
-> *"In our OpenMRS environment, every user has a unique login identity. Strong password policies are enforced, and administrators are required to authenticate using MFA. For AWS, IAM roles are tightly scoped with least privilege, and EC2 server access is restricted to approved keys via SSH. Sessions expire after a period of inactivity to prevent misuse of unattended workstations."*
+*AC-2 (Account Management):* Individual accounts, role-based provisioning, dual approval for new accounts, quarterly access review. Implementation status: COMPLIANT per SAR; M-004 finding revealed one instance of over-privilege from internal role change; SSP v1.2 updated with HR notification requirement. Effectiveness evidence: Q1 access review identified and corrected one over-privilege assignment within 24 hours. Current state: effective; HR notification process improvement in progress (POA&M M-004).
 
-This ties real practices to the **IA control family**, showing how OpenMRS satisfies key requirements from both **NIST 800-53** and **HIPAA**.
+*AT-2 (Security Awareness Training):* Annual HIPAA and security awareness training including phishing recognition. Implementation status: COMPLIANT — 100% completion rate. Effectiveness evidence: training completion confirmed; behavioral effectiveness not yet measured — phishing simulation program not implemented. Current state: implementation effective, effectiveness not demonstrated.
 
----
+*AU-12 (Audit Record Generation):* Authentication events logged to CloudWatch. Implementation status: partially COMPLIANT — successful authentication events logged; denied access events (failed login attempts, blocked access) not currently logged per Day 79 self-assessment finding. Effectiveness gap: systematic credential probing would not be detected in current audit log. POA&M entry pending.
 
-##  Reflection – Why Frameworks Like NIST Make Security Achievable
-
-Before I began using a structured control framework, the task of securing a healthcare system felt **overwhelming**. There are so many angles to cover: who can log in, what data is exposed, how updates are done, how logs are reviewed, and so on.
-
-But once we adopt **NIST 800-53 Moderate + HIPAA**, it’s like being handed a **comprehensive blueprint**. Instead of scrambling, we follow tested security practices, one domain at a time — and make sure every risk is covered.
-
-Reflecting on our earlier risk assessment:
-- **Access control** directly mitigates unauthorized access threats
-- **Encryption** addresses HIPAA confidentiality requirements
-- **Audit logs** support both detection and post-incident response
-- **Config management** prevents vulnerabilities from software rot
-- **Authentication** ensures accountability
-
->  **My takeaway**: Following NIST + HIPAA turns chaos into clarity. It helps us **prove compliance**, **build trust**, and **harden security** with purpose.
-
-I personally believe **Access Control** is the most critical in our OpenMRS case — because everything else (encryption, audit logs, patching) fails if the wrong person gets in.
+**Control coverage assessment for RS-001:** Technical controls (IA-2, AC-2) are effective. The primary gap is the human layer — training completion is confirmed but behavioral effectiveness against targeted phishing (the elevated threat vector) is not demonstrated. The phishing simulation program closes this gap. The AU-12 remediation improves detection capability for credential probing.
 
 ---
 
-##  Suggested Keywords & Search Resources
+### RS-002: Application Layer Vulnerability (MODERATE)
 
-- `NIST 800-53 moderate baseline controls`  
-- `HIPAA security rule safeguards NIST mapping`  
-- `Access control best practices healthcare IT`  
-- `AWS data encryption HIPAA compliance`  
-- `OpenMRS security configuration guidelines`  
+**Primary controls addressing this risk:**
+
+*SC-5 (Denial of Service Protection) / SC-7 (Boundary Protection):* AWS WAF with OWASP Core Rule Set and custom OpenMRS-specific rules. Implementation status: COMPLIANT per SAR; WAF rule log review included in monthly monitoring. Effectiveness evidence: WAF blocks SQL injection, XSS, and path traversal attempts before reaching application layer. Current state: effective.
+
+*SI-2 (Flaw Remediation):* Monthly OWASP Dependency-Check scans; AWS Inspector monthly EC2 OS vulnerability scans; patch SLA compliance tracked at KPI-VM-1 (97% in Q1). Implementation status: COMPLIANT. Effectiveness evidence: no High or Critical unpatched vulnerabilities identified in Q1 monitoring. Current state: effective.
+
+*CM-3 (Configuration Change Control):* Module governance requiring ISSO notification and SIA for all OpenMRS module additions. Implementation status: documented; M-002 finding demonstrated IAM policy change outside CM-3 (IT Administrator pattern). Effectiveness evidence: no unauthorized module installations detected in Q1; two CM-3 compliance lapses involved infrastructure changes, not application changes. Current state: effective for application layer; process compliance gap in infrastructure layer.
+
+*CM-7 (Least Functionality):* Unnecessary services, ports, and protocols disabled on EC2. Implementation status: COMPLIANT per SAR hardening checklist. Current state: effective.
+
+**Control coverage assessment for RS-002:** WAF and vulnerability scanning provide strong defense-in-depth for known vulnerability exploitation. CM-3 module governance prevents supply chain compromise through unauthorized module introduction. Principal residual risk (zero-day before patch availability) is not addressable through additional controls — it is managed through WAF behavioral analysis and rapid patch deployment discipline.
 
 ---
 
- **Next Up (Day 91)**: I’ll be creating a **Security Training & Awareness Plan** for OpenMRS users — ensuring everyone knows how to use the system safely, avoid mistakes, and respond if something goes wrong. Onward! 🚀
+### RS-003: S3 Misconfiguration (LOW-MODERATE)
+
+**Primary controls addressing this risk:**
+
+*SC-28 (Protection of Information at Rest):* S3 server-side encryption with AES-256 and customer-managed KMS key. Implementation status: COMPLIANT; Config rule continuously monitoring. Current state: effective.
+
+*AC-3 (Access Enforcement) / AC-6 (Least Privilege):* S3 Block Public Access enabled at bucket and account level. Bucket policy restricts access to authorized IAM roles only. Implementation status: COMPLIANT; Config rules `s3-bucket-level-public-access-prohibition` and `s3-account-level-public-access-blocks` continuously monitoring. Current state: effective — defense-in-depth (bucket-level + account-level Block Public Access) means two independent misconfigurations would be required to expose bucket contents.
+
+*CM-3 (Configuration Change Control):* S3 configuration changes should follow CM-3 process. Effectiveness note: M-002 pattern (IAM changes outside CM-3) demonstrates the IT Administrator will occasionally make changes without ISSO notification; EventBridge alert for S3 configuration changes would catch post-hoc any unauthorized change.
+
+**Control coverage assessment for RS-003:** Multiple overlapping controls (encryption, Block Public Access at two levels, Config monitoring) make this the most technically well-controlled risk in the register. The risk rating reduction from initial Moderate to current LOW-MODERATE is justified by the defense-in-depth architecture.
+
+---
+
+### RS-004: Ransomware — EHR Unavailability (HIGH)
+
+**Primary controls addressing this risk:**
+
+*IA-2 (MFA):* Same as RS-001 — phishing credential theft is the primary ransomware delivery path. Effective at reducing probability of initial access.
+
+*IR-4 (Incident Handling):* Ransomware playbook (Day 81 Playbook 2): EC2 isolation authority delegated to IT Administrator without prior approval; ISSO notification within 15 minutes; Health IT Manager 30-minute brief. Implementation status: documented; IR-3 tabletop not yet executed. Effectiveness evidence: undetermined until IR-3 tabletop confirms staff familiarity. Current state: documented readiness, demonstrated readiness pending IR-3 execution (POA&M item 004).
+
+*CP-9 (Information System Backup):* Weekly S3 cross-region backup export; daily RDS automated snapshots (35-day retention); PITR enabled. Implementation status: COMPLIANT; Q1 restoration test passed within RTO (3:47 vs. 4:00 target). RTO margin narrowing trend (POA&M M-003). Current state: effective; trend monitoring in progress.
+
+*CP-2 (Contingency Plan):* Clinical downtime procedures for OpenMRS unavailability. Implementation status: AT RISK — 90-day authorization condition, Milestone 3 meeting scheduled. Current state: compensating controls in place; full implementation in progress.
+
+*Architectural note (RDS separation):* Patient database on RDS is not directly accessible to ransomware on EC2 — the attack surface for full data encryption is smaller than in architectures where the application and database reside on the same instance. Recovery from ransomware on EC2 is application restoration from clean AMI, not full data recovery. This architectural decision, made during the initial deployment, has a material effect on the worst-case ransomware scenario.
+
+**Control coverage assessment for RS-004:** The elevated risk rating reflects the threat environment, not inadequate controls — the technical controls are functioning. The principal gaps are the undocumented clinical downtime procedures (CP-2 condition AT RISK) and the unexecuted ransomware tabletop (IR-3 POA&M item 004). Both are known, documented, and being addressed. The phishing simulation program (second-year priority) is the single most impactful improvement for this risk because it addresses the primary delivery vector at the human layer.
+
+---
+
+### RS-005: Insider Access Misuse (MODERATE)
+
+**Primary controls addressing this risk:**
+
+*AC-3 / AC-6 (Access Enforcement / Least Privilege):* RBAC limits each user's accessible records to their clinical function. Implementation status: COMPLIANT; quarterly access review confirms role accuracy. Current state: effective at preventing access to records outside role scope.
+
+*AU-2 / AU-12 (Audit Events / Audit Record Generation):* Application audit log records user access to patient records. Implementation status: partial — authorized access events logged; denied access events not logged (AU-12 gap from Day 79). Effectiveness gap: an insider systematically probing records just outside their role scope would generate denied access attempts that are not currently captured. Authorized access outside legitimate need-to-know (accessing records within role scope but without patient care justification — curiosity access) may generate audit events but depends on query pattern analysis. Current state: partially effective.
+
+*IR-8 (Incident Response Plan — Privacy):* HIPAA privacy incident response procedure documents the steps for responding to a confirmed insider access violation including patient notification and OCR reporting. Current state: documented.
+
+**Control coverage assessment for RS-005:** The AU-12 gap is the most significant control effectiveness issue for this risk. The access review catches role-level over-privilege. It does not catch within-role curiosity access. The audit log, when complete, is the detection mechanism for within-role access pattern anomalies. The AU-12 remediation closes the denied-access event gap; the longer-term improvement is audit log pattern analysis capability (AU-6 — POA&M item 005).
+
+---
+
+### RS-006: Configuration Drift (MODERATE)
+
+**Primary controls addressing this risk:**
+
+*CM-2 (Baseline Configuration):* Documented baseline configuration for EC2 and AWS services; Config rules enforce deviation detection. Implementation status: COMPLIANT per SAR. Current state: effective for AWS-managed configuration items covered by Config rules.
+
+*CM-3 (Configuration Change Control):* CM-3 process requires ISSO review and SIA for all security-relevant changes. Implementation status: COMPLIANT documented; two operational lapses (M-002, A-7) demonstrate process compliance gap. Effectiveness evidence: both lapses were detected through monitoring; neither produced exploitation. Current state: documented implementation with identified compliance discipline gap; EventBridge coverage expanded as remediation.
+
+*SI-7 (Software, Firmware, and Information Integrity):* AWS Config and Security Hub continuously monitor 22 managed rules covering security-critical configurations. NON_COMPLIANT Config events generate immediate ISSO notification. Current state: effective at detecting security-critical configuration drift rapidly.
+
+**Control coverage assessment for RS-006:** Automated Config monitoring is effective at detecting security-critical configuration drift. The CM-3 compliance discipline gap — documented in M-002 and A-7 — represents a human process reliability issue that the technical monitoring partially compensates for through detection. The long-term solution is organizational process culture, not additional technical controls.
+
+---
+
+### RS-007: Backup/Recovery Failure (LOW-MODERATE)
+
+**Primary controls addressing this risk:**
+
+*CP-9 (Information System Backup):* Backup architecture as described in RS-004. Quarterly restoration test completed. Implementation status: COMPLIANT. Current state: effective.
+
+*CP-4 (Contingency Plan Testing):* Quarterly restoration tests per monitoring schedule. Q1 test completed; M-003 finding (narrowing RTO margin) generated POA&M item. Current state: effective — the quarterly test is the mechanism for detecting degradation before a real recovery is required.
+
+**Control coverage assessment for RS-007:** The quarterly restoration test is working as designed — it detected the RTO margin trend before the margin was exceeded. POA&M M-003 tracks the restoration procedure optimization. The RPO reduction proposal (daily export, RPO 1 day) would significantly improve the worst-case data loss exposure; this remains a second-year priority.
+
+---
+
+## The Control Implementation Summary — Current Effectiveness Status
+
+| Control Family | Key Controls | Implementation Status | Effectiveness Status | Primary Gap |
+|---|---|---|---|---|
+| Access Control (AC) | AC-2, AC-3, AC-6 | Compliant | Effective | M-004 HR notification in progress |
+| Identification/Authentication (IA) | IA-2 | Compliant | Effective | Phishing simulation absent (human layer) |
+| Audit/Accountability (AU) | AU-2, AU-9, AU-12 | Partially compliant | Partially effective | AU-12 denied-access logging gap |
+| System/Communications (SC) | SC-5, SC-7, SC-8, SC-28 | Compliant | Effective | None significant |
+| Configuration Management (CM) | CM-2, CM-3, CM-7 | Compliant | Partially effective | CM-3 process compliance discipline |
+| Contingency Planning (CP) | CP-2, CP-4, CP-9 | Partially compliant | Partially effective | CP-2 AT RISK; RPO improvement pending |
+| Incident Response (IR) | IR-4, IR-8 | Compliant (documented) | Undemonstrated | IR-3 tabletop not executed |
+| Awareness/Training (AT) | AT-2 | Compliant | Undemonstrated | Phishing simulation absent |
+| System Integrity (SI) | SI-2, SI-7 | Compliant | Effective | None significant |
+
+---
+
+## Policy Architecture — Current Status and Gaps
+
+The security control implementation depends on organizational policies that define the rules governing how controls operate. The current policy architecture:
+
+**IS-AC-001 — Access Control Policy:** Fully developed (Day 76). Covers account provisioning, role assignments, MFA requirements, shared account prohibition, exception process. Current version: 1.0. Owner: ISSO. Annual review scheduled.
+
+**CP-2 — Contingency Plan / Downtime Procedures:** In development (authorization condition, AT RISK). Covers clinical downtime procedures, emergency access, recovery decision authority. Status: draft (Milestones 1-2 complete, Milestone 3 meeting scheduled).
+
+**IR Plan — Incident Response Plan:** Documented (Day 81). Covers incident classification, playbooks for compromised credentials, ransomware, and OpenMRS unavailability, HIPAA breach notification workflow, escalation authorities. Current version: 1.0.
+
+**Policies referenced in SSP but not yet fully developed as standalone documents:**
+
+*Data Retention and Disposal Policy:* The SSP references record retention (7-year Minnesota Health Records Act requirement) and data disposal procedures (Day 75 decommissioning framework). These exist as SSP sections, not as a standalone organizational policy with owner, review cycle, and exception process. **Second-year development priority.**
+
+*Acceptable Use Policy (AUP):* The SSP references acceptable use of OpenMRS and AWS resources. An AUP has not been developed as a standalone document requiring user acknowledgment. Without a signed AUP, the organization's ability to discipline an insider for misuse is weaker — the policy was never formally communicated. **Second-year development priority, particularly given RS-005 (insider misuse) residual rating.**
+
+*Vendor Management Policy:* The Day 82 TPRM register documents the three-vendor management approach. A formal vendor management policy governing BAA requirements, annual review obligations, and vendor security assessment standards has not been developed as a standalone document. **Second-year development priority.**
+
+*Change Management Policy:* CM-3 is implemented and documented in the SSP. The M-002 and A-7 findings both involve CM-3 compliance — suggesting the procedure exists but the organizational policy (who owns change management authority, what are the mandatory escalation paths, what are the consequences of unauthorized changes) needs to be developed as a standalone document that the IT Administrator acknowledges. **Second-year priority, directly relevant to RS-006 remediation.**
+
+---
+
+## The Highest-Priority Control Gap
+
+Looking across the full control set, the single highest-priority gap — the one that both the risk register and the control effectiveness summary point to — is the human layer.
+
+The technical controls are working. Encryption is compliant and continuously monitored. MFA is enforced and bypass-resistant. WAF is blocking application-layer attacks. Backup architecture passed its quarterly restoration test. Configuration monitoring is catching drift within hours of occurrence.
+
+What the technical controls cannot do is prevent a staff member from clicking a targeted phishing email that captures both their password and their TOTP code in real time. And what the audit logging currently cannot do is detect the credential probing that precedes a targeted attack — because denied access events are not being logged.
+
+Both gaps are addressable. The phishing simulation program addresses the human layer effectiveness measurement gap. The AU-12 remediation addresses the denied-access detection gap. Together, they close the two most significant control effectiveness gaps in the entire program.
+
+Neither is technically complex. Both are organizationally straightforward. The reason they are second-year priorities rather than completed work is resource prioritization — the first authorization year's energy went into building and assessing the technical control foundation. The second year's opportunity is demonstrating that the human layer is as disciplined as the technical layer.
+
+---
+
+## A Real-World Example That Made This Click
+
+The gap between documented control implementation and demonstrated control effectiveness is illustrated precisely by the **2020 University of Vermont Health Network ransomware attack**, in which the organization's security team had implemented many of the right technical controls — endpoint detection, network segmentation, backup systems — but the ransomware attack still succeeded in taking the EHR system offline for several weeks because the human layer (phishing email that delivered the initial malware) had not been addressed with the same rigor as the technical layer.
+
+The recovery took weeks rather than days in part because the backup restoration procedures, while documented, had not been fully tested under the specific conditions of the incident — a lesson that maps directly to the OpenMRS IR-3 tabletop gap (documented ransomware playbook, unexecuted tabletop scenario).
+
+For the OpenMRS program, the UVM case is both a validation that the technical architecture is on the right track (network segmentation, backup systems) and a caution that technical controls alone are insufficient — the human layer and the demonstrated readiness through exercises are what convert documented capability into actual resilience.
+
+---
+
+## What's Next
+
+Day 91 develops the Security Awareness Training Plan — completing the thread from Day 55 (AT-2 implementation), Day 79 (CP-3 retention gap), Day 83 (phishing simulation effectiveness metric gap), Day 85 (phishing simulation funding request communication scenario), and today's control gap analysis. What does a second-year training program look like when the first year confirmed implementation compliance but not behavioral effectiveness?
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-53 Rev 5 – Security and Privacy Controls Catalog](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [NIST SP 800-53A Rev 5 – Assessing Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [NIST SP 800-37 Rev 2 – RMF: Risk-to-Control Traceability](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [HHS OCR – HIPAA Security Rule Control Implementation Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [University of Vermont Health Network Ransomware Incident — American Hospital Association](https://www.aha.org/news/headline/2020-11-02-vermont-hospital-hit-cyberattack)
+
+---
+
+*#GRC #ControlImplementation #NIST80053 #RiskToControl #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day90*
