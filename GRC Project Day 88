@@ -1,75 +1,274 @@
-#  Day 88: Capstone Part 2 – Identify Compliance Requirements & Frameworks | 100 Days of GRC
-
-##  Objective
-
-Today, I focused on aligning **OpenMRS**, our cloud-hosted electronic medical record system, with the **compliance requirements** and **security frameworks** that govern the handling of sensitive healthcare data. A strong GRC program doesn’t just secure systems – it ensures compliance with laws, standards, and policies, providing both **legal protection** and a **security roadmap**.
-
-This step is about translating abstract rules (like HIPAA or NIST CSF) into **practical controls** we can implement in our environment. I approached it from a leadership mindset: “How can I ensure our hospital’s OpenMRS instance is both compliant and secure – today, tomorrow, and under audit?”
+# Day 88 – Capstone Part 2: Compliance Mapping | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Why Compliance Matters in a Cloud-Based EHR System
+## From Regulatory Text to Traceable Evidence
 
-When managing a system that handles **ePHI (electronic protected health information)**, regulatory compliance isn’t optional – it’s mandatory. Our OpenMRS system is deployed in **AWS**, which means we must think in terms of both the **HIPAA Security Rule** and the **AWS Shared Responsibility Model**.
+Day 87 produced the system description — current-state architecture, authorization boundary, data classification with population-specific sensitivity, user population, and regulatory applicability. The system description establishes what is being protected. Day 88 establishes how the regulatory requirements that govern the system connect to the specific controls that implement them and the evidence that demonstrates compliance.
 
-Here’s the truth: AWS can sign a **Business Associate Agreement (BAA)** with you, but **compliance is never fully outsourced**. We, as the implementers and security team, are responsible for configuring and enforcing the right controls *in* the cloud. Today, I learned how to translate compliance obligations into enforceable actions – bridging regulation with real-world technical decisions.
+I want to explain what I mean by compliance mapping at the depth this project has developed, because the concept is often presented as simpler than it is. A compliance mapping table that shows "HIPAA §164.312(a)(1) → MFA implementation" is a starting point, not a complete mapping. The complete mapping traces the requirement through four layers:
 
----
+**Layer 1 — Regulatory requirement:** What the law or standard requires.
+**Layer 2 — NIST control:** Which NIST SP 800-53 control addresses the requirement.
+**Layer 3 — SSP implementation:** How that control is specifically implemented in the OpenMRS deployment.
+**Layer 4 — Evidence chain:** What documentation demonstrates compliance — assessment findings, monitoring records, POA&M status, and current operational evidence.
 
-##  Compliance Requirements & Security Frameworks Mapped to Controls
+A compliance mapping that stops at Layer 2 tells an auditor which controls are supposed to address each requirement. A compliance mapping through Layer 4 tells an auditor where to find the evidence that the controls are actually working. The difference between these two is the difference between a compliance assertion and a compliance demonstration — the distinction from Day 79's self-assessment section.
 
-Below is a table mapping key compliance and security frameworks to specific control actions I am implementing in our GRC plan for OpenMRS.
-
-| **Requirement / Framework** | **How We Comply (Control / Action Plan)** |
-|-----------------------------|--------------------------------------------|
-| **HIPAA Security Rule**: Ensure confidentiality, integrity, and availability of ePHI | - Role-Based Access Control (RBAC) within OpenMRS<br> - Encrypted AWS RDS (data at rest)<br> - TLS/HTTPS for data in transit<br> - AWS IAM permissions and CloudWatch logs<br> - Routine backup strategy with AWS snapshot automation |
-| **HIPAA Security Rule**: Risk analysis and risk management | - Risk Summary section of our GRC plan documents known threats<br> - We will maintain a **POA&M** (Plan of Action and Milestones)<br> - Annual reviews and continuous monitoring included |
-| **HIPAA Security Rule**: Audit Controls | - Enable OpenMRS access logging<br> - Use AWS CloudTrail and CloudWatch for infrastructure logs<br> - Retain logs per retention policy and review monthly |
-| **NIST Cybersecurity Framework (CSF)**: Protect Function | - Implement multi-factor authentication (MFA)<br> - Limit console access to specific IAM roles<br> - Harden EC2 configurations (e.g., disable unused ports)<br> - Maintain baseline OS images and patch regularly |
-| **NIST CSF**: Detect Function | - CloudWatch alarms for login anomalies and resource misuse<br> - Setup alerts for ePHI data export attempts<br> - Scheduled log review for unusual patterns |
-| **NIST CSF**: Respond & Recover Functions | - Incident Response Plan section in the GRC plan<br> - Define escalation paths, containment steps, and notification procedures<br> - Daily snapshots of database, with restore tests every quarter |
-| **Hospital Internal Policy**: Annual user security training | - OpenMRS user training module (customized videos and quizzes)<br> - Training completion tracked and logged in HR system<br> - Certificate required before full access is granted |
-| **AWS Shared Responsibility Model** | - AWS manages physical security, hypervisor, and network layers<br> - We configure firewalls, security groups, IAM roles, backups, and OS hardening<br> - Use Private Subnets for database, restrict SSH via Bastion only |
+Today I build the complete four-layer compliance mapping for the HIPAA Security Rule's technical and administrative safeguards, using the evidence developed across 87 days of operational documentation.
 
 ---
 
-##  Key Insight: Compliance Reveals What You Missed
+## What I Worked On Today
 
-As I mapped each requirement to a control, I realized how easily some critical areas could have been overlooked without these frameworks:
-
-- **HIPAA** made me think deeper about **audit logs** and how important it is to **track user activity** across both OpenMRS and the AWS platform.
-- **NIST CSF** reminded me to include a **response plan** – not just preventative controls.
-- The **AWS Shared Responsibility Model** helped clarify where my team must take ownership: IAM roles, encryption, patching – all fall under *our* side of the responsibility line.
-
-By following these frameworks, I’m not just ticking boxes – I’m building resilience. Regulatory frameworks like HIPAA don’t just mandate security; they **guide you to think holistically**.
+The HIPAA Security Rule (45 CFR Part 164, Subpart C) organizes safeguards into three categories: administrative safeguards (§164.308), physical safeguards (§164.310), and technical safeguards (§164.312). Required specifications are mandatory; addressable specifications require implementation or documented rationale for alternatives. Today I work through the technical safeguards in full depth and the most critical administrative safeguards, with the evidence chain for each.
 
 ---
 
-##  Reflection
+## What Actually Clicked for Me
 
-What stood out most today is that **regulations shape design**. Without considering HIPAA and NIST, our OpenMRS deployment might have been functional but vulnerable. These standards act like a flashlight, revealing weak spots: no backup plan, no incident response, no training program? That's a recipe for trouble.
+The insight that clarified compliance mapping today is understanding the difference between control coverage and control traceability.
 
-Compliance doesn’t slow us down. It **accelerates trust**, ensures **data safety**, and prepares us for the day when an auditor knocks or a breach looms.
+Control coverage answers: does a control exist for every requirement? A compliance mapping table that lists a control for every HIPAA provision demonstrates coverage. Coverage is necessary but not sufficient.
 
----
+Control traceability answers: for any specific regulatory requirement, can an auditor follow a documented path from the requirement to the specific control implementation to the evidence that the control is working? Traceability is what makes compliance defensible in an OCR investigation — not the assertion that controls exist, but the documented chain of evidence that proves they work.
 
-##  What I Taught Myself Today
+The 2013 Advocate Medical Group breach discussed in Day 75 and Day 82 illustrates the traceability gap: Advocate had encryption policies. The unencrypted laptops represented a control coverage gap — the policy existed, but the specific asset category was not covered. An auditor who traced the encryption requirement through the policy to the asset inventory would have identified that laptops were out of scope.
 
-- How to **transform regulatory text** into practical cloud security controls  
-- The value of **compliance mapping** as a foundational GRC activity  
-- That **cloud hosting doesn't remove responsibility** – it just changes where it lies  
-- And finally: **Security is shared, but compliance is earned**
+For the OpenMRS compliance mapping, traceability means that for every HIPAA requirement, the mapping includes not just the control but the specific implementation artifact (SSP section), the assessment evidence (SAR finding), and the current monitoring evidence (Config rule, quarterly review record, POA&M status).
 
 ---
 
-##  Suggested Keywords & Resources
+## HIPAA Technical Safeguards — Four-Layer Compliance Mapping
 
-- `HIPAA Security Rule summary`  
-- `OpenMRS HIPAA compliance`  
-- `NIST CSF healthcare implementation`  
-- `AWS Shared Responsibility Model healthcare`  
-- `Compliance requirements mapping table`
+**§164.312(a)(1) — Access Control**
+*Regulatory requirement:* Implement technical policies and procedures for electronic information systems that maintain ePHI to allow access only to those persons or software programs that have been granted access rights as specified in §164.308(a)(4).
+
+*NIST controls:* AC-2 (Account Management), AC-3 (Access Enforcement), AC-6 (Least Privilege), IA-2 (Identification and Authentication)
+
+*SSP implementation (v1.2):* Role-Based Access Control enforced at the application layer through OpenMRS role assignments. Five defined roles (Clinician, Nursing Staff, Administrative Staff, Lab Tech, System Admin/ISSO) with documented access scopes in the Role Authorization Matrix. All access requires individual account (shared accounts prohibited per IS-AC-001 Section 3.1). Account provisioning requires dual approval (Health IT Manager + ISSO) before creation.
+
+*Evidence chain:*
+- Assessment evidence: SAR — AC-2 assessed compliant; three cross-role access attempts during formal assessment all rejected; IA-2 MFA enforcement tested (3 bypass attempts all rejected)
+- Ongoing monitoring: Quarterly access review records (Q1 certification signed by Health IT Manager [date]); M-004 finding — one over-privileged role assignment identified and corrected within 24 hours
+- Current state: SSP v1.2 AC-2 updated to include internal role change notification requirement; POA&M item M-004 in progress for HR process update
+- Config evidence: Audit Manager HIPAA framework evidence — IAM user listing showing current active accounts with role assignments; CloudTrail evidence of account creation and deletion events
+
+*Compliance assessment:* Compliant with known improvement in progress (M-004 HR notification process)
 
 ---
 
-🔜 **Up Next:** I’ll begin identifying risks and building the **Risk Summary** section of the plan – categorizing threats, assessing likelihood and impact, and preparing mitigation strategies. Onward to Day 89! 🚀
+**§164.312(a)(2)(i) — Unique User Identification (Required)**
+*Regulatory requirement:* Assign a unique name and/or number for identifying and tracking user identity.
+
+*NIST control:* IA-2 (Identification and Authentication — Unique Identification)
+
+*SSP implementation:* All OpenMRS accounts are individually assigned with a unique username. Account creation process prohibits shared credentials. IAM inventory maintained by ISSO documents all IAM entities.
+
+*Evidence chain:*
+- Assessment evidence: SAR — IA-2 assessed compliant; IAM inventory reviewed
+- Assessment finding: Finding A-3 (undocumented service account) — identified and remediated pre-authorization; account added to inventory
+- Ongoing monitoring: Quarterly access review completeness check confirms all accounts match IAM inventory; EventBridge automated notification for new IAM entity creation (Finding A-7 remediation) provides real-time ISSO alert for any new account creation
+
+*Compliance assessment:* Compliant
+
+---
+
+**§164.312(a)(2)(ii) — Emergency Access Procedure (Required)**
+*Regulatory requirement:* Establish (and implement as needed) procedures for obtaining necessary ePHI during an emergency.
+
+*NIST control:* CP-2 (Contingency Plan), IR-4 (Incident Handling)
+
+*SSP implementation:* The contingency plan (CP-2 — POA&M item 001, 90-day authorization condition) documents emergency access procedures including the designation of emergency access credentials held in the ISSO's secure password manager, accessible to the Health IT Manager as the designated backup. Emergency access requires ISSO or Health IT Manager authorization and generates an audit log entry flagged for post-emergency review.
+
+*Evidence chain:*
+- Assessment evidence: CP-2 identified as POA&M item at assessment — full procedure documentation in progress as authorization condition
+- Current status: POA&M item 001 AT RISK at Q1 quarterly report (12 days to 90-day deadline); Milestone 3 meeting scheduled; AO notified
+- Compensating control during CP-2 development: Emergency access credentials exist and are held per the interim procedure documented at authorization
+
+*Compliance assessment:* In progress — compensating controls in place during CP-2 completion
+
+---
+
+**§164.312(a)(2)(iii) — Automatic Logoff (Addressable)**
+*Regulatory requirement:* Implement electronic procedures that terminate an electronic session after a predetermined time of inactivity.
+
+*NIST control:* AC-11 (Session Lock)
+
+*SSP implementation:* OpenMRS session timeout configured at 15 minutes of inactivity with a 2-minute warning notification. Session timeout applies to all user roles without exception.
+
+*Evidence chain:*
+- Assessment evidence: SAR — AC-11 assessed; session timeout tested at 15-minute interval, confirmed with 2-minute warning notification
+- Implementation decision: 15-minute timeout selected based on clinical workflow analysis — shorter timeout would disrupt active clinical encounters; longer would increase unauthorized access window during unattended workstation scenario
+- Ongoing monitoring: Session timeout configuration included in quarterly self-assessment review (Day 79 self-assessment confirmed configuration unchanged)
+
+*Compliance assessment:* Compliant — implemented, rationale documented
+
+---
+
+**§164.312(a)(2)(iv) — Encryption and Decryption (Addressable)**
+*Regulatory requirement:* Implement a mechanism to encrypt and decrypt ePHI.
+
+*NIST control:* SC-28 (Protection of Information at Rest)
+
+*SSP implementation:* RDS instance encrypted with customer-managed KMS key (openmrs-rds-encryption). S3 backup bucket encrypted with AES-256 server-side encryption and customer-managed KMS key. EC2 EBS volumes encrypted. CloudWatch log groups containing OpenMRS audit logs encrypted. KMS key rotation enabled.
+
+*Evidence chain:*
+- Assessment evidence: SAR — SC-28 assessed compliant; RDS, S3, and EBS encryption verified
+- Ongoing monitoring: Config rule `rds-storage-encrypted` continuously COMPLIANT; Config rule `s3-bucket-server-side-encryption-enabled` COMPLIANT; Audit Manager SC-28 evidence collection current
+- Current state: Three KMS keys active and in use; no unexpected key deletion scheduled (Config rule `kms-cmk-not-scheduled-for-deletion` COMPLIANT)
+
+*Compliance assessment:* Compliant
+
+---
+
+**§164.312(b) — Audit Controls (Required)**
+*Regulatory requirement:* Implement hardware, software, and/or procedural mechanisms that record and examine activity in information systems that contain or use ePHI.
+
+*NIST controls:* AU-2 (Audit Events), AU-9 (Protection of Audit Information), AU-12 (Audit Record Generation)
+
+*SSP implementation:* OpenMRS audit log module records: user authentication (success and failure), patient record access, record modifications, and administrative actions. Logs delivered to CloudWatch log group (encrypted). CloudTrail records all AWS API calls. Log tamper protection via EventBridge alert (former POA&M item POA&M-AU9-01, closed pre-authorization).
+
+*Evidence chain:*
+- Assessment evidence: SAR — AU-2 and AU-12 assessed; four required event types verified captured with all required fields; AU-9 tamper detection verified
+- Ongoing monitoring: Monthly CloudTrail log review documented; quarterly CloudTrail pattern analysis conducted
+- **Day 79 self-assessment finding: AU-12 gap identified — denied access events not appearing in audit log.** This is an active control effectiveness gap. Denied access attempts are being blocked by AC-3 enforcement but are not being logged.
+- Current status: Investigation in progress; POA&M entry to be created; AO notification required per Condition 3 (Moderate finding)
+- Config evidence: `cloud-trail-enabled` COMPLIANT; `cloudwatch-log-group-encrypted` COMPLIANT
+
+*Compliance assessment:* **Partial — audit controls implemented and largely functioning. Denied access event logging gap identified in Day 79 self-assessment; remediation in progress. This is the most significant current compliance gap.**
+
+*Note to assessors:* This gap was self-identified through the ISSO's periodic self-assessment program, not through an external audit. The organization's internal controls identified this gap before formal re-authorization. The gap is being remediated through a documented process with AO notification.
+
+---
+
+**§164.312(c)(1) — Integrity (Required)**
+*Regulatory requirement:* Implement policies and procedures to protect ePHI from improper alteration or destruction.
+
+*NIST controls:* SI-7 (Software, Firmware, and Information Integrity), AU-10 (Non-Repudiation)
+
+*SSP implementation:* RDS point-in-time recovery enables restoration of patient records to any point in the prior 35 days. CloudTrail log file validation detects any tampering with audit logs. OpenMRS modification audit log captures record changes with timestamp and user ID. KMS key policies prevent unauthorized key deletion.
+
+*Evidence chain:*
+- Assessment evidence: SAR — integrity controls verified
+- POA&M item 009 (AU-3): Modification audit log does not capture previous field values (Low severity); decision pending on Option A (application layer solution) vs Option B (SSP update/risk acceptance). Compensating control: RDS PITR enables recovery of original values within 35-day window.
+
+*Compliance assessment:* Compliant with known limitation documented in POA&M
+
+---
+
+**§164.312(d) — Person or Entity Authentication (Required)**
+*Regulatory requirement:* Implement procedures to verify that a person or entity seeking access to ePHI is the one claimed.
+
+*NIST control:* IA-2 (Identification and Authentication — Multi-Factor)
+
+*SSP implementation:* TOTP MFA enforced for all OpenMRS user accounts. Password requirements per IS-AC-001: minimum 12 characters, complexity requirements, 90-day rotation, 12-password history. Authentication bypass requires both password and TOTP code — possession of either alone is insufficient.
+
+*Evidence chain:*
+- Assessment evidence: SAR — IA-2 MFA enforcement tested; three bypass attempts (password-only, expired TOTP, intercepted TOTP replay) all rejected
+- Ongoing monitoring: GuardDuty monitors for unusual authentication patterns; Security Hub `[IAM.3] IAM users' access keys should be rotated every 90 days` and related findings monitored
+- IAM policy: `iam-password-policy` Config rule COMPLIANT (M-002 finding corrected immediately)
+
+*Compliance assessment:* Compliant
+
+---
+
+**§164.312(e)(1) — Transmission Security (Required)**
+*Regulatory requirement:* Implement technical security measures to guard against unauthorized access to ePHI that is being transmitted over an electronic communications network.
+
+*NIST controls:* SC-8 (Transmission Confidentiality and Integrity), SC-28
+
+*SSP implementation:* All OpenMRS web application traffic requires HTTPS/TLS 1.2 or higher — HTTP connections are rejected by the ALB with a 301 redirect. The LIS HL7 interface uses encrypted API connection. AWS internal traffic between EC2 and RDS traverses the VPC private subnet and does not traverse the public internet.
+
+*Evidence chain:*
+- Assessment evidence: SAR — SC-8 assessed compliant; TLS enforcement verified; HL7 interface encryption verified
+- Ongoing monitoring: WAF monitors for protocol anomalies; Security Hub FSBP checks for unencrypted transmission configurations
+
+*Compliance assessment:* Compliant
+
+---
+
+## HIPAA Administrative Safeguards — Selected Critical Requirements
+
+**§164.308(a)(1) — Security Management Process (Required)**
+*Sub-requirement: Risk Analysis and Risk Management*
+
+The HIPAA Security Rule's foundation requirement — that covered entities conduct a thorough assessment of the potential risks and vulnerabilities to ePHI — is addressed through the comprehensive risk management program documented across the OpenMRS GRC project.
+
+*Evidence chain:*
+- Risk analysis: FIPS 199 categorization (Day 44); threat identification and risk register (Day 38); vulnerability inventory (Day 37); risk response record (Day 66)
+- Risk management: NIST RMF seven-step execution (Days 1-75); POA&M as ongoing risk management tool; continuous monitoring program
+- Annual refresh: Structured risk analysis scheduled for annual continuous monitoring summary (Day 83 metrics section — added as annual activity)
+
+*Compliance assessment:* Compliant — comprehensive risk analysis documented; annual refresh process established
+
+---
+
+**§164.308(a)(5) — Security Awareness and Training (Required)**
+
+*Evidence chain:*
+- AT-2 training program: Annual HIPAA and security awareness training; tracking records maintained
+- CP-3 training: Downtime procedure training — completion documented; retention gap identified in Day 79 self-assessment
+- Training effectiveness: Phishing simulation program not yet implemented — effectiveness metric absent (Day 83 identified this as second-year priority)
+
+*Compliance assessment:* Compliant on implementation basis; effectiveness gap noted — phishing simulation program development in progress
+
+---
+
+## The Compliance Mapping Summary Table
+
+For each HIPAA technical safeguard section, the current compliance status:
+
+| HIPAA Provision | NIST Control(s) | Status | Evidence Location |
+|---|---|---|---|
+| §164.312(a)(1) Access Control | AC-2, AC-3, AC-6, IA-2 | ✅ Compliant (M-004 in progress) | SAR, Q1 access review, POA&M M-004 |
+| §164.312(a)(2)(i) Unique User ID | IA-2 | ✅ Compliant | SAR, IAM inventory, EventBridge alert |
+| §164.312(a)(2)(ii) Emergency Access | CP-2, IR-4 | ⚠️ In Progress | POA&M 001 AT RISK, compensating controls active |
+| §164.312(a)(2)(iii) Auto Logoff | AC-11 | ✅ Compliant | SAR, Day 79 self-assessment |
+| §164.312(a)(2)(iv) Encryption/Decryption | SC-28 | ✅ Compliant | SAR, Config rules, Audit Manager |
+| §164.312(b) Audit Controls | AU-2, AU-9, AU-12 | ⚠️ Partial — Denied access logging gap | SAR, Day 79 self-assessment finding, POA&M pending |
+| §164.312(c)(1) Integrity | SI-7, AU-10 | ✅ Compliant (POA&M 009 for previous value logging) | SAR, RDS PITR verification |
+| §164.312(d) Authentication | IA-2 | ✅ Compliant | SAR, MFA bypass testing |
+| §164.312(e)(1) Transmission Security | SC-8 | ✅ Compliant | SAR, TLS verification |
+
+---
+
+## Why Honest Compliance Mapping Matters
+
+The two ⚠️ entries in the compliance summary — the CP-2 emergency access procedure in progress and the AU-12 denied-access logging gap — might tempt a less honest compliance mapping approach to show them as compliant: the CP-2 has compensating controls, and the AU-12 gap was self-identified and is being addressed. An optimistic compliance table could show all green.
+
+The honest mapping shows the partial status because an OCR auditor or formal assessor who finds these gaps during an investigation — and finds that the compliance mapping represented them as compliant — is looking at a documentation credibility problem, not just a control gap. The organization that finds its own gaps and documents them honestly is in a fundamentally different position than one that discovers gaps under audit pressure.
+
+This connects to the Touchstone Medical Imaging settlement from Day 80: inaccurate representations during an OCR investigation resulted in a significantly larger settlement than the underlying violations would have warranted. Honest documentation, even when it shows gaps, is the only sustainable compliance posture.
+
+---
+
+## A Real-World Example That Made This Click
+
+The four-layer compliance mapping approach — from requirement through NIST control through SSP implementation through evidence chain — is validated by how OCR structures its HIPAA compliance investigations.
+
+The **2019 University of Rochester Medical Center settlement ($3 million)** involved OCR finding that URMC had impermissibly disclosed ePHI — specifically through unencrypted personal health information on lost and stolen portable devices. The investigation found that URMC's risk analysis had identified unencrypted mobile devices as a risk, but the risk management process had not addressed the risk with appropriate controls.
+
+The compliance mapping lesson: URMC could demonstrate that they had conducted a risk analysis (Layer 1 requirement met) and had identified the risk (Layer 2 control awareness). The failure was in Layers 3 and 4 — the implementation did not address the identified risk, and the evidence chain would have shown unencrypted devices still in use despite the risk analysis.
+
+A compliance mapping that traces through all four layers would have made this gap visible before the breach: the encryption requirement (§164.312(a)(2)(iv)) mapped to the risk analysis finding, mapped to the implementation status, would have shown "risk identified, implementation incomplete." That gap representation in the compliance mapping is what drives the remediation that prevents the incident.
+
+---
+
+## What's Next
+
+Day 89 develops the Risk Summary section — the current-state risk register with the evolved threat environment from Q1 monitoring, the threat landscape changes identified through HC3 briefings, and the residual risk picture after controls and POA&M management.
+
+---
+
+## Resources I Found Helpful Today
+- [HHS OCR – HIPAA Security Rule Guidance: Technical Safeguards](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [NIST SP 800-66 Rev 2 – Implementing the HIPAA Security Rule](https://csrc.nist.gov/publications/detail/sp/800-66/rev-2/final)
+- [NIST SP 800-53 Rev 5 – HIPAA Control Mapping Appendix](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [HHS OCR – University of Rochester Medical Center Settlement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/urmc/index.html)
+- [HHS OCR – HIPAA Audit Protocol](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html)
+
+---
+
+*#GRC #ComplianceMapping #HIPAA #NISTRMF #OpenMRS #HealthcareSecurity #TraceableEvidence #100DaysOfGRC #AWS #Day88*
