@@ -1,136 +1,274 @@
-#  Day 95: Capstone Part 9 – Compile the GRC Plan Document | 100 Days of GRC
-
-##  Objective
-
-Today marks a major milestone: compiling the **Governance, Risk, and Compliance (GRC) Plan Document** for our OpenMRS-on-AWS project. After weeks of designing security controls, identifying risks, defining policies, and establishing monitoring procedures, it’s time to **bring it all together into a single, cohesive document**.
-
-This isn’t just paperwork — it’s our **living blueprint** for securing OpenMRS and staying compliant over time. This GRC Plan will serve as a guide for stakeholders, team members, auditors, and future administrators who manage or assess the security of this system.
+# Day 95 – Capstone Part 9: POA&M — The Authorization Story | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Purpose of the GRC Plan
+## The Document That Tells the Whole Story
 
-> “What is the system, what could go wrong, and how are we protecting it?”
+Day 94 completed the continuous monitoring plan — the operational schedule that converts security from a one-time setup into ongoing stewardship, with the detection versus assurance distinction at its center. The monitoring plan is the most operationally complex section of the capstone because it has to describe a program that is actually running, not one being designed from scratch.
 
-The GRC Plan answers those questions. It documents our structured, proactive approach to managing security and compliance, including:
-- System scope and environment
-- Risk identification and treatment
-- Security controls implemented
-- Policy and procedural governance
-- Monitoring and audit preparation
+Day 95 addresses the POA&M. I want to be direct about why the POA&M is the capstone section that most directly demonstrates what kind of security program this is — and why it deserves its own full section rather than being appended to another section as a table of open items.
 
-By consolidating our efforts into one document, we make it **readable, transferable, and actionable**.
+The POA&M is the only document in the entire authorization package that shows the AO how the organization has managed its security obligations over time. The SSP shows what controls are implemented. The SAR shows what the assessor found. The risk register shows what risks have been identified. The POA&M shows what the organization did about the gaps that were found — which ones were remediated and when, which ones were formally accepted and why, which ones remain open and what the genuine plan is to close them.
+
+An AO who reads the POA&M history — what was identified at assessment, what was remediated pre-authorization, what was deferred with conditions, what has been closed during the monitoring period, what is currently open, what the aging trend looks like — has a complete picture of organizational security governance. This is information that no other document provides.
 
 ---
 
-##  GRC Plan Document Structure
+## What I Worked On Today
 
-### 1. **Introduction & System Overview**
-> *“What is OpenMRS, where does it live, and why does it matter?”*
-
-- **System**: OpenMRS is an open-source electronic medical record (EMR) system used by Clinic X to manage patient care.
-- **Hosting**: Deployed on Amazon Web Services (AWS) using EC2, RDS (MySQL), S3, CloudWatch, IAM, and VPC configurations.
-- **Scope**: This plan applies to the OpenMRS application, supporting AWS infrastructure, storage, and administrative access controls.
+The POA&M section draws from: Day 65 (initial POA&M development post-assessment), Day 66 (risk response and POA&M entry decisions), Day 72 (M-4 authorization package updates reflecting monitoring findings), Day 78 (POA&M management discipline — ownership, aging, formal risk acceptance), and Q1 monitoring findings (M-001 through M-005, AU-12 self-assessment finding). Today I produce the complete current-state POA&M with aging analysis, closure record, and the program management narrative that connects the POA&M to the authorization story.
 
 ---
 
-### 2. **Roles & Responsibilities**
-> *“Who is responsible for what?”*
+## What Actually Clicked for Me
 
-| Role | Responsibility |
-|------|----------------|
-| **System Owner** | Oversees OpenMRS implementation and budget (e.g., Clinic IT Director) |
-| **AWS Administrator** | Manages cloud infrastructure, backups, IAM, and patching |
-| **GRC Lead (You)** | Owns the GRC Plan, policies, and continuous monitoring |
-| **Security Analyst** | Performs log reviews, alerts, and vulnerability scans |
-| **End-Users (Clinicians)** | Follow secure usage policies; report anomalies |
+The insight that clarified the POA&M section today is the difference between a POA&M that records history and a POA&M that tracks commitments.
 
----
+A history-recording POA&M documents what was found and what has been done. It is useful as an audit trail. It answers the question "what happened?" and an auditor can reconstruct the remediation timeline from it.
 
-### 3. **Risk Assessment Summary**
-> *“What could go wrong and what have we done about it?”*
+A commitments-tracking POA&M documents what the organization has promised to do and holds the organization accountable to those promises. It answers the question "what is the organization obligated to do, and is it on track?" An AO who reads a commitments-tracking POA&M can tell immediately whether the organization is managing its security obligations responsibly or deferring them indefinitely.
 
-| Risk | Rating | Mitigation |
-|------|--------|------------|
-| SQL Injection Attack | High | WAF enabled, input validation enforced |
-| Unauthorized Admin Access | High | IAM roles restricted, MFA required |
-| Misconfigured S3 Bucket | High | AWS Config alerts, access audits |
-| Server Outage | Medium | Multi-AZ RDS, backup EC2 AMI |
-| Insider Misuse | Medium | Audit logs, least privilege enforced |
+The difference between these two is visible in two specific areas: the scheduled completion date field and the milestone structure for items that cannot be closed in a single action. An item with a scheduled completion date of "Q3 2024" that is now in Q1 2025 with no explanation has been recorded in the history-recording mode — the date was set and missed without documentation of why. An item with a missed date that includes a documented explanation ("original date missed because CP-2 Milestone 3 meeting was blocked by unavailable participant; AO notified; revised date set for 15 days after Milestone 3 completion") is being managed in the commitments-tracking mode — the organization has explained the miss, documented the revised plan, and maintained AO visibility.
 
- A full risk register is available in the appendices.
+The OpenMRS POA&M is managed in commitments-tracking mode. Every open item has a clear owner, a current target date, and documented milestone progress. The one missed target (CP-2 authorization condition AT RISK) has been formally communicated to the AO. This is what POA&M discipline looks like in practice.
 
 ---
 
-### 4. **Control Implementation Summary**
-> *“What security controls protect the system?”*
-
-**Access Control**
-- IAM policies with least privilege
-- Role-Based Access Control in OpenMRS
-- MFA enforced for AWS and administrative logins
-
-**Data Protection**
-- RDS encrypted at rest
-- HTTPS and SSL/TLS enforced in transit
-- S3 buckets configured with encryption and versioning
-
-**Monitoring**
-- AWS CloudTrail logs all actions
-- AWS CloudWatch alarms configured for anomalies
-- OpenMRS audit logs enabled and reviewed
-
-**Incident Response**
-- NIST-aligned IRP in place (Prepare, Detect, Contain, Eradicate, Recover, Learn)
-- Response roles defined; communication playbook prepared
-
-**Backup & Recovery**
-- Automated daily backups to encrypted S3
-- Quarterly backup restore tests documented
+## Complete Current-State POA&M
 
 ---
 
-### 5. **Policies & Procedures**
-> *“What rules and steps guide secure behavior?”*
+### Items Closed During the Authorization Period
 
-- **Access Control Policy** – Updated to reflect OpenMRS/AWS user management
-- **Incident Response Plan (IRP)** – Defines how to handle security events
-- **Backup & Recovery Procedure** – Details backup frequency, testing, and restoration
-- **Acceptable Use Policy (AUP)** – Defines proper use expectations for end users
-- **Change Management Procedure** – Governs updates to OpenMRS or AWS configuration
-- **Training Plan** – Role-based, HIPAA-aligned, includes phishing simulation and onboarding
+The following items were identified at assessment and have been closed — fully remediated during the authorization period:
 
-Policies are referenced here and stored in **Appendix B**.
+**POA&M-002 — IR-2: Incident Response Training**
+*Original finding:* Incident response training had not been conducted with all current staff at assessment date.
+*Remediation:* Annual IR training completed for all staff within 30 days of authorization. Completion records on file.
+*Closed:* [date], pre-authorization
+*Evidence:* Training completion records, ISSO sign-off
 
----
+**POA&M-006 — AC-6: Least Privilege — IAM Role Scope**
+*Original finding:* Several IAM roles had permissions broader than required by current operational use.
+*Remediation:* IAM role review completed; permissions scoped to minimum required. IAM policy documentation updated in SSP.
+*Closed:* [date], Q1 monitoring period
+*Evidence:* IAM policy snapshots before/after, ISSO review record
 
-### 6. **Continuous Monitoring & Audit Plan**
-> *“How do we keep this plan effective and audit-ready?”*
+**POA&M-007 — SC-7: Boundary Protection — Security Group Audit**
+*Original finding:* One security group rule permitted inbound access from a broader IP range than required.
+*Remediation:* Security group rule updated to restrict to approved source IP ranges. Config rule `restricted-ssh` now COMPLIANT.
+*Closed:* [date], pre-authorization
+*Evidence:* AWS Config compliance record, security group change CloudTrail entry
 
-| Task | Frequency | Owner | Audit Evidence |
-|------|-----------|-------|----------------|
-| Review AWS CloudTrail logs | Weekly | Security Analyst | Log review email or report |
-| Verify backup completion | Daily | DevOps | Screenshot or success log |
-| Run vulnerability scans | Monthly | IT Admin | Nessus report or scan output |
-| IAM access review | Quarterly | GRC Lead | Signed access review form |
-| Restore from backup (test) | Quarterly | DevOps | Validation report |
+**POA&M-010 — CP-9: Backup Architecture Documentation**
+*Original finding:* CP-9 SSP narrative did not fully describe the cross-region S3 backup architecture.
+*Remediation:* SSP CP-9 section updated with complete backup architecture description including S3 cross-region replication and retention schedule.
+*Closed:* [date], pre-authorization
+*Evidence:* SSP v1.1 CP-9 section, ISSO review record
 
-- Monitoring tasks scheduled via secure calendar
-- Evidence stored in protected audit repository
-- Audit readiness includes pre-audit checklist, IRP drills, policy reviews
-
----
-
-### 7. **Appendices**
-> *Supporting docs to avoid crowding the main document.*
-
-- **Appendix A**: Full Risk Register (detailed list of risks, scores, treatment, owner)
-- **Appendix B**: Full Text of Policies (Access, IR, AUP, etc.)
-- **Appendix C**: AWS Architecture Diagram  
-- **Appendix D**: Monitoring Checklist Template  
-- **Appendix E**: Compliance Mapping (HIPAA & NIST 800-53 references)
+**M-001 — Tomcat CVE Patch**
+*Finding source:* Q1 monitoring, Inspector scan
+*Finding:* Apache Tomcat version in use had a known CVE rated HIGH.
+*Remediation:* Patch applied within 24-hour SLA. Configuration tested post-patch. OpenMRS functionality verified.
+*Closed:* [date], Q1 monitoring period
+*Evidence:* Inspector before/after scan comparison, CloudTrail patch deployment record, post-patch test result
 
 ---
 
-### 🗺️ Sample AWS Architecture Diagram (Appendix C)
+### Items Currently Open
 
+---
+
+**POA&M-001 — CP-2: Contingency Plan / Clinical Downtime Procedures**
+*Control:* CP-2 (Contingency Plan)
+*Severity:* Moderate
+*Finding source:* Formal assessment
+*Authorization condition:* Yes — 90-day condition
+*Finding:* Clinical downtime procedures for OpenMRS unavailability were not documented, had not been reviewed by clinical leadership, and had not been tested by clinical staff.
+
+*Milestone plan:*
+- Milestone 1 (Complete): ISSO drafts downtime procedure outline — completed [date]
+- Milestone 2 (Complete): IT restoration procedure documented and quarterly restoration test completed — completed [date]
+- Milestone 3 (AT RISK): Clinical leadership review and approval meeting. Required participants: Health IT Manager (confirmed), Clinical Director (confirmed), Charge Nurse (not yet confirmed as of Q1 report). AO intervention requested to confirm Charge Nurse attendance.
+- Milestone 4 (Pending Milestone 3): Final CP-2 document signed; paper downtime forms designed, reviewed, and physically posted at clinical workstations; distribution confirmed.
+
+*Current status:* AT RISK — 12 days to 90-day condition deadline at Q1 reporting. Milestone 3 meeting scheduled. AO notified of AT RISK status.
+*Target completion date:* [original date] → revised to [date 5 days after Milestone 3 meeting completion]
+*Owner:* ISSO (Milestones 1-2), Health IT Manager (Milestone 3 participant confirmation), ISSO + Health IT Manager (Milestone 4)
+*Risk if not completed:* Missed authorization condition triggers mandatory AO re-authorization evaluation. Clinical unavailability incident without tested downtime procedures creates patient care risk.
+
+---
+
+**POA&M-003 — CP-4: Alternate Site Testing**
+*Control:* CP-4 (Contingency Plan Testing — Alternate Site)
+*Severity:* Low
+*Finding source:* Formal assessment
+*Finding:* Alternate processing site recovery has not been tested — cross-region us-west-2 backup restoration has not been exercised.
+*Remediation plan:* Conduct cross-region restoration test using S3 cross-region backup export as the restoration source. This is a different test from the quarterly Q1 restoration test (which tested us-east-1 RDS snapshot recovery).
+*Current status:* On track — scheduled for [date], within second-year monitoring cycle
+*Target completion date:* [date]
+*Owner:* ISSO + IT Administrator
+*Progress to date:* Cross-region backup data integrity confirmed quarterly. Full restoration test procedure documented. Test not yet executed.
+
+---
+
+**POA&M-004 — IR-3: Incident Response Tabletop Exercise**
+*Control:* IR-3 (Incident Response Testing)
+*Severity:* Low
+*Finding source:* Formal assessment
+*Finding:* No tabletop exercise has been conducted to test incident response capability against a realistic scenario.
+*Remediation plan:* Conduct tabletop with 2am/primary-contact-unreachable scenario (designed Day 81). Participants: ISSO, IT Administrator, Health IT Manager. Post-tabletop: IRP updated to address any gaps identified by the scenario.
+*Current status:* Scheduled for [date]. Must be completed before re-authorization assessment.
+*Target completion date:* [date]
+*Owner:* ISSO (scenario facilitator), all three participants
+*Progress to date:* Scenario designed and documented. Participants identified. Date being confirmed.
+*Why this is pre-authorization priority despite Low severity:* The IR-3 tabletop is the single activity that converts the IRP from a documented capability into a demonstrated capability. Its severity classification (Low) reflects the severity of the control gap, not the importance of the exercise to the program's overall readiness posture.
+
+---
+
+**POA&M-005 — AU-6: Automated Anomaly Detection**
+*Control:* AU-6 (Audit Record Review, Analysis, and Reporting)
+*Severity:* Low
+*Finding source:* Formal assessment
+*Finding:* Audit log review is currently manual and periodic; automated anomaly detection (pattern analysis across log volume) is not implemented.
+*Remediation plan:* Evaluate CloudWatch Log Insights for automated pattern detection queries; implement initial query set for: failed login rate threshold, after-hours access patterns, bulk record access.
+*Current status:* On track — evaluation in progress within second-year monitoring enhancement plan
+*Target completion date:* [date]
+*Owner:* ISSO + IT Administrator
+*Progress to date:* CloudWatch Log Insights capabilities reviewed. Initial query design in progress.
+
+---
+
+**POA&M-008 — AT-2: Quarterly Security Awareness Review**
+*Control:* AT-2 (Literacy Training and Awareness)
+*Severity:* Low
+*Finding source:* Formal assessment
+*Finding:* Annual training completed; quarterly awareness reinforcement activities not yet established at assessment date.
+*Remediation plan:* Establish quarterly awareness campaign cadence (newsletter, targeted communications, phishing simulation — Day 92 training program design).
+*Current status:* Monitoring — Q1 quarterly awareness campaign delivered. Phishing simulation program design complete; first simulation scheduled for Q2.
+*Target completion date:* [date — phishing simulation program first execution]
+*Owner:* ISSO
+*Progress to date:* Q1 awareness campaign delivered. GoPhish setup in progress. Staff communication template drafted per Day 85 communication scenario (funding request approved).
+
+---
+
+**POA&M-009 — AU-3: Audit Record Content — Previous Value Logging**
+*Control:* AU-3 (Content of Audit Records)
+*Severity:* Low
+*Finding source:* Formal assessment
+*Finding:* Audit records for record modifications do not capture the previous field value — only the new value and the modifier identity are captured. This limits forensic ability to reconstruct what data existed before a modification.
+*Status:* Decision pending between two options:
+- Option A: Implement application-layer solution to capture field-level change history in OpenMRS database triggers (estimated development effort: [hours]; requires CM-3 SIA and testing)
+- Option B: Update SSP and formally accept residual risk — document that RDS PITR (35-day window) provides compensating control for data reconstruction within the retention window; accept that forensic reconstruction beyond 35 days is not supported
+*Decision timeline:* ISSO recommendation to Health IT Manager and AO by [date]. AO acceptance required if Option B (formal risk acceptance).
+*Owner:* ISSO (recommendation), AO (final decision if Option B)
+*Current status:* Analysis complete. ISSO leans toward Option B given the compensating control adequacy and the development complexity of Option A for a Low severity finding.
+
+---
+
+**M-003 — CP-9: RTO Optimization**
+*Control:* CP-9 (System Backup)
+*Severity:* Low
+*Finding source:* Q1 monitoring — quarterly restoration test
+*Finding:* Q1 restoration test completed in 3:47 against 4:00 RTO target. Margin: 13 minutes. One procedure step required unplanned manual intervention (S3 export format had changed since procedure was last updated). Trend concern: if RTO margin continues to narrow, a single additional complication during restoration could cause an RTO miss.
+*Remediation plan:* Update restoration procedure to address S3 export format change. Review restoration test results from Q2 and Q3 to confirm margin is stabilizing or improving. If Q2 test shows further margin reduction, escalate to Moderate severity.
+*Current status:* Open — 60-day target. Procedure update in progress.
+*Target completion date:* [date]
+*Owner:* ISSO + IT Administrator
+*Progress to date:* S3 format change identified and documented. Procedure update draft in progress. Q2 restoration test will be the first data point after the procedure update.
+
+---
+
+**M-004 — AC-2: Role-Change Notification Process**
+*Control:* AC-2 (Account Management)
+*Severity:* Low
+*Finding source:* Q1 monitoring — quarterly access review
+*Finding:* Quarterly access review identified one clinical staff member with role assignment (Senior Clinician with expanded prescription authority) that reflected a 6-month-old internal role change. The role change had not triggered an ISSO notification because the HR-to-ISSO notification process did not exist in documented form.
+*Remediation plan:* Document the HR-to-ISSO notification requirement in a formal process step; incorporate into the Change Management Policy (Day 91 second-year development priority); add IS-AC-001 Section 7 update to require HR notification to ISSO within 48 hours of any role change affecting OpenMRS permissions.
+*Current status:* Open — 45-day target. IS-AC-001 update drafted. HR notification process under review with Health IT Manager.
+*Target completion date:* [date]
+*Owner:* ISSO (policy update), Health IT Manager (HR process update)
+*Progress to date:* The over-privilege instance identified in Q1 was corrected within 24 hours. The process gap is the focus of this item — ensuring the detection that currently depends on the quarterly review is supplemented by proactive notification.
+
+---
+
+**AU-12 Finding (Day 79 Self-Assessment) — Pending POA&M Entry**
+*Control:* AU-12 (Audit Record Generation)
+*Severity:* Moderate (confirmed — denied access events not logged; affects detection capability for RS-001 and RS-005)
+*Finding source:* ISSO semi-annual audit log completeness test, Day 79
+*Finding:* Denied access attempts (failed authorization checks where a user attempts to access records outside their role scope) are not generating audit log entries. Successful access, successful authentication, and record modifications are logged correctly. Only the denied access event type is missing.
+*Status:* POA&M entry creation in progress. AO notification required (Moderate finding per authorization condition). This is the program's most significant current control effectiveness gap.
+
+*Proposed POA&M entry:*
+- Control: AU-12
+- Severity: Moderate
+- Finding: Denied access events not captured in OpenMRS audit log
+- Impact: Reduces detection capability for credential probing (RS-001) and insider access probing (RS-005); limits forensic reconstruction of pre-breach access attempts
+- Remediation: Investigate OpenMRS audit log module configuration for denied access event capture; if configuration gap, implement and verify; if application limitation, evaluate alternative (CloudWatch metric filter on access denial HTTP response codes as compensating control)
+- Compensating control during remediation: GuardDuty behavioral anomaly detection provides partial coverage for unusual access patterns; quarterly access review provides periodic access rights verification
+- Target completion: [date, within 90 days of POA&M creation]
+- Owner: ISSO + IT Administrator
+- AO notification: Required; included in next quarterly POA&M report with AT RISK notification
+
+---
+
+## POA&M Aging Analysis
+
+The most important trend metric for POA&M health is whether closures are outpacing openings over time.
+
+**Year one summary:**
+- Items opened at assessment: 10 (POA&M-001 through POA&M-010)
+- Items opened during monitoring: 3 (M-001, M-003, M-004) + 1 pending (AU-12)
+- Items closed: 5 (POA&M-002, POA&M-006, POA&M-007, POA&M-010, M-001)
+- Items currently open: 9 (POA&M-001, -003, -004, -005, -008, -009, M-003, M-004, AU-12 pending)
+
+**Aging analysis:**
+- Items open less than 90 days: 3 (M-003, M-004, AU-12 pending)
+- Items open 90-180 days: 4 (POA&M-003, -004, -005, -008)
+- Items open more than 180 days: 2 (POA&M-001 [authorization condition], POA&M-009 [decision pending])
+
+**Assessment:** The POA&M aging is within acceptable range for a first authorization year. No item has been deferred indefinitely without explanation. The two items over 180 days both have documented status: POA&M-001 has a milestone plan with an identified blocker and AO notification; POA&M-009 has a documented decision pending with a decision timeline.
+
+The Day 78 governance signal — items beyond 180 days without closure are a governance failure signal — applies conditionally: items beyond 180 days with documented active management and AO visibility are not governance failures; they are items in the portion of the POA&M that requires sustained organizational attention. The signal fires for items that have simply been deferred without plan.
+
+---
+
+## What the Complete POA&M Tells the AO
+
+An AO reading the complete POA&M history sees: 5 items closed in the first authorization year, including the most significant technical gap (POA&M-007, security group scope) and the assessment-identified training gap (POA&M-002). The continuous monitoring program produced 4 new items — including two that involved process improvements to existing controls (M-004 access review accuracy, M-003 restoration procedure currency). The program's most significant current gap (AU-12, Moderate) was self-identified by the ISSO's proactive self-assessment, not discovered by an external auditor.
+
+This is the authorization story the POA&M tells: an organization that identifies its own gaps, closes them at a rate that keeps pace with new discoveries, manages the open items with genuine accountability, and maintains AO visibility into the items that require executive attention.
+
+The alternative — an organization that has the same 10 items open at re-authorization as at initial authorization, with no closures and no milestone progress — tells a different and less favorable story. POA&M management discipline is how the organization demonstrates to the AO that the conditional authorization was well-placed.
+
+---
+
+## A Real-World Example That Made This Click
+
+The commitment-tracking value of the POA&M — showing what the organization promised to do and whether it delivered — is illustrated by the **2019 Premera Blue Cross settlement ($6.8 million)**.
+
+The OCR investigation found that Premera had a vulnerability in its IT infrastructure that was identified during an audit in 2012 and documented in their remediation tracking. The vulnerability was not remediated. In 2015, attackers exploited the same vulnerability to breach approximately 10.4 million records.
+
+The Premera case is exactly the failure mode that a commitments-tracking POA&M prevents. The vulnerability was documented — the history-recording function worked correctly. The remediation commitment was not tracked and enforced — the commitments-tracking function was absent. Between 2012 and 2015, the vulnerability sat in a remediation log without escalation, without milestone management, without AO visibility.
+
+For the OpenMRS program, the Day 78 POA&M management discipline — 15-day check-in, 30-day formal status, 40-day supervisor escalation, items beyond 180 days without closure as a governance failure signal — is the operational implementation of the lesson the Premera case teaches. The POA&M is not a list of known vulnerabilities. It is an accountability system for organizational promises about managing those vulnerabilities.
+
+---
+
+## What's Next
+
+Day 96 produces the final synthesis — stepping back from the nine capstone sections to examine what the integrated view of the complete OpenMRS GRC program reveals, and what the second-year program looks like as a whole. The capstone is nearly complete.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – POA&M Management and Authorization](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [OMB M-02-01 – Guidance for Preparing and Submitting Security Plans of Action and Milestones](https://www.whitehouse.gov/wp-content/uploads/legacy_drupal_files/omb/memoranda/2002/m02-01.pdf)
+- [HHS OCR – Premera Blue Cross Resolution Agreement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/premera/index.html)
+- [CISA – Plan of Action and Milestones (POA&M) Process Guide](https://www.cisa.gov/sites/default/files/publications/FY20_FISMA_CIO_Metrics.pdf)
+- [FedRAMP – POA&M Template and Guidance](https://www.fedramp.gov/documents-templates/)
+
+---
+
+*#GRC #POAandM #AuthorizationStory #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #AccountabilitySystem #100DaysOfGRC #AWS #Day95*
