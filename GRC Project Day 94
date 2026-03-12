@@ -1,103 +1,237 @@
-#  Day 94: Capstone Part 8 – Continuous Monitoring & Audit Readiness | 100 Days of GRC
-
-## � Objective
-
-Today’s goal was to build a **Continuous Monitoring** and **Audit Readiness** strategy for our OpenMRS deployment on AWS. While we’ve implemented technical controls and governance policies, security isn’t a one-time job — it’s a **living system** that needs continuous oversight.
-
-**Continuous monitoring** ensures that security risks, control failures, and compliance gaps are detected early, while **audit readiness** ensures that we can provide clear, timely evidence of security practices and compliance activities — whenever required.
+# Day 94 – Capstone Part 8: Continuous Monitoring and Audit Readiness | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Why Continuous Monitoring & Audit Readiness Matter
+## The Monitoring Program That Has Already Run for Eight Months
 
--  **Threats evolve**: New vulnerabilities, phishing campaigns, or misconfigurations can appear any time.
--� **Environments change**: Cloud resources are dynamic. Someone might open a port, change a policy, or spin up an insecure service.
--  **Audits happen**: Whether internal reviews or external HIPAA audits, you must show documentation and proof of compliance efforts.
+Day 93 completed the incident response and contingency planning section — documenting the three playbooks, the HIPAA breach notification workflow, the CP-2 AT RISK status, and the IR-3 tabletop gap. The common thread across both areas was the documented-readiness versus demonstrated-readiness distinction: the IRP is documented but the tabletop has not been executed; the CP-2 is drafted but not yet adopted by clinical leadership.
 
->  Continuous monitoring ensures we’re always ready — not just once a year.
+Day 94 develops the continuous monitoring plan. But unlike the earlier capstone sections — which were drawing from completed work and synthesizing it into a coherent program document — the continuous monitoring plan has a specific advantage: the monitoring program has actually been running. Days 69 through 74 executed the Monitor step across six tasks (M-1 through M-6). Q1 monitoring produced real findings: M-001 (Tomcat CVE patch), M-002 (CM-3 IAM compliance gap), M-003 (RTO margin trend), M-004 (over-privileged role from role change), M-005 (HC3 ransomware briefing), and the HC3 threat intelligence update that elevated two risk ratings.
 
----
-
-##  Core Elements of Continuous Monitoring
-
-### Log Reviews
-- Monitor AWS CloudTrail and OpenMRS application logs
-- Detect signs of misuse, privilege escalation, or data access anomalies
-
-###  Automated Alerts
-- Use AWS CloudWatch Alarms for key metrics (e.g., CPU spikes, failed logins, S3 bucket access)
-- Set SNS notifications for critical events like DB restarts or security group changes
-
-### Vulnerability Scanning
-- Conduct monthly vulnerability scans on OpenMRS servers
-- Use tools like Nessus or AWS Inspector to identify known CVEs
-
-###  Compliance Checks
-- Quarterly reviews of:
-  - Backup success status
-  - IAM user and role permissions
-  - Encryption settings (RDS, S3)
-  - MFA enforcement
-  - Patch status of EC2 instances
-
-###  Documentation Updates
-- Keep policies, diagrams, recovery plans, and logs up-to-date
-- Ensure alignment with HIPAA and NIST expectations
+The capstone monitoring plan is therefore not a design document — it is a documented description of an operational program, updated to reflect the second-year enhancements that eight months of experience have identified.
 
 ---
 
-##  Continuous Monitoring Tools for OpenMRS on AWS
+## What I Worked On Today
 
-| **Tool/Service** | **Purpose** |
-|------------------|-------------|
-| **AWS CloudWatch** | Monitor system health, resource utilization, and trigger alarms |
-| **AWS CloudTrail** | Record AWS API activity (who did what and when) |
-| **AWS Config** | Continuously assess AWS resources against compliance rules (e.g., S3 encryption) |
-| **AWS Security Hub** | Aggregate alerts and posture across AWS services |
-| **OpenMRS Application Logs** | Monitor user access and application-level activity |
-| **Vulnerability Scanner (e.g., Nessus)** | Identify system-level weaknesses monthly |
-| **Backup Testing** | Restore OpenMRS from backup quarterly to validate recovery readiness |
+The continuous monitoring plan draws from: the Day 52 continuous monitoring strategy, the M-2 ongoing assessment program (Days 70-71), the M-3 ongoing risk response (Day 71), the M-4 authorization package updates (Day 72), the M-5 reporting program (Day 73), the M-6 ongoing authorization (Day 74), the Day 77 AWS-native automation section, the Day 79 self-assessment findings, the Day 83 metrics framework, and the Day 84 dashboard design. Today I produce the complete monitoring plan that integrates all of those components into a single operational reference.
 
 ---
 
-##  Hands-On Activity: My Monitoring Checklist
+## What Actually Clicked for Me
 
-| **Monitoring Item** | **Frequency** | **Owner** | **Audit Evidence** |
-|----------------------|----------------|-----------|---------------------|
-| Review CloudTrail logs for unusual AWS admin activity | Weekly | Security Analyst | Email summary log review report saved |
-| Verify daily RDS backups completed successfully | Daily | DevOps Engineer | Backup success logs or screenshots from AWS Console |
-| Run vulnerability scan on OpenMRS server | Monthly | IT Admin | Scanner report PDF stored in audit folder |
-| Review OpenMRS audit log for suspicious data access | Weekly | Privacy Officer | Log review checklist signed off and stored |
-| Restore a backup from S3 to test data recovery | Quarterly | DevOps | Restore report with timestamp and verification steps |
-| Check IAM roles and access permissions | Quarterly | Cloud Security Engineer | IAM policy snapshot and access review form |
-| Ensure S3 buckets and RDS are encrypted | Monthly | Compliance Officer | AWS Config rule evaluation reports |
+The insight that clarified the monitoring plan today is the difference between monitoring as detection and monitoring as assurance.
 
->  **Pro Tip**: Each monitoring task should produce a small piece of evidence. A quick email, signed log, or PDF screenshot is enough to keep you audit-ready.
+Monitoring as detection asks: has something gone wrong? GuardDuty, CloudTrail alerts, Config NON_COMPLIANT notifications — these are detection mechanisms. They fire when a security-relevant event occurs. They are reactive: the event happens, the alert fires, the ISSO investigates.
+
+Monitoring as assurance asks: is the control still working as designed? The quarterly access review, the quarterly backup restoration test, the semi-annual audit log completeness test, the CP-3 retention check — these are assurance mechanisms. They run on a schedule regardless of whether any alerting has fired. They are proactive: the ISSO periodically verifies that the controls are effective, rather than waiting for a failure to reveal a degraded control.
+
+The AU-12 finding from Day 79 is the most important illustration of why assurance monitoring matters. AWS Config was monitoring for CloudTrail enablement, log encryption, and tamper detection — detection mechanisms that were all functioning correctly. None of the detection mechanisms caught the fact that denied access events were not being captured by the OpenMRS audit log module. The gap was found through a proactive assurance test — the ISSO manually tested whether a denied access attempt generated an audit log entry. It did not.
+
+A monitoring program built entirely on detection mechanisms would not have found this gap. The assurance mechanisms in the monitoring schedule are what found it. This is why the monitoring calendar must include both.
 
 ---
 
-##  Reflection – Monitoring = Confidence
-
-Today was a reminder that **security isn't just about setup — it's about stewardship.**
-
-It’s one thing to configure encryption or IAM roles. It’s another to ensure they **stay correct over time**, especially in the cloud where settings can drift, people can make changes, and attackers are constantly probing for weakness.
-
-The **real power of continuous monitoring** is that it turns security into a routine — **no surprises, no scrambling during audits, no hoping everything works**. You *know* it does, because you're checking regularly.
-
-Personally, I believe our **log review + backup testing** strategy is the cornerstone of this plan. Logs tell the story of what’s happening, and backup testing ensures that no matter what happens, we can recover.
-
->  *Takeaway*: A mature security program isn’t measured by how secure your system is today — but how confident you are it will remain secure tomorrow.
+## Continuous Monitoring Program — Complete Operational Design
 
 ---
 
-## 🔗 Suggested Search Terms
+### Automated Continuous Monitoring (Real-Time Detection)
 
-- `Continuous monitoring checklist for cloud`  
-- `AWS CloudTrail audit log review`  
-- `HIPAA audit readiness best practices`  
-- `Security Hub vs AWS Config comparison`  
-- `Vulnerability scanning schedule healthcare`
+These mechanisms run continuously without ISSO initiation. They fire alerts when a security-relevant event occurs.
+
+**AWS Config — 22 Managed Rules:**
+Config continuously evaluates the AWS environment against the configured compliance rules. NON_COMPLIANT findings generate an EventBridge event that triggers an SNS notification to the ISSO within minutes of the configuration change. Current rule categories and representative rules:
+
+*Encryption:* `rds-storage-encrypted`, `s3-bucket-server-side-encryption-enabled`, `ec2-ebs-encryption-by-default`, `kms-cmk-not-scheduled-for-deletion`
+
+*Network security:* `vpc-flow-logs-enabled`, `restricted-ssh`, `no-unrestricted-admin-ports`, `s3-bucket-level-public-access-prohibition`
+
+*Audit logging:* `cloud-trail-enabled`, `cloudtrail-s3-dataevents-enabled`, `cloudwatch-log-group-encrypted`
+
+*IAM:* `iam-password-policy`, `iam-root-access-key-check`, `mfa-enabled-for-iam-console-access`, `iam-user-no-policies-check`
+
+*Backup:* `rds-automatic-minor-version-upgrade-enabled`, `db-instance-backup-enabled`
+
+Config compliance status is reviewed at each quarterly assessment cycle and is part of the Audit Manager evidence collection for both NIST 800-53 and HIPAA frameworks.
+
+**AWS GuardDuty:**
+Threat detection service monitoring VPC flow logs, CloudTrail management events, and DNS logs for indicators of compromise. Finding categories relevant to the OpenMRS environment: UnauthorizedAccess (credential use from unusual location), CryptoCurrency (mining activity — ransomware staging indicator), Discovery (reconnaissance activity), Persistence (IAM credential exfiltration).
+
+GuardDuty findings are aggregated in Security Hub and generate ISSO notification for MEDIUM and above findings. LOW findings are reviewed in the monthly monitoring summary. Finding suppression rules reviewed quarterly — the Day 77 alert fatigue discipline: no finding is suppressed without documented rationale.
+
+**AWS Security Hub:**
+Aggregates findings from Config, GuardDuty, Inspector, and Audit Manager. Two active standards: AWS Foundational Security Best Practices (FSBP) and NIST SP 800-53. Monthly Security Hub posture review is included in the M-2 assessment schedule. Suppression review is quarterly.
+
+**EventBridge Rules (Custom Alerts):**
+Following the A-7 and M-002 findings, EventBridge rules were added to provide real-time ISSO notification for: IAM entity creation (new users, roles, groups), CloudTrail modification or deletion events, and security group rule changes. These custom rules address the gap between what Config monitors (configuration states) and what the ISSO needs immediate visibility into (specific change events regardless of whether they produce a Config violation).
 
 ---
 
-📅 **Next Up (Day 95)**: I’ll start compiling everything we’ve done into a unified **OpenMRS GRC Plan Document** — bringing together scope, risks, controls, policies, training, monitoring, and more into a cohesive and professional security package. Almost there! 🚀📘
+### Monthly Assessment Activities
+
+**Vulnerability Management:**
+AWS Inspector runs automated scans monthly against the EC2 instance, producing a prioritized finding list by CVE severity. OWASP Dependency-Check scans the OpenMRS application dependencies monthly. The IT Administrator reviews findings and patches per the SLA: Critical CVEs within 24 hours, High within 7 days, Medium within 30 days. ISSO reviews patch completion against SLA (KPI-VM-1 target: ≥95% SLA compliance).
+
+Patch status is documented in the monthly monitoring summary with specific CVE references for any High or Critical findings.
+
+**CloudTrail Pattern Analysis:**
+The ISSO reviews the monthly CloudTrail summary for: unusual API call patterns, access from unexpected geographic locations, API calls occurring outside business hours, configuration changes not preceded by ISSO notification (CM-3 compliance check). This review is the mechanism for catching CM-3 lapses that EventBridge may not have flagged immediately.
+
+**Security Hub Posture Review:**
+ISSO reviews the Security Hub dashboard for: new FSBP or NIST 800-53 failing checks, trend in failing check count (increasing = degrading posture), any new HIGH or CRITICAL findings from Inspector or GuardDuty. Findings below threshold for immediate action are tracked for the quarterly review.
+
+**OpenMRS Community Advisory Review:**
+ISSO reviews the OpenMRS community forum and GitHub security advisories for: security patches affecting the deployed version, new vulnerability disclosures in OpenMRS modules in use, dependency updates with security implications. Any HIGH or CRITICAL advisory triggers immediate SIA and CM-3 notification process.
+
+---
+
+### Quarterly Assessment Activities
+
+**Access Review (AC-2):**
+The quarterly access review uses the Role Authorization Matrix template updated after the M-004 finding. The review confirms: all active accounts match current employment status (employment verification with HR), all account role assignments match current job function (role accuracy verification — this is the M-004 gap that was missed in previous reviews), no dormant accounts (30-day threshold for privileged accounts, 90-day threshold for clinical staff), no shared accounts in use.
+
+Review completed by Health IT Manager. ISSO reviews the completed form, investigates any discrepancies, and documents the review in the monitoring log within 5 business days of receiving the form.
+
+**Backup Restoration Test (CP-4):**
+Quarterly restoration of the OpenMRS backup to a non-production environment. The test follows the procedure documented in CP-2 Milestone 2. ISSO documents: restoration start time, restoration completion time, RTO compliance (target: ≤4 hours), any procedure steps that required deviation from documented procedure, and current RTO margin. KRI-CP-1 tracking: RTO margin trend over four quarters.
+
+The Q1 test produced: completion time 3:47, RTO margin 13 minutes, procedure deviation noted (S3 export format change required manual step). POA&M M-003 addresses the procedure optimization. Q2 test will confirm whether the procedure update resolved the deviation.
+
+**Security Hub Suppression Review:**
+Review all active suppression rules in Security Hub. Confirm each suppression still has a valid rationale. Remove suppressions for findings that have been remediated or whose risk acceptance has expired. Add suppressions for new findings with documented rationale. Suppression discipline is the primary mechanism for preventing alert fatigue from accumulating over the authorization period.
+
+**IAM Access Analyzer Review:**
+AWS IAM Access Analyzer identifies resources with external or cross-account access that may not be intended. Quarterly review confirms no unexpected external access paths have been created for S3 buckets, IAM roles, KMS keys, or other resources.
+
+**CloudTrail Integrity Verification:**
+Quarterly confirmation that CloudTrail log file validation has not detected any tampered log files. Log file validation status is part of the Audit Manager evidence collection. This is the control that assures the ISSO that the audit trail itself has not been modified.
+
+---
+
+### Semi-Annual Assessment Activities
+
+**Audit Log Completeness Test (Added Day 79):**
+Semi-annual test procedure to verify that all required audit event types are being captured by the OpenMRS audit log module. The test was added to the monitoring schedule after the Day 79 self-assessment found that denied access events were not being logged despite AU-12 being assessed as compliant at the formal assessment.
+
+Test procedure: ISSO or designee executes five test scenarios and verifies the expected audit log entry for each:
+1. Successful login — confirm event captured with user ID, timestamp, session ID
+2. Failed login (wrong password) — confirm event captured with failure reason
+3. Denied access attempt (role attempting access outside permissions) — confirm event captured (**current gap — this test will remain FAIL until AU-12 remediation is complete**)
+4. Patient record modification — confirm event captured with previous and new values (AU-3 gap — current POA&M item 009)
+5. Administrative action (account creation) — confirm event captured with administrator ID and action details
+
+Results documented in the monitoring log. Any FAIL result requires ISSO investigation, POA&M entry if a new finding, and AO notification if the finding is Moderate or above.
+
+**CP-3 Retention Check (Added Day 79):**
+Semi-annual informal assessment of contingency plan knowledge retention among designated clinical staff. The ISSO selects two to three clinical staff members per semi-annual cycle and has a brief (5-10 minute) conversation: What would you do if OpenMRS stopped working in the middle of a patient encounter? Where are the paper downtime forms? Who do you call?
+
+Not graded. Not formal. Not anxiety-inducing. The goal is to find out whether the contingency plan training is being retained in a practically accessible form — whether the staff member who completed the module can describe the actual steps they would take. Q1 assessment found one of two staff tested could not describe the downtime procedure. This retention gap drives the CP-2 completion requirement (paper downtime forms posted at workstations) and the Q3 second-year awareness campaign ("The Downtime Procedure — Could You Do It at 2am?").
+
+---
+
+### Annual Assessment Activities
+
+**Annual Security Self-Assessment:**
+The comprehensive annual self-assessment follows the Day 79 methodology: NIST SP 800-53A test procedures applied to a selected set of controls, with priority given to controls with active POA&M items, controls that have shown degradation in the quarterly monitoring cycle, and controls in the HIGH impact baseline that have not been formally re-assessed since authorization.
+
+The self-assessment does not replace the formal assessment that will be conducted at re-authorization. It supplements the automated monitoring by applying human judgment to control effectiveness in a way that automated tools cannot — testing whether a staff member would actually recognize a suspicious email, not just whether the phishing simulation click rate is below threshold.
+
+**Risk Register Annual Update:**
+The ISSO reviews the complete risk register and updates likelihood ratings based on: the year's monitoring findings, the threat intelligence reviewed during the year, changes in the operational environment, and any incidents or near-misses. Updated risk register presented to AO with the annual monitoring summary.
+
+**Threat Environment Annual Review:**
+Review of HC3 briefings, CISA healthcare sector advisories, and HHS OCR enforcement actions from the year. Identify any new threat categories relevant to the OpenMRS deployment. Update risk register and control set if the threat environment has shifted materially.
+
+**Annual Monitoring Summary for AO:**
+The culminating annual communication to the AO: twelve months of monitoring program results, risk register evolution, POA&M management record, authorization recommendation (Day 85 communication scenario 4). This is the document that supports the AO's annual determination of whether the authorization remains appropriate.
+
+---
+
+## Monitoring Calendar — Consolidated View
+
+| Frequency | Activity | Owner | Evidence Produced |
+|---|---|---|---|
+| Continuous | Config 22-rule compliance | Automated + ISSO review | Config dashboard; Audit Manager evidence |
+| Continuous | GuardDuty threat detection | Automated + ISSO triage | Finding log; Security Hub aggregation |
+| Continuous | EventBridge custom alerts (IAM, CloudTrail, security groups) | Automated + ISSO response | EventBridge event log |
+| Monthly | Vulnerability scan review (Inspector + Dependency-Check) | IT Admin + ISSO | Scan report; patch completion record |
+| Monthly | CloudTrail pattern analysis | ISSO | Monthly summary |
+| Monthly | Security Hub posture review | ISSO | Posture trend record |
+| Monthly | OpenMRS community advisory review | ISSO | Advisory review log |
+| Monthly | Monitoring summary to Health IT Manager | ISSO | Written summary |
+| Quarterly | Access review (AC-2) | Health IT Manager + ISSO | Signed review form |
+| Quarterly | Backup restoration test (CP-4) | ISSO + IT Admin | Restoration test record with RTO time |
+| Quarterly | Security Hub suppression review | ISSO | Suppression log update |
+| Quarterly | IAM Access Analyzer review | ISSO | Access Analyzer findings log |
+| Quarterly | CloudTrail integrity verification | ISSO | Validation status record |
+| Quarterly | Phishing simulation | ISSO + Health IT Manager | Aggregate click rate and reporting rate |
+| Quarterly | POA&M review with AO | ISSO + AO | Meeting notes; updated POA&M |
+| Semi-annual | Audit log completeness test | ISSO | Test results log (pass/fail per event type) |
+| Semi-annual | CP-3 retention check | ISSO | Retention check notes |
+| Annual | Security self-assessment | ISSO | Self-assessment report |
+| Annual | Risk register update | ISSO | Updated risk register |
+| Annual | Threat environment review | ISSO | HC3/CISA advisory summary |
+| Annual | Annual monitoring summary to AO | ISSO | Annual summary document |
+
+---
+
+## Audit Readiness — The Evidence Trail Principle
+
+Audit readiness is not a sprint that happens two weeks before an audit. It is the continuous practice of producing evidence as a byproduct of normal security operations.
+
+Every item in the monitoring calendar above produces evidence. The quarterly access review produces a signed review form. The backup restoration test produces a test record with timestamp and RTO. The audit log completeness test produces a pass/fail record per event type. The phishing simulation produces an aggregate click rate report. The monthly CloudTrail review produces a written summary.
+
+This evidence trail means that when an OCR auditor or formal re-authorization assessor asks "how do you know your access controls are working?" the answer is not "we have a policy" — it is "here are four quarterly access review records, here is the M-004 finding that identified one over-privilege instance and the 24-hour correction timeline, and here is the SSP v1.2 update that added the HR notification requirement to prevent recurrence."
+
+The Day 80 pre-audit narrative consistency check applies here: two weeks before any formal assessment, the ISSO reviews the monitoring log, POA&M, SSP, and assessment findings to confirm that the narrative is consistent — that the SSP describes what the monitoring program actually found, and that the POA&M accurately reflects the current status of all open items. Any inconsistency between the documentation layers is a finding waiting to be discovered by an assessor; it is far better to find and resolve it proactively.
+
+**What audit readiness is not:** A clean dashboard with all green indicators. The Day 79 and Day 80 discussion of honest compliance mapping is directly relevant here. The AU-12 finding is in the monitoring log. The CP-2 AT RISK status is in the POA&M. The phishing simulation gap is in the metrics dashboard. An auditor who finds these items documented with honest status is looking at a mature monitoring program. An auditor who finds these items missing from the documentation and discovers them independently is looking at a program that was not audit-ready.
+
+---
+
+## Second-Year Monitoring Enhancements
+
+The first authorization year's monitoring program was designed before operations began. The second year's monitoring program should incorporate the lessons that eight months of actual operation produced:
+
+**Enhancement 1 — Semi-annual audit log completeness test (added):** The AU-12 finding was not detected by any automated monitoring mechanism. It required a human-initiated test procedure. The semi-annual completeness test institutionalizes this type of proactive assurance check.
+
+**Enhancement 2 — CM-3 compliance rate metric (formalized):** The M-002 and A-7 findings revealed that CM-3 compliance was a behavioral gap, not a technical gap. Formalizing the CM-3 compliance rate metric — number of security-relevant changes preceded by ISSO notification versus discovered post-hoc — creates the measurement that makes the gap visible in the metrics dashboard.
+
+**Enhancement 3 — Phishing simulation effectiveness metrics (new):** KRI-AT-1 (click rate) and the reporting rate are new metrics that did not exist in year one. Adding them to the quarterly monitoring cycle closes the AT-2 effectiveness measurement gap.
+
+**Enhancement 4 — CP-3 retention check (semi-annual):** Informal but documented. Adds behavioral assurance for the contingency plan training that completion records alone cannot provide.
+
+**Enhancement 5 — RPO improvement (proposed):** Daily S3 export (reducing maximum RPO from 7 days to 1 day for full environment reconstruction). Under development; pending Health IT Manager and AO approval. If approved, the quarterly backup restoration test procedure will be updated to test the daily export restoration path.
+
+---
+
+## A Real-World Example That Made This Click
+
+The value of assurance monitoring over detection-only monitoring is validated by the **2020 SolarWinds Orion supply chain compromise**, discussed briefly in Day 77.
+
+The SolarWinds attackers operated within the target environments for months before detection. They used legitimate credentials, generated traffic that blended with normal network patterns, and specifically evaded detection mechanisms. The organizations that were compromised had extensive detection monitoring infrastructure — and the detection mechanisms did not fire because the attackers were operating through normal-looking access paths.
+
+What the SolarWinds case validates for the OpenMRS monitoring program is that detection mechanisms alone are not sufficient. The semi-annual audit log completeness test is an assurance mechanism — it tests whether the audit trail would capture a specific attacker behavior (unauthorized access attempt), not whether any alerts are currently firing. If the test finds that unauthorized access attempts are not being logged (as the Day 79 test found for denied access events), the organization knows its forensic capability is limited before an incident exploits that limitation.
+
+Detection monitoring tells you when something bad has happened. Assurance monitoring tells you whether your controls would detect something bad if it happened. Both are necessary. The OpenMRS monitoring program explicitly includes both.
+
+---
+
+## What's Next
+
+Day 95 develops the POA&M section — the complete current-state POA&M with all open items, the aging analysis, the closure record, and the POA&M as a program management narrative that tells the authorization story. The POA&M is the document that most directly shows the AO how the organization has managed its security obligations over the authorization period.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-137 – Information Security Continuous Monitoring for Federal Information Systems](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [NIST SP 800-53A Rev 5 – Assessing Security and Privacy Controls](https://csrc.nist.gov/publications/detail/sp/800-53a/rev-5/final)
+- [HHS OCR – HIPAA Audit Program Protocol](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/audit/protocol/index.html)
+- [AWS – Security Hub NIST 800-53 Standard](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html)
+- [CISA – Continuous Diagnostics and Mitigation Program Overview](https://www.cisa.gov/cdm)
+
+---
+
+*#GRC #ContinuousMonitoring #AuditReadiness #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #AWS #SecurityAssurance #100DaysOfGRC #Day94*
