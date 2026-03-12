@@ -1,104 +1,194 @@
-#  Day 92: Capstone Part 6 – Training and Awareness Program 
-
-##  Objective
-
-Today, I focused on developing the **Security Training and Awareness Program** for the OpenMRS deployment hosted on AWS. The goal is to ensure that **everyone — from front-line clinic staff to system administrators — understands their role** in keeping the system secure, compliant with HIPAA, and resilient against human error.
-
-Even the most secure systems can be compromised by a single careless click, weak password, or failure to report suspicious activity. That’s why **user education is not optional — it’s a strategic layer of defense.**
+#  Day 92 – Capstone Part 6: Security Awareness Training Program | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## � Training Goals by Role
+## From Compliance Training to Behavioral Security
 
-We’ve designed the training program with **two primary user groups** in mind:
+Day 91 documented the policy architecture — fully developed policies, policies in development, and policies that exist only as SSP references without standalone governance documents. The policy section identified the Acceptable Use Policy as a material gap in the insider threat deterrence architecture (RS-005), and the change management policy as a second-year priority driven by the M-002 and A-7 compliance pattern. It also surfaced a principle that connects directly to today's section: a policy that no one has been formally presented with and acknowledged is not an enforceable policy.
 
-###  General Users (Doctors, Nurses, Medical Assistants, Clerks)
+The same principle applies to training. Training that confirms completion but does not measure behavioral change is not security awareness — it is compliance documentation. The distinction between these two is something the OpenMRS program encountered directly: AT-2 training completion is at 100%, which satisfies the HIPAA administrative safeguard requirement for security awareness and training. But the Day 79 self-assessment found that one of two staff members could not describe the downtime procedure after completing the contingency plan training. One hundred percent completion, approximately fifty percent behavioral retention for the specific procedure tested.
 
-Topics to be covered:
-
-- **Password Hygiene**: Strong password creation, avoiding reuse, no sticky notes!
-- **Workstation Security**: Locking sessions, logging out when stepping away
-- **Phishing Awareness**: Identifying and reporting suspicious emails or messages
-- **Patient Data Privacy**: Understanding HIPAA obligations and personal accountability
-- **Incident Reporting**: How and when to escalate concerns to IT/security
-
-Goal: Help end-users adopt secure habits that become **second nature**, without disrupting their clinical duties.
+Day 92 develops the training program that the capstone's second year needs to build — starting from what year one established, honest about what year one did not demonstrate, and specific about what a behaviorally effective training program looks like for a healthcare NGO with OpenMRS on AWS.
 
 ---
 
-###  Technical Users (System Admins, IT Staff, DevOps)
+## What I Worked On Today
 
-In addition to general user topics, admins will receive advanced technical training:
-
-- **Secure Server and App Management**: Patch management for OpenMRS and OS
-- **AWS Security Fundamentals**: IAM roles, security groups, bucket permissions
-- **Audit Logging & Monitoring**: Interpreting logs, detecting anomalies
-- **Incident Response Execution**: Aligning with IRP (Incident Response Plan)
-- **Backup & Recovery Operations**: Restoration procedures and validation testing
-
-Goal: Equip technical staff to protect, detect, and respond to threats effectively — from the infrastructure layer up.
+NIST SP 800-50 provides the framework for building a security awareness and training program. The AT-2 control family (Literacy Training and Awareness) in NIST SP 800-53 Rev 5 defines the requirements. Today I build the complete second-year training program design: role-differentiated curriculum, delivery mechanisms, the phishing simulation program design, measurement framework, and the honest gap assessment that connects training effectiveness to the risk register.
 
 ---
 
-##  Training Program Structure
+## What Actually Clicked for Me
 
-- **Onboarding Training**: Required for all new users before accessing OpenMRS
-- **Annual Security Refresher**: Covers HIPAA updates, security best practices, policy changes
-- **Quarterly Awareness Campaigns**: Themed newsletters, posters, or email tips
-- **Phishing Simulation Drills**: Simulated phishing emails with just-in-time education
-- **Role-Based Training Modules**: Custom content tailored to job responsibilities
+The insight that clarified the training section today is the distinction between security training and security behavioral change.
 
----
+Security training delivers information. Security behavioral change produces different decisions under real conditions. The distinction is not academic — it is the difference between a staff member who completed a module about phishing and a staff member who, when a targeted phishing email arrives at 9am during a busy clinical morning, pauses before clicking and takes 15 seconds to verify the sender.
 
-##  Hands-On Training Activity: *Phishing Drill & Awareness Campaign*
+The conditions under which the training is tested are never the conditions under which it was delivered. Training is delivered in a controlled, low-pressure environment — a computer module with clear prompts and obvious correct answers. The real attack arrives when the staff member is between patients, the inbox shows 47 unread messages, and the phishing email is specifically crafted to look like a message from the Health IT Manager about a system update.
 
-###  Title: “Click Smart, Stay Safe” – Quarterly Phishing Simulation
-
-**Objective**: Improve email security hygiene by simulating real-world phishing attacks in a safe, educational environment.
-
-**How It Works**:
-- A realistic but fake phishing email is sent to OpenMRS users.
-- Users who click the link are redirected to a training page that highlights the red flags they missed.
-- All results are anonymized and compiled into a quarterly security report.
-- A follow-up newsletter shares helpful tips and success stories (e.g., “15 staff members reported the phishing email — great job!”).
-
-**Who Participates**: All OpenMRS users (clinical, admin, and IT staff)
-
-**Why It Matters**:
-Healthcare organizations are high-value targets for phishing. Teaching staff how to recognize deception **before** a real attack occurs reduces the likelihood of compromise and encourages a culture of curiosity and caution.
+This is why the phishing simulation program is not a nice metric to have — it is the only mechanism that tests whether the training has produced behavioral change under realistic conditions. Every month without a phishing simulation is a month in which the organization asserts its training is effective without any evidence that it is.
 
 ---
 
-##  Reflection – Building a Human Firewall
+## Year One Training Program — Honest Assessment
 
-While firewalls and encryption are vital, **people are often the first and last line of defense.**
+**What was delivered:**
+- Annual HIPAA and security awareness training module: completed by 100% of staff
+- Contingency plan training (CP-3): completed by all designated staff members
+- Access control training: delivered as part of IS-AC-001 policy acknowledgment process at account provisioning
 
-Many users:
-- Are busy and may find security tasks annoying or confusing
-- Aren’t trained to detect subtle threats like spear phishing
-- Don’t realize how impactful their actions are on system integrity
+**What was demonstrated:**
+- Completion rates: 100% (KPI-AT-1 — Green)
+- CP-3 retention: approximately 50% — one of two staff members tested informally could not describe the paper-based downtime procedure (Day 79 self-assessment finding)
+- Phishing recognition: not measured — phishing simulation program not implemented
 
-That’s why I believe training must be:
-- **Relevant** (linked to real-world situations)
-- **Engaging** (interactive scenarios, storytelling, gamification)
-- **Reinforced** (not a one-time course — ongoing touchpoints)
+**What was not demonstrated:**
+- Whether staff can identify a targeted phishing email under realistic conditions
+- Whether staff understand the specific escalation steps for a security incident (beyond module completion)
+- Whether staff who completed the HIPAA training understand their personal obligation to report observed privacy violations
 
-From my experience, the training that sticks includes **simulations**, **short videos with real consequences**, and **team-based competitions** ("Who can spot the phishing email fastest?").
-
-One well-trained staff member who reports a phishing attempt or avoids downloading data to personal devices could literally save the entire system from breach or non-compliance.
-
->  *Takeaway*: Security awareness isn’t an add-on. It’s an embedded mindset — and culture always beats policy alone.
-
----
-
-## 🔗 Suggested Search Terms
-
-- `Security awareness training healthcare staff`  
-- `HIPAA training requirements for employees`  
-- `IT admin cybersecurity training topics`  
-- `Phishing simulation program best practices`  
-- `Creating a security culture healthcare`
+The honest year-one assessment: the training program meets minimum compliance requirements and has produced documented completion. It has not produced demonstrated behavioral effectiveness for the two most important behavioral outcomes in the current threat environment — phishing recognition and incident escalation.
 
 ---
 
-📅 **Next Up (Day 93)**: I’ll begin drafting the **Continuous Monitoring Plan** for OpenMRS, defining how we’ll track security metrics, audit logs, vulnerabilities, and compliance over time. Let’s keep our eyes open! 👀🚀
+## Second-Year Training Program Design
+
+---
+
+### Training Curriculum by Role
+
+**All Staff — Core Security Awareness Curriculum**
+
+The core curriculum applies to all OpenMRS users: clinical staff, administrative staff, and IT personnel. Delivered annually with quarterly reinforcement.
+
+*Module 1 — HIPAA Obligations and Personal Accountability:*
+Reframed from "here are the rules" to "here is what happens to patients when these rules are broken." The training should use the New York State HIV disclosure case (Day 87) as a concrete example — not as a compliance scare story but as an illustration that the data the staff member touches represents a real person whose life can be materially affected by how the staff member handles it. The goal is not rule compliance driven by fear of consequences but internalized understanding of why the rules exist.
+
+Specific behavioral outcomes measured: Can the staff member identify the three circumstances that require immediate escalation to the ISSO or Compliance Officer? Can they describe what constitutes a HIPAA reportable breach versus a security incident that does not require patient notification?
+
+*Module 2 — Phishing and Social Engineering Recognition:*
+Theory component (10 minutes): what phishing looks like, why it works, the specific attack patterns relevant to healthcare (invoice fraud, IT help desk impersonation, urgent EHR access notifications). This should be brief.
+
+Simulation component (ongoing): the phishing simulation program — described in detail below — is the primary delivery mechanism for this behavioral outcome. The module completion and the simulation results together tell the complete story of phishing awareness.
+
+Specific behavioral outcomes measured: Phishing simulation click rate (KRI-AT-1, target: below 10% by end of Q2 second year); reporting rate (staff who report the simulation email rather than just not clicking is a stronger behavioral indicator than click rate alone).
+
+*Module 3 — Workstation Security and Session Management:*
+Practical focus: locking sessions when stepping away from the workstation, not accessing OpenMRS from personal devices without ISSO approval, not leaving patient records visible on screen in patient areas. This module should be built around specific scenarios from the MyClinic clinic environment rather than generic corporate scenarios.
+
+Specific behavioral outcome measured: Informal spot-check during clinical operations — are workstations locked when clinicians step away? This is an observable behavior that the ISSO can assess during a brief operational walk-through without requiring formal testing.
+
+*Module 4 — Incident Reporting Obligations:*
+The training should make the reporting process so clear that a staff member who observes a potential security event can describe the specific steps they would take without consulting any reference material. Who do they call? At what hour? What information do they need to provide?
+
+The CP-3 retention gap finding (Day 79) demonstrated that completing a training module does not guarantee retention of specific procedural steps. This module should be reinforced through a quarterly 10-minute informal retention check — the ISSO asks two or three clinical staff members to describe what they would do if they received a suspicious email, or if OpenMRS displayed an unusual error message. Not graded. Not formal. Just a conversation that reveals whether the training is being retained and gives the ISSO an opportunity to reinforce the key steps.
+
+---
+
+**IT Administrator — Technical Security Curriculum**
+
+In addition to the core curriculum, the IT Administrator receives role-specific training on:
+
+*AWS Security Operations:* Quarterly review of IAM configuration, security group rules, and Config compliance status. The training is integrated with the M-2 assessment activities — the IT Administrator participates in the quarterly review rather than just being informed of results. This builds operational familiarity with the monitoring tools and reduces the likelihood of future CM-3 compliance lapses by making the IT Administrator a participant in the monitoring program rather than a subject of it.
+
+*Change Management Procedure Refresher:* Following the M-002 and A-7 findings, the IT Administrator receives an explicit annual refresher on CM-3 obligations — specifically the ISSO notification requirement for IAM entity creation, IAM policy modifications, and security group changes. This is not punitive; it is recognition that CM-3 compliance is a process discipline that requires deliberate reinforcement.
+
+Specific behavioral outcome measured: CM-3 compliance rate — number of security-relevant changes in the monitoring period that were preceded by ISSO notification, versus discovered post-hoc through Config alerting. This was tracked informally during year one (M-002 and A-7 found post-hoc). Formalizing the metric makes the expectation explicit.
+
+*Incident Response Execution:* Annual tabletop participation (the IR-3 exercise from POA&M item 004). The IT Administrator needs to be able to execute the EC2 isolation procedure under time pressure — 2am, GuardDuty HIGH finding, ISSO on the phone, thirty-second decision window. The tabletop scenario should test this specifically.
+
+---
+
+### Phishing Simulation Program Design
+
+**Tool:** GoPhish (open-source, self-hosted on a separate EC2 instance within the same VPC or a dedicated lightweight environment). Self-hosted ensures ePHI is not transmitted to a third-party simulation platform.
+
+**Cadence:** Quarterly simulation — one simulation per quarter, timed to occur between two and four weeks after the most recent phishing awareness module or refresher communication. This spacing tests retention rather than immediate recall.
+
+**Scenario design principles:**
+- Each quarterly simulation should escalate in sophistication over the year. Q1: obvious phishing (misspelled sender domain, generic greeting). Q2: moderate sophistication (credible sender name, plausible subject line). Q3: spear-phishing (uses staff member's name, references a plausible internal context). Q4: healthcare-specific scenario (purports to be a patient portal notification, HC3 security advisory, or OpenMRS system alert).
+- Scenarios should never use actual patient names or real patient data, even in simulation. The simulation is about security behavior, not clinical content.
+
+**Results communication protocol:**
+- Aggregate click rate reported to Health IT Manager and ISSO within one week of simulation completion
+- Individual results not shared with supervisors or used in performance evaluations — this is explicitly stated in the advance communication to staff. Simulation is a learning tool, not a surveillance mechanism.
+- Departments where click rates are elevated receive additional targeted awareness (newsletter, brief team meeting) without identifying individual clickers
+- Staff who report the simulation email (not just who avoid clicking) are recognized in the aggregate positive report — "N staff members proactively reported this month's simulation — exactly the behavior we want"
+
+**KRI-AT-1 target trajectory:**
+- Baseline measurement: first simulation (Q1 of second year) — no target, establish baseline
+- Q2 target: below 25% click rate
+- Q3 target: below 15% click rate
+- Q4 target: below 10% click rate
+- Reporting rate target: above 30% of staff reporting the simulation by Q4
+
+**What the simulation cannot measure:** The simulation tests recognition of simulated phishing. It does not test response to a genuinely targeted spear-phishing campaign designed by an attacker with knowledge of MyClinic's internal structure. The simulation is a necessary but not sufficient measure of phishing resilience.
+
+---
+
+### Quarterly Awareness Campaign Design
+
+The quarterly awareness campaigns are not training — they are reinforcement. Brief, specific, relevant to the current threat environment.
+
+**Q1 second year:** "Why Your TOTP Code Is the Last Line of Defense" — connecting MFA to the HC3 credential theft briefing. Two paragraphs, one concrete example, one specific action request (never share your TOTP code, even with IT staff asking for it).
+
+**Q2 second year:** "What Happens After You Click" — following the first phishing simulation, a brief explanation of what the simulation found, what it means, and what to look for. Positive framing: this is how we get better together.
+
+**Q3 second year:** "The Downtime Procedure — Could You Do It at 2am?" — contingency plan retention reinforcement. One page, laminated, posted at the clinical workstation. Not a training module. A reference card.
+
+**Q4 second year:** "Year-End Security Reflection" — aggregate metrics from the year's monitoring program. Not a compliance report. A brief, accessible summary: here is how the security program performed, here is what improved, here is what we are working on. Treats staff as partners in the security program, not subjects of it.
+
+---
+
+## Training Effectiveness Measurement Framework
+
+| Metric | Type | Measurement Method | Target |
+|---|---|---|---|
+| AT-2 completion rate | KPI | Training platform completion records | 100% annually |
+| CP-3 retention rate | Effectiveness | Quarterly informal retention check (2-3 staff per quarter) | 100% can describe downtime procedure |
+| Phishing simulation click rate | KRI | Quarterly GoPhish results | Below 10% by Q4 |
+| Phishing simulation reporting rate | Effectiveness | Quarterly GoPhish results | Above 30% reporting by Q4 |
+| CM-3 compliance rate (IT Admin) | Effectiveness | Monitoring log: changes preceded by ISSO notification | 100% |
+| Incident escalation accuracy | Effectiveness | IR-3 tabletop results | All participants can describe escalation steps |
+
+The critical design choice in this framework is including both KPIs (implementation metrics — did training happen?) and effectiveness metrics (did training change behavior?). Year one had only KPIs. Year two adds the effectiveness metrics that tell the ISSO whether the training is actually working.
+
+---
+
+## The Human Layer as a Security Control
+
+Looking at the complete control set from Day 90 alongside the training program, the human layer is both the most difficult to monitor and the most important for the current threat environment. The technical controls (MFA, WAF, encryption, Config monitoring) address the opportunistic attacker — the one who is looking for easy targets and will move on if the first obstacle is robust. The human layer addresses the targeted attacker — the one who is specifically trying to compromise MyClinic's OpenMRS system and is willing to invest in a convincing phishing email to do it.
+
+The HC3 briefing that elevated RS-001 and RS-004 from Moderate to High described targeted campaigns, not opportunistic scanning. Targeted campaigns go through people because that is often the path of least resistance through good technical controls. A staff member who recognizes and reports a targeted phishing attempt stops the attack at the first step — before the attacker ever reaches the technical controls.
+
+This is what the Day 90 control gap analysis described as "the human layer as the single highest-priority gap in the current control set." The phishing simulation program and the quarterly retention checks are the mechanisms for closing that gap systematically — not through a single training intervention, but through ongoing measurement and reinforcement that builds genuine security intuition over time.
+
+---
+
+## A Real-World Example That Made This Click
+
+The behavioral gap between training completion and effective response under real conditions is illustrated precisely by the **2020 Twitter Bitcoin scam**, in which attackers used social engineering — phone calls impersonating IT support — to convince Twitter employees to provide their VPN credentials. Twitter's employees had security training. They presumably understood that credential sharing was prohibited. Under real-time social pressure from a convincing impersonator, several employees complied.
+
+The Twitter case is relevant to the OpenMRS training program not because the attack vector is identical but because it demonstrates the core behavioral gap: employees who know the rule in a training context may not apply it reliably under the time pressure and social dynamics of a real attack. The phishing simulation program specifically tests this — it creates a low-pressure real-world analog to the actual attack, measures the behavioral response, and provides just-in-time feedback when the behavior needs correction.
+
+For the OpenMRS program, the quarterly awareness campaign topic "never share your TOTP code, even with IT staff asking for it" addresses exactly the Twitter attack vector — social engineering that creates urgency and legitimacy to extract a credential. Staff who have seen this framed explicitly, rather than just completing a phishing recognition module, are better positioned to resist it.
+
+---
+
+## What's Next
+
+Day 93 develops the Continuous Monitoring Plan — building from the M-2 through M-6 monitoring framework developed in Days 69-74, the Q1 monitoring activities and findings, and the second-year monitoring enhancements identified through operational experience (semi-annual audit log completeness test, quarterly CP-3 retention check, CM-3 compliance rate metric).
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-50 – Building an Information Technology Security Awareness and Training Program](https://csrc.nist.gov/publications/detail/sp/800-50/final)
+- [NIST SP 800-53 Rev 5 – AT-2 Literacy Training and Awareness; AT-3 Role-Based Training](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [HHS OCR – HIPAA Security Rule: Security Awareness and Training Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/index.html)
+- [GoPhish — Open Source Phishing Simulation Framework](https://getgophish.com/)
+- [CISA – Phishing Guidance: Stopping the Attack Cycle at Phase One](https://www.cisa.gov/resources-tools/resources/phishing-guidance-stopping-attack-cycle-phase-one)
+
+---
+
+*#GRC #SecurityAwareness #TrainingProgram #PhishingSimulation #HIPAA #NISTRMF #OpenMRS #HealthcareSecurity #HumanFirewall #100DaysOfGRC #Day92*
