@@ -1,109 +1,227 @@
-#  Day 87: Capstone Part 1 – Define Scope & System Description | 100 Days of GRC
-
-## � Objective
-
-Today, I kicked off the hands-on phase of my GRC Capstone project by drafting the **Scope and System Description** section of a Governance, Risk, and Compliance (GRC) plan for **OpenMRS**, an open-source electronic medical record system deployed in a cloud-based healthcare environment. This section is the foundation of any effective GRC plan, ensuring all stakeholders understand **what is being secured**, **where it operates**, **who uses it**, and **what sensitive data is at stake**.
+# Day 87 – Capstone Part 1: System Description and Scope | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## System Description – What is OpenMRS?
+## The Foundation That Everything Else Rests On
 
-**OpenMRS** (Open Medical Record System) is a mission-critical, open-source **Electronic Health Record (EHR)** platform used in our healthcare facility to capture, store, and manage patient health information. The system plays a vital role in streamlining clinical workflows, improving patient care, and ensuring proper documentation of medical encounters. 
+Day 86 established the capstone structure — nine sections, each with a synthesis goal and a specific integration insight to capture that the day-by-day development alone would not reveal. The capstone's purpose is to show that the components developed across 85 days form a coherent security program, not just a collection of well-executed individual activities.
 
-Our deployment of OpenMRS is tailored to support the specific needs of our hospital, including clinical documentation, medication tracking, patient registration, diagnostics, and reporting. The system is accessible through secure web interfaces and is used by clinical and non-clinical staff alike.
+Section 1 — System Description and Scope — is where the capstone earns its coherence. Every subsequent section (compliance mapping, risk summary, control implementation, policies, training, incident response, monitoring, POA&M) is bounded by what is defined here. If the scope is vague, every subsequent section inherits that vagueness. If the system description is accurate and current, every subsequent section can be traced back to it.
 
----
-
-##  Technical Environment – AWS Cloud Infrastructure
-
-Our instance of OpenMRS is securely hosted on **Amazon Web Services (AWS)**, leveraging cloud-native infrastructure for flexibility, availability, and cost-efficiency. Specifically, OpenMRS is deployed on an **EC2 virtual machine** with a **MySQL backend database**, operating within a **VPC** under the hospital’s dedicated AWS account.
-
-- The **AWS Shared Responsibility Model** governs this deployment: AWS manages the security *of* the cloud (physical security, infrastructure, storage durability), while our team is responsible for the security *in* the cloud (operating system hardening, patching, access controls, application configurations).
-- We have also integrated **AWS Identity and Access Management (IAM)** roles and security groups to enforce role-based access and least privilege principles at the infrastructure layer.
-
-This environment allows us to scale operations securely while maintaining strong availability and disaster recovery capabilities.
+I also want to be honest about what makes the Day 87 system description different from what a fresh GRC plan would produce. A fresh plan starts from scratch — what is the system, who uses it, what data does it handle. This capstone system description starts from eight months of operational experience, SSP version 1.2, and a continuous monitoring program that has produced five significant findings and five POA&M closures. The system I am describing is not the authorized-day system — it is the system as it exists now, informed by everything the monitoring program has revealed.
 
 ---
 
-##  Users and Roles
+## What I Worked On Today
 
-OpenMRS is accessed by multiple user groups within the hospital:
-
-- **Doctors and Nurses**: Have access to patient diagnosis, treatment records, prescriptions, and clinical notes.
-- **Lab Technicians**: Input diagnostic results and interpret lab orders.
-- **Administrative Staff**: Manage patient demographics, appointment scheduling, and insurance documentation.
-- **System Administrators**: Configure and maintain the application and ensure system health and security.
-
-Access is managed using **Role-Based Access Control (RBAC)** to ensure users only interact with data relevant to their job function. This control model helps mitigate insider threats and supports compliance with privacy regulations such as **HIPAA**.
+The system description and scope section draws from: the original system registration record (Day 42), the FIPS 199 categorization (Day 44), the system boundary diagram and asset inventory (Days 33-34), the SSP v1.2 current state (Day 72), and the Q1 monitoring findings that have modified the system's documented implementation. Today I produce the current-state synthesis that integrates all of those sources into a single coherent system description.
 
 ---
 
-## Data Processed and Stored
+## What Actually Clicked for Me
 
-OpenMRS processes and stores **Protected Health Information (PHI)** including:
+The insight that clarified the system description section today is understanding why "what the system is" and "what the system does with sensitive data" are two different sections that both belong in the description.
 
-- Personally Identifiable Information (PII): Name, Date of Birth, Contact Info
-- Medical History and Treatment Records
-- Diagnoses, Prescriptions, and Lab Results
-- Audit logs tracking user activity and data access
+"What the system is" is technical: EC2 instance, RDS MySQL database, WAF, GuardDuty, IAM configuration, VPC architecture. This is the information that an assessor or auditor uses to understand the authorization boundary and identify which controls apply.
 
-Given the sensitivity of this information, our GRC plan ensures **HIPAA compliance**, incorporating administrative, physical, and technical safeguards to prevent unauthorized access, loss, or tampering.
+"What the system does with sensitive data" is the mission context: patient registration, clinical encounter documentation, medication history, lab result recording, HIV status tracking, mental health notes. This is the information that explains why the system is categorized HIGH across all three security objectives and why HIPAA applies. A system that stores routine administrative data might merit different controls than one that stores mental health records and HIV status information for a vulnerable population.
 
----
-
-## Scope Boundaries
-
-To maintain clarity and focus, this GRC plan is scoped specifically to the following components:
-
-**In-Scope:**
-- OpenMRS application running on AWS EC2
-- Associated MySQL database
-- User roles and access management
-- Logging, monitoring, and data integrity controls specific to OpenMRS
-- Interfaces with external lab systems (where applicable)
-
-**Out-of-Scope:**
-- Broader hospital IT infrastructure (e.g., core network, HR systems, external billing platforms)
-- Physical security of hospital workstations (unless they directly impact OpenMRS)
-- Any third-party systems not integrated with OpenMRS
-
-By setting these boundaries, we can conduct focused **risk assessments**, implement appropriate **security controls**, and **map compliance requirements** effectively without spreading resources too thin or introducing ambiguity.
+The system description needs both — the technical description enables control assessment, the mission context explains the stakes. An assessor who understands the mission context will understand why the CP-2 condition was the AO's highest concern at authorization: a system that community health workers in a low-resource environment depend on for clinical decision support during patient encounters cannot afford unplanned downtime without a tested fallback procedure.
 
 ---
 
-## Reflection – Why Scope Definition Matters in GRC
-
-Clearly defining the **system and scope** at the beginning of a GRC plan is not just a formality—it's a **strategic necessity**. Here's why:
-
-1. **Avoids Ambiguity:** A vague scope leads to misunderstandings about who is responsible for what. Without defining the AWS cloud environment, we might overlook cloud-specific security tasks, leading to compliance gaps.
-2. **Enables Focused Risk Management:** A narrow and precise scope allows risk assessments to be meaningful, manageable, and measurable.
-3. **Streamlines Communication:** Stakeholders (technical and non-technical) can quickly understand what the plan covers and why.
-4. **Supports Compliance Audits:** Auditors can trace controls back to specific assets and systems, increasing audit readiness and reducing friction.
-5. **Prevents Scope Creep:** Helps avoid taking on responsibilities that exceed available resources or team expertise.
-
-A well-defined scope transforms GRC from a theoretical exercise into an actionable, measurable, and accountable program.
+## MyClinic OpenMRS — Current State System Description
 
 ---
 
-##� What I Learned and Applied Today
+### Organization and Mission Context
 
-- The importance of **role clarity**, especially in regulated environments.
-- How to **translate technical cloud infrastructure (AWS EC2, IAM, RDS)** into a compliance context.
-- That GRC is **not just about risk control**, but about **storytelling**—how we communicate risks, systems, and safeguards to stakeholders.
-- How the **AWS Shared Responsibility Model** shifts the security paradigm from physical hardware to **configuration responsibility** and **cloud-native controls**.
+**Organization:** MyClinic (pseudonym)
+**Organization type:** Healthcare Non-Governmental Organization (NGO)
+**Mission:** Providing primary healthcare services to underserved populations, including HIV/AIDS care, maternal and child health, and community health programs.
+**Patient population:** Approximately [N] active patients; population includes individuals with HIV/AIDS, mental health conditions, and other sensitive diagnoses. A significant proportion of patients are members of populations that face social stigma for their health conditions — making unauthorized ePHI disclosure a patient safety issue, not only a compliance issue.
 
-This foundation will guide the rest of my capstone work—from compliance mapping and control selection to incident response planning and continuous monitoring.
-
----
-
-## Keywords & Resources
-
-- `OpenMRS system overview`
-- `AWS shared responsibility model healthcare`
-- `HIPAA compliance cloud hosting`
-- `Scope definition in risk management`
-- `Information system security plan examples`
+This mission context establishes the stakes for the security program. The patient population served by MyClinic includes individuals for whom an unauthorized disclosure of health status could result in social harm, employment discrimination, family dissolution, or physical violence. The security program protects not just data but people.
 
 ---
 
-Next up: I’ll begin mapping compliance requirements and identifying control objectives tailored to OpenMRS in AWS. Onward to Day 88! 
+### System Purpose and Function
+
+**System Name:** MyClinic OpenMRS Electronic Health Record System
+**System Identifier:** MCOPENMRS-001
+**System Type:** Major Application — Electronic Health Record
+**System Status:** Operational (authorized)
+**Authorization Date:** [date]
+**Authorization Expiration:** [authorization date + 3 years]
+**Current SSP Version:** 1.2 (last updated [date])
+
+OpenMRS serves as the primary clinical information system for MyClinic's patient care operations. The system supports:
+
+*Clinical documentation:* Encounter notes, diagnosis records, treatment plans, medication orders and administration records, clinical assessments. All clinical encounters with active patients generate documentation in OpenMRS.
+
+*Patient registration and demographics:* Patient identifiers, contact information, next of kin, insurance information, community health worker assignments. The registration record is the anchor for all clinical documentation.
+
+*Laboratory information management:* Lab orders transmitted to the Laboratory Information System via HL7 interface; lab results received from the LIS and recorded in the patient record. The HL7 interface represents the system's primary interconnection with an external system.
+
+*Pharmacy and medication management:* Medication orders, dispensing records, and medication history. For HIV/AIDS patients, this includes antiretroviral therapy regimens that require careful adherence tracking.
+
+*Reporting and quality improvement:* Aggregate clinical reporting for program performance (patient retention, treatment outcomes, community health indicators). These reports support MyClinic's donor reporting obligations and clinical quality improvement programs.
+
+**What OpenMRS does not do:** OpenMRS does not process financial transactions, manage payroll or human resources data, or provide telemedicine services. Billing and insurance functions are handled by a separate administrative system that is out of scope for this GRC plan.
+
+---
+
+### Technical Architecture — Current State (SSP v1.2)
+
+**Deployment environment:** Amazon Web Services (AWS), us-east-1 region (primary), with cross-region backup to us-west-2.
+
+**Primary compute:** EC2 instance ([instance type], [current AMI version]) running Ubuntu [version] and Apache Tomcat [version] serving the OpenMRS application. Instance is deployed in a private subnet within the dedicated VPC; all inbound application traffic passes through the AWS WAF and Application Load Balancer before reaching the EC2 instance.
+
+**Database:** RDS MySQL [version], deployed in a separate private subnet, accessible only from the EC2 instance's security group. Encryption at rest using customer-managed KMS key (openmrs-rds-encryption, ARN: [ARN]). Automated daily snapshots retained for 35 days. Point-in-time recovery enabled.
+
+**Storage:** S3 bucket ([bucket name]) storing weekly full database exports for cross-region backup. Server-side encryption with AES-256. Object Lock in Compliance mode for backup objects. Cross-region replication to us-west-2.
+
+**Network security:** VPC with public subnet (WAF/ALB) and private subnets (EC2, RDS) in separate availability zones. Security groups enforce least-privilege network access. VPC flow logs enabled. No direct internet access to EC2 or RDS instances.
+
+**Identity and access management:** IAM roles and policies for all AWS service interactions. No long-term access keys in use for application functions (exception: CloudWatch agent IAM user — Low severity finding, optimization scheduled). MFA enforced for all IAM console access. Root account locked with TOTP MFA and no active access keys.
+
+**Monitoring and detection:** AWS CloudTrail (all regions, log file validation enabled, S3 delivery with EventBridge tamper detection alert), AWS Config (22 managed rules, all currently COMPLIANT except one [date of last review]), AWS GuardDuty (enabled, Security Hub integration active), AWS Inspector (monthly automated assessment), AWS Security Hub (FSBP standard, NIST 800-53 standard, findings aggregation), AWS Audit Manager (NIST 800-53 and HIPAA frameworks, automated evidence collection).
+
+**Changes since authorization:** The system architecture has not changed materially since the authorization date. Significant implementation changes reflected in SSP v1.2: CM-3 implementation description updated to document IAM policy modification notification gap and EventBridge expansion commitment; CP-9 implementation description updated with RTO trend note; AC-2 implementation description updated for internal role change notification requirement.
+
+---
+
+### Authorization Boundary
+
+**In-scope components:**
+
+The authorization boundary encompasses all components within the MyClinic AWS account that support the OpenMRS application:
+
+| Component | Type | Location | Purpose |
+|---|---|---|---|
+| EC2 instance (MCOPENMRS-EC2-01) | Compute | Private subnet, us-east-1 | OpenMRS application server |
+| RDS instance (MCOPENMRS-RDS-01) | Database | Private subnet, us-east-1 | Patient record database |
+| S3 backup bucket | Storage | us-east-1 (replicated to us-west-2) | Database backup and cross-region DR |
+| VPC, subnets, security groups | Network | us-east-1 | Network segmentation and access control |
+| WAF, ALB | Network security | Public subnet, us-east-1 | Application layer protection and routing |
+| IAM users, roles, policies | Access management | AWS account-wide | Identity and access control |
+| CloudTrail, CloudWatch, GuardDuty, Config, Security Hub, Inspector, Audit Manager | Monitoring | Account-wide | Continuous monitoring and detection |
+| KMS keys (openmrs-rds-encryption, openmrs-ec2-encryption, openmrs-s3-backup) | Cryptography | us-east-1 | Encryption key management |
+
+**Out-of-scope components:**
+
+The following are explicitly out of scope for this authorization:
+
+- Other systems in MyClinic's broader IT environment not connected to OpenMRS (HR systems, financial systems, email)
+- The Laboratory Information System (LIS) is out of scope as a system — it is governed by its own authorization and security program. The LIS interconnection (HL7 interface) is in scope as an interconnection and is governed by the Information Sharing Agreement (ISA) documented in the SSP.
+- Physical security of clinical workstations — workstations are used to access OpenMRS via web browser; workstation security is governed by an endpoint security policy outside this GRC plan's scope.
+- AWS infrastructure security below the hypervisor level — governed by the AWS Shared Responsibility Model and assured through the AWS SOC 2 Type II report.
+
+**Inherited controls:** Security controls for the physical data center, hardware, hypervisor, and AWS global network infrastructure are inherited from AWS and documented in the AWS SOC 2 Type II report. The AWS BAA establishes AWS's obligations as a Business Associate for ePHI processed in HIPAA-eligible services.
+
+---
+
+### Data Classification and Sensitivity
+
+**Primary data type:** Electronic Protected Health Information (ePHI) as defined by HIPAA 45 CFR §160.103.
+
+**Sensitivity considerations:**
+
+The patient population includes individuals with HIV/AIDS, mental health conditions, and other diagnoses that carry social stigma and potential for discrimination. This sensitivity profile elevates the practical impact of unauthorized disclosure beyond what a standard HIPAA breach analysis would capture. An unauthorized disclosure of HIV status for a patient in a community where HIV carries significant stigma may result in social harms — family rejection, employment loss, community exclusion — that are not captured by the financial impact metrics used in standard breach cost analyses.
+
+This population-specific sensitivity is reflected in the FIPS 199 categorization:
+
+**System Categorization:** SC OpenMRS = {(confidentiality, HIGH), (integrity, HIGH), (availability, HIGH)} — overall system categorization: HIGH impact.
+
+*Confidentiality HIGH rationale:* ePHI includes HIV status, mental health diagnoses, and medications that could reveal sensitive health conditions. Unauthorized disclosure could cause severe harm to individuals — the standard FIPS 199 HIGH threshold ("severe or catastrophic adverse effect").
+
+*Integrity HIGH rationale:* Clinical decisions are made based on the data in OpenMRS. A medication error caused by corrupted pharmacy records, or a diagnostic error caused by tampered laboratory results, could directly cause patient harm. Data integrity failures in a clinical EHR are patient safety events.
+
+*Availability HIGH rationale:* MyClinic serves patients with chronic conditions requiring consistent care (HIV/AIDS antiretroviral therapy, maternal health monitoring). OpenMRS unavailability during clinical operations could delay medication dispensing, interrupt continuity of care, or require emergency paper-based documentation that increases error risk. For a resource-constrained healthcare NGO, extended OpenMRS unavailability has patient care consequences.
+
+---
+
+### User Population and Access Model
+
+**User categories and approximate counts:**
+
+| Role | Count | OpenMRS Role Assignment | Access Scope |
+|---|---|---|---|
+| Clinical staff (physicians, nurses, clinical officers) | [N] | Clinician | Full encounter documentation, medication orders, clinical notes |
+| Nursing staff | [N] | Nursing Staff | Encounter documentation, medication administration, vital signs |
+| Administrative staff | [N] | Administrative Staff | Patient registration, demographics, scheduling |
+| Laboratory staff | [N] | Lab Tech | Lab order receipt, result entry |
+| IT Administrator | 1 | System — Admin | Application administration, user management |
+| ISSO | 1 | System — ISSO | Security monitoring, audit log review |
+
+**Access control model:** Role-Based Access Control (RBAC) enforced at the application layer through OpenMRS role assignments. All access requires individual account (no shared accounts), TOTP MFA, and session timeout at 15 minutes of inactivity. The Role Authorization Matrix (maintained by the ISSO) documents the specific access scope for each role.
+
+**Remote access:** OpenMRS is accessible via web browser from approved clinic workstations on the clinic network. Remote access by administrative or IT personnel requires [documented access mechanism — VPN or equivalent] with the same MFA requirements as on-site access.
+
+---
+
+### Regulatory and Compliance Requirements
+
+**HIPAA Security Rule (45 CFR Part 164, Subpart C):** Applicable — MyClinic is a covered entity; OpenMRS processes ePHI. All HIPAA Security Rule safeguard requirements (administrative, physical, technical) apply.
+
+**HIPAA Breach Notification Rule (45 CFR Part 164, Subpart D):** Applicable — unauthorized access to or disclosure of ePHI may trigger notification obligations to patients, HHS, and media (if breach affects 500+ individuals in a state).
+
+**Minnesota Health Records Act (Minn. Stat. §144.291 et seq.):** Applicable — state health record confidentiality and patient access requirements. Record retention minimum: 7 years from date of service.
+
+**NIST SP 800-53 Rev 5:** Selected as the security control framework. Controls are tailored to the HIGH impact baseline with additional controls selected based on threat environment and operational context.
+
+**Business Associate Agreement:** Executed with AWS for HIPAA-eligible services. Executed with [LIS Provider name] for the laboratory information exchange.
+
+---
+
+### Key Dependencies and External Relationships
+
+**AWS:** Infrastructure provider. Security relationship governed by AWS Shared Responsibility Model and AWS BAA. Annual TPRM review through AWS Artifact (SOC 2 Type II).
+
+**OpenMRS Community:** Open-source application dependency. No contractual relationship. Security relationship managed through community security advisory monitoring, GitHub security notifications, and monthly OWASP Dependency-Check scans.
+
+**Laboratory Information System ([Provider name]):** Clinical interconnection. HL7 interface for lab order and result exchange. Security relationship governed by ISA (executed [date]) and BAA (executed [date]). Annual TPRM review.
+
+---
+
+## The Scope Boundary Judgment — What Required Careful Thought
+
+The hardest scoping decision was the clinical workstation question — whether the endpoints used to access OpenMRS are in or out of scope.
+
+The decision: out of scope, with a documented risk acceptance. Workstations are web browser clients — they do not store ePHI, they do not process ePHI outside the browser session, and they are managed by the broader MyClinic IT environment rather than the ISSO's direct administrative control. Including them in scope would expand the authorization boundary to include hardware and software that the ISSO cannot fully assess or monitor.
+
+The risk acceptance: if a workstation is compromised with credential-stealing malware, the MFA requirement for OpenMRS access means the compromised workstation alone cannot produce unauthorized OpenMRS access. The attacker also needs the TOTP code, which requires access to the user's physical authenticator device. The MFA enforcement is the compensating control for the out-of-scope workstation risk.
+
+This scoping rationale is documented explicitly because a future assessor who asks "what about workstation security?" should find the answer in the scope definition, not discover that it was never considered.
+
+---
+
+## A Real-World Example That Made This Click
+
+The population-specific sensitivity section — where I explained that HIV status disclosure for patients in stigmatizing communities creates harms not captured by standard breach cost metrics — was informed by the **2013 New York State Department of Health breach** in which names and HIV status information for approximately 4,800 individuals were inadvertently disclosed in a court filing that was not properly sealed.
+
+The harm from that disclosure was not primarily financial — it was social and personal, affecting individuals' relationships, employment, and safety. Some individuals reported significant personal consequences from the disclosure.
+
+Standard breach impact metrics — cost per record, regulatory fine, credit monitoring cost — do not capture this category of harm. A security program for a system that stores HIV status information for a vulnerable population needs to understand that the HIPAA confidentiality HIGH categorization reflects real-world harm potential that goes beyond what the regulatory penalty structure quantifies.
+
+For the OpenMRS GRC program, this understanding of population-specific sensitivity is what justifies the HIGH categorization and the depth of the security program — not just regulatory compliance, but genuine protection of vulnerable patients.
+
+---
+
+## What's Next
+
+Day 88 develops the compliance mapping section — tracing each HIPAA Security Rule requirement to the NIST SP 800-53 control that addresses it, to the SSP implementation description, to the assessment evidence, and to the ongoing monitoring mechanism. The compliance mapping reveals the traceability chain that makes the program auditable.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-37 Rev 2 – System Description and Authorization Boundary](https://csrc.nist.gov/publications/detail/sp/800-37/rev-2/final)
+- [NIST FIPS 199 – Standards for Security Categorization](https://csrc.nist.gov/publications/detail/fips/199/final)
+- [HHS OCR – HIPAA Covered Entities and Business Associates](https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html)
+- [AWS – HIPAA Eligible Services Reference](https://aws.amazon.com/compliance/hipaa-eligible-services-reference/)
+- [New York State HIV Disclosure Breach — NYT Coverage and Community Impact Analysis](https://www.nytimes.com/2013/01/11/nyregion/leak-of-hiv-data-raises-new-fears-for-patients.html)
+
+---
+
+*#GRC #SystemDescription #AuthorizationBoundary #FIPS199 #HIPAA #NISTRMF #OpenMRS #HealthcareSecurity #100DaysOfGRC #AWS #Day87*
