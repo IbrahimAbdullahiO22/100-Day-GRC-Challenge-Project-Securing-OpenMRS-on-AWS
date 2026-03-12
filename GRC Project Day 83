@@ -1,94 +1,257 @@
-# Day 83 – Measuring GRC with KPIs & KRIs | 100 Days of GRC
-
-Today, I dove deep into one of the most crucial yet often overlooked elements of a mature GRC program — **measurement**. You can’t improve what you don’t measure, and in Governance, Risk, and Compliance (GRC), metrics provide the visibility needed to prove effectiveness and uncover emerging threats. Two powerful tools in this space are **Key Performance Indicators (KPIs)** and **Key Risk Indicators (KRIs)**.
-
----
-
-## What I Learned
-
-###  KPIs = Measuring Performance  
-KPIs help track how well processes are functioning against expectations or goals. They’re aligned with continuous improvement and compliance success.
-
-###  KRIs = Monitoring Risk  
-KRIs are early warning signals that highlight increasing exposure to risk. They help GRC leaders stay proactive instead of reactive.
+# Day 83 – Measuring GRC with KPIs and KRIs | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-## Applying KPIs & KRIs to OpenMRS on AWS
+## What Gets Measured Gets Managed — and What Gets Managed Gets Better
 
-As I manage the OpenMRS deployment on AWS from a GRC perspective, I started thinking about what metrics truly reflect both performance and potential risk. Below are some contextualized examples I’ve mapped out:
+Day 82 produced the third-party risk management framework — the TPRM register, the three vendor categories with distinct assurance mechanisms, and the TOTP authenticator app governance insight that emerged from reviewing the register as a whole. The TPRM review is itself a form of measurement: a structured evaluation of whether external dependencies continue to meet the organization's security requirements.
 
-### Patch Management  
-- **KPI**: `% of critical patches applied within 30 days of release`  
-   → Measures efficiency of patch management and responsiveness.
-- **KRI**: `Number of high-risk vulnerabilities unpatched >30 days`  
-   → Indicates build-up of security debt, increasing breach risk.
+Day 83 extends measurement from a periodic review activity to a continuous program discipline. Metrics — specifically Key Performance Indicators (KPIs) and Key Risk Indicators (KRIs) — are what transform the monitoring and assessment program from a set of individual activities into a coherent picture of the security program's direction over time.
 
-### User Access Governance  
-- **KPI**: `% of monthly user access reviews completed on time`  
-   → Tracks adherence to access governance policy.
-- **KRI**: `Number of stale/inactive OpenMRS accounts >90 days`  
-   → Identifies potential risks from unused but active accounts.
+I want to be direct about where I am starting from with metrics. The concept of KPIs and KRIs is straightforward; the challenge is designing metrics that genuinely measure what matters rather than metrics that are easy to collect and report but do not actually tell the story of the security program's health. A metric that shows green on the dashboard while a significant risk accumulates in the background is worse than no metric — it creates false confidence.
 
-###  Security Awareness  
-- **KPI**: `% of workforce who completed mandatory training this quarter`  
-   → Reflects commitment to staff education and compliance.
-- **KRI**: `Number of employees overdue on cybersecurity training`  
-   → Signals cultural and human-layer vulnerabilities.
-
-###  Incident Response & Resilience  
-- **KPI**: `Mean Time to Recover (MTTR) from OpenMRS outages`  
-   → Demonstrates recovery efficiency after incidents.
-- **KRI**: `Downtime hours due to security incidents`  
-   → Reflects risk to availability and operational continuity.
+Today I want to think carefully about what makes a metric genuinely informative for the OpenMRS program, and how to avoid the common failure modes in security metrics design.
 
 ---
 
-## Hands-On Metrics I’ve Defined
+## What I Worked On Today
 
-For my OpenMRS GRC Program, here are two key metrics I’ve chosen to implement and track:
-
-###  KPI:
-**Percentage of monthly OpenMRS data backups completed successfully**
-- **Why it matters**: Ensures critical patient data is protected and recoverable.
-- **How I’ll measure**: Automate reporting from backup logs via scheduled scripts that verify timestamps and status codes of completed backup jobs.
-
-###  KRI:
-**Number of critical vulnerabilities on OpenMRS server older than 30 days**
-- **Why it matters**: Highlights unresolved high-risk exposures that could lead to compromise.
-- **How I’ll measure**: Use Nessus scan reports and internal ticket logs to track open findings past due remediation timelines.
+Security metrics are addressed in NIST SP 800-55 Rev 2 (Performance Measurement Guide for Information Security), which provides a framework for developing, selecting, and using security metrics. NIST SP 800-137's continuous monitoring framework establishes monitoring as a data-generating activity that should feed structured reporting to decision-makers. Today I design the full metrics program for the OpenMRS GRC program — distinguishing implementation metrics from effectiveness metrics, designing KPIs and KRIs that connect to the specific controls and risk profile of this system, and thinking about the reporting cadence and audience for each metric.
 
 ---
 
-##  Reflection
+## What Actually Clicked for Me
 
-At this stage in my GRC journey, **KRIs are more valuable for me** than KPIs. While KPIs help validate that my processes are running smoothly, **KRIs help me detect lurking risks before they become incidents**. As I focus on strengthening OpenMRS’s security posture, the ability to see risk trends in real-time is key.
+The concept that clarified metrics design today is the NIST SP 800-55 distinction between implementation metrics, effectiveness/efficiency metrics, and impact metrics.
 
-This doesn’t mean I ignore KPIs — they’re crucial for reporting and stakeholder assurance — but in my current environment, **risk detection is the immediate priority**. Moving forward, I plan to build a small dashboard that visualizes both my KPIs and KRIs, driving accountability and continuous improvement.
+**Implementation metrics** measure whether security controls are in place: "Is MFA configured for all OpenMRS user accounts?" These are binary — yes or no, percentage compliant. They answer the question: do we have the controls? They are the easiest metrics to collect because they typically map directly to configuration state that automated tools (Config, Security Hub) can evaluate continuously.
 
----
+**Effectiveness metrics** measure whether the controls that are in place are producing the intended outcomes: "Of the accounts that have MFA configured, what percentage actually use MFA at every login?" or "When access reviews identify over-privileged accounts, how quickly are they corrected?" These metrics are harder to collect because they require behavioral data, not just configuration data. But they answer the more important question: are the controls working?
 
-##  Key Takeaways
+**Impact metrics** measure the security program's contribution to the organization's mission: "How many potential HIPAA breach incidents were prevented by the monitoring program's early detection?" or "How has the time-to-remediate critical vulnerabilities changed over the course of the authorization period?" These metrics are the hardest to collect and require baseline data over time, but they are what justify the security program's resource investment to organizational leadership.
 
-- KPIs measure how well we’re doing (success).
-- KRIs measure where things could go wrong (early warnings).
-- Metrics need to be **specific, measurable, and tied to objectives**.
-- Too many metrics create noise — choose what truly matters.
-- Track them over time to see trends and proactively adapt your GRC strategy.
+The most common security metrics failure is an over-reliance on implementation metrics — reporting that all controls are in place without measuring whether they are working. The AU-12 denied-access logging gap from Day 79 is exactly the gap that implementation metrics miss: the logging configuration was in place (implementation metric: COMPLIANT), but the logging was not capturing denied access events (effectiveness metric: 75% of required event types logging correctly, not 100%). Reporting "audit logging: COMPLIANT" without the effectiveness test creates false assurance.
+
+The OpenMRS metrics program will include all three types, organized so that the decision-maker audience for each level is clear.
 
 ---
 
-##  Suggested Search Terms
-
-- `GRC Metrics and Measurement (Compliance KPIs)`
-- `Key Risk Indicators Examples (IT Security)`
-- `Security Patch Management Metrics`
-- `Measuring Compliance Effectiveness KPI KRI`
-- `IT Governance Metrics for Healthcare Systems`
+## The OpenMRS KPI and KRI Framework
 
 ---
 
-## 📣 Final Thought
+### Vulnerability Management Metrics
 
-By implementing KPIs and KRIs thoughtfully, I’m transforming GRC from a static checklist to a **living, breathing system of continuous feedback and control**. This is how we move from reactive to resilient. Measurement isn’t just a formality — it’s our compass in the dynamic landscape of risk and compliance.
+**KPI-VM-1: Critical and High Patch SLA Compliance Rate**
 
+*Definition:* Percentage of Critical and High severity vulnerabilities (Inspector, Dependency-Check, ZAP findings combined) remediated within the defined SLA — Critical: 7 days; High: 30 days — measured monthly.
+
+*Formula:* (Vulnerabilities remediated within SLA ÷ Total Critical/High vulnerabilities identified) × 100
+
+*Target:* ≥ 95% SLA compliance. Below 90% triggers escalation to Health IT Manager.
+
+*Data source:* Inspector monthly scan reports, Dependency-Check reports, POA&M item status for vulnerability findings.
+
+*Why this KPI matters:* SLA compliance rate is an effectiveness metric — it measures not just whether scans are running but whether findings from scans are being acted on within the required timeframe. A system with 100% scan completion but 70% SLA compliance has a functioning detection capability and a failing remediation capability.
+
+*Trend interpretation:* A declining compliance rate over successive months signals either increasing vulnerability volume (more findings arriving than remediation capacity can absorb) or declining remediation prioritization (findings are being deprioritized). Either requires a different response — the first requires process optimization; the second requires leadership escalation.
+
+---
+
+**KRI-VM-1: High Vulnerability Aging Counter**
+
+*Definition:* Number of High severity vulnerability findings open beyond the 30-day SLA at the end of each month.
+
+*Target:* Zero. Any High finding beyond 30 days without a POA&M entry with compensating controls is a policy violation.
+
+*Threshold:* Zero open High findings beyond SLA = Green. 1-2 open with documented compensating controls and POA&M entries = Yellow. 3+ open, or any open without POA&M entry = Red.
+
+*Data source:* POA&M, Inspector reports.
+
+*Why this KRI matters:* This is the early warning metric that detects security debt accumulation before it becomes a material risk. A system that consistently has 0-1 aged High findings is managing its vulnerability backlog. A system where the aged High count climbs to 5, 8, 10 over several months is accumulating unacceptable risk that the monthly SLA compliance rate may be masking (because the numerator includes some on-time remediations while the denominator grows).
+
+---
+
+### Access Control Metrics
+
+**KPI-AC-1: Quarterly Access Review Completion and Accuracy Rate**
+
+*Definition:* Two components measured quarterly:
+- Completion rate: Was the quarterly access review completed within 10 business days of the ISSO providing the account report? (Target: 100%)
+- Accuracy rate: What percentage of accounts reviewed required no correction after the review? (Target: >95%, with any accounts requiring correction tracked for root cause)
+
+*Data source:* Quarterly access review certifications, account correction records.
+
+*Why this KPI matters:* Completion rate is an implementation metric — the review happened. Accuracy rate is an effectiveness metric — the review produced an accurate access state. The M-004 finding (over-privileged role persisting for six weeks between reviews) shows what an access accuracy problem looks like. An access review that consistently produces 1-3 corrections per quarter suggests the underlying provisioning process has gaps; the review is catching them but not preventing them.
+
+*Trend interpretation:* Increasing correction rate over time signals a deteriorating provisioning process — the quarterly review is functioning but the root cause of mis-provisioning is not being addressed. Stable 0 corrections per quarter could signal either excellent provisioning hygiene or an insufficiently rigorous review (the M-004 pattern where role accuracy is not being evaluated, just account continuation).
+
+---
+
+**KRI-AC-1: Privileged Account Dormancy Indicator**
+
+*Definition:* Number of IT Administrator and ISSO accounts with no login activity in the prior 30 days at the time of each quarterly access review.
+
+*Target:* Zero. A privileged account with 30 days of dormancy should be immediately reviewed — no legitimate operational reason exists for a privileged account to be unused for 30 days.
+
+*Threshold:* Zero dormant privileged accounts = Green. Any dormant privileged account = immediate ISSO review and Health IT Manager notification.
+
+*Why this KRI matters:* Dormant privileged accounts are a high-value attack surface. An attacker who obtains dormant credentials for a privileged account may be able to use them without triggering the authentication anomaly alerts that would fire for an active account suddenly showing unusual activity. The 30-day threshold for privileged accounts (versus the role-differentiated thresholds from Day 70 for clinical accounts) reflects the elevated risk level of privileged access.
+
+---
+
+### Incident Response Metrics
+
+**KPI-IR-1: Mean Time to Contain (MTTC) for Tier 3 Incidents**
+
+*Definition:* For each Tier 3 (Critical) incident, the time from incident detection (GuardDuty finding timestamp or equivalent) to the completion of the initial containment action (account disabled, instance isolated, or equivalent). Measured per incident; trended over time.
+
+*Target:* ≤ 30 minutes for initial containment action from detection. This is the target from the IR playbook (Day 81) — the IT Administrator should be able to take containment action within 30 minutes of a detection alert.
+
+*Data source:* GuardDuty/Security Hub finding timestamps, CloudTrail records of containment actions (account disable, security group modification), incident report documentation.
+
+*Why this KPI matters:* MTTC measures the effectiveness of the detection-to-containment pipeline — not just whether the alert was sent, but whether a human received it and acted on it within the required timeframe. A system where GuardDuty generated a HIGH finding at 2am Saturday and the containment action occurred 6 hours later has a 6-hour MTTC — the detection worked, the response did not. This metric distinguishes detection capability from response capability.
+
+*Note on data volume:* At MyClinic's scale, Tier 3 incidents may be rare — potentially zero in a given quarter. When incidents are rare, MTTC is measured during the tabletop exercise rather than from live incidents. The tabletop scenario's "time to first containment action" is recorded as a proxy MTTC that reflects the team's current response capability.
+
+---
+
+**KRI-IR-1: Days Since Last IR Tabletop Exercise**
+
+*Definition:* Number of days since the most recent documented incident response tabletop exercise.
+
+*Target:* ≤ 365 days (annual exercise requirement from POA&M item 004). At 300 days since last exercise, begin scheduling the next one. At 365 days, Red.
+
+*Threshold:* 0-300 days = Green. 301-364 days = Yellow (schedule next exercise). 365+ days = Red (AO notification, POA&M item escalation).
+
+*Why this KRI matters:* The tabletop exercise is the only mechanism that tests whether the incident response capability actually works. As time passes since the last exercise, the team's familiarity with the IRP and their confidence in the escalation paths degrades — especially as personnel change and the informal "who do I call" knowledge is not consistently maintained. This KRI is a leading indicator of incident response capability degradation that would otherwise be invisible until a real incident reveals it.
+
+---
+
+### Contingency Planning Metrics
+
+**KPI-CP-1: Backup Success Rate and RTO Compliance**
+
+*Definition:* Two components:
+- Backup success rate: Percentage of scheduled backup jobs (automated RDS snapshots + weekly S3 export) that complete successfully each month. Target: 100%.
+- RTO compliance: Was the quarterly restoration test completed within the 4-hour RTO target? Target: Yes, with actual time recorded for trend analysis.
+
+*Data source:* AWS Backup job completion status, CloudWatch backup monitoring alerts, quarterly restoration test documentation.
+
+*Trend interpretation for RTO:* The M-003 finding identified a trend — restoration time increasing from 2:47 to 3:47 over one quarter. This trend, tracked through the RTO compliance metric, provides the data that supports the optimization investment before the RTO is missed. Without the trend data, the deterioration is invisible until the first failed test.
+
+---
+
+**KRI-CP-1: RTO Margin Trend**
+
+*Definition:* The difference between the quarterly restoration test completion time and the 4-hour RTO target, tracked over successive quarterly tests.
+
+*Calculation:* RTO target (240 minutes) minus actual restoration time = RTO margin.
+
+*Q1 value:* 240 - 227 = 13-minute margin (3:47 completion time).
+
+*Target:* RTO margin ≥ 60 minutes. Below 60 minutes = Yellow (optimization required). Below 30 minutes = Red (AO notification, immediate optimization priority).
+
+*Why this KRI matters:* A passing restoration test that is 13 minutes from failure is not the same as a passing test that has 90 minutes of margin. The KRI margin trend converts the binary pass/fail into a directional signal: is the system's recovery capability improving, stable, or degrading? The M-003 POA&M item exists because the trend analysis surfaced the degradation early enough to address it proactively.
+
+---
+
+### Security Awareness Training Metrics
+
+**KPI-AT-1: Training Completion Rate and Currency**
+
+*Definition:* Percentage of active OpenMRS users who have completed the required security awareness training within the past 12 months, measured quarterly.
+
+*Target:* 100% compliance, with zero users in the 10-day remediation window at any quarterly review.
+
+*Data source:* Training completion records, OpenMRS user account list from most recent quarterly access review.
+
+*Trend interpretation:* The AT-2 gap from Day 55 (users in the overdue remediation window at the time of the HC3 briefing) shows what low training currency looks like operationally — not just a compliance gap but an actual increased susceptibility to the threat vector (phishing credential theft) that the HC3 briefing identified as elevated.
+
+---
+
+**KRI-AT-1: Phishing Simulation Click Rate**
+
+*Definition:* If a phishing simulation program is implemented — percentage of staff who click a simulated phishing link in a quarterly simulation.
+
+*Target:* Below 5% click rate. Above 10% triggers targeted retraining.
+
+*Note on current state:* MyClinic does not currently run a formal phishing simulation program — this is a future program development item. Adding a simple phishing simulation (available through free or low-cost tools) would convert AT-2 training completion from an implementation metric into an effectiveness metric. Completing the training proves the training occurred; not clicking a simulated phishing link proves the training produced behavioral change.
+
+*This is the metrics gap the KPI/KRI framework surfaces:* The current AT-2 metrics measure implementation (training completion rate). No effectiveness metric exists for security awareness. Adding a phishing simulation would close this gap — and connect directly to the HC3 briefing's credential theft threat vector.
+
+---
+
+## The Metrics Reporting Cadence
+
+Metrics have no governance value unless they reach the right decision-makers at the right frequency. The reporting cadence:
+
+**Monthly — ISSO operational review:**
+All KPIs and KRIs reviewed by the ISSO. Red and Yellow indicators generate immediate action or escalation. Documented in monitoring log. No report generated unless a Red indicator requires stakeholder notification.
+
+**Quarterly — Health IT Manager report:**
+KPI and KRI summary included in the monthly monitoring summary that the Health IT Manager receives. Focus on metrics where the Health IT Manager's action or awareness is required: access review metrics, contingency planning metrics, training completion metrics.
+
+**Quarterly — AO report:**
+Selected KPIs and KRIs included in the quarterly POA&M status report. AO receives the high-level picture: are the key metrics green, yellow, or red? Are any KRIs trending toward threshold breach? The KRI-CP-1 RTO margin trend — showing the 13-minute margin from the Q1 restoration test — is exactly the kind of forward-looking risk signal the AO needs to maintain informed risk acceptance.
+
+**Annual — Continuous monitoring summary:**
+12-month trend analysis for each KPI and KRI. The trend analysis answers: is the security program improving, stable, or degrading over the authorization period? This is the organizational learning narrative (referenced in Day 74's ongoing authorization section) that the AO receives at the annual review.
+
+---
+
+## The Dashboard Design — Avoiding Metric Theater
+
+The metrics dashboard should answer one question clearly and honestly for each audience: is the security program moving in the right direction?
+
+For the ISSO: a complete view of all KPIs and KRIs with trend arrows (improving, stable, degrading) and threshold indicators (green, yellow, red). The ISSO needs the full picture to manage the program.
+
+For the Health IT Manager: a simplified view of the metrics that require their awareness or action. Not all 10 metrics — the 4 that directly involve their role (access review completion and accuracy, CP-2 condition status, training completion, RTO margin).
+
+For the AO: a further simplified view — three to five headline metrics that tell the authorization story. Are critical vulnerabilities being patched on time? Is the access review running correctly? Is the RTO margin adequate? These three metrics, with trend data, give the AO the information they need to assess whether the authorization remains appropriate.
+
+The dashboard should not be optimized to look green. A dashboard that is always green because metrics are designed to be easy to achieve, or because red indicators are suppressed before they reach senior audiences, is producing metric theater — the appearance of security performance without the substance. The phishing simulation example is the clearest illustration: if the training completion rate is 100% (Green) but no effectiveness metric exists, the dashboard shows green in security awareness while the actual phishing susceptibility rate is unknown. Adding the phishing simulation click rate might show Yellow or Red — but that honest signal is more valuable than a false Green.
+
+---
+
+## A Real-World Example That Made This Click
+
+The KRI concept — early warning before threshold breach — is directly illustrated by the **2021 Florida water treatment facility incident**, where an attacker gained remote access to the facility's operational technology systems and attempted to increase sodium hydroxide (lye) levels in the water supply to dangerous levels. The intrusion was noticed by an operator who saw the cursor moving on screen.
+
+The water treatment facility had monitoring systems. What it did not have was KRIs calibrated to the operational threat: no alert for remote access from unexpected geographic locations, no alert for attempts to modify treatment chemical levels beyond normal operational ranges, no threshold-based indicator that would have surfaced the intrusion before the operator happened to notice the cursor.
+
+This is the KRI design principle: KRIs should be calibrated to the specific threats that the risk assessment identified as most likely and most impactful. For OpenMRS, the KRI-AC-1 privileged account dormancy indicator is calibrated to the specific threat (compromised dormant privileged credentials) identified as a high-value attack vector. The KRI-VM-1 High vulnerability aging counter is calibrated to the specific threat (unpatched vulnerabilities exploited before remediation) that drives most healthcare breach incidents.
+
+Generic KRIs — "number of security incidents" — are less valuable than threat-specific KRIs because they measure outcomes rather than leading indicators. By the time "number of security incidents" shows Red, the incident has already occurred. KRIs that show Yellow at 30 days of vulnerability aging give the ISSO 30 days to remediate before the threshold becomes a breach.
+
+---
+
+## What I Am Still Thinking About
+
+The phishing simulation gap — no effectiveness metric for security awareness training — is worth examining more carefully.
+
+A formal phishing simulation program requires staff notification that simulations will occur (ethical transparency), a process for providing immediate feedback to staff who click simulated links, and a reporting mechanism for tracking improvement over time. For MyClinic's staff size, a simple phishing simulation using a free tool (GoPhish is open-source and self-hosted) could be implemented with minimal technical investment.
+
+The hesitation I would anticipate from leadership: "Won't this embarrass staff who click?" This is a real concern worth addressing directly. The simulation is not designed to identify and shame individuals — it is designed to measure population-level susceptibility and provide immediate teachable moments for individuals who click. The report to leadership shows aggregate click rates by department and trend over time, not individual names. The individual who clicks receives an immediate micro-training about phishing recognition rather than a disciplinary notification.
+
+This framing — simulation as a learning tool, not a surveillance mechanism — is what makes the phishing simulation program culturally acceptable in a healthcare environment where staff trust is essential to the organization's mission. The KRI it produces is genuinely more valuable than any number of training completion records.
+
+---
+
+## What's Next
+
+Day 84 examines security awareness training in depth — not just the metrics that measure it (addressed today) but the design principles that make training actually change behavior rather than producing completion records. The CP-3 retention gap from Day 79 and the phishing susceptibility measurement gap from today both point to the same underlying challenge: training that produces documentation without producing behavioral change is not security investment — it is compliance overhead.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-55 Rev 2 – Performance Measurement Guide for Information Security](https://csrc.nist.gov/publications/detail/sp/800-55/rev-2/final)
+- [NIST SP 800-137 – Metrics in Continuous Monitoring Reporting](https://csrc.nist.gov/publications/detail/sp/800-137/final)
+- [CIS Controls v8 – Metrics and Measurement for Each Control](https://www.cisecurity.org/controls/v8)
+- [SANS – Security Metrics: Replacing Fear, Uncertainty, and Doubt](https://www.sans.org/white-papers/33375/)
+- [Florida Water Treatment Facility Incident — CISA Advisory](https://www.cisa.gov/news-events/alerts/2021/02/10/compromise-us-water-treatment-facility)
+
+---
+
+*#GRC #SecurityMetrics #KPI #KRI #ContinuousMonitoring #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day83*
