@@ -1,78 +1,208 @@
-#  Day 91: Capstone Part 5 – Policies and Procedures 
-
-##  Objective
-
-Today I focused on identifying and documenting the **security policies and procedures** needed to govern the OpenMRS deployment on AWS. These documents serve as the **human rulebook** for how we manage security, define responsibilities, and ensure consistent behavior across all stakeholders — from clinicians to system administrators.
-
-This part of the GRC plan ensures that our **technical controls are backed by formal guidance**, reducing confusion, enforcing compliance (e.g., HIPAA), and preparing the organization for audits or incident response scenarios.
+# Day 91 – Capstone Part 5: Policies and Procedures | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Understanding Policies vs. Procedures
+## The Governance Layer That Makes Controls Sustainable
 
-- **Policies** = What & Why (the rule, its intent, and who it applies to)
-- **Procedures** = How (step-by-step instructions to carry out the policy)
+Day 90 produced the control implementation plan — risk-to-control traceability showing that the OpenMRS technical controls are largely effective, with three meaningful gaps: the phishing simulation absence (human layer effectiveness undemonstrated), the AU-12 denied-access logging gap (detection capability reduced), and the CP-2 AT RISK condition (clinical downtime procedures not yet complete). The control section also identified a policy architecture gap: several policies referenced in the SSP have never been developed as standalone organizational documents with owners, acknowledgment requirements, and review cycles.
 
-Policies give direction. Procedures give instruction. Together, they ensure **predictability, accountability, and compliance**.
+Day 91 addresses that gap directly. But I want to be honest about what "policies and procedures" means at the capstone stage of a program that has been running for eight months, because the framing matters for how this section is read.
 
-For OpenMRS — which handles **Protected Health Information (PHI)** — both are essential for HIPAA readiness and real-world security operations.
+At initial GRC program design, the policy section answers "what policies do we need?" At the capstone stage, the policy section answers two different questions: "which policies are fully developed and operational?" and "which policies exist only as SSP references or partial documents, and what is the plan to complete them?" The honest answer to both questions tells a more useful story than presenting a policy list as though every item were equally complete.
 
----
-
-##  Key Policies & Procedures for OpenMRS
-
-| **Title** | **Status** | **Purpose** |
-|-----------|------------|-------------|
-| **Access Control Policy** | Existing – Needs Update | Defines how OpenMRS and AWS user accounts are created, modified, and revoked. Enforces the principle of least privilege and ensures only authorized personnel access sensitive systems and data. |
-| **Incident Response Plan (IRP)** | New | Provides a clear workflow for identifying, reporting, containing, and remediating security incidents involving OpenMRS. Defines roles, communication paths, and documentation expectations. |
-| **Backup & Recovery Procedure** | Existing – Needs Update | Outlines how OpenMRS data is backed up (daily encrypted backups to S3) and how recovery is tested. Ensures we can restore operations quickly and preserve patient data integrity. |
-| **Acceptable Use Policy (AUP)** | Existing – Needs Update | Educates end-users (doctors, nurses, admins) on responsible system usage. Clarifies prohibited actions like password sharing, unauthorized access, and use of personal devices for PHI access. |
-| **Change Management Procedure** | Existing – Needs Update | Ensures that patches, software updates, or infrastructure changes to OpenMRS/AWS go through documented review and approval, with testing and rollback plans in place. |
-| **Encryption & Data Protection Policy** | New | Documents the encryption requirements for data at rest (e.g., RDS, S3) and in transit (e.g., HTTPS, TLS). Ensures OpenMRS handles PHI according to HIPAA's confidentiality requirements. |
-| **User Provisioning & Deprovisioning Procedure** | New | Step-by-step guide for onboarding new users, assigning appropriate roles, and promptly revoking access upon departure or role change. Critical for avoiding orphaned accounts. |
-| **Log Management & Review Policy** | New | Defines how OpenMRS and AWS audit logs are collected, protected, reviewed, and retained. Ensures security events are detectable and traceable. |
+The OpenMRS program has one fully developed standalone policy (IS-AC-001 Access Control Policy), one operational plan document (the Incident Response Plan), one plan document in development under an authorization condition (CP-2 Contingency Plan), and a set of policy needs that have been documented in the SSP but never formalized as organizational governance documents. This section organizes that complete picture.
 
 ---
 
-##  Hands-On Policy Review Summary (3 Examples)
+## What I Worked On Today
 
-### 1. **Access Control Policy** – *Existing, Needs Update*  
-> Governs how user access is granted or revoked for OpenMRS and AWS resources. It ensures adherence to least privilege, password complexity standards, and role-based access.
-
-### 2. **Incident Response Plan (IRP)** – *New*  
-> Lays out roles, notification paths, and containment strategies in the event of a breach. Guides the technical team in coordinating fast, consistent, and documented response actions.
-
-### 3. **Backup & Recovery Procedure** – *Existing, Needs Update*  
-> Ensures OpenMRS data is backed up nightly and stored in encrypted S3 buckets, with quarterly restore drills to confirm integrity and availability.
+NIST SP 800-12 Rev 1 describes the policy development framework — the hierarchy from organizational policy through system-specific policy through procedures and guidelines. The Day 76 policy writing section established the policy hierarchy (policy → standard → procedure → guideline) and identified the five writing failure modes (passive voice, "should" instead of "must," scope ambiguity, missing exception process, no enforcement reference). Today I apply that framework to the complete OpenMRS policy inventory — documenting current status for existing policies and drafting the substance for the two highest-priority new documents.
 
 ---
 
-##  Reflection – The Power of Governance in Security
+## What Actually Clicked for Me
 
-Today’s work reinforced something important: **Security isn’t just about firewalls and encryption – it’s also about people, behavior, and consistency.** Policies and procedures make this possible.
+The insight that clarified the policy section today is understanding that a policy without an acknowledgment requirement is not an enforceable policy.
 
-They’re how we:
-- Prevent confusion when onboarding staff
-- Respond quickly when things go wrong
-- Meet compliance requirements (like HIPAA)
-- Foster a culture of security awareness
+IS-AC-001, the Access Control Policy developed in Day 76, contains specific obligations — "Users must not share account credentials under any circumstances" (Section 3.1), "All user sessions must timeout after 15 minutes of inactivity" (Section 3.4). These are written in the mandatory voice with named enforcement references. But the policy's enforceability depends on users having been formally presented with the policy and acknowledged their obligation to comply. Without that acknowledgment, the organization's ability to take disciplinary action for a policy violation is weaker — the user can plausibly claim they were unaware of the requirement.
 
-The **Incident Response Plan** stands out to me as the most impactful policy — because **when a breach happens, response time and clarity are everything**. However, I also believe that **Access Control** sets the tone for risk prevention, and should be tightly governed.
+This is especially significant for the Acceptable Use Policy gap identified in Day 90. RS-005 (insider misuse) is one of the program's Moderate residual risks. The primary deterrence mechanism for insider misuse — beyond access controls and audit logging — is the credible organizational consequence for misuse. That consequence depends on a policy that was formally communicated and acknowledged. A clinician who accesses a patient record without clinical justification has violated HIPAA and the Access Control Policy, but if there is no signed AUP establishing that they understood their obligations, the disciplinary response is harder to execute cleanly.
 
-Writing these documents is one challenge. **Getting buy-in and compliance** is another. That’s why training, regular reviews, and executive support are critical. A policy that no one reads is a **risk in itself**.
-
->  *Takeaway*: Policies and procedures translate technical strategy into day-to-day practice. Without them, even the best controls will fail in a real-world crisis.
+This is why the AUP is not just a nice-to-have second-year priority — it is a material gap in the insider threat deterrence architecture.
 
 ---
 
-## Suggested Search Terms
-
-- `Essential cybersecurity policies healthcare`  
-- `Access control policy example clinic`  
-- `Incident response plan template small business`  
-- `HIPAA security policies list requirements`  
-- `IT change management procedure examples`
+## Current Policy Inventory — Complete Status Assessment
 
 ---
 
- **Next Up (Day 92)**: I’ll be developing a **User Security Awareness Training Plan** — making sure OpenMRS users understand how to keep patient data safe and follow all the rules we’ve now put in place. Let’s keep building! 🚀
+### IS-AC-001: Access Control Policy
+**Status:** Fully developed, operational
+**Version:** 1.0 (developed Day 76)
+**Owner:** ISSO
+**Scope:** All OpenMRS user accounts and AWS IAM entities; all clinical and administrative staff; IT Administrator
+**Key provisions:** Individual account requirement (no shared credentials), role-based access aligned with job function, dual-approval provisioning, quarterly access review obligation, 15-minute session timeout, MFA requirement, account deprovisioning within 24 hours of separation, exception process through ISSO with Health IT Manager approval
+**Acknowledgment status:** Acknowledged by all current users as part of account provisioning process
+**Review cycle:** Annual; next review [date]
+**Gap identified:** Section 6 (Approved Authenticator Applications) needs update — the TOTP authenticator app governance gap identified in Day 82 requires an approved app list. This is a minor policy maintenance item, not a material gap.
+**Relationship to SSP:** IS-AC-001 is referenced in SSP AC-2 and AC-3 implementation descriptions. SSP v1.2 updated to reflect M-004 HR notification requirement, which IS-AC-001 will incorporate at next annual review.
+
+---
+
+### Incident Response Plan (IRP)
+**Status:** Fully developed, operational
+**Version:** 1.0 (developed Day 81)
+**Owner:** ISSO (primary), Health IT Manager (secondary authority for invocation decisions)
+**Scope:** All security incidents involving OpenMRS, AWS infrastructure, or ePHI
+**Key provisions:**
+- Four-tier incident classification (Tier 1 monitor through Tier 4 HIPAA reportable)
+- Three operational playbooks: Compromised Credentials, Ransomware/EC2 Compromise, OpenMRS Unavailability
+- HIPAA breach notification workflow (60-day OCR deadline from discovery)
+- Escalation authorities: ISSO → Health IT Manager → AO (Tier 3/4) → Compliance Officer (HIPAA reportable)
+- Communication protocol for 2am incidents (Day 85 scenario design)
+**Demonstrated readiness gap:** IR-3 tabletop exercise (POA&M item 004) not yet executed. The IRP documents what the organization will do. The tabletop demonstrates whether the organization can do it under pressure. Until IR-3 is executed with the 2am/primary-contact-unreachable scenario, the program has documented readiness, not demonstrated readiness.
+**Next exercise:** Scheduled for [date]; must be completed before re-authorization assessment
+**Acknowledgment status:** Distributed to IT Administrator and Health IT Manager; escalation procedures verbally confirmed at Q1 quarterly review
+
+---
+
+### CP-2: Contingency Plan / Clinical Downtime Procedures
+**Status:** In development — authorization condition AT RISK
+**Version:** Draft (Milestones 1 and 2 complete; Milestone 3 meeting scheduled; Milestone 4 pending)
+**Owner:** ISSO (author), Health IT Manager (clinical operations owner), designated clinical staff (content contributors)
+**Scope:** OpenMRS unavailability lasting 30 minutes or longer
+**Key provisions under development:**
+- Clinical downtime invocation threshold and authority (30-minute unavailability threshold; Health IT Manager invocation authority)
+- Paper-based downtime procedure for clinical staff (encounter documentation, medication dispensing without EHR access)
+- Recovery procedure (data reconciliation between paper records and restored OpenMRS)
+- RTO target: 4 hours; current RTO margin: 13 minutes (POA&M M-003 in progress)
+**AT RISK status:** 90-day authorization condition deadline is 12 days away at Q1 reporting date. AO notified. Milestone 3 meeting blocked by one unresponsive clinical leadership participant. AO intervention requested per Day 85 communication scenario.
+
+---
+
+### Data Retention and Disposal Policy
+**Status:** Not developed as standalone document — exists as SSP references in multiple sections
+**Priority:** Second year — HIGH
+**What exists:** SSP CP-9 section documents the 7-year retention requirement (Minnesota Health Records Act); SSP references backup retention (35-day RDS snapshots, indefinite S3 backup exports); Day 75 decommissioning framework documents the disposal sequence (archive verification, access revocation, data destruction, encryption key management).
+**What is missing:** A standalone organizational policy that:
+- Names the data steward responsible for the 7-year archive obligation
+- Documents the approved data destruction methods for different media types
+- Establishes the exception process for records requested by legal hold beyond standard retention periods
+- Requires annual certification by the data steward that retention obligations are being met
+**Why this matters:** Without a standalone retention and disposal policy, the 7-year retention obligation lives in a technical document (the SSP) rather than an organizational governance document with a named owner and review cycle. If the ISSO position turns over, there is no standalone document ensuring institutional continuity of the retention obligation.
+**Development approach for second year:** Draft standalone policy incorporating SSP retention references, Day 75 disposal framework, and data steward designation. Obtain Health IT Manager and AO approval. Add to annual acknowledgment process.
+
+---
+
+### Acceptable Use Policy (AUP)
+**Status:** Not developed — material gap for insider threat deterrence
+**Priority:** Second year — HIGH (elevated due to RS-005 residual rating and AU-12 gap)
+**What exists:** IS-AC-001 Section 3 contains some AUP-equivalent provisions (shared credential prohibition, session management). These provisions are in the Access Control Policy, which all users have acknowledged. The gap is in the broader acceptable use space: personal device access to ePHI, social media and patient information, personal use of organization systems, reporting obligations when a colleague's behavior raises privacy concerns.
+**What is missing:** A standalone AUP that:
+- Defines permitted and prohibited uses of OpenMRS and organization IT systems
+- Addresses personal device access to ePHI (currently: not prohibited by written policy; IS-AC-001 addresses MFA requirement but not device governance)
+- Establishes the obligation to report observed policy violations
+- Defines consequences for violation (referencing HR disciplinary framework)
+- Requires annual acknowledgment with dated signature
+**Why this matters now:** The M-004 finding (over-privileged access due to internal role change) and the AU-12 gap (denied access events not logged) both reduce the detection capability for insider misuse. Strengthening the deterrence layer — through a clear AUP with acknowledged consequences — is the administrative complement to the technical detection improvements.
+**Draft provision examples:**
+- "OpenMRS shall be accessed only for purposes directly related to patient care for patients under your clinical responsibility at MyClinic. Access to patient records for personal curiosity, family member inquiries, or purposes unrelated to current care episodes is prohibited and constitutes a HIPAA privacy violation."
+- "Access to ePHI via personal (non-organization-issued) devices is prohibited without prior written approval from the ISSO. Approved personal device access requires the same MFA controls as clinic workstation access and is subject to audit log review."
+- "Employees who observe potential policy violations involving ePHI access are obligated to report to the ISSO or Compliance Officer within 24 hours."
+
+---
+
+### Change Management Policy
+**Status:** Partially developed — CM-3 procedure exists in SSP; standalone policy not developed
+**Priority:** Second year — MODERATE-HIGH (directly relevant to M-002 and A-7 findings)
+**What exists:** SSP CM-3 implementation description documents the change management procedure: ISSO notification of planned changes, SIA for security-relevant changes, 72-hour advance notice requirement, emergency change process, post-change testing. This is a documented procedure.
+**What is missing:** An organizational change management policy that:
+- Names the change management authority (who has final approval for different change categories)
+- Defines consequences for unauthorized changes (the M-002 finding — unauthorized IAM password policy change — was addressed through a conversation with the IT Administrator; a policy with named consequences would give the ISSO clearer authority to escalate)
+- Requires IT Administrator acknowledgment of change management obligations
+- Addresses the IAM policy modification gap documented in M-002 (CM-3 scope update)
+**Why the IT Administrator acknowledgment matters:** The M-002 and A-7 findings both involved the IT Administrator making changes outside the CM-3 process. Both were addressed through direct conversation. The pattern suggests a process culture problem — the IT Administrator understands the procedure exists but does not consistently treat it as obligatory. A signed change management policy acknowledgment makes the obligation explicit and gives the ISSO clearer authority for escalation if the pattern continues.
+
+---
+
+### Vendor Management Policy
+**Status:** Partially developed — Day 82 TPRM register exists; standalone policy not developed
+**Priority:** Second year — MODERATE
+**What exists:** The TPRM register (Day 82) documents the three-vendor management approach: AWS (annual SOC 2 review through Artifact), OpenMRS community (monthly advisory monitoring), LIS (annual review per ISA). This is an operational register.
+**What is missing:** A standalone vendor management policy that:
+- Defines the BAA requirement for all vendors who may receive, transmit, or handle ePHI
+- Establishes the annual review cadence as a policy obligation (not just an operational practice)
+- Documents the TPRM register maintenance responsibility
+- Defines the process for onboarding new vendors (security questionnaire, BAA execution, ISSO review before data sharing begins)
+
+---
+
+### Log Management and Review Policy
+**Status:** Partially developed — audit log requirements scattered across multiple SSP sections
+**Priority:** Second year — MODERATE
+**What exists:** SSP AU-2 documents the required audit event types; AU-9 documents tamper protection; AU-11 documents retention period (90 days hot, 1-year cold storage); the M-2 assessment program documents monthly and quarterly review activities.
+**What is missing:** A standalone log management policy that:
+- Consolidates the log requirements into a single reference document
+- Names the log review owner and review frequency
+- Documents the AU-12 denied-access logging gap and the remediation plan (honest documentation of current state)
+- Defines the log retention schedule and destruction procedure at retention expiration
+- Addresses the AU-3 previous-value logging gap (POA&M item 009)
+
+---
+
+## Policy Development Priority Matrix
+
+| Policy | Current Status | Second-Year Priority | Primary Driver |
+|---|---|---|---|
+| IS-AC-001 Access Control | Operational | Maintenance update | TOTP app list; M-004 HR notification |
+| Incident Response Plan | Operational | IR-3 tabletop execution | Demonstrated readiness gap |
+| CP-2 Contingency Plan | AT RISK | Complete Milestone 3-4 | Authorization condition deadline |
+| Data Retention and Disposal | SSP reference only | HIGH — new development | Institutional continuity; data steward designation |
+| Acceptable Use Policy | Not developed | HIGH — new development | RS-005 deterrence; AU-12 gap |
+| Change Management Policy | Procedure only | MODERATE-HIGH | M-002/A-7 pattern; IT Admin acknowledgment |
+| Vendor Management Policy | TPRM register only | MODERATE | BAA governance; new vendor onboarding |
+| Log Management Policy | Scattered SSP sections | MODERATE | AU-12 remediation documentation; review ownership |
+
+---
+
+## The Policy Governance Lifecycle — What This Program Has Learned
+
+The policy governance lifecycle has three phases that the Day 76 analysis identified: writing, communication/training, and monitoring. Eight months of operations have produced lessons about each:
+
+**Writing:** The IS-AC-001 policy development process — starting from organizational specificity (this system, these roles, this enforcement mechanism) rather than adapting a generic template — produced a policy that maps directly to the system's actual operation. The policy writing failures (passive voice, "should" instead of "must," scope ambiguity) are real failure modes that generic templates often exhibit. The second-year policies should follow the same specificity-first approach.
+
+**Communication and training:** The IT Administrator's CM-3 compliance pattern (M-002, A-7) suggests that communication of the change management procedure was not sufficient to produce consistent behavioral compliance. Communication of a policy is not the same as acknowledgment of a policy obligation. The change management policy development for year two should include an explicit acknowledgment step — the IT Administrator signs that they have read and understood the change management requirements — so that subsequent compliance conversations have a clear reference point.
+
+**Monitoring:** The quarterly access review (AC-2) is a policy monitoring mechanism — it confirms that the Access Control Policy's role-based access requirements are being maintained. The M-004 finding (one over-privilege instance corrected in Q1) demonstrates the monitoring mechanism working as designed. For the second-year policies (AUP, change management, vendor management), equivalent monitoring mechanisms need to be defined at policy development time, not added later.
+
+---
+
+## A Real-World Example That Made This Click
+
+The importance of the Acceptable Use Policy as a deterrence mechanism — not just a compliance document — is illustrated by the **2017 Memorial Healthcare System settlement ($5.5 million, one of the largest HIPAA settlements at the time)**.
+
+The OCR investigation found that a workforce member had used login credentials of a former employee to access ePHI without authorization over a period of approximately a year. The access control failure was real — the former employee's credentials had not been promptly deprovisioned (an AC-2 issue). But the investigation also identified that the workforce member who used those credentials had not been formally presented with a policy that clearly prohibited this behavior and defined the consequences.
+
+The Memorial Healthcare case is directly relevant to the OpenMRS AUP gap because it shows that technical access control failures (delayed deprovisioning) are more likely to be exploited when the workforce has not been formally presented with a policy that establishes clear behavioral expectations and consequences. The IS-AC-001 policy covers deprovisioning timing. The missing AUP covers the workforce member's obligation not to use credentials they are not authorized to use — and the consequences if they do.
+
+The combined lesson: technical controls (AC-2 deprovisioning) and administrative controls (AUP establishing behavioral obligations) work together. Either one alone leaves a gap that the other cannot fully compensate for.
+
+---
+
+## What's Next
+
+Day 92 develops the Security Awareness Training Plan — building from AT-2 implementation (year one), the CP-3 retention gap finding, the absent phishing simulation effectiveness metric, and the Day 90 control gap analysis that identified the human layer as the single highest-priority gap in the current control set. What does a second-year training program look like that moves from confirmed implementation to demonstrated behavioral effectiveness?
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-12 Rev 1 – An Introduction to Information Security: Policy Development Framework](https://csrc.nist.gov/publications/detail/sp/800-12/rev-1/final)
+- [NIST SP 800-53 Rev 5 – Policy and Procedures Control (PL-1, AC-1, AU-1)](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [HHS OCR – Memorial Healthcare System HIPAA Settlement](https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/memorial-healthcare/index.html)
+- [SANS – Security Policy Templates](https://www.sans.org/information-security-policy/)
+- [HHS OCR – HIPAA Policies and Procedures Guidance](https://www.hhs.gov/hipaa/for-professionals/security/guidance/policies-procedures/index.html)
+
+---
+
+*#GRC #Policies #Procedures #HIPAA #NIST #OpenMRS #HealthcareSecurity #PolicyGovernance #100DaysOfGRC #AWS #Day91*
