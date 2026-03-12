@@ -1,91 +1,266 @@
-#  Day 89: Capstone Part 3 – Risk Assessment Summary | 100 Days of GRC
-
-##  Objective
-
-Today, I completed a **risk assessment** for the OpenMRS electronic medical record system deployed in AWS. The goal was to identify and rank potential threats to the confidentiality, integrity, and availability of the system and its data. By using a **qualitative 3x3 risk matrix**, **team brainstorming**, and results from a **vulnerability scan**, I evaluated technical and human-centric risks that could impact healthcare operations.
-
-This process helped me prioritize which risks require immediate attention and which can be monitored or mitigated with lower urgency. It’s not just a checklist — it's a leadership tool for decision-making.
+# Day 89 – Capstone Part 3: Risk Assessment Summary | 100 Days of GRC
+*By Ibrahim Abdullahi | 100-Day GRC Challenge: Securing OpenMRS on AWS*
 
 ---
 
-##  Risk Assessment Methodology
+## Risk Assessment at the Capstone Stage — What Has Changed
 
-We used a **simple but effective 3x3 qualitative risk matrix**, rating each threat based on:
+Day 88 produced the compliance mapping — four-layer traceability from HIPAA requirement through NIST control through SSP implementation through evidence chain, with honest ⚠️ markers for the two gaps currently in progress. The compliance mapping revealed the program's coverage structure. Day 89 is about the risk picture that the program was built to address — and how that picture has evolved over eight months of authorized operation and continuous monitoring.
 
-- **Likelihood** (Low, Medium, High)
-- **Impact** (Low, Medium, High)
+I want to be direct about the difference between this capstone risk assessment and the initial risk assessment conducted in Days 38-40. The Day 38 risk register was built prospectively — identifying threats before the system was fully operational, estimating likelihoods and impacts based on the threat landscape at categorization time, and establishing the risk baseline that the authorization was built on.
 
-Each risk was assigned a rating of **Low**, **Medium**, or **High** based on where it landed on the grid. This matrix was informed by:
+The Day 89 risk assessment is built retrospectively and currently — it incorporates eight months of operational evidence. The continuous monitoring program has produced real findings that either validate or update the initial risk ratings. The HC3 threat intelligence briefing from Q1 monitoring changed the likelihood rating for one risk category. The M-002, A-7, and M-004 findings all revealed process-layer risks that the technical control inventory did not fully capture at initial assessment. The AU-12 self-assessment finding revealed an implementation gap in a control that was assessed as compliant.
 
--  **Team brainstorming sessions** (business and IT perspectives)
--  **Vulnerability scan results** (technical evidence)
--  **Previous incident logs and threat intelligence**
-
-This hybrid approach helped ensure a **holistic view** — combining both **cybersecurity controls** and **operational insights**.
+The capstone risk summary should reflect this evolved picture — not a retrospective recreation of the initial assessment, but the current risk posture as it actually exists after eight months of operation, monitoring, and mitigation.
 
 ---
 
-##  Top 5 Risks Identified
+## What I Worked On Today
 
-| **Risk** | **Risk Description** | **Likelihood** | **Impact** | **Overall Risk** |
-|----------|----------------------|----------------|------------|------------------|
-| Data breach via SQL injection | Vulnerability in application code could be exploited to exfiltrate patient records | High | High | **High** |
-| Unauthorized admin access | Weak or stolen credentials could lead to privilege escalation | Medium | High | **High** |
-| PHI exposure via S3 misconfiguration | Improper access settings could publicly expose backups or logs | Medium | High | **High** |
-| Server outage without rapid recovery | Downtime from patch failure, hardware error, or DDoS attack could disrupt clinical care | Medium | Medium | **Medium** |
-| Insider misuse of data | Staff with legitimate access may misuse or leak sensitive information | Low | High | **Medium** |
-
->  *Lower-rated risks (e.g., cosmetic software bugs) were noted but deprioritized for immediate mitigation.*
+NIST SP 800-30 Rev 1 provides the risk assessment methodology guidance. The OpenMRS risk register (first developed in Day 38) has been updated through Q1 monitoring (HC3 briefing, monitoring findings). Today I produce the current-state risk summary organized for the capstone — complete risk register with updated ratings, the threat environment evolution from initial assessment to current, and the residual risk picture after controls and POA&M management.
 
 ---
 
-##  Hands-On Risk Categorization & Mitigation Exercise
+## What Actually Clicked for Me
 
-###  High Risk: Unauthorized Admin Access  
-- **Description**: If a malicious actor gains unauthorized admin credentials, they could compromise all patient records or alter configurations.  
-- **Mitigation**:  
-  - Enforce **multi-factor authentication (MFA)** on all administrative accounts  
-  - Use **strict password policies** and **IAM least privilege roles**  
-  - Regularly audit admin access and disable unused accounts  
+The concept that clarified risk assessment maturity today is the distinction between a point-in-time risk assessment and a risk register that reflects operational learning.
 
-###  Medium Risk: Prolonged Server Outage  
-- **Description**: A patching error or cloud infrastructure failure could take OpenMRS offline, affecting care continuity.  
-- **Mitigation**:  
-  - Use **AWS Multi-AZ deployment** for high availability  
-  - Automate **daily encrypted snapshots** of the EC2 instance and RDS database  
-  - Conduct quarterly **disaster recovery drills** to reduce downtime  
+A point-in-time risk assessment documents the risk picture at a specific moment — the initial categorization, the pre-authorization assessment, the re-authorization assessment. These are high-rigor, structured assessments that produce formal documentation. They are necessary but inherently backward-looking — they capture the risk picture at the moment of assessment.
 
-###  Low Risk: UI Bug Causing Display Error  
-- **Description**: A minor display bug causes the visit summary to render incorrectly, with no impact on underlying data integrity.  
-- **Mitigation**:  
-  - Document the bug and assign to the dev team with normal SLA  
-  - No emergency fix required; monitor user feedback for escalation  
+A risk register that reflects operational learning incorporates the lessons that ongoing monitoring produces: a control that was assessed as effective but degraded over time, a threat actor whose capabilities increased based on threat intelligence, a vulnerability that was rated Low at assessment but was exploited in a comparable organization and warrants re-evaluation. The risk register is not a snapshot — it is a living document that the continuous monitoring program keeps current.
+
+The eight months of OpenMRS operation have produced exactly this kind of operational learning. The risk register at the capstone stage is more accurate than the risk register at authorization — not because the initial assessment was wrong, but because operational experience produces information that prospective risk assessment cannot generate.
 
 ---
 
-##� Reflection – Why This Process Matters
+## OpenMRS Risk Register — Current State
 
-This risk assessment reminded me that **security leadership begins with awareness**. Without a structured review, some of these risks might stay hidden until it's too late. I was surprised by how technical issues (like SQL injection) and human issues (like insider misuse) can both be **High risk** in a healthcare setting.
-
-The **ranking process was eye-opening**:  
-- SQL injection felt like a top concern because of real-world breaches in healthcare.  
-- Insider misuse was less likely, but its impact on trust and compliance is severe.  
-- Misconfigured S3 buckets are often overlooked — but can result in **instant public data exposure**.
-
-By evaluating these scenarios through a risk lens, I’ve learned how to **focus resources**, **build accountability**, and **communicate security priorities** to both technical and non-technical stakeholders.
-
-> **Takeaway**: Risk assessments are not just paperwork — they’re a guide to smart, proactive security.
+The risk register below reflects the current status as of the capstone date, incorporating initial assessment ratings, post-authorization monitoring findings, and threat intelligence updates. For each risk, I document: the original rating, the current rating, the change rationale, the mitigation status, and the residual risk.
 
 ---
 
-## Suggested Keywords & Resources
+### RS-001: Unauthorized Access to ePHI via Compromised User Credentials
 
-- `Qualitative risk assessment 3x3 matrix`  
-- `Top healthcare IT security risks`  
-- `SQL injection medical data breach`  
-- `Vulnerability scanning tools open source`  
-- `Risk mitigation strategies examples`  
+**Threat source:** External threat actor (targeted credential theft via phishing); malicious insider
+**Threat event:** Attacker obtains valid OpenMRS user credentials through phishing and uses them to access patient records
+
+**Initial likelihood:** Moderate — credential theft is common; MFA reduces but does not eliminate risk
+**Current likelihood:** Moderate-High — HC3 Q1 briefing documented specifically elevated phishing campaigns targeting healthcare EHR credentials for organizations matching MyClinic's profile. The threat is more specifically directed at this system category than the initial assessment captured.
+
+**Impact:** HIGH — ePHI disclosure for population with elevated sensitivity (HIV status, mental health records); HIPAA breach notification obligation; patient harm potential for stigmatized diagnoses
+
+**Current risk rating:** HIGH (elevated from Moderate-Moderate at initial assessment)
+
+**Mitigation status:**
+- MFA enforcement: COMPLIANT — all user accounts require TOTP MFA; bypass testing confirmed during formal assessment
+- Security awareness training: AT-2 implemented; phishing simulation program not yet implemented — this gap is the residual human-layer vulnerability for this risk
+- GuardDuty: Monitoring for unusual authentication patterns (credential use from unusual locations, unusual API call patterns)
+- HC3 briefing response: Staff reminder issued; email security posture evaluation scheduled for next quarterly review
+
+**Residual risk:** MODERATE — MFA significantly reduces the credential theft attack vector (attacker needs both password and TOTP device). Residual exposure is through: (1) sophisticated phishing that captures both credentials and TOTP code in real time, and (2) insider misuse where the legitimate user intentionally accesses records beyond their need-to-know.
+
+**Monitoring mechanism:** GuardDuty unusual authentication findings; quarterly access review accuracy (role accuracy catches over-privilege); AT-2 training currency monitoring
 
 ---
 
-📅 **Next Up (Day 90)**: I’ll be working on the **Security Controls & Policy Plan** — defining exactly which controls we’ll implement to mitigate the risks identified today. Let’s keep building forward. 💪
+### RS-002: Application Layer Vulnerability in OpenMRS Code
+
+**Threat source:** External threat actor exploiting known vulnerabilities; supply chain compromise via OpenMRS modules or dependencies
+**Threat event:** Attacker exploits a vulnerability in OpenMRS application code or a dependency library to gain unauthorized access, execute code, or exfiltrate patient data
+
+**Initial likelihood:** Moderate — OpenMRS is open-source with publicly visible code; dependency chain includes libraries with historical CVEs (Log4Shell was the canonical example)
+**Current likelihood:** Moderate — OWASP Dependency-Check monthly scans have not identified High or Critical unpatched vulnerabilities in the current deployment. No OpenMRS community security advisories affecting the deployed version in Q1.
+
+**Impact:** HIGH — application-layer exploitation could bypass access controls and extract the full patient database; potential for undetected data exfiltration before discovery
+
+**Current risk rating:** MODERATE (stable from initial assessment)
+
+**Mitigation status:**
+- WAF: Configured with OWASP Core Rule Set, custom rules for OpenMRS application patterns. WAF blocks SQL injection, XSS, and common web application attacks before they reach the application layer.
+- Monthly OWASP Dependency-Check: Current — no unpatched High or Critical findings
+- AWS Inspector monthly scan: EC2 OS vulnerabilities patched within SLA (97% SLA compliance in Q1)
+- Module governance: CM-3 process requires ISSO notification and SIA for all module additions; no unauthorized modules detected in Q1 monitoring
+- OpenMRS community advisory monitoring: Weekly review per M-1 environmental monitoring schedule
+
+**Residual risk:** LOW-MODERATE — WAF provides defense-in-depth against web application attacks; dependency scanning provides current-state vulnerability visibility; module governance prevents unauthorized code introduction. Principal residual risk is a zero-day vulnerability in OpenMRS before patch availability.
+
+**Monitoring mechanism:** Monthly Inspector and Dependency-Check scans; weekly OpenMRS community advisory monitoring; WAF rule log review
+
+---
+
+### RS-003: S3 Bucket Misconfiguration Exposing ePHI Backup Data
+
+**Threat source:** Accidental misconfiguration by IT Administrator; malicious insider configuration change
+**Threat event:** S3 backup bucket is inadvertently made publicly accessible, exposing encrypted database exports containing ePHI
+
+**Initial likelihood:** Low-Moderate — S3 misconfigurations are common in cloud environments; risk is real but mitigated by technical controls
+**Current likelihood:** Low — the M-002 finding (unauthorized IAM password policy change) demonstrated the IT Administrator makes occasional configuration changes without CM-3 compliance, but no S3 configuration changes were identified in Q1 monitoring; S3 Block Public Access is enforced at both bucket and account level
+
+**Impact:** HIGH — even if the data is encrypted, a publicly accessible bucket containing ePHI triggers HIPAA breach notification assessment; if the KMS key were ever compromised, the exposed data would be decryptable
+
+**Current risk rating:** LOW-MODERATE (reduced from initial Moderate through technical controls)
+
+**Mitigation status:**
+- S3 Block Public Access: Enabled at both bucket level and AWS account level — this control prevents public access even if a bucket policy accidentally allows it
+- Config rule `s3-bucket-server-side-encryption-enabled`: COMPLIANT; Config rule for Block Public Access: COMPLIANT
+- Security Hub: `[S3.1] S3 Block Public Access setting` — currently passing
+- KMS encryption: All backup data encrypted with customer-managed key; key policies restrict decryption to authorized IAM roles
+
+**Residual risk:** LOW — defense in depth (bucket-level Block Public Access + account-level Block Public Access + Config monitoring + Security Hub alerting) makes this a highly unlikely exposure path. The KMS encryption means that even if access were somehow obtained, the data would be unreadable without the key.
+
+**Monitoring mechanism:** Config rules continuous monitoring; Security Hub FSBP S3 checks; quarterly CloudTrail pattern analysis for S3 configuration changes
+
+---
+
+### RS-004: Ransomware Attack — EHR Unavailability and Data Encryption
+
+**Threat source:** External threat actor; ransomware via phishing credential theft or vulnerability exploitation
+**Threat event:** Ransomware encrypts EC2 instance and/or associated storage, rendering OpenMRS unavailable for clinical operations
+
+**Initial likelihood:** Moderate — healthcare ransomware is a significant and growing threat category
+**Current likelihood:** HIGH — HC3 Q1 briefing specifically identified ransomware campaigns targeting healthcare organizations matching MyClinic's profile (under 200 employees, cloud-hosted EHR). This is the threat category with the highest risk rating change since authorization.
+
+**Impact:** HIGH — OpenMRS unavailability during clinical operations affects patient care continuity; antiretroviral therapy patients may miss medication dispensing; paper-based downtime extends clinic capacity and increases documentation error risk. Note: RDS architectural separation means patient database is not directly accessible to ransomware on EC2 — recovery is application restoration, not full data recovery.
+
+**Current risk rating:** HIGH (elevated from Moderate at initial assessment based on HC3 threat intelligence)
+
+**Mitigation status:**
+- MFA enforcement reduces credential theft vector (primary ransomware delivery path)
+- GuardDuty monitors for cryptocurrency mining activity (ransomware staging indicator) and unusual network patterns
+- EC2 instance isolation playbook (Day 81 Playbook 2): IT Administrator has authority to isolate EC2 instance without approval during active incident
+- RDS architectural separation: Patient database not directly accessible to ransomware on EC2; recovery is application restoration from clean AMI + reconnection to existing RDS
+- Clinical downtime procedures: CP-2 condition — AT RISK for 90-day deadline; compensating controls (paper downtime cards) in place
+- Cross-region backup: Weekly S3 export to us-west-2; RPO 7 days (improvement proposal in progress to reduce to daily, RPO 1 day)
+
+**Residual risk:** MODERATE — the RDS architectural separation and cross-region backup significantly reduce the worst-case outcome (total data loss). The primary residual risk is clinical operations disruption during recovery, which is why the CP-2 condition and the RPO reduction proposal are the most important risk management actions currently open.
+
+**Monitoring mechanism:** GuardDuty threat detection; HC3 threat briefings weekly review; IR-3 tabletop exercise (POA&M item 004 — pending execution); CP-2 condition deadline monitoring
+
+---
+
+### RS-005: ePHI Disclosure via Insider Access Misuse
+
+**Threat source:** Malicious insider; curious insider (accessing records without need-to-know)
+**Threat event:** Authorized user accesses patient records beyond their clinical need-to-know — curiosity access (celebrity patient, family member), data sale, or targeted harassment of a specific patient
+
+**Initial likelihood:** Low — MyClinic serves a focused patient population; insider threat motivation is lower than at large urban health systems with higher-profile patients
+**Current likelihood:** Low — Q1 access review identified one over-privilege instance (M-004 finding); no evidence of unauthorized access in application audit log; no patient complaints related to privacy
+
+**Impact:** HIGH — for a patient population with HIV/AIDS diagnoses, mental health conditions, or other stigmatized health status, a targeted disclosure by an insider could cause severe personal harm; HIPAA breach notification obligation; potential for OCR enforcement; patient trust damage to the organization's community health mission
+
+**Current risk rating:** MODERATE (stable — low likelihood, high impact)
+
+**Mitigation status:**
+- RBAC enforcement: Role-based access limits each user's accessible records to their clinical function
+- Quarterly access review: Updated template (M-004 remediation) now verifies role accuracy, not just account continuation
+- OpenMRS audit log: User access logged; ISSO monthly review of access patterns
+- AU-12 gap: **Denied access events not currently logged** — this is a material gap for this risk scenario. An insider systematically probing for records outside their access scope would generate denied access attempts that are currently not captured. This is the most significant risk implication of the Day 79 AU-12 finding.
+
+**Residual risk:** MODERATE — access is controlled and reviewed. The AU-12 denied-access logging gap reduces the detection capability for systematic insider probing below the level documented in the SAR.
+
+**Monitoring mechanism:** Quarterly access review accuracy; monthly audit log review; GuardDuty behavioral anomaly detection; AU-12 remediation (will improve detection capability when complete)
+
+---
+
+### RS-006: Configuration Drift Creating Undetected Control Gap
+
+**Threat source:** IT Administrator unauthorized change; accidental configuration change; software update changing default settings
+**Threat event:** A security-relevant configuration change occurs outside the CM-3 change management process, creating a control gap that is not detected by automated monitoring until it is exploited
+
+**Initial likelihood:** Low — CM-3 process was designed to prevent this
+**Current likelihood:** Moderate — the M-002 finding (unauthorized IAM password policy change) and Finding A-7 (IAM entity creation without ISSO notification) both demonstrate that configuration changes outside CM-3 have occurred. The pattern is established even if neither incident produced exploitation.
+
+**Impact:** MODERATE — depends on the specific configuration affected; Low for cosmetic configuration drift, HIGH for security-critical configuration (encryption disabled, public access enabled, audit logging disabled)
+
+**Current risk rating:** MODERATE (elevated from Low based on operational evidence)
+
+**Mitigation status:**
+- AWS Config: 22 managed rules covering security-critical configurations; Config NON_COMPLIANT events generate immediate ISSO notification
+- EventBridge automated notification: IAM entity creation and CloudTrail modification events generate real-time ISSO alerts
+- CM-3 procedure update: Updated post-A-7 finding to include IAM entity creation as ISSO-notification trigger; updated post-M-002 to note IAM policy modification gap pending EventBridge expansion
+- IT Administrator briefing: Two instances of non-compliance addressed with IT Administrator directly
+
+**Residual risk:** LOW-MODERATE — automated Config monitoring catches most security-critical configuration drift rapidly. The residual risk is configuration changes that are not covered by existing Config rules (the "known unknowns" — configurations that matter for security but have not been written into a Config rule).
+
+**Monitoring mechanism:** Config rules continuous compliance; Security Hub FSBP checks; quarterly CloudTrail pattern analysis; semi-annual self-assessment test procedures (Day 79 approach)
+
+---
+
+### RS-007: Data Availability — Backup/Recovery Failure
+
+**Threat source:** Technical failure (AWS service disruption, RDS failure, backup job failure); process failure (restoration procedure outdated, encryption key not preserved)
+**Threat event:** When recovery from a major availability incident is required, the backup and recovery process fails — either backup data is unavailable, the restoration procedure does not work, or the restoration time exceeds the RTO
+
+**Initial likelihood:** Low — backup systems are automated; quarterly restoration tests planned
+**Current likelihood:** Low-Moderate — Q1 quarterly restoration test completed within RTO (3:47 vs. 4:00 target) but identified narrowing margin (POA&M M-003); restoration procedure required updating for S3 export format change
+
+**Impact:** HIGH — recovery failure during a major incident could mean permanent data loss (RPO exceeded) or extended clinical unavailability (RTO exceeded)
+
+**Current risk rating:** LOW-MODERATE (stable, with active trend monitoring)
+
+**Mitigation status:**
+- Quarterly restoration tests: Q1 completed; trend monitoring via KRI-CP-1 (RTO margin)
+- Cross-region backup: Weekly S3 export to us-west-2
+- RPO reduction proposal: Daily export (reducing RPO from 7 days to 1 day) under development for Health IT Manager and AO consideration
+- POA&M M-003: Restoration procedure optimization in progress (60-day target)
+
+**Residual risk:** LOW-MODERATE — the Q1 restoration test passed; the trend monitoring is the appropriate mechanism for detecting risk escalation before a test failure occurs.
+
+**Monitoring mechanism:** Quarterly restoration tests with RTO margin trend (KRI-CP-1); backup job success rate (KPI-CP-1a); M-003 POA&M item progress
+
+---
+
+## Risk Register Summary — Current State
+
+| Risk | Current Rating | Change from Initial | Primary Mitigation | Residual Risk |
+|---|---|---|---|---|
+| RS-001 Credential theft/unauthorized access | HIGH | ↑ Elevated (HC3 briefing) | MFA enforcement | MODERATE |
+| RS-002 Application vulnerability | MODERATE | Stable | WAF, Dependency-Check | LOW-MODERATE |
+| RS-003 S3 misconfiguration | LOW-MODERATE | ↓ Reduced (controls effective) | Block Public Access, Config | LOW |
+| RS-004 Ransomware | HIGH | ↑ Elevated (HC3 briefing) | MFA, GuardDuty, RDS separation | MODERATE |
+| RS-005 Insider misuse | MODERATE | Stable | RBAC, access review | MODERATE (AU-12 gap) |
+| RS-006 Configuration drift | MODERATE | ↑ Elevated (operational evidence) | Config rules, EventBridge | LOW-MODERATE |
+| RS-007 Backup/recovery failure | LOW-MODERATE | Stable | Quarterly restoration tests | LOW-MODERATE |
+
+---
+
+## What the Risk Register Reveals — Integrated View
+
+Two patterns emerge from looking at the complete current-state risk register that would not be visible from individual daily entries:
+
+**Pattern 1 — The threat environment has elevated in two specific areas.** RS-001 (credential theft) and RS-004 (ransomware) both increased from Moderate to High based on the HC3 Q1 briefing. These two risks share a threat vector — phishing campaigns targeting healthcare EHR credential theft as a ransomware precursor. The single most impactful second-year security improvement for both risks is the phishing simulation program: it converts the security awareness training from a documentation exercise into a measured behavioral intervention targeted at exactly the attack vector the threat intelligence identifies as elevated.
+
+**Pattern 2 — The AU-12 denied-access logging gap affects multiple risks.** The Day 79 self-assessment finding that denied access events are not logged affects both RS-001 (inability to detect systematic credential probing) and RS-005 (inability to detect insider probing of records outside role scope). One technical remediation — fixing the OpenMRS audit log's denied-access event capture — improves the detection capability for two of the program's Moderate residual risks simultaneously. This is the type of compound benefit that the integrated risk register reveals.
+
+Both patterns point to the same two second-year priorities: the phishing simulation program (addresses elevated threat landscape) and the AU-12 remediation (addresses detection capability across multiple risk scenarios). Both are currently in the POA&M or pending POA&M entry. Neither is new — they were identified through the continuous monitoring program. What the capstone risk register does is show why they are the right priorities.
+
+---
+
+## A Real-World Example That Made This Click
+
+The RS-004 risk rating elevation based on HC3 threat intelligence — moving ransomware from Moderate to High based on external threat intelligence rather than a change in internal controls — illustrates the concept of threat-informed risk management that NIST SP 800-30 describes.
+
+The **2021 Ireland Health Service Executive (HSE) ransomware attack** is the most directly relevant case study. The HSE — Ireland's national public health service — suffered a Conti ransomware attack that took the national health IT systems offline for weeks, affecting hospitals and healthcare services across the country. The attack used spear-phishing to obtain initial credentials, escalated privileges, and deployed ransomware across connected systems.
+
+The HSE attack is directly relevant to the OpenMRS program for several reasons: it was a healthcare organization, the initial access vector was phishing credential theft (the exact vector in the HC3 briefing for organizations matching MyClinic's profile), and the impact was extended clinical unavailability affecting patient care.
+
+The RS-004 rating elevation from Moderate to High is not alarmist — it is a rational response to specific threat intelligence about a known, active threat category targeting healthcare organizations matching the risk register subject's profile. The appropriate response is the risk response that is already in progress: the CP-2 condition (clinical downtime procedures), the RPO reduction proposal (reducing maximum data loss exposure), and the IR-3 tabletop exercise (testing the ransomware incident response capability before it is needed).
+
+---
+
+## What's Next
+
+Day 90 develops the Security Controls and Policy Plan — connecting the risk register to the control set, showing how each risk is addressed by one or more controls, identifying control gaps for risks without adequate coverage, and presenting the policy suite that governs control implementation.
+
+---
+
+## Resources I Found Helpful Today
+- [NIST SP 800-30 Rev 1 – Guide for Conducting Risk Assessments](https://csrc.nist.gov/publications/detail/sp/800-30/rev-1/final)
+- [HHS HC3 – Health Sector Cybersecurity Coordination Center Threat Briefings](https://www.hhs.gov/about/agencies/asa/ocio/hc3/index.html)
+- [NIST SP 800-53 Rev 5 – Risk Register Integration with Control Selection](https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final)
+- [Ireland HSE Ransomware Attack — Post-Incident Review Report](https://www.hse.ie/eng/services/publications/conti-cyber-attack-on-the-hse-full-report.pdf)
+- [CISA – StopRansomware Healthcare Sector Guidance](https://www.cisa.gov/stopransomware/healthcare)
+
+---
+
+*#GRC #RiskAssessment #RiskRegister #ThreatIntelligence #NISTRMF #OpenMRS #HealthcareSecurity #HIPAA #100DaysOfGRC #AWS #Day89*
