@@ -13,11 +13,11 @@ Day 1 gave me the big picture of GRC. Day 2 showed me how governance sets the fo
 
 Risk management starts with three concepts that I kept coming back to today:
 
-- A **threat** is something bad that could happen — a ransomware attack, an insider accidentally sharing patient data, a server going down at the worst possible time
-- A **vulnerability** is a weakness that makes a threat more likely to succeed — unpatched software, weak passwords, a misconfigured AWS setting
-- A **risk** is what you get when a threat meets a vulnerability — and the way you measure it is straightforward:
+- A threat is something bad that could happen — a ransomware attack, an insider accidentally sharing patient data, a server going down at the worst possible time
+- A vulnerability is a weakness that makes a threat more likely to succeed — unpatched software, weak passwords, a misconfigured AWS setting
+- A risk is what you get when a threat meets a vulnerability — and the way you measure it is straightforward:
 
-**Risk = Likelihood × Impact**
+Risk = Likelihood × Impact
 
 That formula sounds simple, but applying it well is where the real work is. Not every risk is equal. Some things are very likely but low impact. Some are unlikely but catastrophic if they happen. Risk management is about figuring out which ones deserve your attention first — and being honest about that, even when the answer is uncomfortable.
 
@@ -37,21 +37,21 @@ I also found the concept of **impact** really interesting — specifically in he
 
 When I tried to apply today's concepts to the OpenMRS environment, three risk scenarios stood out immediately:
 
-**1. Data Breach — Confidentiality Risk**
+1. Data Breach — Confidentiality Risk
 - Threat: Unauthorized access to OpenMRS patient records
 - Vulnerability: Weak access controls or exposed AWS services
 - Likelihood: High — healthcare data is one of the most targeted categories
 - Impact: High — patient privacy violated, HIPAA penalties, loss of trust
 - Priority: Critical
 
-**2. Record Tampering — Integrity Risk**
+2. Record Tampering — Integrity Risk
 - Threat: Malicious or accidental modification of patient records
 - Vulnerability: Lack of audit logging and access restrictions
 - Likelihood: Medium
 - Impact: High — wrong medical decisions could be made based on altered data
 - Priority: High
 
-**3. System Outage — Availability Risk**
+3. System Outage — Availability Risk
 - Threat: Ransomware or cloud misconfiguration taking OpenMRS offline
 - Vulnerability: No tested backup and recovery plan
 - Likelihood: Medium
